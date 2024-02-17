@@ -23,9 +23,7 @@ class PermissionSeeder extends Seeder
             'permissions' => [
                 'actions' => ['list', 'create', 'edit', 'delete'],
             ],
-            'comments' => [
-                'actions' => ['list', 'create', 'edit', 'delete'],
-            ],
+          
         ];
 
         foreach ($permissions as $entity => $permissionData) {
