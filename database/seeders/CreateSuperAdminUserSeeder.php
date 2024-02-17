@@ -18,7 +18,7 @@ class CreateSuperAdminUserSeeder extends Seeder
         $superAdmin = User::firstOrCreate([
             'name' => 'Super Admin', 
             'email' => 'super@admin',
-            'password' => Hash::make('javed1234')
+            'password' => Hash::make('admin')
         ]);
         $role = Role::where('name' ,'Super Admin')->pluck('id')->first();
         $superAdmin->assignRole([$role]);
