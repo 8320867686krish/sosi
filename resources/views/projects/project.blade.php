@@ -41,7 +41,7 @@
                             </div>
                             <div class="col-6">
                                 @can('roles.add')
-                                    <a href="{{ route('projects.add') }}" class="btn btn-primary float-right">Add New
+                                    <a href="{{ route('projects.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New
                                         Project</a>
                                 @endcan
                             </div>
@@ -59,7 +59,7 @@
                                         <th>IHM Table</th>
                                         <th>Project No</th>
                                         <th width="15%">IMO No</th>
-                                        <th width="10%">Action</th>
+                                        <th width="6%">#</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -77,7 +77,7 @@
                                                     @can('projects.edit')
                                                         <a href="{{ route('projects.edit', ['id' => $project->id]) }}"
                                                             rel="noopener noreferrer" title="Edit">
-                                                            <i class="fas fa-edit fa-2x text-primary"></i>
+                                                            <i class="fas fa-edit  text-primary" style="font-size: 1rem"></i>
                                                         </a>
                                                     @endcan
                                                     @can('projects.remove')
@@ -85,7 +85,7 @@
                                                             class="ml-2"
                                                             onclick="return confirm('Are you sure you want to delete this project?');"
                                                             title="Delete">
-                                                            <i class="fas fa-trash fa-2x text-danger"></i>
+                                                            <i class="fas fa-trash-alt  text-danger" style="font-size: 1rem"></i>
                                                         </a>
                                                     @endcan
                                                 </td>

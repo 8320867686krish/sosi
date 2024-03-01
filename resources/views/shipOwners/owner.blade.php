@@ -40,7 +40,7 @@
                             </div>
                             <div class="col-6">
                                 @can('ship_owners.add')
-                                    <a href="{{ route('ship_owners.add') }}" class="btn btn-primary float-right">Add New Owner</a>
+                                    <a href="{{ route('ship_owners.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New Owner</a>
                                 @endcan
                             </div>
                         </div>
@@ -55,9 +55,9 @@
                                         <th width="15%">Email</th>
                                         <th width="12%">Phone</th>
                                         <th width="12%">Address</th>
-                                        <th width="12%">Image</th>
+                                        <th width="8%">Image</th>
                                         <th width="12%">Identification</th>
-                                        <th width="10%">Action</th>
+                                        <th width="5%">#</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -75,14 +75,14 @@
                                                     @can('ship_owners.edit')
                                                         <a href="{{ route('ship_owners.edit', ['id' => $owner->id]) }}"
                                                             rel="noopener noreferrer" title="Edit">
-                                                            <i class="fas fa-edit fa-2x text-primary"></i>
+                                                            <i class="fas fa-edit text-primary" style="font-size: 1rem !important;"></i>
                                                         </a>
                                                     @endcan
                                                     @can('ship_owners.remove')
                                                         <a href="{{ route('ship_owners.delete', ['id' => $owner->id]) }}"
                                                             class="ml-2"
                                                             onclick="return confirm('Are you sure you want to delete this owner ?');" title="Delete">
-                                                            <i class="fas fa-trash fa-2x text-danger"></i>
+                                                            <i class="fas fa-trash-alt text-danger" style="font-size: 1rem !important;"></i>
                                                         </a>
                                                     @endcan
                                                 </td>

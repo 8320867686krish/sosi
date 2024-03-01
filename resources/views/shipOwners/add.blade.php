@@ -75,7 +75,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="address">Address</label>
-                                <textarea name="address" id="address" rows="2" class="form-control @error('phone') is-invalid @enderror">{{ old('address', $owner->address ?? '') }}</textarea>
+                                <textarea name="address" id="address" rows="2" class="form-control @error('address') is-invalid @enderror">{{ old('address', $owner->address ?? '') }}</textarea>
                                 @error('address')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -107,8 +107,17 @@
                             @if (isset($owner) && !empty($owner->imagePath))
                                 <img src="{{$owner->imagePath}}" alt="Image Not Found" class="img-thumbnail" width="15%">
                             @endif
-                            <div class="form-group">
-                                <button class="btn btn-primary float-right" type="submit">{{ $button ?? 'Add' }}</button>
+                            <div class="row mt-3">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <a href="{{ route('ship_owners') }}" class="btn btn-info btn-rounded formBackBtn" type="button">Back</a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary float-right btn-rounded formSubmitBtn" type="submit">{{ $button ?? 'Add' }}</button>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>

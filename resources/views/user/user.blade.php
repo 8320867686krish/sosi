@@ -43,7 +43,8 @@
                             </div>
                             <div class="col-6">
                                 @can('users.add')
-                                    <a href="{{ route('users.add') }}" class="btn btn-primary float-right">Add New User</a>
+                                    <a href="{{ route('users.add') }}"
+                                        class="btn btn-primary float-right btn-rounded addNewBtn">Add New User</a>
                                 @endcan
                             </div>
                         </div>
@@ -78,7 +79,7 @@
                                                     @can('users.edit')
                                                         <a href="{{ route('users.edit', ['id' => $user->id]) }}"
                                                             rel="noopener noreferrer" title="Edit" class="text-center">
-                                                            <i class="fas fa-edit fa-2x text-primary"></i>
+                                                            <i class="fas fa-edit text-primary" style="font-size: 1rem"></i>
                                                         </a>
                                                     @endcan
                                                 </td>
@@ -116,7 +117,7 @@
                         "isVerified": isChecked ? 1 : 0
                     },
                     success: function(response) {
-                        alert(response.message); // Display success message
+                        console.log(response.message); // Display success message
                     },
                     error: function(xhr, status, error) {
                         console.error(error); // Log any errors

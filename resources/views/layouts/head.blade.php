@@ -11,13 +11,9 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}">
     <link href="{{ asset('assets/vendor/fonts/circular-std/style.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/libs/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/libs/css/extrastyle.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/fontawesome/css/fontawesome-all.css') }}">
     <link rel="icon" href="{{ asset('assets/images/favicon.png') }}" type="image/x-icon"/>
-    <style>
-        .invalid-feedback {
-            font-size: 14px;
-        }
-    </style>
     @yield('css')
     @show
 </head>

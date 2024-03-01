@@ -314,6 +314,11 @@ class ApiController extends Controller
     {
         try {
             $surverorDetails = projects::where('id', $project_id)->first()->toArray();
+            foreach ($surverorDetails as $key => $value) {
+                if ($value === null) {
+                    $surverorDetails[$key] = '';
+                }
+            }
             return response()->json(['isStatus' => true, 'message' => 'surveyor details retrieved successfully.', 'surveyorDetails' => $surverorDetails]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.', 'surveyorDetails' => (object) []]);
@@ -327,7 +332,7 @@ class ApiController extends Controller
             $projectId = $inputData['id'];
             // Update the project record with the provided data
             Projects::where(['id' => $projectId])->update($inputData);
-            return response()->json(['isStatus' => true, 'message' => 'Surveyors created successfully.']);
+            return response()->json(['isStatus' => true, 'message' => 'successfully save details !!']);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
