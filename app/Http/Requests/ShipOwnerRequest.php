@@ -29,4 +29,15 @@ class ShipOwnerRequest extends FormRequest
             'identification' => 'required|unique:ship_owners,identification,'.$this->id,
         ];
     }
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'please enter name',
+            'email.required' => 'please enter email',
+            'email.unique' => 'please enter unique email',
+            'phone.required' => 'please enter phone',
+            'identification.required' => 'plese enter identification',
+            'identification.unique' => 'please enter unique identification'
+        ];
+    }
 }

@@ -25,11 +25,18 @@ return new class extends Migration
             $table->string('imo_number')->nullable()->unique();
             $table->string('client_name')->default('');
             $table->string('client_details')->default('');
+            $table->string('builder_name')->default('');
+            $table->string('builder_details')->default('');
+            $table->string('build_date')->default('');
+            $table->string('delivery_date')->default('');
+            $table->string('flag')->default('');
+            $table->string('vessal_class')->default('');
+            $table->string('ihm_class')->default('');
             $table->string('additional_hazmats')->default('');
             $table->string('survey_location_name')->default('');
             $table->string('survey_location_address')->default('');
             $table->string('survey_type')->default('');
-            $table->date('survey_date');
+            $table->date('survey_date')->nullable();
 
             $table->timestamps();
         });

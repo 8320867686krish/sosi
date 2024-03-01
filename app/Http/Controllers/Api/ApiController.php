@@ -291,18 +291,20 @@ class ApiController extends Controller
 
             return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $modifiedProjects]);
         } catch (Throwable $th) {
-            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
+            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.','projectList'=>[]]);
         }
     }
 
-    public function getShipDetail(Request $request)
+    public function getShipDetail($project_id)
     {
         try {
-            $project = Projects::with('ship_owner:id,image')->where('id', $request->id)->first();
-            $project->ship_owner->imagePath = request()->getSchemeAndHttpHost() . '/images/ship/owner/' . $project->ship_owner->image;
-            return response()->json(['isStatus' => true, 'message' => 'Project detail retrieved successfully.', 'projectDetail' => $project]);
+            $project = Projects::with('ship_owner:name,address,id')->where('id', $project_id)->first()->toarray();
+            $project['survey_date'] = (@$project['survey_date']) ? @$project['survey_date'] : "";
+            if ($project) {
+                return response()->json(['isStatus' => true, 'message' => 'Project detail retrieved successfully.', 'shipParticular' => $project]);
+            }
         } catch (Throwable $th) {
-            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
+            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.', 'shipParticular' => (object) []]);
         }
     }
 
@@ -311,15 +313,10 @@ class ApiController extends Controller
     public function getProjectSurveyors($project_id)
     {
         try {
-            $surverorDetails = projects::where('id', $project_id)->first();
-
-            if ($surverorDetails->count() > 0) {
-                return response()->json(['isStatus' => true, 'message' => 'surveyor details retrieved successfully.', 'surveyorDetails' => $surverorDetails]);
-            } else {
-                return response()->json(['isStatus' => false, 'message' => 'surveyor detail retrieved successfully.', 'surveyorDetails' => $surverorDetails]);
-            }
+            $surverorDetails = projects::where('id', $project_id)->first()->toArray();
+            return response()->json(['isStatus' => true, 'message' => 'surveyor details retrieved successfully.', 'surveyorDetails' => $surverorDetails]);
         } catch (Throwable $th) {
-            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
+            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.', 'surveyorDetails' => (object) []]);
         }
     }
 
@@ -327,12 +324,9 @@ class ApiController extends Controller
     {
         try {
             $inputData = $request->input();
-
             $projectId = $inputData['id'];
-
             // Update the project record with the provided data
             Projects::where(['id' => $projectId])->update($inputData);
-
             return response()->json(['isStatus' => true, 'message' => 'Surveyors created successfully.']);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
