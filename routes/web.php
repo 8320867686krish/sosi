@@ -78,6 +78,9 @@ Route::middleware('auth')->group(function () {
             Route::get('users', 'index')->name('users');
             Route::get('users/add', 'create')->name('users.add');
             Route::post('users', 'store')->name('users.store');
+            Route::get('users/{id}/edit', 'edit')->name('users.edit');
+            Route::get('users/{id}/delete', 'destroy')->name('users.delete');
+            Route::post('changeUserStatus', 'changeUserStatus')->name('change.isVerified');
         });
     });
 });
