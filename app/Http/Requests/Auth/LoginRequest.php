@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
 
 class LoginRequest extends FormRequest
 {
@@ -32,6 +33,14 @@ class LoginRequest extends FormRequest
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'email.required' => 'Please enter email.',
+            'password.required' => 'Please enter password.',
+        ];
+    }
+
     /**
      * Attempt to authenticate the request's credentials.
      *
@@ -40,15 +49,41 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
-        
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+
+        // Auth::logoutOtherDevices($this->only('password'));
+
+        if (!Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
-           
+
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'autherror' => trans('auth.failed'),
             ]);
         }
-        
+
+        // $chkLogin = DB::table('sessions')->where('user_id',Auth()->user()->id)->first();
+        // if(@$chkLogin){
+        //     Auth::logout(); // Log out the user if they don't have access
+        //     throw ValidationException::withMessages([
+        //         'email' => trans('You are logged in from another device. Please log out from the other device first.'),
+        //     ]);
+        // }
+
+        $role = Auth()->user()->roles->first();
+        if (!isset($role->permissions)) {
+            Auth::logout(); // Log out the user if they don't have access
+            throw ValidationException::withMessages([
+                'autherror' => trans('You do not have permission to login at this time.'),
+            ]);
+        }
+
+        $permissions = $role->permissions->pluck('name')->toArray();
+        if (Auth::user()->can('APP.access') && count($permissions) == 2) {
+            Auth::logout(); // Log out the user if they don't have access  && in_array('APP.access', $permissions)
+            throw ValidationException::withMessages([
+                'autherror' => trans('You cant access portal.'),
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 
@@ -59,7 +94,7 @@ class LoginRequest extends FormRequest
      */
     public function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -80,6 +115,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->input('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->input('email')) . '|' . $this->ip());
     }
 }

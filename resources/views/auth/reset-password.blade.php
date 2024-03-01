@@ -35,7 +35,7 @@
     <!-- ============================================================== -->
     <!-- signup form  -->
     <!-- ============================================================== -->
-    
+
     @if(isset($isExpired) && $isExpired === 1)
         <form class="splash-container" method="POST" action="{{ route('password.store') }}" style="max-width: 500px !important">
             @csrf
@@ -73,6 +73,5 @@
         </div>
     @endif
 </body>
-
 
 </html>

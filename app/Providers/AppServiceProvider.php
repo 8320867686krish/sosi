@@ -22,8 +22,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
-        $allPermissions = Permission::select('id','group_type','name')->get()->toArray();
-        
+        $allPermissions = Permission::select('id','group_type','name','is_show')->get()->toArray();
+
         // Share permissions with all views
         View::share('allPermissions', $allPermissions);
     }

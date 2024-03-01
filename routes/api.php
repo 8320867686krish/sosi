@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +15,33 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+// Route::post('login',[UserAuthController::class,'login']);
+// Route::post('logout',[UserAuthController::class,'logout'])
+//   ->middleware('auth:sanctum');
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+Route::controller(ApiController::class)->group(function () {
+    // user Authentication api route
+    Route::post('register', 'register');
+    Route::post('login', 'login');
+    Route::post('forgot_password', 'forgotPassword');
+    Route::post('reset_password', 'resetPassword');
+
+    // Routes that require Sanctum authentication
+    Route::middleware(['auth:sanctum'])->group(function () {
+        // User Api
+        Route::get('refresh_token', 'refreshSanctumToken');
+        Route::get('logout', 'logout');
+        Route::post('change_password', 'changePassword');
+
+        // project owner api route
+        Route::get('ownerlist', 'getshipOwnersList');
+
+        // project api route
+        Route::get('projects', 'getProjectList');
+        Route::get('project/{project_id}/surveyors/get', 'getProjectSurveyors');
+        Route::post('project/surveyors/add', 'addProjectSurveyors');
+        Route::get('project/shipDetials/{project_id}', 'getShipDetail');
+
+    });
 });

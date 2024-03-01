@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Session;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -13,7 +14,6 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -21,8 +21,13 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'last_name',
         'email',
+        'email_verified_at',
         'password',
+        'reVerified',
+        'ismember_token',
+        'last_session_id'
     ];
 
     /**
@@ -45,5 +50,13 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    
+    public function getFullNameAttribute()
+    {
+        return ucfirst($this->name) . ' ' . ucfirst($this->last_name);
+    }
+
+    public function isLoggedInFromAnotherDevice(): bool
+    {
+        return $this->last_session_id !== Session::getId();
+    }
 }

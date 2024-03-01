@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
- 
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -35,12 +35,7 @@
     <div class="splash-container" style="max-width: 500px !important;">
         <div class="row">
             <div class="col-12">
-                @if (session('message'))
-                    <div class="alert alert-success alert-dismissible">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>Success!</strong> {{ session('message') }}
-                    </div>
-                @endif
+                @include('layouts.message')
             </div>
         </div>
         <div class="card">
@@ -50,17 +45,19 @@
                     @csrf
                     <div class="form-group">
                         <x-input-label for="email" :value="__('Email')" />
-                        <x-text-input id="email" class="form-control form-control-lg" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="Email" />
-                        @if($errors->has('email') != "These credentials do not match our records.")
+                        <x-text-input id="email" class="form-control form-control-lg" type="email" name="email" :value="old('email')" autofocus autocomplete="username" placeholder="Email" />
+                        @if($errors->has('email'))
                             <div class="error text-danger mt-1">{{ $errors->first('email') }}</div>
                         @endif
                     </div>
                     <div class="form-group">
                         <x-input-label for="password" :value="__('Password')" />
                         <input class="form-control form-control-lg" id="password" name="password" type="password" placeholder="Password">
-                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                        @if($errors->has('email') == "These credentials do not match our records.")
-                            <div class="error text-danger mt-3">{{ $errors->first('email') }}</div>
+                        @if($errors->has('password'))
+                            <div class="error text-danger mt-3">{{ $errors->first('password') }}</div>
+                        @endif
+                        @if($errors->has('autherror'))
+                            <div class="error text-danger mt-3">{{ $errors->first('autherror') }}</div>
                         @endif
                     </div>
 
@@ -68,15 +65,13 @@
                 </form>
             </div>
             <div class="card-footer bg-white p-0  ">
-                <div class="card-footer-item card-footer-item-bordered">
-                    <a href="{{ route('register') }}" class="footer-link">Create An Account</a></div>
-                <div class="card-footer-item card-footer-item-bordered">
+                <div class="card-footer-item card-footer-item-bordered float-right">
                     <a href="{{ route('password.request') }}" class="footer-link">Forgot Password</a>
                 </div>
             </div>
         </div>
     </div>
-  
+
     <!-- ============================================================== -->
     <!-- end login page  -->
     <!-- ============================================================== -->
@@ -84,5 +79,5 @@
     <script src="../assets/vendor/jquery/jquery-3.3.1.min.js"></script>
     <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
 </body>
- 
+
 </html>

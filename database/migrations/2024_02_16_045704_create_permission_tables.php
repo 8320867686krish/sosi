@@ -28,7 +28,9 @@ return new class extends Migration
             $table->bigIncrements('id'); // permission id
             $table->string('name');       // For MySQL 8.0 use string('name', 125);
             $table->string('guard_name')->nullable(); // For MySQL 8.0 use string('guard_name', 125);
-            $table->string('group_type')->nullable(); 
+            $table->string('group_type')->nullable();
+            $table->boolean('is_show')->default(0);
+
             $table->timestamps();
 
             $table->unique(['name', 'guard_name']);
@@ -42,6 +44,7 @@ return new class extends Migration
             }
             $table->string('name');       // For MySQL 8.0 use string('name', 125);
             $table->string('guard_name')->nullable(); // For MySQL 8.0 use string('guard_name', 125);
+            $table->unsigneInteger('level')->nullable(); // For MySQL 8.0 use string('guard_name', 125);
             $table->timestamps();
             if ($teams || config('permission.testing')) {
                 $table->unique([$columnNames['team_foreign_key'], 'name', 'guard_name']);

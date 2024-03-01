@@ -43,14 +43,25 @@
             </div>
             <div class="card-body">
                 <div class="form-group">
-                    <x-input-label for="name" :value="__('Name')" />
-                    <input class="form-control form-control-lg" type="text" name="name" :value="old('name')" required="" placeholder="Username" autocomplete="off">
-                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                    <x-input-label for="name" :value="__('First Name')" />
+                    <input class="form-control form-control-lg" type="text" name="name" :value="old('name')" required="" placeholder="First Name" autocomplete="off">
+                    <!-- <x-input-error :messages="$errors->get('name')" class="mt-2" /> -->
+                    @if($errors->has('name'))
+                        <div class="error text-danger mt-1">{{ $errors->first('name') }}</div>
+                    @endif
+                </div>
+                <div class="form-group">
+                    <x-input-label for="name" :value="__('Last Name')" />
+                    <input class="form-control form-control-lg" type="text" name="last_name" :value="old('last_name')" required="" placeholder="Last Name" autocomplete="off">
+                    <x-input-error :messages="$errors->get('last_name')" class="mt-2" />
                 </div>
                 <div class="form-group">
                     <x-input-label for="email" :value="__('Email')" />
                     <input class="form-control form-control-lg" type="email" name="email" :value="old('email')" required="" placeholder="E-mail" autocomplete="off">
-                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    <!-- <x-input-error :messages="$errors->get('email')" class="mt-2" /> -->
+                    @if($errors->has('name'))
+                        <div class="error text-danger mt-1">{{ $errors->first('name') }}</div>
+                    @endif
                 </div>
                 <div class="form-group">
                     <x-input-label for="password" :value="__('Password')" />
