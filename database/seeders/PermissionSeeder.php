@@ -32,7 +32,7 @@ class PermissionSeeder extends Seeder
                 "is_show" => 1
             ],
             'users' => [
-                'actions' => ['read' => 0, 'add' => 0,  'edit' => 0,'remove' => 0],
+                'actions' => ['read' => 0, 'add' => 0,  'edit' => 0],
                 "is_show" => 1
             ],
 

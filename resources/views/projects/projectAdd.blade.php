@@ -126,15 +126,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mt-3">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <a href="{{ route('projects') }}" class="btn btn-info" type="button">Back</a>
+                                        <a href="{{ route('projects') }}" class="btn btn-info btn-rounded formBackBtn" type="button">Back</a>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <button class="btn btn-primary float-right"
+                                        <button class="btn btn-primary float-right btn-rounded formSubmitBtn"
                                             type="submit">{{ $button ?? 'Add' }}</button>
                                     </div>
                                 </div>

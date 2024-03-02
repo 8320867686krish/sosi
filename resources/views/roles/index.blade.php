@@ -42,7 +42,7 @@
                             </div>
                             @can('roles.add')
                                 <div class="col-6">
-                                    <a href="{{ route('roles.add') }}" class="btn btn-primary float-right">Add New Role</a>
+                                    <a href="{{ route('roles.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New Role</a>
                                 </div>
                             @endcan
                         </div>
@@ -70,12 +70,12 @@
                                                 <td>
 													@can('roles.edit')
 														<a href="{{ route('roles.edit', ['id' => $role->id]) }}" rel="noopener noreferrer" title="Edit">
-															<i class="fas fa-edit fa-2x text-primary"></i>
+															<i class="fas fa-edit text-primary" style="font-size: 1rem;"></i>
 														</a>
 													@endcan
 													@can('roles.remove')
 														<a href="{{ route('roles.delete', ['id' => $role->id]) }}" class="ml-2" onclick="return confirm('Are you sure you want to delete this role ?');">
-															<i class="fas fa-trash fa-2x text-danger"></i>
+															<i class="fas fa-trash-alt text-danger" style="font-size: 1rem;"></i>
 														</a>
 													@endcan
 												</td>

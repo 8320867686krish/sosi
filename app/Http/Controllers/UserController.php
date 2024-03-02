@@ -38,7 +38,7 @@ class UserController extends Controller
     {
         $currentUserRoleLevel = Auth::user()->roles->first()->level;
         $roles = Role::where('level', '>', $currentUserRoleLevel)->get();
-        return view('user.userAdd', ['roles' => $roles, 'button' => 'Add']);
+        return view('user.userAdd', ['roles' => $roles, 'button' => 'Add', 'head_title' => 'Add']);
     }
 
     /**
@@ -49,8 +49,12 @@ class UserController extends Controller
         try {
             $id = $request->input('id');
             $inputData = $request->input();
-            $password = \Str::random(10);
-            $inputData['password'] = Hash::make($password);
+            $inputData['isVerified'] = $request->has('isVerified') ? 1 : 0;
+
+            if (empty($id)) {
+                $password = \Str::random(10);
+                $inputData['password'] = Hash::make($password);
+            }
 
             // Retrieve the role ID
             $role_id = Role::where('name', $request->input('roles'))->pluck('id')->first();
@@ -105,7 +109,18 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        try {
+            $currentUserRoleLevel = Auth::user()->roles->first()->level;
+            $roles = Role::where('level', '>', $currentUserRoleLevel)->get();
+
+            $user = User::select('id', 'name', 'last_name', 'email', 'isVerified')->find($id);
+            $role = $user->getRoleNames();
+            $user['role'] = $role[0];
+
+            return view('user.userAdd', ['roles' => $roles, 'button' => 'Update', 'head_title' => 'Edit', 'user' => $user]);
+        } catch (\Throwable $th) {
+            return back()->withError($th->getMessage())->withInput();
+        }
     }
 
     /**
@@ -138,6 +153,21 @@ class UserController extends Controller
         } catch (\Exception $e) {
             // Log the error or handle it in any other way
             return false;
+        }
+    }
+
+    public function changeUserStatus(Request $request)
+    {
+        try {
+            $userId = $request->input('id');
+            $isVerified = $request->input('isVerified');
+            $user = User::where('id', $userId)->update(['isVerified' => $isVerified]);
+
+            $message = $isVerified ? "User enabled successfully." : "User disabled successfully.";
+
+            return response()->json(['isStatus' => true, 'message' => $message]);
+        } catch (\Throwable $th) {
+            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
     }
 }
