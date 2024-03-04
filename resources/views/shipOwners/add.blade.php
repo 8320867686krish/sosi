@@ -109,16 +109,17 @@
                             @endif
                             <div class="row mt-3">
                                 <div class="col-sm-12 col-md-6">
-                                    <div class="form-group">
-                                        <a href="{{ route('ship_owners') }}" class="btn btn-info btn-rounded formBackBtn" type="button">Back</a>
+                                    <div class="form-group align-items-center d-flex">
+                                        <a href="{{ route('ship_owners') }}" type="button" class="align-middle"><i class="fas fa-arrow-left"></i>  <b>Back</b></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <button class="btn btn-primary float-right btn-rounded formSubmitBtn" type="submit">{{ $button ?? 'Add' }}</button>
+                                        <button class="btn btn-primary float-right btn-rounded formSubmitBtn" type="submit">{!! $button ?? 'Add' !!}</button>
                                     </div>
                                 </div>
                             </div>
+
                         </form>
                     </div>
                 </div>

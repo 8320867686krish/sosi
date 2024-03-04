@@ -24,7 +24,7 @@ class ShipOwnersController extends Controller
      */
     public function create()
     {
-        return view('shipOwners.add', ['head_title' => 'Add', 'button' => 'Add Owner']);
+        return view('shipOwners.add', ['head_title' => 'Add', 'button' => '<i class="fas fa-plus"></i>  Add']);
     }
 
     /**

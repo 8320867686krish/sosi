@@ -54,7 +54,6 @@
                                         <th>Name</th>
                                         <th width="15%">Email</th>
                                         <th width="12%">Phone</th>
-                                        <th width="12%">Address</th>
                                         <th width="8%">Image</th>
                                         <th width="12%">Identification</th>
                                         <th width="5%">#</th>
@@ -68,7 +67,6 @@
                                                 <td>{{ ucfirst($owner->name) }}</td>
                                                 <td>{{ $owner->email }}</td>
                                                 <td>{{ ucfirst($owner->phone) }}</td>
-                                                <td>{{ $owner->address }}</td>
                                                 <td><img src="{{$owner->imagePath}}" alt="Image Not Found" class="img-thumbnail"></td>
                                                 <td>{{ $owner->identification }}</td>
                                                 <td>

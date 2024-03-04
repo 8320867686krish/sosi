@@ -7,5 +7,16 @@
 }
 
 .addNewBtn{
-    background-color: #017cc0;
+    background-color: #017cc0 !important;
 }
+
+.formSubmitBtn{
+    background-color: #017cc0 !important;
+    outline: none;
+}
+
+.formSubmitBtn:hover {
+    background-color: #017cc0 !important;
+    outline: none;
+}
+

@@ -25,7 +25,7 @@ class ShipOwnerRequest extends FormRequest
             'name' => 'required|max:254',
             'email' => 'required|email|unique:ship_owners,email,'.$this->id,
             'phone' => 'required|numeric|digits:10',
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'identification' => 'required|unique:ship_owners,identification,'.$this->id,
         ];
     }
@@ -36,6 +36,7 @@ class ShipOwnerRequest extends FormRequest
             'email.required' => 'please enter email',
             'email.unique' => 'please enter unique email',
             'phone.required' => 'please enter phone',
+            'image.required' => 'please select image',
             'identification.required' => 'plese enter identification',
             'identification.unique' => 'please enter unique identification'
         ];

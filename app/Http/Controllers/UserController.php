@@ -82,9 +82,9 @@ class UserController extends Controller
                 // Mail::to($user->email)->send(new UserWelcomeMail($userMailData));
                 // Send welcome email
                 if ($this->sendWelcomeEmail($userMailData)) {
-                    return redirect()->back()->with('message', 'User created successfully. Welcome email sent.');
+                    return redirect('users')->with('message', 'User created successfully. Welcome email sent.');
                 } else {
-                    return redirect()->back()->with('message', 'User created successfully, but failed to send welcome email.');
+                    return redirect('users')->with('message', 'User created successfully, but failed to send welcome email.');
                 }
             }
 
