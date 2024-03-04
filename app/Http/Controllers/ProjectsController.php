@@ -9,9 +9,13 @@ use Illuminate\Http\Request;
 
 class ProjectsController extends Controller
 {
-    public function index()
+    public function index($ship_owner_id = null)
     {
-        $projects = Projects::with('ship_owner:id,name')->get();
+        $projects = Projects::with('ship_owner:id,name');
+        if(@$ship_owner_id){
+            $projects->where('ship_owners_id',$ship_owner_id);
+        }
+        $projects = $projects->get();
         return view('projects.project', compact('projects'));
     }
 

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\File;
 
 class ShipOwnersController extends Controller
 {
-    public function index()
+    public function index($ship_owner_id)
     {
         $owners = shipOwners::get();
         $modifiedowners = $owners->map(function ($item) {
@@ -55,7 +55,7 @@ class ShipOwnersController extends Controller
 
             $message = empty($id) ? "Owner added successfully" : "Owner updated successfully";
 
-            return redirect('shipOwners')->with('message', $message);
+            return redirect(url('shipOwners'))->with('message', $message);
         } catch (\Throwable $th) {
             return back()->withError($th->getMessage())->withInput();
         }

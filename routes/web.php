@@ -66,10 +66,11 @@ Route::middleware('auth')->group(function () {
     Route::middleware('can:projects')->group(function () {
         Route::controller(ProjectsController::class)->group(function () {
             Route::get('projects', 'index')->name('projects');
-            Route::get('projects/add', 'create')->name('projects.add');
-            Route::post('projects', 'store')->name('projects.store');
-            Route::get('projects/{id}/edit', 'edit')->name('projects.edit');
-            Route::get('projects/{id}/delete', 'destroy')->name('projects.delete');
+            Route::get('projects/{ship_owner_id}', 'index')->name('projects.ship');
+            Route::get('project/add', 'create')->name('projects.add');
+            Route::post('project', 'store')->name('projects.store');
+            Route::get('project/{id}/edit', 'edit')->name('projects.edit');
+            Route::get('project/{id}/delete', 'destroy')->name('projects.delete');
         });
     });
 
