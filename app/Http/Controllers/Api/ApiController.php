@@ -299,6 +299,11 @@ class ApiController extends Controller
     {
         try {
             $project = Projects::with('ship_owner:name,address,id')->where('id', $project_id)->first()->toarray();
+            foreach ($project as $key => $value) {
+                if ($value === null) {
+                    $project[$key] = '';
+                }
+            }
             $project['survey_date'] = (@$project['survey_date']) ? @$project['survey_date'] : "";
             if ($project) {
                 return response()->json(['isStatus' => true, 'message' => 'Project detail retrieved successfully.', 'shipParticular' => $project]);

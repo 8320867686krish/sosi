@@ -68,9 +68,11 @@ Route::middleware('auth')->group(function () {
             Route::get('projects', 'index')->name('projects');
             Route::get('projects/ships/{ship_owner_id}', 'index')->name('projects.ship');
             Route::get('project/add', 'create')->name('projects.add');
+            Route::get('project/view/{project_id}', 'projectView')->name('projects.view');
             Route::post('project', 'store')->name('projects.store');
             Route::get('project/{id}/edit', 'edit')->name('projects.edit');
             Route::get('project/{id}/delete', 'destroy')->name('projects.delete');
+            Route::post('detail/save', 'saveDetail')->name('projects.detail');
         });
     });
 

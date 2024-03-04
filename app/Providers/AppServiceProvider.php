@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         $allPermissions = Permission::select('id','group_type','name','is_show')->get()->toArray();
-
+       
         // Share permissions with all views
         View::share('allPermissions', $allPermissions);
     }
