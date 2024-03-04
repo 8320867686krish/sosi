@@ -9,10 +9,9 @@ use Illuminate\Support\Facades\File;
 
 class ShipOwnersController extends Controller
 {
-    public function index()
+    public function index($ship_owner_id)
     {
         $owners = shipOwners::get();
-       
         $modifiedowners = $owners->map(function ($item) {
             $item->imagePath = asset("/images/ship/owner/{$item->image}");
             return $item;
