@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\File;
 
 class ShipOwnersController extends Controller
 {
-    public function index($ship_owner_id)
+    public function index()
     {
         $owners = shipOwners::get();
         $modifiedowners = $owners->map(function ($item) {

@@ -52,6 +52,9 @@
                                     <tr>
                                         <th>Sr.No</th>
                                         <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Identification</th>
 
                                     </tr>
                                 </thead>
