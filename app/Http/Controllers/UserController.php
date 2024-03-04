@@ -38,7 +38,7 @@ class UserController extends Controller
     {
         $currentUserRoleLevel = Auth::user()->roles->first()->level;
         $roles = Role::where('level', '>', $currentUserRoleLevel)->get();
-        return view('user.userAdd', ['roles' => $roles, 'button' => 'Add', 'head_title' => 'Add']);
+        return view('user.userAdd', ['roles' => $roles, 'button' => '<i class="fas fa-plus"></i>  Add', 'head_title' => 'Add']);
     }
 
     /**

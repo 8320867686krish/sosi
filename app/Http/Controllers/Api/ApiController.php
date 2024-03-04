@@ -276,14 +276,12 @@ class ApiController extends Controller
         try {
             $project = Projects::with('ship_owner:id,image')->get();
 
-            $hostwithHttp = request()->getSchemeAndHttpHost();
-
             $modifiedProjects = [];
 
             if ($project->count() > 0) {
-                $modifiedProjects = $project->map(function ($item) use ($hostwithHttp) {
+                $modifiedProjects = $project->map(function ($item) {
                     if (!empty($item->ship_owner->image)) {
-                        $item->ship_owner->imagePath = $hostwithHttp . '/images/ship/owner/' . $item->ship_owner->image;
+                        $item->ship_owner->imagePath = url() . '/images/ship/owner/' . $item->ship_owner->image;
                     }
                     return $item;
                 });

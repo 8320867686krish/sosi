@@ -22,7 +22,7 @@ class ProjectsController extends Controller
     public function create()
     {
         $owners = shipOwners::orderBy('id', 'desc')->get(['id', 'name', 'identification']);
-        return view('projects.projectAdd', ['head_title' => 'Add', 'button' => 'Add', 'owners' => $owners]);
+        return view('projects.projectAdd', ['head_title' => 'Add', 'button' => '<i class="fas fa-plus"></i>  Add', 'owners' => $owners]);
     }
 
     public function store(ProjectRequest $request)

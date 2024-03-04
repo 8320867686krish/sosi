@@ -95,9 +95,11 @@
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
                                         <label for="identification">Identification</label>
-                                        <input type="text" class="form-control @error('identification') is-invalid @enderror"
+                                        <input type="text"
+                                            class="form-control @error('identification') is-invalid @enderror"
                                             id="identification" name="identification" placeholder="Owner identification..."
-                                            autocomplete="off" onchange="removeInvalidClass(this)" value="{{ old('identification', $owner->identification ?? '') }}">
+                                            autocomplete="off" onchange="removeInvalidClass(this)"
+                                            value="{{ old('identification', $owner->identification ?? '') }}">
                                         @error('identification')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -105,21 +107,22 @@
                                 </div>
                             </div>
                             @if (isset($owner) && !empty($owner->imagePath))
-                                <img src="{{$owner->imagePath}}" alt="Image Not Found" class="img-thumbnail" width="15%">
+                                <img src="{{ $owner->imagePath }}" alt="Image Not Found" class="img-thumbnail"
+                                    width="15%">
                             @endif
                             <div class="row mt-3">
                                 <div class="col-sm-12 col-md-6">
-                                    <div class="form-group align-items-center d-flex">
-                                        <a href="{{ route('ship_owners') }}" type="button" class="align-middle"><i class="fas fa-arrow-left"></i>  <b>Back</b></a>
+                                    <div class="form-group">
+                                        <a href="{{ route('ship_owners') }}" type="button" class="btn pl-0"><i class="fas fa-arrow-left"></i> <b>Back</b></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <button class="btn btn-primary float-right btn-rounded formSubmitBtn" type="submit">{!! $button ?? 'Add' !!}</button>
+                                        <button class="btn btn-primary float-right btn-rounded formSubmitBtn"
+                                            type="submit">{!! $button ?? 'Add' !!}</button>
                                     </div>
                                 </div>
                             </div>
-
                         </form>
                     </div>
                 </div>

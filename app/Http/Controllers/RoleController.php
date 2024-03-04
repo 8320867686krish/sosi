@@ -23,7 +23,7 @@ class RoleController extends BaseController
      */
     public function create()
     {
-        return view('roles.create', ['head_title' => 'Add', 'button' => 'Add']);
+        return view('roles.create', ['head_title' => 'Add', 'button' => '<i class="fas fa-plus"></i>  Add']);
     }
 
     /**
