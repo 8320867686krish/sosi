@@ -12,6 +12,7 @@ class ShipOwnersController extends Controller
     public function index()
     {
         $owners = shipOwners::get();
+       
         $modifiedowners = $owners->map(function ($item) {
             $item->imagePath = asset("/images/ship/owner/{$item->image}");
             return $item;
@@ -55,7 +56,7 @@ class ShipOwnersController extends Controller
 
             $message = empty($id) ? "Owner added successfully" : "Owner updated successfully";
 
-            return redirect('shipOwners')->with('message', $message);
+            return redirect(url('shipOwners'))->with('message', $message);
         } catch (\Throwable $th) {
             return back()->withError($th->getMessage())->withInput();
         }

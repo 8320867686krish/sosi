@@ -50,14 +50,12 @@
                             <table class="table table-striped table-bordered first">
                                 <thead>
                                     <tr>
-                                        <th width="6%">Sr.No</th>
+                                        <th>Sr.No</th>
                                         <th>Name</th>
-                                        <th width="15%">Email</th>
-                                        <th width="12%">Phone</th>
-                                        <th width="12%">Address</th>
-                                        <th width="8%">Image</th>
-                                        <th width="12%">Identification</th>
-                                        <th width="5%">#</th>
+                                        <th >Email</th>
+                                        <th >Phone</th>
+                                        <th >Identification</th>
+                                        <th>#</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -68,8 +66,7 @@
                                                 <td>{{ ucfirst($owner->name) }}</td>
                                                 <td>{{ $owner->email }}</td>
                                                 <td>{{ ucfirst($owner->phone) }}</td>
-                                                <td>{{ $owner->address }}</td>
-                                                <td><img src="{{$owner->imagePath}}" alt="Image Not Found" class="img-thumbnail"></td>
+                                               
                                                 <td>{{ $owner->identification }}</td>
                                                 <td>
                                                     @can('ship_owners.edit')
@@ -83,6 +80,12 @@
                                                             class="ml-2"
                                                             onclick="return confirm('Are you sure you want to delete this owner ?');" title="Delete">
                                                             <i class="fas fa-trash-alt text-danger" style="font-size: 1rem !important;"></i>
+                                                        </a>
+                                                    @endcan
+                                                    @can('projects.read')
+                                                    <a href="{{url('projects/'.$owner->id)}}" class="ml-2"
+                                                             title="Delete">
+                                                            <i class="fas fas fa-list text-danger" style="font-size: 1rem !important;"></i>
                                                         </a>
                                                     @endcan
                                                 </td>
