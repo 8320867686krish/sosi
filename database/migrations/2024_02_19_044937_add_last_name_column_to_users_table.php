@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('last_name')->nullable()->after('name');
-            $table->boolean('isVerified')->default(0)->after('remember_token');
-            $table->boolean('isApp')->default(0)->after('isVerified')->comment('1=App, 0=Web');
+            $table->boolean('isVerified')->default(1)->after('remember_token');
         });
     }
 

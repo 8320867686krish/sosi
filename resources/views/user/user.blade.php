@@ -5,7 +5,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/buttons.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/select.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/fixedHeader.bootstrap4.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/libs/css/bootstrap4-toggle.min.css') }}">
+    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('assets/libs/css/bootstrap4-toggle.min.css') }}"> --}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/libs/css/switchButton.css') }}">
 @endsection
 
 @section('content')
@@ -71,10 +72,16 @@
                                                 </td>
                                                 <td>{{ ucfirst($user->roles[0]->name ?? '') }}</td>
                                                 <td>{{ $user->email }}</td>
-                                                <td><input type="checkbox" data-offstyle="danger" class="isVerified"
-                                                        name="isVerified" data-id="{{ $user->id }}"
-                                                        data-toggle="toggle" data-on="Enabled" data-off="Disabled"
-                                                        {{ $user->isVerified ? 'checked' : '' }}></td>
+                                                <td>
+                                                    {{-- <input type="checkbox" data-offstyle="danger" class="isVerified" name="isVerified" data-id="{{ $user->id }}" data-toggle="toggle" data-on="ON" data-off="OFF" {{ $user->isVerified ? 'checked' : '' }} data-style="ios"> --}}
+                                                    <label class="switch">
+                                                        <input class="switch-input" type="checkbox"
+                                                        {{ $user->isVerified ? 'checked' : '' }} data-id="{{$user->id}}">
+                                                        <span class="switch-label" data-on=""
+                                                            data-off=""></span>
+                                                        <span class="switch-handle"></span>
+                                                    </label>
+                                                </td>
                                                 <td class="text-center">
                                                     @can('users.edit')
                                                         <a href="{{ route('users.edit', ['id' => $user->id]) }}"
@@ -101,10 +108,11 @@
     <script src="{{ asset('assets/vendor/datatables/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/datatables/js/data-table.js') }}"></script>
     <script src="{{ asset('assets/libs/js/bootstrap4-toggle.min.js') }}"></script>
+    {{-- <script src="{{ asset('assets/vendor/inputmask/js/jquery.inputmask.bundle.js') }}"></script> --}}
 
     <script>
         $(document).ready(function() {
-            $('.isVerified').change(function() {
+            $('.switch-input').change(function() {
                 let isChecked = $(this).is(':checked');
                 let userId = $(this).data('id');
 

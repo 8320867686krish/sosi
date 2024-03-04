@@ -50,12 +50,12 @@
                             <table class="table table-striped table-bordered first">
                                 <thead>
                                     <tr>
-                                        <th>Sr.No</th>
+                                        <th width="6%">Sr.No</th>
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Phone</th>
                                         <th>Identification</th>
-
+                                        <th width="15%">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -66,7 +66,6 @@
                                                 <td>{{ ucfirst($owner->name) }}</td>
                                                 <td>{{ $owner->email }}</td>
                                                 <td>{{ ucfirst($owner->phone) }}</td>
-
                                                 <td>{{ $owner->identification }}</td>
                                                 <td>
                                                     @can('ship_owners.edit')
@@ -83,9 +82,8 @@
                                                         </a>
                                                     @endcan
                                                     @can('projects.read')
-                                                    <a href="{{url('projects/ships/'.$owner->id)}}" class="ml-2"
-                                                             title="Delete">
-                                                            <i class="fas fas fa-list text-danger" style="font-size: 1rem !important;"></i>
+                                                        <a href="{{url('projects/ships/'.$owner->id)}}" class="ml-2">
+                                                            <i class="fas fas fa-list" style="font-size: 1rem !important;"></i>
                                                         </a>
                                                     @endcan
                                                 </td>
