@@ -66,7 +66,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('can:projects')->group(function () {
         Route::controller(ProjectsController::class)->group(function () {
             Route::get('projects', 'index')->name('projects');
-            Route::get('projects/{ship_owner_id}', 'index')->name('projects.ship');
+            Route::get('projects/ships/{ship_owner_id}', 'index')->name('projects.ship');
             Route::get('project/add', 'create')->name('projects.add');
             Route::post('project', 'store')->name('projects.store');
             Route::get('project/{id}/edit', 'edit')->name('projects.edit');

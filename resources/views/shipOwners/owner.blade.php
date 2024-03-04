@@ -83,7 +83,7 @@
                                                         </a>
                                                     @endcan
                                                     @can('projects.read')
-                                                    <a href="{{url('projects/'.$owner->id)}}" class="ml-2"
+                                                    <a href="{{url('projects/ships/'.$owner->id)}}" class="ml-2"
                                                              title="Delete">
                                                             <i class="fas fas fa-list text-danger" style="font-size: 1rem !important;"></i>
                                                         </a>
