@@ -40,7 +40,7 @@
                                 <h3>Projects</h3>
                             </div>
                             <div class="col-6">
-                                @can('roles.add')
+                                @can('projects.add')
                                     <a href="{{ route('projects.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New
                                         Project</a>
                                 @endcan
@@ -86,6 +86,12 @@
                                                             onclick="return confirm('Are you sure you want to delete this project?');"
                                                             title="Delete">
                                                             <i class="fas fa-trash-alt  text-danger" style="font-size: 1rem"></i>
+                                                        </a>
+                                                    @endcan
+                                                    @can('projects.read')
+                                                        <a href="{{ route('projects.view', ['project_id' => $project->id]) }}"
+                                                            rel="noopener noreferrer" title="Edit">
+                                                            <i class="fas fa-eye  text-primary" style="font-size: 1rem"></i>
                                                         </a>
                                                     @endcan
                                                 </td>
