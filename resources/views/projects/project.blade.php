@@ -59,7 +59,7 @@
                                         <th>IHM Table</th>
                                         <th>Project No</th>
                                         <th width="15%">IMO No</th>
-                                        <th width="6%">#</th>
+                                        <th width="6%">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>

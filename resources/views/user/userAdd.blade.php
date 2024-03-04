@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/libs/css/bootstrap4-toggle.min.css') }}">
+    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('assets/libs/css/bootstrap4-toggle.min.css') }}"> --}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/libs/css/switchButton.css') }}">
 @endsection
 
 @section('content')
@@ -97,21 +98,34 @@
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     @if (isset($user))
-                                        <input type="checkbox" name="isVerified" data-offstyle="danger" data-toggle="toggle" data-on="Enabled" data-off="Disabled" {{ $user->isVerified ? 'checked' : '' }}>
+                                        {{-- <input type="checkbox" name="isVerified" data-offstyle="danger" data-toggle="toggle"
+                                            data-on="Enabled" data-off="Disabled" {{ $user->isVerified ? 'checked' : '' }}> --}}
+                                        <label class="switch">
+                                            <input class="switch-input" name="isVerified" type="checkbox"
+                                                {{ $user->isVerified ? 'checked' : '' }}>
+                                            <span class="switch-label" data-on="" data-off=""></span>
+                                            <span class="switch-handle"></span>
+                                        </label>
                                     @else
-                                        <input type="checkbox" name="isVerified" data-offstyle="danger" data-toggle="toggle" data-on="Enabled" data-off="Disabled" checked>
+                                        <label class="switch">
+                                            <input class="switch-input" name="isVerified" type="checkbox" checked>
+                                            <span class="switch-label" data-on="" data-off=""></span>
+                                            <span class="switch-handle"></span>
+                                        </label>
                                     @endif
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <a href="{{ route('users') }}" class="btn pl-0" type="button"><i class="fas fa-arrow-left"></i> <b>Back</b></a>
+                                        <a href="{{ route('users') }}" class="btn pl-0" type="button"><i
+                                                class="fas fa-arrow-left"></i> <b>Back</b></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <button class="btn btn-primary float-right btn-rounded formSubmitBtn" type="submit">{!! $button ?? '<i class="fas fa-plus"></i>  Add' !!}</button>
+                                        <button class="btn btn-primary float-right formSubmitBtn"
+                                            type="submit">{!! $button ?? '<i class="fas fa-plus"></i>  Add' !!}</button>
                                     </div>
                                 </div>
                             </div>

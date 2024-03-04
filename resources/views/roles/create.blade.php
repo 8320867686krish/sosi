@@ -94,7 +94,7 @@
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <button class="btn btn-primary float-right btn-rounded formSubmitBtn"
+                                        <button class="btn btn-primary float-right formSubmitBtn"
                                             type="submit">{!! $button ?? '<i class="fas fa-plus"></i>  Add' !!}</button>
                                     </div>
                                 </div>

@@ -55,7 +55,7 @@
                                         <th>Email</th>
                                         <th>Phone</th>
                                         <th>Identification</th>
-                                        <th width="15%">#</th>
+                                        <th width="15%">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
