@@ -312,7 +312,6 @@ class ApiController extends Controller
         }
     }
 
-
     // Surveyors Api
     public function getProjectSurveyors($project_id)
     {
