@@ -73,7 +73,6 @@
 
         .signature {
             margin-top: 30px;
-            text-align: center;
             color: #888;
         }
     </style>
