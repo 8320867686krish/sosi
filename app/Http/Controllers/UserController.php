@@ -74,6 +74,8 @@ class UserController extends Controller
             if (empty($id)) {
 
                 $userMailData = [
+                    'name'=> $user->name,
+                    'last_name' => $user->last_name,
                     'email' => $user->email,
                     'password' => $password,
                     'isAppAccess' => $checkPermission

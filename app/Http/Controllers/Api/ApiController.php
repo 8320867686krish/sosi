@@ -274,14 +274,14 @@ class ApiController extends Controller
     public function getProjectList()
     {
         try {
-            $project = Projects::with('ship_owner:id,image')->get();
+            $project = Projects::with('ship_owner:id,name,image')->get();
 
             $modifiedProjects = [];
 
             if ($project->count() > 0) {
                 $modifiedProjects = $project->map(function ($item) {
-                    if (!empty($item->ship_owner->image)) {
-                        $item->ship_owner->imagePath = url() . '/images/ship/owner/' . $item->ship_owner->image;
+                    if (isset($item->ship_owner->image) && !empty($item->ship_owner->image)) {
+                        $item->ship_owner->imagePath = url('public/images/ship/owner/') . '/' . $item->ship_owner->image;
                     }
                     return $item;
                 });
@@ -289,7 +289,7 @@ class ApiController extends Controller
 
             return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $modifiedProjects]);
         } catch (Throwable $th) {
-            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.','projectList'=>[]]);
+            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.', 'projectList' => []]);
         }
     }
 
@@ -310,7 +310,6 @@ class ApiController extends Controller
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.', 'shipParticular' => (object) []]);
         }
     }
-
 
     // Surveyors Api
     public function getProjectSurveyors($project_id)
