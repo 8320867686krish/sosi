@@ -42,7 +42,7 @@ return new class extends Migration
             $table->string('survey_location_name')->nullable('');
             $table->string('survey_location_address')->nullable('');
             $table->string('survey_type')->nullable('');
-            $table->date('survey_date')->nullable();
+            $table->string('survey_date',100)->nullable();
 
             $table->timestamps();
         });

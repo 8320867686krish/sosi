@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProjectDetailRequest;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Projects;
 use App\Models\shipOwners;
@@ -81,11 +82,10 @@ class ProjectsController extends Controller
             return back()->withError($th->getMessage())->withInput();
         }
     }
-    public function saveDetail(Request $request){
+    public function saveDetail(ProjectDetailRequest $request){
         $inputData = $request->input();
         unset($inputData['_token']);
         Projects::where(['id' => $inputData['id']])->update($inputData);
-
         return response()->json(['isStatus' => true, 'message' => 'successfully save details !!']);
 
     }
