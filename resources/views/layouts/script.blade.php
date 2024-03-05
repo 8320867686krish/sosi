@@ -2,5 +2,10 @@
 <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.js') }}"></script>
 <script src="{{ asset('assets/vendor/slimscroll/jquery.slimscroll.js') }}"></script>
 <script src="{{ asset('assets/libs/js/main-js.js') }}"></script>
+<script>
+    setTimeout(function() {
+        $('.alert-dismissible').fadeOut();
+    }, 15000);
+</script>
 @yield('js')
 @show

@@ -73,7 +73,7 @@ class LoginRequest extends FormRequest
             Auth::logout();
             request()->session()->invalidate();
             request()->session()->regenerateToken();
-        
+
             throw ValidationException::withMessages([
                 'autherror' => trans('You do not have permission to login at this time.'),
             ]);

@@ -73,6 +73,7 @@ Route::middleware('auth')->group(function () {
             Route::get('project/{id}/edit', 'edit')->name('projects.edit');
             Route::get('project/{id}/delete', 'destroy')->name('projects.delete');
             Route::post('detail/save', 'saveDetail')->name('projects.detail');
+            Route::post('detail/assignProject', 'assignProject')->name('projects.assign');
         });
     });
 

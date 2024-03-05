@@ -17,4 +17,8 @@ class Projects extends Model
         // return $this->belongsTo(shipOwners::class);
         return $this->belongsTo(shipOwners::class, 'ship_owners_id', 'id');
     }
+
+    public function project_teams(){
+        return $this->hasMany(ProjectTeam::class, 'project_id', 'id');
+    }
 }

@@ -36,6 +36,11 @@
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 @include('layouts.message')
+                <div class="alert alert-primary alert-dismissible fade show showSucessMsg" role="alert" style="display: none" ;>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
                 <div class="card">
                     <h4 class="card-header">
                         <div class="row">
@@ -125,7 +130,9 @@
                         "isVerified": isChecked ? 1 : 0
                     },
                     success: function(response) {
-                        console.log(response.message); // Display success message
+                        $(".showSucessMsg").text(response.message);
+                        $(".showSucessMsg").show();
+                        // console.log(response.message); // Display success message
                     },
                     error: function(xhr, status, error) {
                         console.error(error); // Log any errors

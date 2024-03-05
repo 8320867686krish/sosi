@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ProjectTeam extends Model
 {
     use HasFactory;
+
+    protected $table = "project_teams";
+
     protected $guarded = []; // This means no attributes are guarded
 
 }
