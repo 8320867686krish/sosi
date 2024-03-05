@@ -109,6 +109,10 @@ class ApiController extends Controller
                 return response()->json(['isStatus' => false, 'message' => 'This user is not verified. Please contact the administrator.']);
             }
 
+            if (!$user->hasPermissionTo('APP.access')) {
+                return response()->json(['isStatus' => false, 'message' => 'User does not have permission for app access.']);
+            }
+
             // Check if user is already logged in from another device
             // $existingToken = PersonalAccessToken::where('tokenable_id', $user->id)->delete();
             // if ($existingToken) {
@@ -118,16 +122,21 @@ class ApiController extends Controller
             // Create a new token
             $token = $user->createToken('ApiToken')->plainTextToken;
             // $token = $user->createToken($user->name . '-AuthToken', ['expires' => now()->addMinutes(2)])->plainTextToken;
+            $userData = $user->toArray();
+            foreach ($userData as $key => $value) {
+                $userData[$key] = $value ?? ''; // Replace null with empty string
+            }
 
             return response()->json([
                 'isStatus' => true,
                 'message' => 'User login successful.',
-                'user' => $user,
+                'user' =>   $userData,
                 'token' => $token,
             ]);
         } catch (ValidationException $e) {
             return response()->json(['isStatus' => false, 'error' => $e->getMessage()]);
         } catch (Throwable $th) {
+            print_r($th->getMessage());
             // Token creation failed
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }

@@ -69,8 +69,11 @@ class LoginRequest extends FormRequest
         // }
 
         $role = Auth()->user()->roles->first();
-        if (!isset($role->permissions)) {
-            Auth::logout(); // Log out the user if they don't have access
+        if (Auth::check() && !isset($role->permissions)) {
+            Auth::logout();
+            request()->session()->invalidate();
+            request()->session()->regenerateToken();
+        
             throw ValidationException::withMessages([
                 'autherror' => trans('You do not have permission to login at this time.'),
             ]);
@@ -78,7 +81,11 @@ class LoginRequest extends FormRequest
 
         $permissions = $role->permissions->pluck('name')->toArray();
         if (Auth::user()->can('APP.access') && count($permissions) == 2) {
-            Auth::logout(); // Log out the user if they don't have access  && in_array('APP.access', $permissions)
+            Auth::guard('web')->logout();
+
+            request()->session()->invalidate();
+
+            request()->session()->regenerateToken();
             throw ValidationException::withMessages([
                 'autherror' => trans('You cant access portal.'),
             ]);
