@@ -81,7 +81,7 @@
 
 <body>
     <div class="container">
-        <img class="card-img-top" src="{{ url('assets/images/welcome_mail_img.jpg') }}" alt="Welcome Image">
+        <img class="card-img-top" src="{{ url('public/assets/images/welcome_mail_img.jpg') }}" alt="Welcome Image">
         <h4 class="card-title">Hi
             {{ ucfirst($user['name'] ?: '') . ($user['last_name'] ? ' ' . ucfirst($user['last_name']) : '') }},</h4>
         <p class="card-text">As a token of our appreciation for your loyalty, we're excited to offer you an exclusive
