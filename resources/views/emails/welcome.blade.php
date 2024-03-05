@@ -7,71 +7,100 @@
     <title>Welcome Email</title>
     <style>
         /* styles.css */
-        .btn-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
         }
 
         .container {
             max-width: 600px;
-            margin: 0 auto;
+            margin: 20px auto;
             padding: 20px;
-        }
-
-        .card {
-            border: 1px solid #ccc;
+            background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 25px;
+        }
+
+        .card-img-top {
+            width: 100%;
+            border-radius: 8px;
         }
 
         .card-title {
             font-size: 24px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .credential-details {
             margin-bottom: 20px;
         }
 
-        .list-group-item {
-            border: none;
-            padding: 5px;
+        .credential-details p {
+            margin: 5px 0;
         }
 
-        .loginBtn{
+        .btn-container {
+            text-align: center;
+        }
+
+        .btn {
             color: #fff;
-            background-color: #5969ff;
-            border-color: #5969ff;
-            padding: 15px;
+            background-color: #017cc0;
+            border: none;
+            padding: 12px 20px;
             border-radius: 20px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #015e8e;
+        }
+
+        .mt-3 {
+            margin-top: 20px;
+        }
+
+        .signature {
+            margin-top: 30px;
+            text-align: center;
+            color: #888;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h2 class="card-title">Welcome to our platform!</h2>
-                        <p class="card-text">Here are your account details:</p>
-                        <ul class="list-group">
-                            <li class="list-group-item"><strong>Email:</strong> {{ $user['email'] }}</li>
-                            <li class="list-group-item"><strong>Password:</strong> {{ $user['password'] }}</li>
-                        </ul>
-                        <div class="btn-container">
-                            <a href="{{ route('login') }}" class="btn btn-primary loginBtn">Login</a>
-                        </div>
-                        @if ($user['isAppAccess'])
-                            <div class="btn-container">
-                                <a href="{{ route('login') }}" class="btn btn-primary loginBtn">Download App</a>
-                            </div>
-                        @endif
-                        <p class="card-text mt-3">If you have any questions, feel free to contact us.</p>
-                        <p class="card-text">Thanks,<br>{{ config('app.name') }}</p>
-                    </div>
-                </div>
-            </div>
+        <img class="card-img-top" src="{{ url('assets/images/welcome_mail_img.jpg') }}" alt="Welcome Image">
+        <h4 class="card-title">Hi
+            {{ ucfirst($user['name'] ?: '') . ($user['last_name'] ? ' ' . ucfirst($user['last_name']) : '') }},</h4>
+        <p class="card-text">As a token of our appreciation for your loyalty, we're excited to offer you an exclusive
+            opportunity.</p>
+        <div class="credential-details">
+            <h3>Below Your Credential Details:</h3>
+            <p><strong>Email:</strong> {{ $user['email'] }}</p>
+            <p><strong>Password:</strong> {{ $user['password'] }}</p>
         </div>
+        <div class="btn-container">
+            <a href="{{ route('login') }}" class="btn">Login</a>
+            @if ($user['isAppAccess'])
+                <a href="{{ route('login') }}" class="btn">Download App</a>
+            @endif
+        </div>
+        <p class="card-text mt-3">This exclusive offer is our way of saying thank you for being a valued member of our
+            community. Whether you've had your eye on that must-have item or you're planning to explore our latest
+            arrivals, now is the perfect time to treat yourself.</p>
+        <p class="signature">Best regards,<br>{{ config('app.name') }}</p>
     </div>
 </body>
 
