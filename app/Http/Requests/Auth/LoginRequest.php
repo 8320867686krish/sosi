@@ -69,12 +69,11 @@ class LoginRequest extends FormRequest
         // }
 
         $role = Auth()->user()->roles->first();
-        if (!isset($role->permissions)) {
-            Auth::guard('web')->logout();
-
+        if (Auth::check() && !isset($role->permissions)) {
+            Auth::logout();
             request()->session()->invalidate();
+            request()->session()->regenerateToken();
 
-            request()->session()->regenerateToken(); // Log out the user if they don't have access
             throw ValidationException::withMessages([
                 'autherror' => trans('You do not have permission to login at this time.'),
             ]);

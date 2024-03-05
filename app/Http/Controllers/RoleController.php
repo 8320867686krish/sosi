@@ -39,7 +39,10 @@ class RoleController extends BaseController
                 $permissions_main = array_keys($permissions);
                 $permissions_sub = array_values($permissions);
                 $merge_permission = array_merge($permissions_main, $permissions_sub);
+             
                 $role->syncPermissions($merge_permission);
+            }else{
+                $role->syncPermissions([]);
             }
 
             $message = empty($id) ? "Roles with permission added successfully" : "Roles with permission updated successfully";
