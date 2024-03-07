@@ -13,9 +13,8 @@ class Projects extends Model
 
     protected $guarded = []; // This means no attributes are guarded
 
-    public function ship_owner(){
-        // return $this->belongsTo(shipOwners::class);
-        return $this->belongsTo(shipOwners::class, 'ship_owners_id', 'id');
+    public function client(){
+        return $this->belongsTo(Client::class, 'client_id', 'id');
     }
 
     public function project_teams(){

@@ -4,20 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectDetailRequest;
 use App\Http\Requests\ProjectRequest;
+use App\Models\Client;
 use App\Models\Projects;
 use App\Models\ProjectTeam;
-use App\Models\shipOwners;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class ProjectsController extends Controller
 {
-    public function index($ship_owner_id = null)
+    public function index($client_id = null)
     {
-        $projects = Projects::with('ship_owner:id,name');
-        if(@$ship_owner_id){
-            $projects->where('ship_owners_id',$ship_owner_id);
+        $projects = Projects::with('client:id,name');
+        if (@$client_id) {
+            $projects->where('client_id', $client_id);
         }
         $projects = $projects->get();
         return view('projects.project', compact('projects'));
@@ -25,38 +25,35 @@ class ProjectsController extends Controller
 
     public function create()
     {
-        $owners = shipOwners::orderBy('id', 'desc')->get(['id', 'name', 'identification']);
-        return view('projects.projectAdd', ['head_title' => 'Add', 'button' => '<i class="fas fa-plus"></i>  Add', 'owners' => $owners]);
+        $clients = Client::orderBy('id', 'desc')->get(['id', 'name', 'identification']);
+        return view('projects.projectAdd', ['head_title' => 'Add', 'button' => 'Save', 'clients' => $clients]);
     }
 
-    public function projectView($project_id){
-        $owners = shipOwners::orderBy('id', 'desc')->get(['id', 'name', 'identification']);
+    public function projectView($project_id)
+    {
+        $clients = Client::orderBy('id', 'desc')->get(['id', 'name', 'identification']);
         $users = User::where('isVerified', 1)->get();
 
         $project = Projects::with('project_teams')->find($project_id);
         $project['user_id'] = $project->project_teams->pluck('user_id')->toArray();
+        $project->assign_date = $project->project_teams->pluck('assign_date')->unique()->values()->toArray();
+        $project->end_date = $project->project_teams->pluck('end_date')->unique()->values()->toArray();
 
         unset($project->project_teams);
 
         if (!Gate::allows('projects.edit')) {
-          $readonly = "readOnly";
-        }else{
+            $readonly = "readOnly";
+        } else {
             $readonly = "";
         }
-        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users'=>$users, 'owners' => $owners,'project'=>$project,'readonly'=>$readonly,'project_id'=>$project_id]);
-
+        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id]);
     }
+
     public function store(ProjectRequest $request)
     {
         try {
             $id = $request->input('id');
             $inputData = $request->input();
-
-            $ship_owner = shipOwners::where('id', $inputData['ship_owners_id'])->first(['id', 'identification']);
-
-            // if ($ship_owner->count() > 0) {
-            //     $inputData['project_no'] = "sosi_{$ship_owner->identification}_{$inputData['imo_number']}";
-            // }
 
             Projects::updateOrCreate(['id' => $id], $inputData);
 
@@ -68,13 +65,12 @@ class ProjectsController extends Controller
         }
     }
 
-    public function edit(string $id){
+    public function edit(string $id)
+    {
         try {
-            $owners = shipOwners::orderBy('id', 'desc')->get(['id', 'name', 'identification']);
+            $clients = Client::orderBy('id', 'desc')->get(['id', 'name', 'identification']);
             $project = Projects::find($id);
-
-            return view('projects.projectAdd', ['head_title' => 'Edit', 'button' => 'Update', 'owners' => $owners, 'project'=>$project]);
-
+            return view('projects.projectAdd', ['head_title' => 'Edit', 'button' => 'Update', 'clients' => $clients, 'project' => $project]);
         } catch (\Throwable $th) {
             return back()->withError($th->getMessage())->withInput();
         }
@@ -92,27 +88,28 @@ class ProjectsController extends Controller
         }
     }
 
-    public function saveDetail(ProjectDetailRequest $request){
+    public function saveDetail(ProjectDetailRequest $request)
+    {
         $inputData = $request->input();
         unset($inputData['_token']);
         Projects::where(['id' => $inputData['id']])->update($inputData);
         return response()->json(['isStatus' => true, 'message' => 'successfully save details !!']);
     }
 
-    public function assignProject(ProjectDetailRequest $request){
+    public function assignProject(ProjectDetailRequest $request)
+    {
         $inputData = $request->input();
 
-        if(@$inputData['user_id']){
-            foreach($inputData['user_id'] as $user_id) {
-                $count = ProjectTeam::where('user_id', $user_id)->where('project_id', $inputData['project_id'])->count();
-                if ($count <= 0) {
-                    ProjectTeam::create([
-                        'user_id' => $user_id,
-                        'project_id' => $inputData['project_id'],
-                        'assign_date' => $inputData['assign_date'],
-                        'end_date' => $inputData['end_date']
-                    ]);
-                }
+        if (@$inputData['user_id']) {
+            ProjectTeam::where('project_id', $inputData['project_id'])->delete();
+            foreach ($inputData['user_id'] as $user_id) {
+                ProjectTeam::create([
+                    'user_id' => $user_id,
+                    'project_id' => $inputData['project_id'],
+                    'assign_date' => $inputData['assign_date'],
+                    'end_date' => $inputData['end_date'],
+                    'isExpire' => 0
+                ]);
             }
         }
 

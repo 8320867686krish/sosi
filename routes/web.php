@@ -1,15 +1,12 @@
 <?php
 
+use App\Http\Controllers\ClientContoller;
 use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ShipOwnersController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\shipContoller;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,20 +50,20 @@ Route::middleware('auth')->group(function () {
         Route::get('permissions', [PermissionController::class, 'index'])->name('permissions');
     });
 
-    Route::middleware('can:ship_owners')->group(function () {
-        Route::controller(ShipOwnersController::class)->group(function () {
-            Route::get('shipOwners', 'index')->name('ship_owners');
-            Route::get('shipOwners/add', 'create')->name('ship_owners.add');
-            Route::post('shipOwners', 'store')->name('ship_owners.store');
-            Route::get('shipOwners/{id}/edit', 'edit')->name('ship_owners.edit');
-            Route::get('shipOwners/{id}/delete', 'destroy')->name('ship_owners.delete');
+    Route::middleware('can:clients')->group(function () {
+        Route::controller(ClientContoller::class)->group(function () {
+            Route::get('clients', 'index')->name('clients');
+            Route::get('clients/add', 'create')->name('clients.add');
+            Route::post('clients', 'store')->name('clients.store');
+            Route::get('clients/{id}/edit', 'edit')->name('clients.edit');
+            Route::get('clients/{id}/delete', 'destroy')->name('clients.delete');
         });
     });
 
     Route::middleware('can:projects')->group(function () {
         Route::controller(ProjectsController::class)->group(function () {
             Route::get('projects', 'index')->name('projects');
-            Route::get('projects/ships/{ship_owner_id}', 'index')->name('projects.ship');
+            Route::get('projects/client/{client_id}', 'index')->name('projects.client');
             Route::get('project/add', 'create')->name('projects.add');
             Route::get('project/view/{project_id}', 'projectView')->name('projects.view');
             Route::post('project', 'store')->name('projects.store');

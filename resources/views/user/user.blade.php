@@ -18,7 +18,7 @@
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
                     <h2 class="pageheader-title">User Management</h2>
-                    <div class="page-breadcrumb">
+                    {{-- <div class="page-breadcrumb">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">User</a></li>
@@ -26,7 +26,7 @@
                                 <!-- <li class="breadcrumb-item active" aria-current="page">Blank Pageheader</li> -->
                             </ol>
                         </nav>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -36,11 +36,7 @@
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 @include('layouts.message')
-                <div class="alert alert-primary alert-dismissible fade show showSucessMsg" role="alert" style="display: none" ;>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                <div class="showSucessMsg" style="display: none;"></div>
                 <div class="card">
                     <h4 class="card-header">
                         <div class="row">
@@ -81,9 +77,9 @@
                                                     {{-- <input type="checkbox" data-offstyle="danger" class="isVerified" name="isVerified" data-id="{{ $user->id }}" data-toggle="toggle" data-on="ON" data-off="OFF" {{ $user->isVerified ? 'checked' : '' }} data-style="ios"> --}}
                                                     <label class="switch">
                                                         <input class="switch-input" type="checkbox"
-                                                        {{ $user->isVerified ? 'checked' : '' }} data-id="{{$user->id}}">
-                                                        <span class="switch-label" data-on=""
-                                                            data-off=""></span>
+                                                            {{ $user->isVerified ? 'checked' : '' }}
+                                                            data-id="{{ $user->id }}">
+                                                        <span class="switch-label" data-on="" data-off=""></span>
                                                         <span class="switch-handle"></span>
                                                     </label>
                                                 </td>
@@ -113,10 +109,30 @@
     <script src="{{ asset('assets/vendor/datatables/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/datatables/js/data-table.js') }}"></script>
     <script src="{{ asset('assets/libs/js/bootstrap4-toggle.min.js') }}"></script>
-    {{-- <script src="{{ asset('assets/vendor/inputmask/js/jquery.inputmask.bundle.js') }}"></script> --}}
 
     <script>
         $(document).ready(function() {
+
+            let message = localStorage.getItem('message');
+            if (message) {
+                // Display the message on the page
+                let successMessage = `
+                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                        ${message}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>`;
+
+                $('.showSucessMsg').html(successMessage);
+
+                $('.showSucessMsg').html(successMessage);
+                // Display the .showSuccessMsg element
+                $('.showSucessMsg').fadeIn().delay(20000).fadeOut();
+                // Clear the message from localStorage
+                localStorage.removeItem('message');
+            }
+
             $('.switch-input').change(function() {
                 let isChecked = $(this).is(':checked');
                 let userId = $(this).data('id');
@@ -130,9 +146,16 @@
                         "isVerified": isChecked ? 1 : 0
                     },
                     success: function(response) {
-                        $(".showSucessMsg").text(response.message);
-                        $(".showSucessMsg").show();
-                        // console.log(response.message); // Display success message
+                        let successMessage = `
+                        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                            ${response.message}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>`;
+
+                        $(".showSucessMsg").html(successMessage);
+                        $('.showSucessMsg').fadeIn().delay(20000).fadeOut();
                     },
                     error: function(xhr, status, error) {
                         console.error(error); // Log any errors

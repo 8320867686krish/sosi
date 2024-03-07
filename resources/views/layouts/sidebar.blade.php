@@ -55,7 +55,7 @@
                                             $isActive = true;
                                         }
 
-                                        if(Request::segment(1) == $permission['name'] || $permission['name'] == 'ship_owners' && Request::segment(1) == 'shipOwners') {
+                                        if(Request::segment(1) == $permission['name']) {
                                             $isActive = true;
                                         }
                                     @endphp

@@ -9,7 +9,7 @@
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
                     <h2 class="pageheader-title">Project Management</h2>
-                    <div class="page-breadcrumb">
+                    {{-- <div class="page-breadcrumb">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('projects') }}"
@@ -18,7 +18,7 @@
                                         class="breadcrumb-link">{{ $head_title ?? 'Add' }}</a></li>
                             </ol>
                         </nav>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
         <!-- end pageheader -->
         <!-- ============================================================== -->
         <div class="row">
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="offset-xl-2 col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
                 @include('layouts.message')
                 <div class="card">
                     <h5 class="card-header">{{ $head_title ?? '' }} Projects</h5>
@@ -38,19 +38,21 @@
                             <div class="row">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="ship_owners_id">Ship Owner</label>
-                                        <select name="ship_owners_id" id="ship_owners_id" class="form-control">
-                                            <option value="">Select Ship Owner</option>
-                                            @if (isset($owners) && $owners->count() > 0)
-                                                @foreach ($owners as $owner)
-                                                    <option value="{{ $owner->id }}"
-                                                        data-identi="{{ $owner->identification }}"
-                                                        {{ old('ship_owners_id') == $owner->id || (isset($project) && $project->ship_owners_id == $owner->id) ? 'selected' : '' }}>
-                                                        {{ $owner->name }}
+                                        <label for="client_id">Client</label>
+                                        <select name="client_id" id="client_id" class="form-control">
+                                            <option value="">Select Client</option>
+                                            @if (isset($clients) && $clients->count() > 0)
+                                                @foreach ($clients as $client)
+                                                    <option value="{{ $client->id }}" data-identi="{{ $client->identification }}"
+                                                        {{ old('client_id') == $client->id || (isset($project) && $project->client_id == $client->id) ? 'selected' : '' }}>
+                                                        {{ $client->name }}
                                                     </option>
                                                 @endforeach
                                             @endif
                                         </select>
+                                        @error('client_id')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
@@ -161,14 +163,14 @@
         // }
 
         $(document).ready(function() {
-            var ship_identi = $("#ship_owners_id").find('option:selected').data('identi');
+            var ship_identi = $("#client_id").find('option:selected').data('identi');
             var imo = $('#imo_number').val();
 
             $('#imo_number').blur(function() {
                 imo = $(this).val();
                 $("#project_no").val("sosi/" + ship_identi + "/" + imo);
             });
-            $('#ship_owners_id').change(function() {
+            $('#client_id').change(function() {
                 ship_identi = $(this).find('option:selected').data('identi');
                 $("#project_no").val("sosi/" + ship_identi + (imo ? "/" + imo : ""));
             })

@@ -13,7 +13,7 @@
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
                     <h2 class="pageheader-title">Project Management</h2>
-                    <div class="page-breadcrumb">
+                    {{-- <div class="page-breadcrumb">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('projects') }}"
@@ -22,7 +22,7 @@
                                         class="breadcrumb-link">{{ $head_title ?? 'Ship Particulars' }}</a></li>
                             </ol>
                         </nav>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -30,7 +30,7 @@
         <!-- end pageheader -->
         <!-- ============================================================== -->
         <div class="row">
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="offset-xl-2 col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
                 @include('layouts.message')
                 <div class="card">
                     <h5 class="card-header">{{ $head_title ?? '' }} Projects</h5>
@@ -43,7 +43,6 @@
                         <form method="post" action="{{ route('projects.store') }}" class="needs-validation" novalidate
                             id="projectForm">
                             @csrf
-
                             <input type="hidden" name="id" value="{{ $project->id ?? '' }}">
                             <div class="row">
                                 <div class="col-sm-12 col-md-4">
@@ -72,18 +71,15 @@
                                 </div>
                                 <div class="col-sm-12 col-md-4">
                                     <div class="form-group">
-                                        <label for="ship_owners_id">Ship Owner</label>
-                                        <select name="ship_owners_id" id="ship_owners_id" class="form-control"
-                                            {{ $readonly }}>
-                                            <option value="" {{ empty($readonly) ? 'disabled' : '' }}>Select Ship
-                                                Owner</option>
-                                            @if (isset($owners) && $owners->count() > 0)
-                                                @foreach ($owners as $owner)
-                                                    <option value="{{ $owner->id }}"
-                                                        data-identi="{{ $owner->identification }}"
-                                                        {{ old('ship_owners_id') == $owner->id || (isset($project) && $project->ship_owners_id == $owner->id) ? 'selected' : '' }}
+                                        <label for="client_id">Ship Owner</label>
+                                        <select name="client_id" id="client_id" class="form-control" {{ $readonly }}>
+                                            <option value="" {{ empty($readonly) ? 'disabled' : '' }}>Select Client</option>
+                                            @if (isset($clients) && $clients->count() > 0)
+                                                @foreach ($clients as $client)
+                                                    <option value="{{ $client->id }}" data-identi="{{ $client->identification }}"
+                                                        {{ old('client_id') == $client->id || (isset($project) && $project->client_id == $client->id) ? 'selected' : '' }}
                                                         {{ empty($readonly) ? '' : 'disabled' }}>
-                                                        {{ $owner->name }}
+                                                        {{ $client->name }}
                                                     </option>
                                                 @endforeach
                                             @endif
@@ -219,8 +215,6 @@
                             </div>
 
                             <div class="row mt-3">
-
-
                                 <div class="col-sm-12 col-md-4">
                                     <div class="form-group">
                                         <label for="gross_tonnage">Port Of Registry</label>
@@ -260,9 +254,7 @@
                                         @enderror
                                     </div>
                                 </div>
-
                             </div>
-
 
                             <div class="row mt-3">
                                 <div class="col-sm-12 col-md-6">
@@ -287,7 +279,7 @@
         </div>
 
         <div class="row">
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="offset-xl-2 col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="card">
                     <h5 class="card-header">Assign Project</h5>
                     <div class="card-body">
@@ -323,29 +315,20 @@
                                 <div class="col-sm-12 col-md-4">
                                     <div class="form-group">
                                         <label for="assign_date">Assign Date</label>
-                                        <input type="date"
-                                            class="form-control @error('assign_date') is-invalid @enderror"
-                                            id="assign_date"
-                                            value="{{ old('assign_date', $project->assign_date ?? '') }}"
-                                            name="assign_date" autocomplete="off" onchange="removeInvalidClass(this)"
-                                            {{ $readonly }}>
+                                        <input type="date" class="form-control @error('assign_date') is-invalid @enderror" id="assign_date" value="{{ old('assign_date', $project->assign_date[0] ?? '') }}" name="assign_date" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }} >
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-4">
                                     <div class="form-group">
                                         <label for="assign_date">End Date</label>
-                                        <input type="date"
-                                            class="form-control @error('end_date') is-invalid @enderror" id="end_date"
-                                            value="{{ old('end_date', $project->end_date ?? '') }}" name="end_date"
-                                            autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        <input type="date" class="form-control @error('end_date') is-invalid @enderror" id="end_date" value="{{ old('end_date', $project->end_date[0] ?? '') }}" name="end_date" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }} >
                                     </div>
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i
-                                                class="fas fa-arrow-left"></i> <b>Back</b></a>
+                                        <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i class="fas fa-arrow-left"></i> <b>Back</b></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
@@ -364,120 +347,7 @@
         </div>
 
         <div class="row">
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                @include('layouts.message')
-                <div class="card">
-                    <h5 class="card-header"> General Information</h5>
-                    <div class="card-body">
-                        <div class="alert alert-success sucessgenralMsg" role="alert" style="display: none" ;>
-                            Save Successfully!!<a href="#" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </a>
-                        </div>
-                        <form method="post" action="#" class="needs-validation" novalidate id="genralForm">
-                            @csrf
-
-                            <input type="hidden" name="id" value="{{ $project->id ?? '' }}">
-                            <div class="row">
-                                <div class="col-sm-12 col-md-4">
-                                    <div class="form-group">
-                                        <label for="project_no">Project Nuumber</label>
-                                        <input type="text"
-                                            class="form-control @error('project_no') is-invalid @enderror"
-                                            id="project_no" value="{{ old('project_no', $project->project_no ?? '') }}"
-                                            name="project_no" placeholder="Project Nuumber..." autocomplete="off"
-                                            onchange="removeInvalidClass(this)" readonly>
-
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 col-md-4">
-                                    <div class="form-group">
-                                        <label for="ihm_table">IHM Table</label>
-                                        <select class="form-control @error('ihm_table') is-invalid @enderror"
-                                            id="ihm_table" name="ihm_table" onchange="removeInvalidClass(this)"
-                                            {{ $readonly ? 'disabled' : '' }}>
-                                            <option value="">Select IHM</option>
-                                            <option value="IHM Part 1"
-                                                {{ old('ihm_table') == 'IHM Part 1' || (isset($project) && $project->ihm_table == 'IHM Part 1') ? 'selected' : '' }}>
-                                                IHM Part 1</option>
-                                            <option value="IHM Part 2&3"
-                                                {{ old('ihm_table') == 'IHM Part 2&3' || (isset($project) && $project->ihm_table == 'IHM Part 2&3') ? 'selected' : '' }}>
-                                                IHM Part 2&3</option>
-                                            <option value="IHM Gap Analysis"
-                                                {{ old('ihm_table') == 'IHM Gap Analysis' || (isset($project) && $project->ihm_table == 'IHM Gap Analysis') ? 'selected' : '' }}>
-                                                IHM Gap Analysis</option>
-                                            <option value="IHM Additional Sampling"
-                                                {{ old('ihm_table') == 'IHM Additional Sampling' || (isset($project) && $project->ihm_table == 'IHM Additional Sampling') ? 'selected' : '' }}>
-                                                IHM Additional Sampling</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-12 col-md-4">
-                                    <div class="form-group">
-                                        <label for="additional_hazmats">Additional Hazmats</label>
-                                        <input type="text"
-                                            class="form-control @error('additional_hazmats') is-invalid @enderror"
-                                            id="additional_hazmats"
-                                            value="{{ old('additional_hazmats', $project->additional_hazmats ?? '') }}"
-                                            name="additional_hazmats" placeholder="Additional Hazmats..."
-                                            autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
-
-                                    </div>
-                                </div>
-
-
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-sm-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="client_name">Client Name</label>
-                                        <input type="text"
-                                            class="form-control @error('client_name') is-invalid @enderror"
-                                            id="client_name" name="client_name"
-                                            value="{{ old('client_name', $project->client_name ?? '') }}"
-                                            placeholder="Client Name..." autocomplete="off"
-                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
-
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="manager_name">Client Details</label>
-                                        <input type="text"
-                                            class="form-control @error('client_details') is-invalid @enderror"
-                                            id="manager_name"
-                                            value="{{ old('client_details', $project->client_details ?? '') }}"
-                                            name="client_details" placeholder="Manager Details.." autocomplete="off"
-                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-sm-12 col-md-6">
-                                    <div class="form-group">
-                                        <a href="{{ route('projects') }}" class="btn btn-info btn-rounded formBackBtn"
-                                            type="button">Back</a>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 col-md-6">
-                                    <div class="form-group">
-                                        @can('projects.edit')
-                                            <button class="btn btn-primary float-right btn-rounded formgenralButton"
-                                                type="button" style="display:none">Edit</button>
-                                        @endcan
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="offset-xl-2 col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
                 @include('layouts.message')
                 <div class="card">
                     <h5 class="card-header">Survey Information</h5>
@@ -567,7 +437,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 @endsection
 
@@ -588,14 +457,14 @@
                 $('.alert-success').fadeOut();
             }, 15000);
 
-            var ship_identi = $("#ship_owners_id").find('option:selected').data('identi');
+            var ship_identi = $("#client_id").find('option:selected').data('identi');
             var imo = $('#imo_number').val();
 
             $('#imo_number').blur(function() {
                 imo = $(this).val();
                 $("#project_no").val("sosi/" + ship_identi + "/" + imo);
             });
-            $('#ship_owners_id').change(function() {
+            $('#client_id').change(function() {
                 ship_identi = $(this).find('option:selected').data('identi');
                 $("#project_no").val("sosi/" + ship_identi + (imo ? "/" + imo : ""));
             })

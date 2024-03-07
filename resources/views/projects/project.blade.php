@@ -15,15 +15,7 @@
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
-                    <h2 class="pageheader-title">Project Management</h2>
-                    <div class="page-breadcrumb">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item active"><a href="#" class="breadcrumb-link">Project</a>
-                                </li>
-                            </ol>
-                        </nav>
-                    </div>
+                    <h2>Project Management</h2>
                 </div>
             </div>
         </div>
@@ -31,82 +23,52 @@
         <!-- end pageheader -->
         <!-- ============================================================== -->
         <div class="row">
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="col-12">
                 @include('layouts.message')
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-6">
-                                <h3>Projects</h3>
-                            </div>
-                            <div class="col-6">
-                                @can('projects.add')
-                                    <a href="{{ route('projects.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New
-                                        Project</a>
-                                @endcan
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered first">
-                                <thead>
-                                    <tr>
-                                        <th width="8%">Sr.No</th>
-                                        <th>Owner Name</th>
-                                        <th>Ship Name</th>
-                                        <th>Ship Type</th>
-                                        <th>IHM Table</th>
-                                        <th>Project No</th>
-                                        <th width="15%">IMO No</th>
-                                        <th width="6%">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (isset($projects) && $projects->count() > 0)
-                                        @foreach ($projects as $project)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ ucfirst($project->ship_owner->name) }}</td>
-                                                <td>{{ ucfirst($project->ship_name) }}</td>
-                                                <td>{{ $project->ship_type }}</td>
-                                                <td>{{ $project->ihm_table }}</td>
-                                                <td>{{ $project->project_no }}</td>
-                                                <td>{{ $project->imo_number }}</td>
-                                                <td>
-                                                    @can('projects.edit')
-                                                        <a href="{{ route('projects.edit', ['id' => $project->id]) }}"
-                                                            rel="noopener noreferrer" title="Edit">
-                                                            <i class="fas fa-edit  text-primary" style="font-size: 1rem"></i>
-                                                        </a>
-                                                    @endcan
-                                                    @can('projects.remove')
-                                                        <a href="{{ route('projects.delete', ['id' => $project->id]) }}"
-                                                            class="ml-2"
-                                                            onclick="return confirm('Are you sure you want to delete this project?');"
-                                                            title="Delete">
-                                                            <i class="fas fa-trash-alt  text-danger" style="font-size: 1rem"></i>
-                                                        </a>
-                                                    @endcan
-                                                    @can('projects.read')
-                                                        <a href="{{ route('projects.view', ['project_id' => $project->id]) }}"
-                                                            rel="noopener noreferrer" title="Edit">
-                                                            <i class="fas fa-eye  text-primary" style="font-size: 1rem"></i>
-                                                        </a>
-                                                    @endcan
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @endif
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
             </div>
+            @if (isset($projects) && $projects->count() > 0)
+                @foreach ($projects as $project)
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <div class="card campaign-card text-center">
+                            <div class="card-body">
+                                <div class="campaign-img">
+                                    <img src="{{ asset('assets/images/dribbble.png') }}" alt="user" class="user-avatar-xl">
+                                </div>
+                                <div class="campaign-info">
+                                    <h3 class="mb-1">{{ ucfirst($project->ship_name) }}</h3>
+                                    <p class="mb-3">IMO Number:<span class="text-dark font-medium ml-2">{{ $project->imo_number }}</span></p>
+                                    <p class="mb-1">Manager: <span class="text-dark font-medium ml-2">{{ ucwords($project->client->name ?? '') }}</span></p>
+                                    <p>Project No.:<span class="text-dark font-medium ml-2">{{ $project->project_no }}</span>
+                                    </p>
+                                    @can('projects.edit')
+                                        <a href="{{ route('projects.edit', ['id' => $project->id]) }}" rel="noopener noreferrer"
+                                            title="Edit">
+                                            <i class="fas fa-edit fa-sm text-primary"></i>
+                                        </a>
+                                    @endcan
+                                    @can('projects.remove')
+                                        <a href="{{ route('projects.delete', ['id' => $project->id]) }}" class="ml-2"
+                                            onclick="return confirm('Are you sure you want to delete this project?');"
+                                            title="Delete">
+                                            <i class="fas fa-trash-alt fa-sm text-danger"></i>
+                                        </a>
+                                    @endcan
+                                    @can('projects.read')
+                                        <a href="{{ route('projects.view', ['project_id' => $project->id]) }}"
+                                            rel="noopener noreferrer" title="View" class="ml-2">
+                                            <i class="fas fa-eye fa-sm text-info"></i>
+                                        </a>
+                                    @endcan
+                                    {{-- <a href="#"><i class="fab fa-twitter-square fa-sm twitter-color"></i> </a><a href="#"><i class="fab fa-snapchat-square fa-sm snapchat-color"></i></a> --}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
         </div>
-    @stop
+    </div>
+@endsection
 
     @section('js')
         <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
