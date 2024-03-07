@@ -22,7 +22,7 @@ class ProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ship_owners_id' => 'required',
+            'client_id' => 'required',
             'ship_name' => 'required',
             'imo_number' => [
                 'required',

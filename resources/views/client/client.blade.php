@@ -15,11 +15,11 @@
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
-                    <h2 class="pageheader-title">Owner Management</h2>
+                    <h2 class="pageheader-title">Client Management</h2>
                     <div class="page-breadcrumb">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item active"><a href="#" class="breadcrumb-link">Owner</a></li>
+                                <li class="breadcrumb-item active"><a href="#" class="breadcrumb-link">Client</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -36,11 +36,11 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-6">
-                                <h3>Ship Owner</h3>
+                                <h3>Client List</h3>
                             </div>
                             <div class="col-6">
-                                @can('ship_owners.add')
-                                    <a href="{{ route('ship_owners.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New Owner</a>
+                                @can('clients.add')
+                                    <a href="{{ route('clients.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New Client</a>
                                 @endcan
                             </div>
                         </div>
@@ -59,30 +59,34 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (isset($owners) && $owners->count() > 0)
-                                        @foreach ($owners as $owner)
+                                    @if (isset($clients) && $clients->count() > 0)
+                                        @foreach ($clients as $client)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ ucfirst($owner->name) }}</td>
-                                                <td>{{ $owner->email }}</td>
-                                                <td>{{ ucfirst($owner->phone) }}</td>
-                                                <td>{{ $owner->identification }}</td>
+                                                <td>{{ ucwords($client->name) }}</td>
+                                                <td>{{ $client->email }}</td>
+                                                <td>{{ $client->phone }}</td>
+                                                <td>{{ $client->identification }}</td>
                                                 <td>
-                                                    @can('ship_owners.edit')
-                                                        <a href="{{ route('ship_owners.edit', ['id' => $owner->id]) }}"
+                                                    @can('clients.edit')
+                                                        <a href="{{ route('clients.edit', ['id' => $client->id]) }}"
                                                             rel="noopener noreferrer" title="Edit">
-                                                            <i class="fas fa-edit text-primary" style="font-size: 1rem !important;"></i>
+                                                            <i class="fas fa-edit text-primary"
+                                                                style="font-size: 1rem !important;"></i>
                                                         </a>
                                                     @endcan
-                                                    @can('ship_owners.remove')
-                                                        <a href="{{ route('ship_owners.delete', ['id' => $owner->id]) }}"
+                                                    @can('clients.remove')
+                                                        <a href="{{ route('clients.delete', ['id' => $client->id]) }}"
                                                             class="ml-2"
-                                                            onclick="return confirm('Are you sure you want to delete this owner ?');" title="Delete">
-                                                            <i class="fas fa-trash-alt text-danger" style="font-size: 1rem !important;"></i>
+                                                            onclick="return confirm('Are you sure you want to delete this client ?');"
+                                                            title="Delete">
+                                                            <i class="fas fa-trash-alt text-danger"
+                                                                style="font-size: 1rem !important;"></i>
                                                         </a>
                                                     @endcan
                                                     @can('projects.read')
-                                                        <a href="{{url('projects/ships/'.$owner->id)}}" class="ml-2">
+                                                        <a href="{{ route('projects.client', ['client_id' => $client->id]) }}"
+                                                            class="ml-2">
                                                             <i class="fas fas fa-list" style="font-size: 1rem !important;"></i>
                                                         </a>
                                                     @endcan

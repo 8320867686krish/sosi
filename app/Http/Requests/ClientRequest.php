@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ShipOwnerRequest extends FormRequest
+class ClientRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,12 +23,13 @@ class ShipOwnerRequest extends FormRequest
     {
         return [
             'name' => 'required|max:254',
-            'email' => 'required|email|unique:clients,email,'.$this->id,
+            'email' => 'required|email|unique:clients,email,' . $this->id,
             'phone' => 'required|numeric|digits:10',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'identification' => 'required|unique:ship_owners,identification,'.$this->id,
+            'identification' => 'required|unique:clients,identification,' . $this->id,
         ];
     }
+
     public function messages(): array
     {
         return [

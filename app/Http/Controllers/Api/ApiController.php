@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\shipOwners;
 use App\Models\Projects;
 use App\Models\ProjectSurveyor;
 use App\Models\User;
@@ -270,27 +269,17 @@ class ApiController extends Controller
         }
     }
 
-    public function getshipOwnersList()
-    {
-        try {
-            $owners = shipOwners::get(['id', 'name']);
-            return $this->sendResponse($owners, 'Owner list retrieved successfully', 'ownerList');
-        } catch (Throwable $th) {
-            return $this->sendError($th->getMessage());
-        }
-    }
-
     public function getProjectList()
     {
         try {
-            $project = Projects::with('ship_owner:id,name,image')->get();
+            $project = Projects::with('client:id,name,image')->get();
 
             $modifiedProjects = [];
 
             if ($project->count() > 0) {
                 $modifiedProjects = $project->map(function ($item) {
-                    if (isset($item->ship_owner->image) && !empty($item->ship_owner->image)) {
-                        $item->ship_owner->imagePath = url('public/images/ship/owner/') . '/' . $item->ship_owner->image;
+                    if (isset($item->client->image) && !empty($item->client->image)) {
+                        $item->client->imagePath = url('public/images/client/') . '/' . $item->client->image;
                     }
                     return $item;
                 });
@@ -306,7 +295,7 @@ class ApiController extends Controller
     public function getShipDetail($project_id)
     {
         try {
-            $project = Projects::with('ship_owner:name,address,id')->where('id', $project_id)->first()->toarray();
+            $project = Projects::with('client:name,address,id')->where('id', $project_id)->first()->toarray();
             foreach ($project as $key => $value) {
                 if ($value === null) {
                     $project[$key] = '';

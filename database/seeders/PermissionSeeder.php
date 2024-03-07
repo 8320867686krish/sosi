@@ -19,7 +19,7 @@ class PermissionSeeder extends Seeder
                 'actions' => [],
                 'is_show' => 0,
             ],
-            'ship_owners' => [
+            'clients' => [
                 'actions' => ['read' => 0, 'add' => 0,'edit' => 0, 'remove' => 0],
                 "is_show" => 1
             ],

@@ -21,9 +21,14 @@ class UserController extends Controller
         try {
             $role_id = Auth::user()->roles->first()->level;
 
-            $users = User::whereHas('roles', function ($query) use ($role_id) {
-                $query->where('level', '>', $role_id)->orderBy('level', 'asc');
-            })->get();
+            if($role_id != 1){
+                $users = User::whereHas('roles', function ($query) use ($role_id) {
+                    $query->where('level', '>', $role_id)->orderBy('level', 'asc');
+                })->get();
+            } else {
+                $users = User::get();
+            }
+
 
             return view('user.user', ['users' => $users]);
         } catch (\Throwable $th) {
@@ -37,8 +42,14 @@ class UserController extends Controller
     public function create()
     {
         $currentUserRoleLevel = Auth::user()->roles->first()->level;
-        $roles = Role::where('level', '>', $currentUserRoleLevel)->get();
-        return view('user.userAdd', ['roles' => $roles, 'button' => '<i class="fas fa-plus"></i>  Add', 'head_title' => 'Add']);
+
+        if($currentUserRoleLevel != 1){
+            $roles = Role::where('level', '>', $currentUserRoleLevel)->get();
+        }else{
+            $roles = Role::get();
+        }
+
+        return view('user.userAdd', ['roles' => $roles, 'button' => 'Save', 'head_title' => 'Add']);
     }
 
     /**
@@ -81,20 +92,22 @@ class UserController extends Controller
                     'isAppAccess' => $checkPermission
                 ];
 
-                // Mail::to($user->email)->send(new UserWelcomeMail($userMailData));
-                // Send welcome email
                 if ($this->sendWelcomeEmail($userMailData)) {
-                    return redirect('users')->with('message', 'User created successfully. Welcome email sent.');
+                    // return redirect('users')->with('message', 'User created successfully. Welcome email sent.');
+                    return response()->json(['isStatus' => true, 'message' => 'User created and welcome email sent successfully.']);
                 } else {
-                    return redirect('users')->with('message', 'User created successfully, but failed to send welcome email.');
+                    // return redirect('users')->with('message', 'User created successfully, but failed to send welcome email.');
+                    return response()->json(['isStatus' => true, 'message' => 'User created successfully, but failed to send welcome email.']);
                 }
             }
 
             $message = empty($id) ? "User created successfully" : "User updated successfully";
 
-            return redirect('users')->with('message', $message);
+            // return redirect('users')->with('message', $message);
+            return response()->json(['isStatus' => true, 'message' => $message]);
         } catch (\Throwable $th) {
-            return back()->withError($th->getMessage())->withInput();
+            // return back()->withError($th->getMessage())->withInput();
+            return response()->json(['isStatus' => false, 'message' => $th->getMessage()]);
         }
     }
 

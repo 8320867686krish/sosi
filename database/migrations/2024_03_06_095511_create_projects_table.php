@@ -13,37 +13,31 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('ship_owners_id')->nullable();
-            $table->foreign('ship_owners_id')
-                ->references('id')
-                ->on('ship_owners')
-                ->onDelete('set null');
+            $table->unsignedBigInteger('client_id');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->string('ship_name')->nullable();
             $table->string('ship_type')->nullable();
             $table->string('ihm_table', 50)->nullable();
             $table->string('project_no')->nullable();
             $table->string('imo_number')->nullable()->unique();
             $table->string('manager_name')->nullable();
-            $table->string('manager_details')->nullable('');
-            $table->string('dimensions')->nullable('');
-            $table->string('client_name')->default('');
-            $table->string('client_details')->default('');
-            $table->string('builder_name')->nullable('');
+            $table->string('manager_details')->nullable();
+            $table->string('dimensions')->nullable();
+            $table->string('builder_name')->nullable();
             $table->string('builder_details')->default('');
             $table->string('build_date')->default('');
             $table->string('port_of_registry')->default('');
             $table->string('gross_tonnage')->nullable();
             $table->string('delivery_date')->default('');
-            $table->string('flag')->nullable('');
+            $table->string('flag')->nullable();
             $table->string('image')->nullable();
-            $table->string('vessal_class')->default('');
+            $table->string('vessel_class')->default('');
             $table->string('ihm_class')->default('');
             $table->string('additional_hazmats')->default('');
-            $table->string('survey_location_name')->nullable('');
-            $table->string('survey_location_address')->nullable('');
-            $table->string('survey_type')->nullable('');
-            $table->string('survey_date',100)->nullable();
-
+            $table->string('survey_location_name')->nullable();
+            $table->string('survey_location_address')->nullable();
+            $table->string('survey_type')->nullable();
+            $table->date('survey_date')->nullable();
             $table->timestamps();
         });
     }
