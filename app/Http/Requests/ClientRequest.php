@@ -22,24 +22,38 @@ class ClientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:254',
-            'email' => 'required|email|unique:clients,email,' . $this->id,
-            'phone' => 'required|numeric|digits:10',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'identification' => 'required|unique:clients,identification,' . $this->id,
+            'manager_name' => 'required|max:254',
+            'manager_email' => 'required|email|unique:clients,manager_email,' . $this->id,
+            'manager_phone' => 'required|numeric|digits:10',
+            'manager_contact_person_name' => 'required|max:254',
+            'manager_contact_person_email' => 'required|email',
+            'manager_contact_person_phone' => 'required|numeric|digits:10',
+            'rpsl' => 'required|max:254',
+            'manager_website' => 'required|url',
+            'manager_tax_information' => 'required|max:254',
+            'manager_address' => 'required',
+            'manager_logo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'manager_initials' => 'required|unique:clients,manager_initials,' . $this->id,
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'please enter name',
-            'email.required' => 'please enter email',
-            'email.unique' => 'please enter unique email',
-            'phone.required' => 'please enter phone',
-            'image.required' => 'please select image',
-            'identification.required' => 'plese enter identification',
-            'identification.unique' => 'please enter unique identification'
+            'manager_name.required' => 'please enter name',
+            'manager_email.required' => 'please enter email',
+            'manager_email.unique' => 'please enter unique email',
+            'manager_phone.required' => 'please enter phone',
+            'manager_contact_person_name.required' => 'please enter contact person name',
+            'manager_contact_person_email.required' => 'please enter contact person email',
+            'manager_contact_person_phone.required' => 'please enter contact person phone',
+            'rpsl.required' => 'please enter rpsl',
+            'manager_website.required' => 'please enter website',
+            'manager_tax_information.required' => 'please enter tax information',
+            'manager_address.required' => 'please enter address',
+            'manager_logo.required' => 'please select logo',
+            'manager_initials.required' => 'plese enter manager initials',
+            'manager_initials.unique' => 'please enter unique manager initials'
         ];
     }
 }

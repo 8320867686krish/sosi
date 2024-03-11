@@ -30,30 +30,37 @@ class ClientContoller extends Controller
     /**
      * Store a newly created resource in storage.
      */
-
-    public function store(Request $request)
+    public function store(ClientRequest $request)
     {
-        print_r($request->file('manager_logo'));
-        dd($request->file('owner_logo'));
         try {
             $id = $request->input('id');
-            $inputData = $request->input();
+            $inputData = $request->input(); // Assuming validation rules are defined in ClientRequest
 
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
-                // Use the move method to save the image
-                $image->move(public_path('images/client'), $imageName);
-                $inputData['image'] = $imageName;
-
-                // Delete old image if exists
-                $oldImage = Client::where('id', $id)->value('image');
-                if ($oldImage && file_exists(public_path('images/client/' . $oldImage))) {
-                    unlink(public_path('images/client/' . $oldImage));
+            // Handle manager logo
+            if ($request->hasFile('manager_logo')) {
+                $inputData['manager_logo'] = $this->uploadLogo($request->file('manager_logo'));
+                // If 'same_as_above' is checked, set owner_logo too
+                if ($request->has('same_as_above')) {
+                    $inputData['owner_logo'] = $inputData['manager_logo'];
                 }
             }
 
-            Client::updateOrCreate(['id' => $id], $inputData);
+            // Handle owner logo
+            if ($request->hasFile('owner_logo') && !$request->has('same_as_above')) {
+                $inputData['owner_logo'] = $this->uploadLogo($request->file('owner_logo'));
+            } elseif ($request->has('same_as_above') && $id) {
+                // If 'same_as_above' is checked and ID is provided, update owner_logo with manager_logo
+                $inputData['owner_logo'] = Client::where('id', $id)->value('manager_logo');
+            }
+
+            // Update or create client
+            unset($inputData['same_as_above']);
+            $client = Client::updateOrCreate(['id' => $id], $inputData);
+
+            // Delete old images
+            if ($id) {
+                $this->deleteOldImages($id, $client->manager_logo, $client->owner_logo);
+            }
 
             $message = empty($id) ? "Client added successfully" : "Client updated successfully";
 
@@ -63,11 +70,38 @@ class ClientContoller extends Controller
         }
     }
 
+    private function deleteOldImages($id, $managerLogo, $ownerLogo)
+    {
+        if ($managerLogo && $managerLogo != $ownerLogo) {
+            $this->deleteLogo($managerLogo);
+        }
+
+        if ($ownerLogo) {
+            $this->deleteLogo($ownerLogo);
+        }
+    }
+
+    private function uploadLogo($file)
+    {
+        $imageName = time() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('images/client'), $imageName);
+        return $imageName;
+    }
+
+    private function deleteLogo($imageName)
+    {
+        if ($imageName && file_exists(public_path('images/client/' . $imageName))) {
+            unlink(public_path('images/client/' . $imageName));
+        }
+    }
+
+
     public function edit(string $id)
     {
         try {
             $client = Client::find($id);
-            $client->imagePath = asset("/images/client/{$client->image}");
+            $client->managerLogoPath = asset("/images/client/{$client->manager_logo}");
+            $client->ownerLogoPath = asset("/images/client/{$client->owner_logo}");
             return view('client.clientAdd', ['head_title' => 'Edit', 'button' => 'Update', 'client' => $client]);
         } catch (\Throwable $th) {
             return back()->withError($th->getMessage())->withInput();

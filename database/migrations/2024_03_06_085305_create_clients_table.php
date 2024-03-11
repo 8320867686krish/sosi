@@ -25,11 +25,11 @@ return new class extends Migration
             $table->string('manager_tax_information')->nullable();
             $table->string('manager_logo')->nullable();
             $table->string('manager_initials')->nullable();
-
             $table->string('owner_name')->nullable();
             $table->string('owner_email')->nullable();
             $table->string('owner_phone')->nullable();
             $table->string('owner_address')->nullable();
+            $table->string('IMO_ship_owner_details')->nullable();
             $table->string('owner_contact_person_name')->nullable();
             $table->string('owner_contact_person_email')->nullable();
             $table->string('owner_contact_person_phone')->nullable();
