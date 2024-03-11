@@ -15,7 +15,7 @@ class ProjectsController extends Controller
 {
     public function index($client_id = null)
     {
-        $projects = Projects::with('client:id,name');
+        $projects = Projects::with('client:id,manager_name');
         if (@$client_id) {
             $projects->where('client_id', $client_id);
         }
@@ -25,13 +25,13 @@ class ProjectsController extends Controller
 
     public function create()
     {
-        $clients = Client::orderBy('id', 'desc')->get(['id', 'name', 'identification']);
+        $clients = Client::orderBy('id', 'desc')->get(['id', 'manager_name', 'manager_initials']);
         return view('projects.projectAdd', ['head_title' => 'Add', 'button' => 'Save', 'clients' => $clients]);
     }
 
     public function projectView($project_id)
     {
-        $clients = Client::orderBy('id', 'desc')->get(['id', 'name', 'identification']);
+        $clients = Client::orderBy('id', 'desc')->get(['id', 'manager_name', 'manager_initials']);
         $users = User::where('isVerified', 1)->get();
 
         $project = Projects::with('project_teams')->find($project_id);
@@ -68,7 +68,7 @@ class ProjectsController extends Controller
     public function edit(string $id)
     {
         try {
-            $clients = Client::orderBy('id', 'desc')->get(['id', 'name', 'identification']);
+            $clients = Client::orderBy('id', 'desc')->get(['id', 'manager_name', 'manager_initials']);
             $project = Projects::find($id);
             return view('projects.projectAdd', ['head_title' => 'Edit', 'button' => 'Update', 'clients' => $clients, 'project' => $project]);
         } catch (\Throwable $th) {

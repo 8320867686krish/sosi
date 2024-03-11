@@ -32,10 +32,11 @@ class ClientRequest extends FormRequest
             'manager_website' => 'required|url',
             'manager_tax_information' => 'required|max:254',
             'manager_address' => 'required',
-            'manager_logo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'manager_logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'manager_initials' => 'required|unique:clients,manager_initials,' . $this->id,
         ];
     }
+
 
     public function messages(): array
     {

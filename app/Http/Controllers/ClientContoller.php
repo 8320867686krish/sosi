@@ -11,12 +11,20 @@ class ClientContoller extends Controller
 {
     public function index()
     {
-        $client = Client::get();
-        $modifiedowners = $client->map(function ($item) {
-            $item->imagePath = asset("/images/client/{$item->image}");
-            return $item;
+        $clients = Client::with(['projects' => function ($query) {
+            $query->select('client_id', \DB::raw('count(*) as total_projects'))->groupBy('client_id');
+        }])->select('id', 'manager_name', 'manager_phone', 'manager_logo', 'owner_name')->get();
+
+        $modifiedClients = $clients->map(function ($client) {
+            $client->managerLogoPath = asset("/images/client/{$client->manager_logo}");
+
+            $client->total_projects = $client->projects->isNotEmpty() ? $client->projects->first()->total_projects : 0;
+
+            unset($client->projects);
+            return $client;
         });
-        return view('client.client', ['clients' => $modifiedowners]);
+
+        return view('client.client', ['clients' => $modifiedClients]);
     }
 
     /**
@@ -34,67 +42,66 @@ class ClientContoller extends Controller
     {
         try {
             $id = $request->input('id');
-            $inputData = $request->input(); // Assuming validation rules are defined in ClientRequest
+            $inputData = $request->all();
+            $inputData['isSameAsManager'] = $request->has('isSameAsManager') ? 1 : 0;
 
-            // Handle manager logo
             if ($request->hasFile('manager_logo')) {
                 $inputData['manager_logo'] = $this->uploadLogo($request->file('manager_logo'));
-                // If 'same_as_above' is checked, set owner_logo too
-                if ($request->has('same_as_above')) {
+
+                if ($inputData['isSameAsManager']) {
                     $inputData['owner_logo'] = $inputData['manager_logo'];
+                }
+
+                if (!empty($id)) {
+                    $this->deleteOldImages($id);
                 }
             }
 
-            // Handle owner logo
-            if ($request->hasFile('owner_logo') && !$request->has('same_as_above')) {
+            if ($request->hasFile('owner_logo') && !$inputData['isSameAsManager']) {
                 $inputData['owner_logo'] = $this->uploadLogo($request->file('owner_logo'));
-            } elseif ($request->has('same_as_above') && $id) {
-                // If 'same_as_above' is checked and ID is provided, update owner_logo with manager_logo
+            } elseif ($inputData['isSameAsManager'] && $id) {
                 $inputData['owner_logo'] = Client::where('id', $id)->value('manager_logo');
             }
 
-            // Update or create client
-            unset($inputData['same_as_above']);
-            $client = Client::updateOrCreate(['id' => $id], $inputData);
-
-            // Delete old images
-            if ($id) {
-                $this->deleteOldImages($id, $client->manager_logo, $client->owner_logo);
-            }
+            Client::updateOrCreate(['id' => $id], $inputData);
 
             $message = empty($id) ? "Client added successfully" : "Client updated successfully";
 
-            return redirect('clients')->with('message', $message);
+            // return redirect('clients')->with('message', $message);
+            return response()->json(['isStatus' => true, 'message' => $message]);
         } catch (\Throwable $th) {
             return back()->withError($th->getMessage())->withInput();
         }
     }
 
-    private function deleteOldImages($id, $managerLogo, $ownerLogo)
+    private function deleteOldImages($id)
     {
-        if ($managerLogo && $managerLogo != $ownerLogo) {
-            $this->deleteLogo($managerLogo);
+        $client = Client::findOrFail($id);
+
+        if ($client->manager_logo) {
+            $this->deleteLogo($client->manager_logo);
         }
 
-        if ($ownerLogo) {
-            $this->deleteLogo($ownerLogo);
+        if ($client->owner_logo && $client->owner_logo !== $client->manager_logo) {
+            $this->deleteLogo($client->owner_logo);
         }
     }
 
     private function uploadLogo($file)
     {
-        $imageName = time() . '.' . $file->getClientOriginalExtension();
+        $imageName = time() . rand(10, 99) . '.' . $file->getClientOriginalExtension();
         $file->move(public_path('images/client'), $imageName);
         return $imageName;
     }
 
     private function deleteLogo($imageName)
     {
-        if ($imageName && file_exists(public_path('images/client/' . $imageName))) {
-            unlink(public_path('images/client/' . $imageName));
+        $path = public_path('images/client/' . $imageName);
+
+        if (file_exists($path)) {
+            unlink($path);
         }
     }
-
 
     public function edit(string $id)
     {
@@ -111,19 +118,22 @@ class ClientContoller extends Controller
     public function destroy(string $id)
     {
         try {
+
             $projectClient = Client::findOrFail($id);
 
-            $imagePath = public_path("images/client/{$projectClient->image}");
-
-            if ($imagePath && File::exists($imagePath)) {
-                File::delete($imagePath);
+            // Check if the client has associated projects
+            if ($projectClient->projects()->exists()) {
+                return response()->json(['isStatus' => false, 'message' => 'Cannot delete client. Client has associated projects.']);
             }
 
+            $this->deleteOldImages($id);
             $projectClient->delete();
 
-            return redirect('clients')->with('message', 'Client deleted successfully');
+            // return redirect('clients')->with('message', 'Client deleted successfully');
+            return response()->json(['isStatus' => true, 'message' => 'Client deleted successfully']);
         } catch (\Throwable $th) {
-            return back()->withError($th->getMessage());
+            return response()->json(['isStatus' => false, 'message' => 'Client not deleted successfully']);
+            // return back()->withError($th->getMessage());
         }
     }
 }

@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('manager_tax_information')->nullable();
             $table->string('manager_logo')->nullable();
             $table->string('manager_initials')->nullable();
+            $table->boolean('isSameAsManager')->default(0);
             $table->string('owner_name')->nullable();
             $table->string('owner_email')->nullable();
             $table->string('owner_phone')->nullable();

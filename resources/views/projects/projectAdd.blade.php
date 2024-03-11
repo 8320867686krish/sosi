@@ -26,7 +26,7 @@
         <!-- end pageheader -->
         <!-- ============================================================== -->
         <div class="row">
-            <div class="offset-xl-2 col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                 @include('layouts.message')
                 <div class="card">
                     <h5 class="card-header">{{ $head_title ?? '' }} Projects</h5>
@@ -43,9 +43,9 @@
                                             <option value="">Select Client</option>
                                             @if (isset($clients) && $clients->count() > 0)
                                                 @foreach ($clients as $client)
-                                                    <option value="{{ $client->id }}" data-identi="{{ $client->identification }}"
+                                                    <option value="{{ $client->id }}" data-identi="{{ $client->manager_initials }}"
                                                         {{ old('client_id') == $client->id || (isset($project) && $project->client_id == $client->id) ? 'selected' : '' }}>
-                                                        {{ $client->name }}
+                                                        {{ $client->manager_name }}
                                                     </option>
                                                 @endforeach
                                             @endif

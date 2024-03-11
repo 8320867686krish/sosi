@@ -10,4 +10,9 @@ class Client extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function projects()
+    {
+        return $this->hasMany(Projects::class, 'client_id', 'id');
+    }
 }
