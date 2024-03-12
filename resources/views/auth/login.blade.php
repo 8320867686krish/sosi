@@ -95,7 +95,7 @@
                     window.location.href = "{{ url('dashboard') }}";
 
                    }else{
-                   // window.location.href = "{{ url('otp') }}";
+                    window.location.href = "{{ url('otp') }}";
                    }
 
                 },
