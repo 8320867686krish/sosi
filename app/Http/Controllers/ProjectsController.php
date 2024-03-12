@@ -92,6 +92,30 @@ class ProjectsController extends Controller
     public function saveDetail(ProjectDetailRequest $request)
     {
         $inputData = $request->input();
+
+        if ($request->hasFile('image')) {
+
+            $image = $request->file('image');
+
+            $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
+
+            $image->move(public_path('images/ship'), $imageName);
+
+            $inputData['image'] = $imageName;
+
+            if (!empty($inputData['id'])) {
+                $exitsImg = Projects::select('id', 'image')->findOrFail($inputData['id']);
+
+                if (!empty($exitsImg->image)) {
+                    $path = public_path('images/ship/' . $exitsImg->image);
+
+                    if (file_exists($path) && is_file($path)) {
+                        unlink($path);
+                    }
+                }
+            }
+        }
+
         unset($inputData['_token']);
         Projects::where(['id' => $inputData['id']])->update($inputData);
         return response()->json(['isStatus' => true, 'message' => 'successfully save details !!']);

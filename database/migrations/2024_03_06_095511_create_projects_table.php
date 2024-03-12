@@ -31,11 +31,11 @@ return new class extends Migration
             $table->string('port_of_registry')->default('');
             $table->string('vessel_class')->default('');
             $table->string('gross_tonnage')->nullable();
-            $table->date('delivery_date')->default('');
+            $table->date('delivery_date')->nullable();
             $table->string('flag_of_ship')->nullable();
             $table->string('x_breadth_depth')->nullable();
+            $table->string('ga_plan')->nullable();
             $table->string('image')->nullable();
-            $table->string('vessel_class')->default('');
             $table->string('vessel_previous_name')->default('');
             $table->string('ihm_class')->default('');
             $table->string('additional_hazmats')->default('');

@@ -40,7 +40,8 @@
                                 <span aria-hidden="true">×</span>
                             </a>
                         </div>
-                        <form method="post" action="{{ route('projects.store') }}" class="needs-validation" novalidate id="projectForm">
+                        <form method="post" class="needs-validation" novalidate id="projectForm"
+                            enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="id" value="{{ $project->id ?? '' }}">
                             <div class="row">
@@ -68,7 +69,9 @@
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="call_sign">Call Sign</label>
-                                        <input type="text" class="form-control @error('call_sign') is-invalid @enderror" id="call_sign" name="call_sign" placeholder="Call Sign..." value="{{ old('call_sign', $project->call_sign ?? '') }}">
+                                        <input type="text" class="form-control @error('call_sign') is-invalid @enderror"
+                                            id="call_sign" name="call_sign" placeholder="Call Sign..."
+                                            value="{{ old('call_sign', $project->call_sign ?? '') }}">
                                         @error('call_sign')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -93,8 +96,10 @@
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="client_id">Ship Owner</label>
-                                        <input type="hidden" name="client_id" id="client_id" value="{{ old('client_id', $project->client->id ?? '') }}">
-                                        <input type="text" class="form-control" value="{{ old('owner_name', $project->client->owner_name ?? '') }}">
+                                        <input type="hidden" name="client_id" id="client_id"
+                                            value="{{ old('client_id', $project->client->id ?? '') }}">
+                                        <input type="text" class="form-control"
+                                            value="{{ old('owner_name', $project->client->owner_name ?? '') }}">
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-4">
@@ -115,20 +120,33 @@
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="port_of_registry">Port Of Registry</label>
-                                        <input type="text" class="form-control @error('port_of_registry') is-invalid @enderror" id="port_of_registry" value="{{ old('port_of_registry', $project->port_of_registry ?? '') }}" name="port_of_registry" placeholder="Port Of Registry" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        <input type="text"
+                                            class="form-control @error('port_of_registry') is-invalid @enderror"
+                                            id="port_of_registry"
+                                            value="{{ old('port_of_registry', $project->port_of_registry ?? '') }}"
+                                            name="port_of_registry" placeholder="Port Of Registry" autocomplete="off"
+                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="vessel_class">Vessel Class</label>
-                                        <input type="text" class="form-control @error('vessel_class') is-invalid @enderror" id="vessel_class" value="{{ old('vessel_class', $project->vessel_class ?? '') }}" name="vessel_class" placeholder="Vessel Class" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        <input type="text"
+                                            class="form-control @error('vessel_class') is-invalid @enderror"
+                                            id="vessel_class"
+                                            value="{{ old('vessel_class', $project->vessel_class ?? '') }}"
+                                            name="vessel_class" placeholder="Vessel Class" autocomplete="off"
+                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="ihm_class">IHM Certifying Class</label>
-                                        <input type="text" class="form-control @error('ihm_class') is-invalid @enderror" id="ihm_class"
-                                        value="{{ old('ihm_class', $project->ihm_class ?? '') }}" name="ihm_class" placeholder="Ihm Class" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        <input type="text"
+                                            class="form-control @error('ihm_class') is-invalid @enderror" id="ihm_class"
+                                            value="{{ old('ihm_class', $project->ihm_class ?? '') }}" name="ihm_class"
+                                            placeholder="Ihm Class" autocomplete="off"
+                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
                                         @error('ihm_class')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -159,7 +177,12 @@
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="flag_of_ship">Flag of ship</label>
-                                        <input type="text" class="form-control @error('flag_of_ship') is-invalid @enderror" id="flag_of_ship" value="{{ old('flag_of_ship', $project->flag_of_ship ?? '') }}" name="flag_of_ship" placeholder="Flag of ship..." autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        <input type="text"
+                                            class="form-control @error('flag_of_ship') is-invalid @enderror"
+                                            id="flag_of_ship"
+                                            value="{{ old('flag_of_ship', $project->flag_of_ship ?? '') }}"
+                                            name="flag_of_ship" placeholder="Flag of ship..." autocomplete="off"
+                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
                                         @error('flag_of_ship')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -202,8 +225,8 @@
                                             class="form-control @error('x_breadth_depth') is-invalid @enderror"
                                             id="x_breadth_depth"
                                             value="{{ old('x_breadth_depth', $project->x_breadth_depth ?? '') }}"
-                                            name="x_breadth_depth" placeholder="Length x breadth x depth" autocomplete="off"
-                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                            name="x_breadth_depth" placeholder="Length x breadth x depth"
+                                            autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
                                         @error('x_breadth_depth')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -213,7 +236,12 @@
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="gross_tonnage">Gross Registered Tonnage (GRT)</label>
-                                        <input type="text" class="form-control @error('gross_tonnage') is-invalid @enderror" id="gross_tonnage" value="{{ old('gross_tonnage', $project->gross_tonnage ?? '') }}" name="gross_tonnage" placeholder="GRT" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        <input type="text"
+                                            class="form-control @error('gross_tonnage') is-invalid @enderror"
+                                            id="gross_tonnage"
+                                            value="{{ old('gross_tonnage', $project->gross_tonnage ?? '') }}"
+                                            name="gross_tonnage" placeholder="GRT" autocomplete="off"
+                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
                                         @error('grt')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -227,8 +255,8 @@
                                             class="form-control @error('vessel_previous_name') is-invalid @enderror"
                                             id="vessel_previous_name"
                                             value="{{ old('vessel_previous_name', $project->vessel_previous_name ?? '') }}"
-                                            name="vessel_previous_name" placeholder="Vessel Previous Name" autocomplete="off"
-                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                            name="vessel_previous_name" placeholder="Vessel Previous Name"
+                                            autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
                                         @error('vessel_previous_names')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -239,32 +267,36 @@
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
                                         <label for="image">Ship Photo</label>
-                                        <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        <input type="file" class="form-control @error('image') is-invalid @enderror"
+                                            id="image" name="image" autocomplete="off"
+                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
                                         @error('image')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label for="ga_plan">General Arrangement (GA)</label>
                                         <input type="file" class="form-control @error('ga_plan') is-invalid @enderror" id="ga_plan" name="ga_plan" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
                                         @error('ga_plan')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i class="fas fa-arrow-left"></i> <b>Back</b></a>
+                                        <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i
+                                                class="fas fa-arrow-left"></i> <b>Back</b></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
                                         @can('projects.edit')
-                                            <button class="btn btn-primary float-right btn-rounded formSubmitBtn" type="button" style="display:none">Edit</button>
+                                            <button class="btn btn-primary float-right btn-rounded formSubmitBtn"
+                                                type="submit" style="display:none">Edit</button>
                                         @endcan
                                     </div>
                                 </div>
@@ -353,7 +385,7 @@
         </div>
 
         <div class="row">
-            <div class="offset-xl-2 col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                 @include('layouts.message')
                 <div class="card">
                     <h5 class="card-header">Survey Information</h5>
@@ -457,6 +489,20 @@
             input.classList.toggle('is-invalid', !isValid);
         }
 
+        function previewFile(input) {
+            var file = $("input[type=file]").get(0).files[0];
+
+            if (file) {
+                var reader = new FileReader();
+
+                reader.onload = function() {
+                    $("#previewImg").attr("src", reader.result);
+                }
+
+                reader.readAsDataURL(file);
+            }
+        }
+
         $(document).ready(function() {
 
             setTimeout(function() {
@@ -531,24 +577,49 @@
                     }
                 });
             });
-            $(".formSubmitBtn").click(function(e) {
-                $('.error-message').remove("");
+
+            $('#projectForm').submit(function(e) {
                 e.preventDefault();
+
+                let $submitButton = $(this).find('button[type="submit"]');
+                let originalText = $submitButton.html();
+                $submitButton.text('Wait...');
+                $submitButton.prop('disabled', true);
+
+                // Clear previous error messages and invalid classes
+                $('.error-message').remove("");
+
+                var formData = new FormData(this);
+                console.log(formData);
                 $.ajax({
-                    type: "POST",
-                    url: "{{ url('detail/save') }}",
-                    data: $("#projectForm").serialize(),
-                    success: function(msg) {
+                    url: "{{ url('detail/save') }}", // Change this to the URL where you handle the form submission
+                    type: 'POST',
+                    data: formData,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        // Handle success response
                         $(".sucessMsg").show();
                     },
-                    error: function(err) {
-                        $.each(err.responseJSON.errors, function(i, error) {
-                            var el = $(document).find('[name="' + i + '"]');
-                            el.after($('<span class="error-message" style="color: red;">' +
-                                error[0] + '</span>'));
-                        })
+                    error: function(xhr, status, error) {
+                        // If there are errors, display them
+                        var errors = xhr.responseJSON.errors;
+                        if (errors) {
+                            // Loop through errors and display them
+                            $.each(errors.responseJSON.errors, function(i, error) {
+                                var el = $(document).find('[name="' + i + '"]');
+                                el.after($('<span class="error-message" style="color: red;">' +
+                                    error[0] + '</span>'));
+                            })
+                        } else {
+                            console.error('Error submitting form:', error);
+                        }
+                    },
+                    complete: function() {
+                        $submitButton.html(originalText);
+                        $submitButton.prop('disabled', false);
                     }
-
                 });
             });
         });
