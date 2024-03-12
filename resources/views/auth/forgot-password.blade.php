@@ -69,9 +69,7 @@
                     </div>
                 </form>
             </div>
-            <div class="card-footer text-center">
-                <span>Don't have an account? <a href="{{ route('register') }}">Sign Up</a></span>
-            </div>
+          
         </div>
     </div>
     <!-- ============================================================== -->

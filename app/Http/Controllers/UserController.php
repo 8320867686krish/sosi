@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Mail\UserWelcomeMail;
+use App\Models\otpVerification;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,33 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function otp(){
+      
+        return view('auth.otp');
+
+    }
+    public function verifyOtp(Request $request){
+        $sessionId = session()->getId();
+        $post = $request->input();
+        $sessionPayload = session()->all();
+        $token = $sessionPayload['_token'];
+        $otpVerify = otpVerification::where(['session_id' => $sessionId,'code' => $post['code']])->first();
+        if($otpVerify){
+            $user = User::where(['email' => $otpVerify->email])->first();
+
+            if ($user) {
+                Auth::login($user);
+                $otpVerify->delete();
+                $request->session()->regenerate();
+                return response()->json(['status'=>true],200);
+            }else{
+                return response()->json(['status' => false, 'message' => 'User not found'], 422);
+
+            }
+        }else{
+            return response()->json(['status'=>false,'message' => 'invalid otp'],421);
+        }
+    }
     public function index()
     {
         try {

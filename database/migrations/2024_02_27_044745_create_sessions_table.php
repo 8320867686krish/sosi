@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
+            $table->varchar('verifyCode');
             $table->integer('last_activity')->index();
         });
     }

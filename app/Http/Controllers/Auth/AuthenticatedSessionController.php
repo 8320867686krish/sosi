@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\otpVerification;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
@@ -27,15 +28,21 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request)
     {
-        $request->authenticate();
-
-        $request->session()->regenerate();
-
-        //Auth::logoutOtherDevices($request->input('password'));
-
-        return redirect()->intended(RouteServiceProvider::HOME);
+        $res= $request->authenticate();
+        if(@$res->original['isOtp'] == 1){
+            $sessionId = session()->getId();
+            $code = random_int(100000, 999999);
+            $sessionPayload = session()->all();
+            $token = $sessionPayload['_token'];
+            $insertData = ['session_id' =>$sessionId,'isVerify' => 0,'code' => $code,'token'=> $token,'email' => $request->input('email')];
+            $otp = otpVerification::updateOrCreate(['token'=>$token], $insertData);
+            return response()->json(['isOtp' => 1,'status'=>true,'deviceId'=> $sessionId,'code' => $code],200);
+        }else{
+            $request->session()->regenerate();
+            return response()->json(['isOtp' => 0,'status'=>true],200);
+        }
     }
 
     /**

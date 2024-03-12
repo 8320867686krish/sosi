@@ -9,12 +9,7 @@ use Illuminate\Auth\AuthenticationException;
 
 class Handler extends ExceptionHandler
 {
-    protected function unauthenticated($request, AuthenticationException $exception)
-    {
-        return $request->expectsJson()
-            ? response()->json(['isStatus'=>false,'message' => 'Unauthenticate User'], 401)
-            : redirect()->guest($exception->redirectTo() ?? route('login'))->with('error', 'Your Session Invialid. You are login in another device');
-    }
+   
 
     public function render($request, Throwable $exception)
     {
