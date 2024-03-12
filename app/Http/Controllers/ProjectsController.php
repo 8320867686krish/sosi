@@ -34,7 +34,8 @@ class ProjectsController extends Controller
         $clients = Client::orderBy('id', 'desc')->get(['id', 'manager_name', 'manager_initials']);
         $users = User::where('isVerified', 1)->get();
 
-        $project = Projects::with('project_teams')->find($project_id);
+        $project = Projects::with('project_teams')->with('client:id,manager_name,owner_name')->find($project_id);
+        // dd($project);
         $project['user_id'] = $project->project_teams->pluck('user_id')->toArray();
         $project->assign_date = $project->project_teams->pluck('assign_date')->unique()->values()->toArray();
         $project->end_date = $project->project_teams->pluck('end_date')->unique()->values()->toArray();

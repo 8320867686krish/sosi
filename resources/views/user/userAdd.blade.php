@@ -96,22 +96,23 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
-                                    @if (isset($user))
-                                        {{-- <input type="checkbox" name="isVerified" data-offstyle="danger" data-toggle="toggle"
-                                            data-on="Enabled" data-off="Disabled" {{ $user->isVerified ? 'checked' : '' }}> --}}
-                                        <label class="switch">
-                                            <input class="switch-input" name="isVerified" type="checkbox"
-                                                {{ $user->isVerified ? 'checked' : '' }}>
-                                            <span class="switch-label" data-on="" data-off=""></span>
-                                            <span class="switch-handle"></span>
-                                        </label>
-                                    @else
-                                        <label class="switch">
-                                            <input class="switch-input" name="isVerified" type="checkbox" checked>
-                                            <span class="switch-label" data-on="" data-off=""></span>
-                                            <span class="switch-handle"></span>
-                                        </label>
-                                    @endif
+                                    <div class="form-group">
+                                        <label for="isVerified">Is Disabled</label>
+                                        @if (isset($user))
+                                            <label class="switch">
+                                                <input class="switch-input" name="isVerified" type="checkbox"
+                                                    {{ $user->isVerified ? 'checked' : '' }}>
+                                                <span class="switch-label" data-on="" data-off=""></span>
+                                                <span class="switch-handle"></span>
+                                            </label>
+                                        @else
+                                            <label class="switch">
+                                                <input class="switch-input" name="isVerified" type="checkbox" checked>
+                                                <span class="switch-label" data-on="" data-off=""></span>
+                                                <span class="switch-handle"></span>
+                                            </label>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                             <div class="row mt-3">

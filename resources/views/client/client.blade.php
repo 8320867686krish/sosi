@@ -67,8 +67,7 @@
                                             class="text-dark font-medium ml-2">{{ ucwords($client->owner_name) ?? '' }}</span>
                                     </p>
                                     @can('clients.edit')
-                                        <a href="{{ route('clients.edit', ['id' => $client->id]) }}" rel="noopener noreferrer"
-                                            title="Edit">
+                                        <a href="{{ route('clients.edit', ['id' => $client->id]) }}" rel="noopener noreferrer" title="Edit">
                                             <i class="fas fa-edit fa-sm text-primary"></i>
                                         </a>
                                     @endcan
@@ -76,6 +75,11 @@
                                         <a href="javascript:;" data-id="{{ $client->id }}" class="ml-2 delete-btn"
                                             title="Delete">
                                             <i class="fas fa-trash-alt fa-sm text-danger"></i>
+                                        </a>
+                                    @endcan
+                                    @can('projects.read')
+                                        <a href="{{ route('projects.client', ['client_id' => $client->id]) }}" class="ml-2">
+                                            <i class="fas fas fa-list fa-sm"></i>
                                         </a>
                                     @endcan
                                     {{-- <a href="#"><i class="fab fa-twitter-square fa-sm twitter-color"></i> </a><a href="#"><i class="fab fa-snapchat-square fa-sm snapchat-color"></i></a> --}}

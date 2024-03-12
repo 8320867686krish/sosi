@@ -30,7 +30,7 @@
         <!-- end pageheader -->
         <!-- ============================================================== -->
         <div class="row">
-            <div class="offset-xl-2 col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                 @include('layouts.message')
                 <div class="card">
                     <h5 class="card-header">{{ $head_title ?? '' }} Projects</h5>
@@ -40,28 +40,49 @@
                                 <span aria-hidden="true">×</span>
                             </a>
                         </div>
-                        <form method="post" action="{{ route('projects.store') }}" class="needs-validation" novalidate
-                            id="projectForm">
+                        <form method="post" action="{{ route('projects.store') }}" class="needs-validation" novalidate id="projectForm">
                             @csrf
                             <input type="hidden" name="id" value="{{ $project->id ?? '' }}">
                             <div class="row">
-                                <div class="col-sm-12 col-md-4">
+                                <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
-                                        <label for="ship_name">Name</label>
+                                        <label for="ship_name">Ship Name</label>
                                         <input type="text" class="form-control @error('ship_name') is-invalid @enderror"
                                             id="ship_name" value="{{ old('ship_name', $project->ship_name ?? '') }}"
                                             name="ship_name" placeholder="Ship Name..." autocomplete="off"
                                             onchange="removeInvalidClass(this)" {{ $readonly }} required>
                                     </div>
                                 </div>
+                                <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="imo_number">Ship IMO Number</label>
+                                        <input type="text" class="form-control @error('imo_number') is-invalid @enderror"
+                                            id="imo_number" name="imo_number" placeholder="IMO Number..."
+                                            value="{{ old('imo_number', $project->imo_number ?? '') }}">
+                                        @error('imo_number')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
 
-                                <div class="col-sm-12 col-md-4">
+                                <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="call_sign">Call Sign</label>
+                                        <input type="text" class="form-control @error('call_sign') is-invalid @enderror" id="call_sign" name="call_sign" placeholder="Call Sign..." value="{{ old('call_sign', $project->call_sign ?? '') }}">
+                                        @error('call_sign')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="manager_name">Manager Name</label>
                                         <input type="text"
                                             class="form-control @error('manager_name') is-invalid @enderror"
                                             id="manager_name"
-                                            value="{{ old('manager_name', $project->manager_name ?? '') }}"
+                                            value="{{ old('manager_name', $project->client->manager_name ?? '') }}"
                                             name="manager_name" placeholder="Manager Name..." autocomplete="off"
                                             onchange="removeInvalidClass(this)" {{ $readonly }}>
                                         @error('manager_name')
@@ -69,29 +90,16 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-sm-12 col-md-4">
+                                <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="client_id">Ship Owner</label>
-                                        <select name="client_id" id="client_id" class="form-control" {{ $readonly }}>
-                                            <option value="" {{ empty($readonly) ? 'disabled' : '' }}>Select Client</option>
-                                            @if (isset($clients) && $clients->count() > 0)
-                                                @foreach ($clients as $client)
-                                                    <option value="{{ $client->id }}" data-identi="{{ $client->identification }}"
-                                                        {{ old('client_id') == $client->id || (isset($project) && $project->client_id == $client->id) ? 'selected' : '' }}
-                                                        {{ empty($readonly) ? '' : 'disabled' }}>
-                                                        {{ $client->name }}
-                                                    </option>
-                                                @endforeach
-                                            @endif
-                                        </select>
+                                        <input type="hidden" name="client_id" id="client_id" value="{{ old('client_id', $project->client->id ?? '') }}">
+                                        <input type="text" class="form-control" value="{{ old('owner_name', $project->client->owner_name ?? '') }}">
                                     </div>
                                 </div>
-
-                            </div>
-                            <div class="row mt-3">
                                 <div class="col-sm-12 col-md-4">
                                     <div class="form-group">
-                                        <label for="project_name">Ship Type</label>
+                                        <label for="project_name">Type of ship</label>
                                         <input type="text" class="form-control @error('ship_type') is-invalid @enderror"
                                             id="ship_type" name="ship_type"
                                             value="{{ old('ship_type', $project->ship_type ?? '') }}"
@@ -102,7 +110,31 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-sm-12 col-md-4">
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="port_of_registry">Port Of Registry</label>
+                                        <input type="text" class="form-control @error('port_of_registry') is-invalid @enderror" id="port_of_registry" value="{{ old('port_of_registry', $project->port_of_registry ?? '') }}" name="port_of_registry" placeholder="Port Of Registry" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="vessal_class">Vessel Class</label>
+                                        <input type="text" class="form-control @error('vessal_class') is-invalid @enderror" id="vessal_class" value="{{ old('vessal_class', $project->vessal_class ?? '') }}" name="vessal_class" placeholder="Vessal Class" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="ihm_class">IHM Certifying Class</label>
+                                        <input type="text" class="form-control @error('ihm_class') is-invalid @enderror" id="ihm_class"
+                                        value="{{ old('ihm_class', $project->ihm_class ?? '') }}" name="ihm_class" placeholder="Ihm Class" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        @error('ihm_class')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                {{-- <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="manager_name">Manager Details</label>
                                         <input type="text"
@@ -113,7 +145,7 @@
                                             onchange="removeInvalidClass(this)" {{ $readonly }}>
                                     </div>
                                 </div>
-                                <div class="col-sm-12 col-md-4">
+                                <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="dimensions">Dimensions</label>
                                         <input type="text" class="form-control @error('dimensions') is-invalid @enderror"
@@ -121,12 +153,51 @@
                                             name="dimensions" placeholder="Dimensions" autocomplete="off"
                                             onchange="removeInvalidClass(this)" {{ $readonly }}>
                                     </div>
+                                </div> --}}
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="flag_of_ship">Flag of ship</label>
+                                        <input type="text" class="form-control @error('flag_of_ship') is-invalid @enderror" id="flag_of_ship" value="{{ old('flag_of_ship', $project->flag_of_ship ?? '') }}" name="flag_of_ship" placeholder="Flag of ship..." autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        @error('flag_of_ship')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="delivery_date">Delivery Date</label>
+                                        <input type="date"
+                                            class="form-control @error('delivery_date') is-invalid @enderror"
+                                            id="delivery_date"
+                                            value="{{ old('delivery_date', $project->delivery_date ?? '') }}"
+                                            name="delivery_date" placeholder="Delivery Date" autocomplete="off"
+                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="builder_details">Building Yard Details</label>
+                                        <input type="text"
+                                            class="form-control @error('builder_details') is-invalid @enderror"
+                                            id="builder_details"
+                                            value="{{ old('builder_details', $project->builder_details ?? '') }}"
+                                            name="builder_details" placeholder="Builder Details" autocomplete="off"
+                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        @error('builder_details')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row mt-3">
-                                <div class="col-sm-12 col-md-4">
+
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
-                                        <label for="builder_name">Builder Name</label>
+                                        <label for="builder_name">Length x breadth x depth</label>
                                         <input type="text"
                                             class="form-control @error('builder_name') is-invalid @enderror"
                                             id="builder_name"
@@ -139,16 +210,11 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-12 col-md-4">
+                                <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
-                                        <label for="builder_name">Builder Details</label>
-                                        <input type="text"
-                                            class="form-control @error('builder_details') is-invalid @enderror"
-                                            id="builder_details"
-                                            value="{{ old('builder_details', $project->builder_details ?? '') }}"
-                                            name="builder_details" placeholder="Builder Details" autocomplete="off"
-                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
-                                        @error('builder_details')
+                                        <label for="grt">GRT</label>
+                                        <input type="text" class="form-control @error('grt') is-invalid @enderror" id="grt" value="{{ old('grt', $project->grt ?? '') }}" name="grt" placeholder="GRT" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        @error('grt')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -156,118 +222,49 @@
 
                                 <div class="col-sm-12 col-md-4">
                                     <div class="form-group">
-                                        <label for="build_date">Builder Date</label>
-                                        <input type="text"
-                                            class="form-control @error('build_date	') is-invalid @enderror"
-                                            id="build_date	" value="{{ old('build_date', $project->build_date ?? '') }}"
-                                            name="build_date" placeholder="Build Date" autocomplete="off"
-                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
-                                        @error('builder_name')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="row mt-3">
-                                <div class="col-sm-12 col-md-4">
-                                    <div class="form-group">
-                                        <label for="builder_name">Flag</label>
-                                        <input type="text" class="form-control @error('flag') is-invalid @enderror"
-                                            id="builder_name" value="{{ old('flag', $project->flag ?? '') }}"
-                                            name="flag" placeholder="Flag" autocomplete="off"
-                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
-                                        @error('flag')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-12 col-md-4">
-                                    <div class="form-group">
-                                        <label for="gross_tonnage">Gross Tonnage</label>
+                                        <label for="gross_tonnage">Vessel Previous Name</label>
                                         <input type="text"
                                             class="form-control @error('gross_tonnage') is-invalid @enderror"
                                             id="gross_tonnage"
                                             value="{{ old('gross_tonnage', $project->gross_tonnage ?? '') }}"
-                                            name="gross_tonnage" placeholder="Gross Tonnage" autocomplete="off"
+                                            name="gross_tonnage" placeholder="Vessel Previous Name" autocomplete="off"
                                             onchange="removeInvalidClass(this)" {{ $readonly }}>
                                         @error('builder_details')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
-
-                                <div class="col-sm-12 col-md-4">
-                                    <div class="form-group">
-                                        <label for="build_date">Delivery Date</label>
-                                        <input type="text"
-                                            class="form-control @error('delivery_date') is-invalid @enderror"
-                                            id="delivery_date"
-                                            value="{{ old('delivery_date', $project->delivery_date ?? '') }}"
-                                            name="delivery_date" placeholder="Delivery Date" autocomplete="off"
-                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
-
-                                    </div>
-                                </div>
-
                             </div>
-
-                            <div class="row mt-3">
-                                <div class="col-sm-12 col-md-4">
+                            <div class="row">
+                                <div class="col-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="gross_tonnage">Port Of Registry</label>
-                                        <input type="text"
-                                            class="form-control @error('port_of_registry') is-invalid @enderror"
-                                            id="port_of_registry"
-                                            value="{{ old('port_of_registry', $project->port_of_registry ?? '') }}"
-                                            name="port_of_registry" placeholder="Port Of Registry" autocomplete="off"
-                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
-
+                                        <label for="image">Ship Photo</label>
+                                        <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        @error('image')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
-
-                                <div class="col-sm-12 col-md-4">
+                                <div class="col-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="vessal_class">Vessal Class</label>
-                                        <input type="text"
-                                            class="form-control @error('vessal_class') is-invalid @enderror"
-                                            id="vessal_class"
-                                            value="{{ old('vessal_class', $project->vessal_class ?? '') }}"
-                                            name="vessal_class" placeholder="Vessal Class" autocomplete="off"
-                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
-
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-12 col-md-4">
-                                    <div class="form-group">
-                                        <label for="builder_name">Ihm Class</label>
-                                        <input type="text"
-                                            class="form-control @error('ihm_class') is-invalid @enderror" id="ihm_class"
-                                            value="{{ old('flag', $project->ihm_class ?? '') }}" name="ihm_class"
-                                            placeholder="Ihm Class" autocomplete="off"
-                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
-                                        @error('flag')
+                                        <label for="ga_plan">General Arrangement (GA)</label>
+                                        <input type="file" class="form-control @error('ga_plan') is-invalid @enderror" id="ga_plan" name="ga_plan" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        @error('ga_plan')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row mt-3">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <a href="{{ route('projects') }}" class="btn btn-info btn-rounded formBackBtn"
-                                            type="button">Back</a>
+                                        <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i class="fas fa-arrow-left"></i> <b>Back</b></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
                                         @can('projects.edit')
-                                            <button class="btn btn-primary float-right btn-rounded formSubmitBtn"
-                                                type="button" style="display:none">Edit</button>
+                                            <button class="btn btn-primary float-right btn-rounded formSubmitBtn" type="button" style="display:none">Edit</button>
                                         @endcan
                                     </div>
                                 </div>
@@ -279,7 +276,7 @@
         </div>
 
         <div class="row">
-            <div class="offset-xl-2 col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="card">
                     <h5 class="card-header">Assign Project</h5>
                     <div class="card-body">
@@ -315,20 +312,29 @@
                                 <div class="col-sm-12 col-md-4">
                                     <div class="form-group">
                                         <label for="assign_date">Assign Date</label>
-                                        <input type="date" class="form-control @error('assign_date') is-invalid @enderror" id="assign_date" value="{{ old('assign_date', $project->assign_date[0] ?? '') }}" name="assign_date" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }} >
+                                        <input type="date"
+                                            class="form-control @error('assign_date') is-invalid @enderror"
+                                            id="assign_date"
+                                            value="{{ old('assign_date', $project->assign_date[0] ?? '') }}"
+                                            name="assign_date" autocomplete="off" onchange="removeInvalidClass(this)"
+                                            {{ $readonly }}>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-4">
                                     <div class="form-group">
                                         <label for="assign_date">End Date</label>
-                                        <input type="date" class="form-control @error('end_date') is-invalid @enderror" id="end_date" value="{{ old('end_date', $project->end_date[0] ?? '') }}" name="end_date" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }} >
+                                        <input type="date"
+                                            class="form-control @error('end_date') is-invalid @enderror" id="end_date"
+                                            value="{{ old('end_date', $project->end_date[0] ?? '') }}" name="end_date"
+                                            autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i class="fas fa-arrow-left"></i> <b>Back</b></a>
+                                        <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i
+                                                class="fas fa-arrow-left"></i> <b>Back</b></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
