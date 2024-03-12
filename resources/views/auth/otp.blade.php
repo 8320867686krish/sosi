@@ -48,31 +48,15 @@
 
 
                     <div class="form-group">
-                        <x-input-label for="email" :value="__('Email')" />
-                        <x-text-input id="email" class="form-control form-control-lg" type="email" name="email" :value="old('email')" autofocus autocomplete="username" placeholder="Email" />
-                        @if($errors->has('email'))
-                        <div class="error text-danger mt-1">{{ $errors->first('email') }}</div>
-                        @endif
+                        <x-text-input id="code" class="form-control form-control-lg" type="text" name="code" :value="old('code')" autofocus autocomplete="username" placeholder="Otp" />
+                      
                     </div>
-                    <div class="form-group">
-                        <x-input-label for="password" :value="__('Password')" />
-                        <input class="form-control form-control-lg" id="password" name="password" type="password" placeholder="Password">
-                        @if($errors->has('password'))
-                        <div class="error text-danger mt-3">{{ $errors->first('password') }}</div>
-                        @endif
-                        @if($errors->has('autherror'))
-                        <div class="error text-danger mt-3">{{ $errors->first('autherror') }}</div>
-                        @endif
-                    </div>
+                   
 
-                    <button type="button" class="btn btn-primary btn-lg btn-block signIn">Sign in</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block signIn">Verify</button>
                 </form>
             </div>
-            <div class="card-footer bg-white p-0  ">
-                <div class="card-footer-item card-footer-item-bordered float-right">
-                    <a href="{{ route('password.request') }}" class="footer-link">Forgot Password</a>
-                </div>
-            </div>
+            
         </div>
     </div>
 
@@ -86,16 +70,18 @@
         $(".signIn").click(function() {
             $.ajax({
                 type: "POST",
-                url: "{{ url('login') }}",
+                url: "{{ url('verify/otp') }}",
                 data: $("#loginForm").serialize(),
                
                 success: function(response) {
-                   if(response.isOtp == 0){
+                  if(response.status == true){
                     window.location.href = "{{ url('dashboard') }}";
 
-                   }else{
-                    window.location.href = "{{ url('otp') }}";
-                   }
+                  }else{
+                    var el = $(document).find('[name=code]');
+                            el.after($('<span class="error-message" style="color: red;">' +
+                               response.message + '</span>'));
+                  }
 
                 },
                 error: function(err) {

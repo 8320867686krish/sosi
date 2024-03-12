@@ -26,6 +26,8 @@ use App\Http\Controllers\UserController;
 Route::get('/home', function () {
     return view('home');
 })->name('home');
+Route::get('otp',[UserController::class,'otp']);
+Route::post('verify/otp',[UserController::class,'verifyOtp']);
 
 Route::get('/dashboard', function () {
     return view('home');

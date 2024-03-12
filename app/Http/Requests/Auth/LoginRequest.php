@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Response;
 
 class LoginRequest extends FormRequest
 {
@@ -46,27 +47,22 @@ class LoginRequest extends FormRequest
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate(): void
+    public function authenticate()
     {
         $this->ensureIsNotRateLimited();
-
-        // Auth::logoutOtherDevices($this->only('password'));
-
         if (!Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
-
             throw ValidationException::withMessages([
                 'autherror' => trans('auth.failed'),
             ]);
         }
 
-        // $chkLogin = DB::table('sessions')->where('user_id',Auth()->user()->id)->first();
-        // if(@$chkLogin){
-        //     Auth::logout(); // Log out the user if they don't have access
-        //     throw ValidationException::withMessages([
-        //         'email' => trans('You are logged in from another device. Please log out from the other device first.'),
-        //     ]);
-        // }
+         $chkLogin = DB::table('sessions')->where('user_id',Auth()->user()->id)->first();
+        if(@$chkLogin){
+           
+            Auth::guard('web')->logout();
+            return response()->json(['isOtp' => 1]);
+        }
 
         $role = Auth()->user()->roles->first();
         if (Auth::check() && !isset($role->permissions)) {
