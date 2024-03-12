@@ -59,4 +59,9 @@ class User extends Authenticatable
     {
         return $this->last_session_id !== Session::getId();
     }
+
+    public function projects()
+    {
+        return $this->belongsToMany(Projects::class, 'project_teams', 'user_id', 'project_id');
+    }
 }

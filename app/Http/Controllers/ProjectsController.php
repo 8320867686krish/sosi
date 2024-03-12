@@ -35,6 +35,7 @@ class ProjectsController extends Controller
         $users = User::where('isVerified', 1)->get();
 
         $project = Projects::with('project_teams')->with('client:id,manager_name,owner_name')->find($project_id);
+        $project['imagePath'] = $project->image != null ? url("images/ship/{$project->image}") : asset('assets/images/giphy.gif');
         // dd($project);
         $project['user_id'] = $project->project_teams->pluck('user_id')->toArray();
         $project->assign_date = $project->project_teams->pluck('assign_date')->unique()->values()->toArray();

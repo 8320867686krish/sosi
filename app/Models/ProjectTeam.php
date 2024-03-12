@@ -13,4 +13,8 @@ class ProjectTeam extends Model
 
     protected $guarded = []; // This means no attributes are guarded
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }
