@@ -37,11 +37,11 @@ class UserController extends Controller
                 $request->session()->regenerate();
                 return response()->json(['status'=>true],200);
             }else{
-                return response()->json(['status' => false, 'message' => 'User not found'], 422);
+                return response()->json(['status' => false, 'message' => 'User not found'], 200);
 
             }
         }else{
-            return response()->json(['status'=>false,'message' => 'invalid otp'],421);
+            return response()->json(['status'=>false,'message' => 'invalid otp'],200);
         }
     }
     public function index()
@@ -211,9 +211,7 @@ class UserController extends Controller
             $userId = $request->input('id');
             $isVerified = $request->input('isVerified');
             $user = User::where('id', $userId)->update(['isVerified' => $isVerified]);
-
             $message = $isVerified ? "User enabled successfully." : "User disabled successfully.";
-
             return response()->json(['isStatus' => true, 'message' => $message]);
         } catch (\Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);

@@ -42,6 +42,7 @@
         <div class="card">
             <div class="card-header text-center"><a href="#"><img class="logo-img" src="{{ asset('assets/images/logo.png') }}" alt="logo"></a></div>
             <div class="card-body">
+            <span class="error-message" style="color:red"></span>
                 <form method="POST" action="#" id="loginForm">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
@@ -100,9 +101,8 @@
                 },
                 error: function(err) {
                     $.each(err.responseJSON.errors, function(i, error) {
-                            var el = $(document).find('[name="' + i + '"]');
-                            el.after($('<span class="error-message" style="color: red;">' +
-                                error[0] + '</span>'));
+                        console.log(error);
+                           $(".error-message").text(error);
                         })
                 }
             });

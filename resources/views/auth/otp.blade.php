@@ -74,23 +74,18 @@
                 data: $("#loginForm").serialize(),
                
                 success: function(response) {
+                    console.log(response.message);
+
                   if(response.status == true){
                     window.location.href = "{{ url('dashboard') }}";
-
-                  }else{
+                }else{
                     var el = $(document).find('[name=code]');
                             el.after($('<span class="error-message" style="color: red;">' +
-                               response.message + '</span>'));
-                  }
-
-                },
-                error: function(err) {
-                    $.each(err.responseJSON.errors, function(i, error) {
-                            var el = $(document).find('[name="' + i + '"]');
-                            el.after($('<span class="error-message" style="color: red;">' +
-                                error[0] + '</span>'));
-                        })
+                            response.message + '</span>'));
                 }
+
+                }
+                
             });
         });
     </script>
