@@ -28,6 +28,8 @@ class ProjectDetailRequest extends FormRequest
         if ($this->has('ship_type')) {
             $rules['ship_type'] = 'required';
         }
+
+        $rules['image'] = 'image|mimes:jpeg,png,jpg|max:2048';
         return $rules;
 
     }

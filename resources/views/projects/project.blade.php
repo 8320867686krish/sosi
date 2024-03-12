@@ -26,23 +26,34 @@
             <div class="col-12">
                 @include('layouts.message')
             </div>
+            <div class="col-12 mb-4">
+                @can('projects.add')
+                    <a href="{{ route('projects.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New
+                        Project</a>
+                @endcan
+            </div>
             @if (isset($projects) && $projects->count() > 0)
                 @foreach ($projects as $project)
                     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                         <div class="card campaign-card text-center">
                             <div class="card-body">
                                 <div class="campaign-img">
-                                    <img src="{{ asset('assets/images/dribbble.png') }}" alt="user" class="user-avatar-xl">
+                                    <img src="{{ asset('assets/images/dribbble.png') }}" alt="user"
+                                        class="user-avatar-xl">
                                 </div>
                                 <div class="campaign-info">
                                     <h3 class="mb-1">{{ ucfirst($project->ship_name) }}</h3>
-                                    <p class="mb-3">IMO Number:<span class="text-dark font-medium ml-2">{{ $project->imo_number }}</span></p>
-                                    <p class="mb-1">Manager: <span class="text-dark font-medium ml-2">{{ ucwords($project->client->name ?? '') }}</span></p>
-                                    <p>Project No.:<span class="text-dark font-medium ml-2">{{ $project->project_no }}</span>
+                                    <p class="mb-3">IMO Number:<span
+                                            class="text-dark font-medium ml-2">{{ $project->imo_number }}</span></p>
+                                    <p class="mb-1">Manager: <span
+                                            class="text-dark font-medium ml-2">{{ ucwords($project->client->name ?? '') }}</span>
+                                    </p>
+                                    <p>Project No.:<span
+                                            class="text-dark font-medium ml-2">{{ $project->project_no }}</span>
                                     </p>
                                     @can('projects.edit')
-                                        <a href="{{ route('projects.edit', ['id' => $project->id]) }}" rel="noopener noreferrer"
-                                            title="Edit">
+                                        <a href="{{ route('projects.edit', ['id' => $project->id]) }}"
+                                            rel="noopener noreferrer" title="Edit">
                                             <i class="fas fa-edit fa-sm text-primary"></i>
                                         </a>
                                     @endcan
@@ -65,13 +76,19 @@
                         </div>
                     </div>
                 @endforeach
+            @else
+                <div class="col-12">
+                    <div class="alert alert-danger fade show text-center" role="alert">
+                        Data not found.
+                    </div>
+                </div>
             @endif
         </div>
     </div>
 @endsection
 
-    @section('js')
-        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-        <script src="{{ asset('assets/vendor/datatables/js/dataTables.bootstrap4.min.js') }}"></script>
-        <script src="{{ asset('assets/vendor/datatables/js/data-table.js') }}"></script>
-    @endsection
+@section('js')
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="{{ asset('assets/vendor/datatables/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/datatables/js/data-table.js') }}"></script>
+@endsection
