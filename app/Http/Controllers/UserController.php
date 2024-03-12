@@ -29,7 +29,6 @@ class UserController extends Controller
                 $users = User::get();
             }
 
-
             return view('user.user', ['users' => $users]);
         } catch (\Throwable $th) {
             return back()->withError($th->getMessage())->withInput();
@@ -63,7 +62,8 @@ class UserController extends Controller
             $inputData['isVerified'] = $request->has('isVerified') ? 1 : 0;
 
             if (empty($id)) {
-                $password = \Str::random(10);
+                $first_three_chars = substr($request->input('name'), 0, min(3, strlen($request->input('name'))));
+                $password = "sosi{$first_three_chars}123";
                 $inputData['password'] = Hash::make($password);
             }
 
@@ -125,8 +125,14 @@ class UserController extends Controller
     public function edit(string $id)
     {
         try {
+
             $currentUserRoleLevel = Auth::user()->roles->first()->level;
-            $roles = Role::where('level', '>', $currentUserRoleLevel)->get();
+
+            if($currentUserRoleLevel != 1){
+                $roles = Role::where('level', '>', $currentUserRoleLevel)->get();
+            }else{
+                $roles = Role::get();
+            }
 
             $user = User::select('id', 'name', 'last_name', 'email', 'isVerified')->find($id);
             $role = $user->getRoleNames();

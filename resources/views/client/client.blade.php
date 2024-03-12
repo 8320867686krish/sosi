@@ -42,29 +42,31 @@
             </div>
             @if (isset($clients) && $clients->count() > 0)
                 @foreach ($clients as $client)
-                    <div class="col-lg-4 col-md-6 col-sm-12 col-12 clientShowCard">
+                    <div class="col-lg-3 col-md-6 col-sm-12 col-12 clientShowCard">
                         <div class="card campaign-card text-center">
-                            <div class="card-header">
+                            @can('projects.read')
+                                <a href="{{ route('projects.client', ['client_id' => $client->id]) }}" class="product-wishlist-btn active" style="border-color: #017cc0 !important; line-height: 2.1 !important;background-color: #017cc0 !important; color: #fff !important;">{{ $client->total_projects ?? 0 }}</a>
+                            @else
+                                <a href="#" class="product-wishlist-btn active" style="border-color: #017cc0 !important; line-height: 2.1 !important;background-color: #017cc0 !important; color: #fff !important;">{{ $client->total_projects ?? 0 }}</a>
+                            @endcan
+
+                            {{-- <div class="card-header">
                                 <h4 class="d-flex justify-content-between align-items-center mb-0">
                                     <span class="text-muted">Projects</span>
                                     <span class="badge badge-secondary badge-pill">{{ $client->total_projects ?? 0 }}</span>
                                 </h4>
-                            </div>
+                            </div> --}}
                             <div class="card-body">
-
                                 <div class="campaign-img">
-                                    <img src="{{ $client->managerLogoPath }}" alt="user"
-                                        class="user-avatar-xl rounded-circle">
+                                    <img src="{{ $client->managerLogoPath }}" alt="user" class="user-avatar-xl rounded-circle">
                                 </div>
                                 <div class="campaign-info">
-                                    <h3 class="mb-1">{{ ucfirst($client->manager_name) ?? '' }}</h3>
-                                    <p class="mb-3">Total Project:<span
+                                    <h3 class="mb-3">{{ ucfirst($client->manager_name) ?? '' }}</h3>
+                                    {{-- <p class="mb-3">Total Project:<span
                                             class="text-dark font-medium ml-2">{{ $client->total_projects ?? 0 }}</span>
-                                    </p>
-                                    <p class="mb-1">Phone: <span
-                                            class="text-dark font-medium ml-2">{{ $client->manager_phone ?? '' }}</span></p>
-                                    <p>Ship owner.:<span
-                                            class="text-dark font-medium ml-2">{{ ucwords($client->owner_name) ?? '' }}</span>
+                                    </p> --}}
+                                    <p class="mb-1">Phone: <span class="text-dark font-medium ml-2">{{ $client->manager_phone ?? '' }}</span></p>
+                                    <p>Ship owner.:<span class="text-dark font-medium ml-2">{{ ucwords($client->owner_name) ?? '' }}</span>
                                     </p>
                                     @can('clients.edit')
                                         <a href="{{ route('clients.edit', ['id' => $client->id]) }}" rel="noopener noreferrer" title="Edit">
@@ -77,12 +79,6 @@
                                             <i class="fas fa-trash-alt fa-sm text-danger"></i>
                                         </a>
                                     @endcan
-                                    @can('projects.read')
-                                        <a href="{{ route('projects.client', ['client_id' => $client->id]) }}" class="ml-2">
-                                            <i class="fas fas fa-list fa-sm"></i>
-                                        </a>
-                                    @endcan
-                                    {{-- <a href="#"><i class="fab fa-twitter-square fa-sm twitter-color"></i> </a><a href="#"><i class="fab fa-snapchat-square fa-sm snapchat-color"></i></a> --}}
                                 </div>
                             </div>
                         </div>

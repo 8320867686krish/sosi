@@ -31,7 +31,6 @@ class ProjectDetailRequest extends FormRequest
 
         $rules['image'] = 'image|mimes:jpeg,png,jpg|max:2048';
         return $rules;
-
     }
     public function messages(): array
     {

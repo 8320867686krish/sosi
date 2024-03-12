@@ -99,7 +99,7 @@
                                 </div>
                                 <div class="col-sm-12 col-md-4">
                                     <div class="form-group">
-                                        <label for="project_name">Type of ship</label>
+                                        <label for="ship_type">Type of ship</label>
                                         <input type="text" class="form-control @error('ship_type') is-invalid @enderror"
                                             id="ship_type" name="ship_type"
                                             value="{{ old('ship_type', $project->ship_type ?? '') }}"
@@ -120,8 +120,8 @@
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
-                                        <label for="vessal_class">Vessel Class</label>
-                                        <input type="text" class="form-control @error('vessal_class') is-invalid @enderror" id="vessal_class" value="{{ old('vessal_class', $project->vessal_class ?? '') }}" name="vessal_class" placeholder="Vessal Class" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        <label for="vessel_class">Vessel Class</label>
+                                        <input type="text" class="form-control @error('vessel_class') is-invalid @enderror" id="vessel_class" value="{{ old('vessel_class', $project->vessel_class ?? '') }}" name="vessel_class" placeholder="Vessel Class" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-4">
@@ -180,14 +180,14 @@
 
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
-                                        <label for="builder_details">Building Yard Details</label>
+                                        <label for="building_details">Building Yard Details</label>
                                         <input type="text"
-                                            class="form-control @error('builder_details') is-invalid @enderror"
-                                            id="builder_details"
-                                            value="{{ old('builder_details', $project->builder_details ?? '') }}"
-                                            name="builder_details" placeholder="Builder Details" autocomplete="off"
+                                            class="form-control @error('building_details') is-invalid @enderror"
+                                            id="building_details"
+                                            value="{{ old('building_details', $project->building_details ?? '') }}"
+                                            name="building_details" placeholder="Builder Details" autocomplete="off"
                                             onchange="removeInvalidClass(this)" {{ $readonly }}>
-                                        @error('builder_details')
+                                        @error('building_details')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -197,14 +197,14 @@
                             <div class="row">
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
-                                        <label for="builder_name">Length x breadth x depth</label>
+                                        <label for="x_breadth_depth">Length x breadth x depth</label>
                                         <input type="text"
-                                            class="form-control @error('builder_name') is-invalid @enderror"
-                                            id="builder_name"
-                                            value="{{ old('builder_name', $project->builder_name ?? '') }}"
-                                            name="builder_name" placeholder="Builder Name" autocomplete="off"
+                                            class="form-control @error('x_breadth_depth') is-invalid @enderror"
+                                            id="x_breadth_depth"
+                                            value="{{ old('x_breadth_depth', $project->x_breadth_depth ?? '') }}"
+                                            name="x_breadth_depth" placeholder="Length x breadth x depth" autocomplete="off"
                                             onchange="removeInvalidClass(this)" {{ $readonly }}>
-                                        @error('builder_name')
+                                        @error('x_breadth_depth')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -212,8 +212,8 @@
 
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
-                                        <label for="grt">GRT</label>
-                                        <input type="text" class="form-control @error('grt') is-invalid @enderror" id="grt" value="{{ old('grt', $project->grt ?? '') }}" name="grt" placeholder="GRT" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        <label for="gross_tonnage">Gross Registered Tonnage (GRT)</label>
+                                        <input type="text" class="form-control @error('gross_tonnage') is-invalid @enderror" id="gross_tonnage" value="{{ old('gross_tonnage', $project->gross_tonnage ?? '') }}" name="gross_tonnage" placeholder="GRT" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
                                         @error('grt')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -222,14 +222,14 @@
 
                                 <div class="col-sm-12 col-md-4">
                                     <div class="form-group">
-                                        <label for="gross_tonnage">Vessel Previous Name</label>
+                                        <label for="vessel_previous_name">Vessel Previous Name (If Any) </label>
                                         <input type="text"
-                                            class="form-control @error('gross_tonnage') is-invalid @enderror"
-                                            id="gross_tonnage"
-                                            value="{{ old('gross_tonnage', $project->gross_tonnage ?? '') }}"
-                                            name="gross_tonnage" placeholder="Vessel Previous Name" autocomplete="off"
+                                            class="form-control @error('vessel_previous_name') is-invalid @enderror"
+                                            id="vessel_previous_name"
+                                            value="{{ old('vessel_previous_name', $project->vessel_previous_name ?? '') }}"
+                                            name="vessel_previous_name" placeholder="Vessel Previous Name" autocomplete="off"
                                             onchange="removeInvalidClass(this)" {{ $readonly }}>
-                                        @error('builder_details')
+                                        @error('vessel_previous_names')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>

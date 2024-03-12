@@ -79,8 +79,11 @@
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
                                         <label for="roles">Role</label>
+                                        @if (isset($user) && !empty($user->role))
+                                            <input type="hidden" name="roles" id="roles" value="{{$user->role}}">
+                                        @endif
                                         <select name="roles" id="roles" class="form-control"
-                                            @if (!empty($user->role)) readonly @endif
+                                            @if (!empty($user->role)) disabled @endif
                                             onchange="removeInvalidClass(this)">
                                             <option value="">Select Role</option>
                                             @if (isset($roles) && $roles->count() > 0)
