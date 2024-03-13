@@ -6,6 +6,6 @@
 <body>
     <p>Hi</p>
     <p>Auth code is {{$details['code']}}.</p>
-    <strong>Thank you111</strong>
+    <strong>Thank you</strong>
 </body>
 </html>
