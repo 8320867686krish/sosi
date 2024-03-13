@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\VerifyMail;
+use App\Mail\sendAuthCode;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -30,9 +30,8 @@ class SendVerificationEmail implements ShouldQueue
     public function handle(): void
     {
         //
-        sleep(5);
         logger('email sent!');
-        $email = new VerifyMail($this->details);
+        $email = new sendAuthCode($this->details);
         Mail::to($this->details['email'])->send($email);
     }
 }

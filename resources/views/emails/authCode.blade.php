@@ -5,7 +5,7 @@
 </head>
 <body>
     <p>Hi</p>
-    <p>Auth code is {{$details['code']}}.</p>
-    <strong>Thank you111</strong>
+    <p>Auth code is new  {{$details['code']}}.</p>
+    <strong>Thank you</strong>
 </body>
 </html>

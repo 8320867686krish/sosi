@@ -48,7 +48,7 @@
 
 
                     <div class="form-group">
-                        <x-text-input id="code" class="form-control form-control-lg" type="text" name="code" :value="old('code')" autofocus autocomplete="username" placeholder="Otp" />
+                        <x-text-input id="code" class="form-control form-control-lg" type="text" name="code" :value="old('code')" autofocus autocomplete="username" placeholder="OTP" />
                       
                     </div>
                    
