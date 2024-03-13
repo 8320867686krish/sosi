@@ -272,14 +272,28 @@ class ApiController extends Controller
     public function getProjectList()
     {
         try {
-            $project = Projects::with('client:id,name,image')->get();
+            $user = Auth::user();
+
+            $currentUserRoleLevel = $user->roles->first()->level;
+
+            if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
+                $project = Projects::with('client:id,manager_name,manager_logo');
+            } else {
+                $project = $user->projects()->with('client:id,manager_name,manager_logo');
+            }
+
+            $project = $project->get();
+
+            $project->each(function ($project) {
+                $project->makeHidden(['created_at', 'updated_at', 'pivot']);
+            });
 
             $modifiedProjects = [];
 
             if ($project->count() > 0) {
                 $modifiedProjects = $project->map(function ($item) {
-                    if (isset($item->client->image) && !empty($item->client->image)) {
-                        $item->client->imagePath = url('public/images/client/') . '/' . $item->client->image;
+                    if (isset($item->client->manager_logo) && !empty($item->client->manager_logo)) {
+                        $item->client->imagePath = url('public/images/client/') . '/' . $item->client->manager_logo;
                     }
                     return $item;
                 });
@@ -287,10 +301,10 @@ class ApiController extends Controller
 
             return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $modifiedProjects]);
         } catch (Throwable $th) {
+            dd($th->getMessage());
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.', 'projectList' => []]);
         }
     }
-
 
     public function getShipDetail($project_id)
     {

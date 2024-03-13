@@ -29,7 +29,8 @@
                 <div class="card">
                     <h5 class="card-header">Client Manager</h5>
                     <div class="card-body">
-                        <form method="post" class="needs-validation" novalidate id="clientForm" enctype="multipart/form-data">
+                        <form method="post" class="needs-validation" novalidate id="clientForm"
+                            enctype="multipart/form-data">
                             @csrf
                             <h5>Ship Manager Details</h5>
                             <input type="hidden" name="id" value="{{ $client->id ?? '' }}">
@@ -37,18 +38,27 @@
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="manager_name">Name</label>
-                                        <input type="text" class="form-control @error('manager_name') is-invalid @enderror" id="manager_name" value="{{ old('manager_name', $client->manager_name ?? '') }}" name="manager_name" placeholder="Ship Manager Name..." autocomplete="off" onchange="removeInvalidClass(this)">
+                                        <input type="text"
+                                            class="form-control @error('manager_name') is-invalid @enderror"
+                                            id="manager_name" value="{{ old('manager_name', $client->manager_name ?? '') }}"
+                                            name="manager_name" placeholder="Ship Manager Name..." autocomplete="off"
+                                            onchange="removeInvalidClass(this)">
                                         {{-- @error('manager_name') --}}
-                                            <div class="invalid-feedback error" id="manager_nameError"></div>
+                                        <div class="invalid-feedback error" id="manager_nameError"></div>
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="manager_email">Email</label>
-                                        <input type="email" class="form-control @error('manager_email') is-invalid @enderror" id="manager_email" name="manager_email" value="{{ old('manager_email', $client->manager_email ?? '') }}" placeholder="Ship Manager Email..." autocomplete="off" onchange="removeInvalidClass(this)">
+                                        <input type="email"
+                                            class="form-control @error('manager_email') is-invalid @enderror"
+                                            id="manager_email" name="manager_email"
+                                            value="{{ old('manager_email', $client->manager_email ?? '') }}"
+                                            placeholder="Ship Manager Email..." autocomplete="off"
+                                            onchange="removeInvalidClass(this)">
                                         {{-- @error('manager_email') --}}
-                                            <div class="invalid-feedback error" id="manager_emailError"></div>
+                                        <div class="invalid-feedback error" id="manager_emailError"></div>
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
@@ -62,7 +72,7 @@
                                             placeholder="Ship Manager Phone..." autocomplete="off"
                                             onchange="removeInvalidClass(this)">
                                         {{-- @error('manager_phone') --}}
-                                            <div class="invalid-feedback error" id="manager_phoneError"></div>
+                                        <div class="invalid-feedback error" id="manager_phoneError"></div>
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
@@ -78,16 +88,21 @@
                                             name="manager_contact_person_name" placeholder="Contact Person Name..."
                                             autocomplete="off" onchange="removeInvalidClass(this)">
                                         {{-- @error('manager_contact_person_name') --}}
-                                            <div class="invalid-feedback error" id="manager_contact_person_nameError"></div>
+                                        <div class="invalid-feedback error" id="manager_contact_person_nameError"></div>
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="manager_contact_person_email">Contact Person Email</label>
-                                        <input type="email" class="form-control @error('manager_contact_person_email') is-invalid @enderror" id="manager_contact_person_email" name="manager_contact_person_email" value="{{ old('manager_contact_person_email', $client->manager_contact_person_email ?? '') }}" placeholder="Contact Person Email..." autocomplete="off" onchange="removeInvalidClass(this)">
+                                        <input type="email"
+                                            class="form-control @error('manager_contact_person_email') is-invalid @enderror"
+                                            id="manager_contact_person_email" name="manager_contact_person_email"
+                                            value="{{ old('manager_contact_person_email', $client->manager_contact_person_email ?? '') }}"
+                                            placeholder="Contact Person Email..." autocomplete="off"
+                                            onchange="removeInvalidClass(this)">
                                         {{-- @error('manager_contact_person_email') --}}
-                                            <div class="invalid-feedback error" id="manager_contact_person_emailError"></div>
+                                        <div class="invalid-feedback error" id="manager_contact_person_emailError"></div>
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
@@ -101,7 +116,7 @@
                                             placeholder="Contact Person Phone..." autocomplete="off"
                                             onchange="removeInvalidClass(this)">
                                         {{-- @error('manager_contact_person_phone') --}}
-                                            <div class="invalid-feedback error" id="manager_contact_person_phoneError"></div>
+                                        <div class="invalid-feedback error" id="manager_contact_person_phoneError"></div>
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
@@ -115,7 +130,7 @@
                                             placeholder="RPSL Details..." autocomplete="off"
                                             onchange="removeInvalidClass(this)">
                                         {{-- @error('rpsl') --}}
-                                            <div class="invalid-feedback error" id="rpslError"></div>
+                                        <div class="invalid-feedback error" id="rpslError"></div>
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
@@ -129,7 +144,7 @@
                                             autocomplete="off"
                                             value="{{ old('manager_website', $client->manager_website ?? '') }}">
                                         {{-- @error('manager_website') --}}
-                                            <div class="invalid-feedback error" id="manager_websiteError"></div>
+                                        <div class="invalid-feedback error" id="manager_websiteError"></div>
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
@@ -142,7 +157,7 @@
                                             value="{{ old('manager_tax_information', $client->manager_tax_information ?? '') }}"
                                             onchange="removeInvalidClass(this)" autocomplete="off">
                                         {{-- @error('manager_tax_information') --}}
-                                            <div class="invalid-feedback error" id="manager_tax_informationError"></div>
+                                        <div class="invalid-feedback error" id="manager_tax_informationError"></div>
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
@@ -154,7 +169,7 @@
                                         <textarea name="manager_address" id="manager_address" rows="2"
                                             class="form-control @error('manager_address') is-invalid @enderror" onchange="removeInvalidClass(this)">{{ old('manager_address', $client->manager_address ?? '') }}</textarea>
                                         {{-- @error('manager_address') --}}
-                                            <div class="invalid-feedback error" id="manager_addressError"></div>
+                                        <div class="invalid-feedback error" id="manager_addressError"></div>
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
@@ -166,7 +181,7 @@
                                             id="manager_logo" name="manager_logo" onchange="removeInvalidClass(this)"
                                             accept="image/*">
                                         {{-- @error('manager_logo') --}}
-                                            <div class="invalid-feedback error" id="manager_logoError"></div>
+                                        <div class="invalid-feedback error" id="manager_logoError"></div>
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
@@ -180,7 +195,7 @@
                                             autocomplete="off"
                                             value="{{ old('manager_initials', $client->manager_initials ?? '') }}">
                                         {{-- @error('manager_initials') --}}
-                                            <div class="invalid-feedback error" id="manager_initialsError"></div>
+                                        <div class="invalid-feedback error" id="manager_initialsError"></div>
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
@@ -367,13 +382,20 @@
 
 @section('js')
     <script>
+
         function removeInvalidClass(input) {
-            // Check if the input value is empty or whitespace only
+
             const isValid = input.value.trim() !== '';
 
-            // Toggle the 'is-invalid' class based on the validity
             input.classList.toggle('is-invalid', !isValid);
+
+            const errorMessageElement = input.parentElement.querySelector('.invalid-feedback');
+
+            if (errorMessageElement) {
+                errorMessageElement.style.display = isValid ? 'none' : 'block';
+            }
         }
+
 
         $(document).ready(function() {
             $('#isSameAsManager').click(function() {
@@ -431,8 +453,8 @@
                         window.location.href = "{{ route('clients') }}";
                     },
                     error: function(xhr, status, error) {
-                       // If there are errors, display them
-                       var errors = xhr.responseJSON.errors;
+                        // If there are errors, display them
+                        var errors = xhr.responseJSON.errors;
                         if (errors) {
                             // Loop through errors and display them
                             $.each(errors, function(field, messages) {
