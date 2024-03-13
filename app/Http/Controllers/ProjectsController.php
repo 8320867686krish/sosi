@@ -108,7 +108,7 @@ class ProjectsController extends Controller
     public function saveDetail(ProjectDetailRequest $request)
     {
         $inputData = $request->input();
-
+        unset($inputData['manager_name']);
         if ($request->hasFile('image')) {
 
             $image = $request->file('image');
