@@ -269,7 +269,7 @@
                                         <label for="image">Ship Photo</label>
                                         <input type="file" class="form-control @error('image') is-invalid @enderror"
                                             id="image" name="image" autocomplete="off"
-                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                            onchange="previewFile(this);" {{ $readonly }} accept="image/*">
                                         @error('image')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -283,6 +283,9 @@
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div> --}}
+                                </div>
+                                <div class="col-12">
+                                    <img id="previewImg" src="{{ $project->imagePath }}" width="20%" alt="Upload Image">
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -324,10 +327,7 @@
                                 <div class="col-sm-12 col-md-4">
                                     <div class="form-group">
                                         <label for="project_no">User</label>
-                                        <select
-                                            class="selectpicker show-tick form-control @error('user_id') is-invalid @enderror"
-                                            name="user_id[]" id="user_id" multiple data-live-search="true"
-                                            data-actions-box="true" {{ $readonly }}>
+                                        <select class="selectpicker show-tick form-control @error('user_id') is-invalid @enderror" name="user_id[]" id="user_id" multiple data-live-search="true" data-actions-box="true" {{ $readonly }}>
                                             @if ($users->count() > 0)
                                                 @foreach ($users as $user)
                                                     @if (in_array($user->id, $project->user_id))
@@ -490,10 +490,10 @@
         }
 
         function previewFile(input) {
-            var file = $("input[type=file]").get(0).files[0];
+            let file = $("input[type=file]").get(0).files[0];
 
             if (file) {
-                var reader = new FileReader();
+                let reader = new FileReader();
 
                 reader.onload = function() {
                     $("#previewImg").attr("src", reader.result);
@@ -590,7 +590,7 @@
                 $('.error-message').remove("");
 
                 var formData = new FormData(this);
-                console.log(formData);
+
                 $.ajax({
                     url: "{{ url('detail/save') }}", // Change this to the URL where you handle the form submission
                     type: 'POST',

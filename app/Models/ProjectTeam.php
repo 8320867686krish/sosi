@@ -9,8 +9,10 @@ class ProjectTeam extends Model
 {
     use HasFactory;
 
-    protected $table = "project_teams";
 
     protected $guarded = []; // This means no attributes are guarded
-
+    public function projects()
+    {
+        return $this->belongsToMany(Projects::class, 'project_teams', 'project_id', 'id');
+    }
 }
