@@ -269,7 +269,7 @@
                                         <label for="image">Ship Photo</label>
                                         <input type="file" class="form-control @error('image') is-invalid @enderror"
                                             id="image" name="image" autocomplete="off"
-                                            onchange="previewFile(this);" {{ $readonly }} accept="image/*">
+                                            onchange="previewFile(this); removeInvalidClass(this)" {{ $readonly }} accept="image/*">
                                         @error('image')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
