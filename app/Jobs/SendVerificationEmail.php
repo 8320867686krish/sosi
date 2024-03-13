@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\TestMail;
+use App\Mail\VerifyMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -32,7 +32,7 @@ class SendVerificationEmail implements ShouldQueue
         //
         sleep(5);
         logger('email sent!');
-        $email = new TestMail($this->details);
+        $email = new VerifyMail($this->details);
         Mail::to($this->details['email'])->send($email);
     }
 }
