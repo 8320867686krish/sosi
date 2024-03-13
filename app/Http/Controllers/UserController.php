@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Jobs\sendUserRegisterMail;
 use App\Mail\UserWelcomeMail;
 use App\Models\otpVerification;
 use App\Models\User;
@@ -197,7 +198,9 @@ class UserController extends Controller
     protected function sendWelcomeEmail(array $userData): bool
     {
         try {
-            Mail::to($userData['email'])->send(new UserWelcomeMail($userData));
+            dispatch(new sendUserRegisterMail($userData));
+
+          //  Mail::to($userData['email'])->send(new UserWelcomeMail($userData));
             return true;
         } catch (\Exception $e) {
             // Log the error or handle it in any other way
