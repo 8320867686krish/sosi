@@ -309,7 +309,7 @@ class ApiController extends Controller
     public function getShipDetail($project_id)
     {
         try {
-            $project = Projects::with('client:name,address,id')->where('id', $project_id)->first()->toarray();
+            $project = Projects::with('client:id,manager_name,manager_address')->where('id', $project_id)->first()->toarray();
             foreach ($project as $key => $value) {
                 if ($value === null) {
                     $project[$key] = '';
