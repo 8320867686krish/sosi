@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 use Illuminate\Validation\ValidationException;
+use  App\Jobs\SendVerificationEmail;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -39,6 +40,12 @@ class AuthenticatedSessionController extends Controller
             $token = $sessionPayload['_token'];
             $insertData = ['session_id' =>$sessionId,'isVerify' => 0,'code' => $code,'token'=> $token,'email' => $request->input('email')];
             $otp = otpVerification::updateOrCreate(['token'=>$token], $insertData);
+            $details['email'] = $request['email'];
+            $details['code'] = $code;
+            dispatch(new SendVerificationEmail($details));
+
+           
+
             return response()->json(['isOtp' => 1,'status'=>true,'deviceId'=> $sessionId,'code' => $code],200);
         }else{
             $request->session()->regenerate();
