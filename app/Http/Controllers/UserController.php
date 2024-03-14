@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Jobs\sendUserRegisterMail;
-use App\Mail\UserWelcomeMail;
 use App\Models\otpVerification;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -136,6 +135,7 @@ class UserController extends Controller
             return response()->json(['isStatus' => true, 'message' => $message]);
         } catch (\Throwable $th) {
             // return back()->withError($th->getMessage())->withInput();
+            dd($th->getMessage());
             return response()->json(['isStatus' => false, 'message' => $th->getMessage()]);
         }
     }
@@ -159,13 +159,15 @@ class UserController extends Controller
 
             if($currentUserRoleLevel != 1){
                 $roles = Role::where('level', '>', $currentUserRoleLevel)->get();
-            }else{
+            } else {
                 $roles = Role::get();
             }
 
-            $user = User::select('id', 'name', 'last_name', 'email', 'isVerified')->find($id);
+            $user = User::find($id);
             $role = $user->getRoleNames();
             $user['role'] = $role[0];
+            $user['roleLevel'] = $currentUserRoleLevel;
+            unset($user->password, $user->created_at, $user->updated_at);
 
             return view('user.userAdd', ['roles' => $roles, 'button' => 'Update', 'head_title' => 'Edit', 'user' => $user]);
         } catch (\Throwable $th) {

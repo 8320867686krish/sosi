@@ -13,7 +13,7 @@ class ClientContoller extends Controller
     {
         $clients = Client::with(['projects' => function ($query) {
             $query->select('client_id', \DB::raw('count(*) as total_projects'))->groupBy('client_id');
-        }])->select('id', 'manager_name', 'manager_phone', 'manager_logo', 'owner_name')->get();
+        }])->select('id', 'manager_name', 'manager_contact_person_name', 'manager_logo', 'owner_name')->get();
 
         $modifiedClients = $clients->map(function ($client) {
             $client->managerLogoPath = asset("/images/client/{$client->manager_logo}");
