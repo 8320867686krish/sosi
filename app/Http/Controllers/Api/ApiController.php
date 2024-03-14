@@ -115,6 +115,7 @@ class ApiController extends Controller
             if (!$user->hasPermissionTo('APP.access')) {
                 return response()->json(['isStatus' => false, 'message' => 'User does not have permission for app access.']);
             }
+
             $existingToken = PersonalAccessToken::where('tokenable_id', $user->id)->first();
 
             if ($existingToken) {
@@ -125,7 +126,7 @@ class ApiController extends Controller
                 dispatch(new SendVerificationEmail($details));
             }
             // Check if user is already logged in from another device
-          
+
             // Create a new token
             $token = $user->createToken('ApiToken')->plainTextToken;
             if( $isOtpSend == true){
@@ -134,11 +135,13 @@ class ApiController extends Controller
                     'code' => $code
                 ]);
             }
+
             $userData = $user->makeHidden(['roles','permissions','email_verified_at','firebase_token','created_at','updated_at'])->toArray();
+
             foreach ($userData as $key => $value) {
                 $userData[$key] = $value ?? ''; // Replace null with empty string
             }
-           
+
 
             return response()->json([
                 'isStatus' => true,

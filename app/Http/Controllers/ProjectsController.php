@@ -18,26 +18,32 @@ class ProjectsController extends Controller
     public function index($client_id = null)
     {
         $user = Auth::user();
-
         $currentUserRoleLevel = $user->roles->first()->level;
 
         if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
             $projects = Projects::with('client:id,manager_name');
         } else {
-            // $team = ProjectTeam::with('projects')->where('user_id',$user['id'])->get();
             $projects = $user->projects()->with('client:id,manager_name,manager_logo');
         }
 
-        if (@$client_id) {
+        if ($client_id) {
             $projects->where('client_id', $client_id);
         }
 
         $projects = $projects->get();
 
-
+        // if ($projects->isNotEmpty()) {
+        //     $projects->transform(function ($item) {
+        //         $imagePath = $item->image ? url("images/ship/{$item->image}") : asset('assets/images/dribbble.png');
+        //         $item->imagePath = $imagePath;
+        //         return $item;
+        //     });
+        // }
+        // dd($projects);
 
         return view('projects.project', compact('projects'));
     }
+
 
     public function create()
     {
@@ -65,6 +71,11 @@ class ProjectsController extends Controller
             $readonly = "";
         }
         return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id]);
+    }
+
+    public function projectInfo($project_id)
+    {
+        return view('projects.projectInfo', ['head_title' => 'Ship Particulars', 'button' => 'View']);
     }
 
     public function store(ProjectRequest $request)

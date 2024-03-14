@@ -30,7 +30,8 @@ class Projects extends Model
 
     public function getImageAttribute($value)
     {
-        
-        return 'path/to/image/' . $value;
+        $imagePath = $value ? url("images/ship/{$value}") : asset('assets/images/dribbble.png');
+        return $imagePath;
+        // url("images/ship/{$value}");
     }
 }

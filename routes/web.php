@@ -33,6 +33,10 @@ Route::get('/dashboard', function () {
     return view('home');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::fallback(function () {
+    return response()->view('errors.404', [], 404);
+});
+
 Route::middleware('auth')->group(function () {
     // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -55,8 +59,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware('can:clients')->group(function () {
         Route::controller(ClientContoller::class)->group(function () {
             Route::get('clients', 'index')->name('clients');
-            Route::get('clients/add', 'create')->name('clients.add');
-            Route::post('clients', 'store')->name('clients.store');
+            Route::get('clients/add', 'create')->name('clients.add')->middleware('can:clients.add');
+            Route::post('clients', 'store')->name('clients.store')->middleware('can:clients.add');
             Route::get('clients/{id}/edit', 'edit')->name('clients.edit');
             Route::get('clients/{id}/delete', 'destroy')->name('clients.delete');
         });
@@ -68,6 +72,7 @@ Route::middleware('auth')->group(function () {
             Route::get('projects/client/{client_id}', 'index')->name('projects.client');
             Route::get('project/add', 'create')->name('projects.add');
             Route::get('project/view/{project_id}', 'projectView')->name('projects.view');
+            Route::get('project/info/{project_id}', 'projectInfo')->name('projects.info');
             Route::post('project', 'store')->name('projects.store');
             Route::get('project/{id}/edit', 'edit')->name('projects.edit');
             Route::get('project/{id}/delete', 'destroy')->name('projects.delete');
