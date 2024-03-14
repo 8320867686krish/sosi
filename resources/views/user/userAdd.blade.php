@@ -96,7 +96,7 @@
                                             @endif
                                         </select>
                                         <div class="invalid-feedback error" id="rolesError"></div>
-                                        <input type="hidden" name="isVerified" value="{{ $user->isVerified ? $user->isVerified : '' }}">
+                                        <input type="hidden" name="isVerified" value="{{ @$user->isVerified ? $user->isVerified : 1 }}">
                                     </div>
                                 </div>
                             </div>
