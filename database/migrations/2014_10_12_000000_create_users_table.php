@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->boolean('isVerified')->default(0);
+            $table->boolean('isVerified')->default(1);
             $table->text('firebase_token')->nullable();
             $table->rememberToken();
             $table->timestamps();

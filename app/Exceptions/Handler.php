@@ -6,10 +6,20 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Session\TokenMismatchException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
 {
-   
+    protected function prepareException(Throwable $e)
+    {
+        
+        if ($e instanceof TokenMismatchException) {
+            $e = new HttpException(419, 'Your session has expired. Please refresh the page to continue using the system.', $e);
+        }
+
+        return parent::prepareException($e);
+    }
 
     public function render($request, Throwable $exception)
     {

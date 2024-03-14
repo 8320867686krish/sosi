@@ -17,6 +17,9 @@ use Laravel\Sanctum\PersonalAccessToken;
 use Spatie\Permission\Models\Role;
 use Illuminate\Validation\ValidationException;
 use Throwable;
+use  App\Jobs\SendVerificationEmail;
+use App\Models\AppUserVerify;
+use Illuminate\Support\Facades\App;
 
 class ApiController extends Controller
 {
@@ -90,6 +93,7 @@ class ApiController extends Controller
     {
         try {
             // Validate request data
+            $isOtpSend = false;
             $validatedData = $request->validate([
                 'email' => 'required|email',
                 'password' => 'required',
@@ -111,24 +115,35 @@ class ApiController extends Controller
             if (!$user->hasPermissionTo('APP.access')) {
                 return response()->json(['isStatus' => false, 'message' => 'User does not have permission for app access.']);
             }
+            $existingToken = PersonalAccessToken::where('tokenable_id', $user->id)->first();
 
+            if ($existingToken) {
+                $isOtpSend = true;
+                $code = random_int(100000, 999999);
+                $details['email'] = $request['email'];
+                $details['code'] = $code;
+                dispatch(new SendVerificationEmail($details));
+            }
             // Check if user is already logged in from another device
-            // $existingToken = PersonalAccessToken::where('tokenable_id', $user->id)->delete();
-            // if ($existingToken) {
-            //     return response()->json(['isStatus' => false, 'message' => 'You are already logged in from another device']);
-            // }
-
+          
             // Create a new token
             $token = $user->createToken('ApiToken')->plainTextToken;
-            // $token = $user->createToken($user->name . '-AuthToken', ['expires' => now()->addMinutes(2)])->plainTextToken;
-            $userData = $user->toArray();
+            if( $isOtpSend == true){
+                AppUserVerify::create([
+                    'token' => $token,
+                    'code' => $code
+                ]);
+            }
+            $userData = $user->makeHidden(['roles','permissions','email_verified_at','firebase_token','created_at','updated_at'])->toArray();
             foreach ($userData as $key => $value) {
                 $userData[$key] = $value ?? ''; // Replace null with empty string
             }
+           
 
             return response()->json([
                 'isStatus' => true,
                 'message' => 'User login successful.',
+                'isOtpSend' => $isOtpSend,
                 'user' =>   $userData,
                 'token' => $token,
             ]);
@@ -351,5 +366,19 @@ class ApiController extends Controller
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
+    }
+    public function verifyCode(Request $request){
+        $post = $request->input();
+        $token = $request->bearerToken();
+        $otpVerify = AppUserVerify::where(['token' => $token,'code' => $post['code']])->first();
+        if( $otpVerify){
+            $otpVerify->delete();
+            return response()->json(['isStatus' => true, 'message' => 'successfully verified!!']);
+
+        }else{
+            return response()->json(['isStatus' => false, 'message' => 'enter valid code.']);
+
+        }
+
     }
 }

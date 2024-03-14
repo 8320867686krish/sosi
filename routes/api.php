@@ -31,6 +31,7 @@ Route::controller(ApiController::class)->group(function () {
     Route::middleware(['auth:sanctum'])->group(function () {
         // User Api
         Route::get('refresh_token', 'refreshSanctumToken');
+        Route::post('verify/code', 'verifyCode');
         Route::get('logout', 'logout');
         Route::post('change_password', 'changePassword');
 

@@ -56,7 +56,16 @@ class LoginRequest extends FormRequest
                 'autherror' => trans('auth.failed'),
             ]);
         }
+        if(Auth()->user()->isVerified == 0){
+            Auth::guard('web')->logout();
 
+            request()->session()->invalidate();
+
+            request()->session()->regenerateToken();
+            throw ValidationException::withMessages([
+                'autherror' => trans('this is user not verified please contact to admin.'),
+            ]);
+        }
          $chkLogin = DB::table('sessions')->where('user_id',Auth()->user()->id)->first();
         if(@$chkLogin){
            
