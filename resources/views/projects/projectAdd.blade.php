@@ -43,7 +43,8 @@
                                             <option value="">Select Client</option>
                                             @if (isset($clients) && $clients->count() > 0)
                                                 @foreach ($clients as $client)
-                                                    <option value="{{ $client->id }}" data-identi="{{ $client->manager_initials }}"
+                                                    <option value="{{ $client->id }}"
+                                                        data-identi="{{ $client->manager_initials }}"
                                                         {{ old('client_id') == $client->id || (isset($project) && $project->client_id == $client->id) ? 'selected' : '' }}>
                                                         {{ $client->manager_name }}
                                                     </option>
@@ -131,12 +132,14 @@
                             <div class="row mt-3">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i class="fas fa-arrow-left"></i> <b>Back</b></a>
+                                        <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i
+                                                class="fas fa-arrow-left"></i> <b>Back</b></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <button class="btn btn-primary float-right formSubmitBtn" type="submit">{!! $button ?? '<i class="fas fa-plus"></i>  Add' !!}</button>
+                                        <button class="btn btn-primary float-right formSubmitBtn"
+                                            type="submit">{!! $button ?? '<i class="fas fa-plus"></i>  Add' !!}</button>
                                     </div>
                                 </div>
                             </div>
@@ -151,16 +154,17 @@
 @section('js')
     <script>
         function removeInvalidClass(input) {
-            // Check if the input value is empty or whitespace only
+
             const isValid = input.value.trim() !== '';
 
-            // Toggle the 'is-invalid' class based on the validity
             input.classList.toggle('is-invalid', !isValid);
+
+            const errorMessageElement = input.parentElement.querySelector('.invalid-feedback');
+
+            if (errorMessageElement) {
+                errorMessageElement.style.display = isValid ? 'none' : 'block';
+            }
         }
-
-        // function generateProjectNo(){
-
-        // }
 
         $(document).ready(function() {
             var ship_identi = $("#client_id").find('option:selected').data('identi');

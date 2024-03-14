@@ -61,22 +61,23 @@
                                     <img src="{{ $client->managerLogoPath }}" alt="user" class="user-avatar-xl rounded-circle">
                                 </div>
                                 <div class="campaign-info">
-                                    <h3 class="mb-3">{{ ucfirst($client->manager_name) ?? '' }}</h3>
+                                    <h3 class="mb-1">{{ ucfirst($client->manager_name) ?? '' }}</h3>
                                     {{-- <p class="mb-3">Total Project:<span
                                             class="text-dark font-medium ml-2">{{ $client->total_projects ?? 0 }}</span>
                                     </p> --}}
-                                    <p class="mb-1">Phone: <span class="text-dark font-medium ml-2">{{ $client->manager_phone ?? '' }}</span></p>
+                                    @if (!empty($client->manager_contact_person_name))
+                                        <p class="mb-1">Contact Person: <span class="text-dark font-medium ml-2">{{ $client->manager_contact_person_name ?? '' }}</span></p>
+                                    @endif
                                     <p>Ship owner.:<span class="text-dark font-medium ml-2">{{ ucwords($client->owner_name) ?? '' }}</span>
                                     </p>
                                     @can('clients.edit')
                                         <a href="{{ route('clients.edit', ['id' => $client->id]) }}" rel="noopener noreferrer" title="Edit">
-                                            <i class="fas fa-edit fa-sm text-primary"></i>
+                                            <i class="fas fa-edit text-primary" style="font-size: 1rem !important"></i>
                                         </a>
                                     @endcan
                                     @can('clients.remove')
-                                        <a href="javascript:;" data-id="{{ $client->id }}" class="ml-2 delete-btn"
-                                            title="Delete">
-                                            <i class="fas fa-trash-alt fa-sm text-danger"></i>
+                                        <a href="javascript:;" data-id="{{ $client->id }}" class="ml-2 delete-btn" title="Delete">
+                                            <i class="fas fa-trash-alt text-danger" style="font-size: 1rem !important"></i>
                                         </a>
                                     @endcan
                                 </div>

@@ -13,16 +13,24 @@ class Projects extends Model
 
     protected $guarded = []; // This means no attributes are guarded
 
-    public function client(){
+    public function client()
+    {
         return $this->belongsTo(Client::class, 'client_id', 'id');
     }
 
-    public function project_teams(){
+    public function project_teams()
+    {
         return $this->hasMany(ProjectTeam::class, 'project_id', 'id');
     }
 
     public function users()
     {
         return $this->belongsToMany(User::class, 'project_teams', 'project_id', 'user_id');
+    }
+
+    public function getImageAttribute($value)
+    {
+        
+        return 'path/to/image/' . $value;
     }
 }

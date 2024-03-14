@@ -29,7 +29,7 @@
         <!-- end pageheader -->
         <!-- ============================================================== -->
         <div class="row">
-            <div class="offset-xl-2 col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                 @include('layouts.message')
                 <div class="card">
                     <h5 class="card-header">{{ $head_title ?? '' }} User</h5>
@@ -80,7 +80,7 @@
                                     <div class="form-group">
                                         <label for="roles">Role</label>
                                         @if (isset($user) && !empty($user->role))
-                                            <input type="hidden" name="roles" id="roles" value="{{$user->role}}">
+                                            <input type="hidden" name="roles" id="roles" value="{{ $user->role }}">
                                         @endif
                                         <select name="roles" id="roles" class="form-control"
                                             @if (!empty($user->role)) disabled @endif
@@ -96,25 +96,30 @@
                                             @endif
                                         </select>
                                         <div class="invalid-feedback error" id="rolesError"></div>
+                                        <input type="hidden" name="isVerified" value="{{ $user->isVerified ? $user->isVerified : '' }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="phone">Phone</label>
+                                        <input type="number" class="form-control @error('phone') is-invalid @enderror"
+                                            id="phone" name="phone" value="{{ old('phone', $user->phone ?? '') }}"
+                                            placeholder="User Phone..." autocomplete="off"
+                                            onchange="removeInvalidClass(this)">
+                                        <div class="invalid-feedback error" id="phoneError"></div>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="isVerified">Is Disabled</label>
-                                        @if (isset($user))
-                                            <label class="switch">
-                                                <input class="switch-input" name="isVerified" type="checkbox"
-                                                    {{ $user->isVerified ? 'checked' : '' }}>
-                                                <span class="switch-label" data-on="" data-off=""></span>
-                                                <span class="switch-handle"></span>
-                                            </label>
-                                        @else
-                                            <label class="switch">
-                                                <input class="switch-input" name="isVerified" type="checkbox" checked>
-                                                <span class="switch-label" data-on="" data-off=""></span>
-                                                <span class="switch-handle"></span>
-                                            </label>
-                                        @endif
+                                        <label for="location">Location</label>
+                                        <input type="text" class="form-control @error('location') is-invalid @enderror"
+                                            id="location" name="location"
+                                            value="{{ old('location', $user->location ?? '') }}"
+                                            placeholder="User Location..." autocomplete="off"
+                                            onchange="removeInvalidClass(this)">
+                                        <div class="invalid-feedback error" id="locationError"></div>
                                     </div>
                                 </div>
                             </div>
@@ -143,11 +148,16 @@
 @section('js')
     <script>
         function removeInvalidClass(input) {
-            // Check if the input value is empty or whitespace only
+
             const isValid = input.value.trim() !== '';
 
-            // Toggle the 'is-invalid' class based on the validity
             input.classList.toggle('is-invalid', !isValid);
+
+            const errorMessageElement = input.parentElement.querySelector('.invalid-feedback');
+
+            if (errorMessageElement) {
+                errorMessageElement.style.display = isValid ? 'none' : 'block';
+            }
         }
 
         $(document).ready(function() {

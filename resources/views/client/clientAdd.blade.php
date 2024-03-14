@@ -48,6 +48,20 @@
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="manager_initials">Ship Manager Initials</label>
+                                        <input type="text"
+                                            class="form-control @error('manager_initials') is-invalid @enderror"
+                                            id="manager_initials" name="manager_initials"
+                                            onchange="removeInvalidClass(this)" placeholder="Ship Manager Initials..."
+                                            autocomplete="off"
+                                            value="{{ old('manager_initials', $client->manager_initials ?? '') }}">
+                                        {{-- @error('manager_initials') --}}
+                                        <div class="invalid-feedback error" id="manager_initialsError"></div>
+                                        {{-- @enderror --}}
+                                    </div>
+                                </div>
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="manager_email">Email</label>
@@ -62,6 +76,8 @@
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="manager_phone">Phone</label>
@@ -76,8 +92,6 @@
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="manager_contact_person_name">Contact Person Name</label>
@@ -106,6 +120,8 @@
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="manager_contact_person_phone">Contact Person Phone</label>
@@ -120,9 +136,7 @@
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4">
+                                <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="rpsl">RPSL Details</label>
                                         <input type="text" class="form-control @error('rpsl') is-invalid @enderror"
@@ -134,7 +148,7 @@
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="manager_website">Website</label>
                                         <input type="text"
@@ -148,7 +162,9 @@
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
-                                <div class="col-sm-4 col-md-4">
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6 col-lg-6">
                                     <div class="form-group">
                                         <label for="manager_tax_information">Tax Information</label>
                                         <input type="text" name="manager_tax_information" id="manager_tax_information"
@@ -161,12 +177,10 @@
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
+                                <div class="col-sm-12 col-md-6 col-lg-6">
                                     <div class="form-group">
                                         <label for="manager_address">Address</label>
-                                        <textarea name="manager_address" id="manager_address" rows="2"
+                                        <textarea name="manager_address" id="manager_address" rows="1"
                                             class="form-control @error('manager_address') is-invalid @enderror" onchange="removeInvalidClass(this)">{{ old('manager_address', $client->manager_address ?? '') }}</textarea>
                                         {{-- @error('manager_address') --}}
                                         <div class="invalid-feedback error" id="manager_addressError"></div>
@@ -185,20 +199,7 @@
                                         {{-- @enderror --}}
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="manager_initials">Ship Manager Initials</label>
-                                        <input type="text"
-                                            class="form-control @error('manager_initials') is-invalid @enderror"
-                                            id="manager_initials" name="manager_initials"
-                                            onchange="removeInvalidClass(this)" placeholder="Ship Manager Initials..."
-                                            autocomplete="off"
-                                            value="{{ old('manager_initials', $client->manager_initials ?? '') }}">
-                                        {{-- @error('manager_initials') --}}
-                                        <div class="invalid-feedback error" id="manager_initialsError"></div>
-                                        {{-- @enderror --}}
-                                    </div>
-                                </div>
+
                                 @if (isset($client))
                                     <div class="col-12 mb-2"><img src="{{ $client->managerLogoPath }}" alt=""
                                             width="15%"></div>
@@ -265,7 +266,7 @@
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
                                         <label for="owner_address">Address</label>
-                                        <textarea name="owner_address" id="owner_address" rows="2"
+                                        <textarea name="owner_address" id="owner_address" rows="1"
                                             class="form-control @error('owner_address') is-invalid @enderror">{{ old('owner_address', $client->owner_address ?? '') }}</textarea>
                                         @error('owner_address')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -275,11 +276,7 @@
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
                                         <label for="IMO_ship_owner_details">IMO Ship owner details</label>
-                                        <textarea name="IMO_ship_owner_details" id="IMO_ship_owner_details" rows="2"
-                                            class="form-control @error('IMO_ship_owner_details') is-invalid @enderror">{{ old('IMO_ship_owner_details', $client->IMO_ship_owner_details ?? '') }}</textarea>
-                                        @error('IMO_ship_owner_details')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
+                                        <input type="text" class="form-control" id="IMO_ship_owner_details" name="IMO_ship_owner_details" value="{{ old('IMO_ship_owner_details', $client->IMO_ship_owner_details ?? '') }}" placeholder="IMO Ship owner details..." autocomplete="off" onchange="removeInvalidClass(this)">
                                     </div>
                                 </div>
                             </div>
@@ -396,7 +393,6 @@
             }
         }
 
-
         $(document).ready(function() {
             $('#isSameAsManager').click(function() {
                 if ($(this).is(':checked')) {
@@ -466,12 +462,10 @@
                         } else {
                             console.error('Error submitting form:', error);
                         }
-                    },
-                    complete: function() {
-                        // $submitButton.html('<i class="fas fa-plus"></i>  Add');
-                        $submitButton.html(originalText); // Restore original text
+
+                        $submitButton.html(originalText);
                         $submitButton.prop('disabled', false);
-                    }
+                    },
                 });
             });
         });
