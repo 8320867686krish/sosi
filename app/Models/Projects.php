@@ -28,9 +28,10 @@ class Projects extends Model
         return $this->belongsToMany(User::class, 'project_teams', 'project_id', 'user_id');
     }
 
-    public function getImageAttribute($value)
-    {
-        
-        return 'path/to/image/' . $value;
-    }
+    // public function getImageAttribute($value)
+    // {
+    //     $imagePath = $value ? url("images/ship/{$value}") : asset('assets/images/error-img.png');
+
+    //     return array_merge(['image' => $value], ['imagePath' => $imagePath]);
+    // }
 }

@@ -60,6 +60,8 @@
                                         <th>Name</th>
                                         <th width="15%">Roles</th>
                                         <th width="18%">Email</th>
+                                        <th width="10%">Phone</th>
+                                        <th width="10%">Location</th>
                                         <th width="8%">Status</th>
                                         <th width="5%">Action</th>
                                     </tr>
@@ -73,6 +75,8 @@
                                                 </td>
                                                 <td>{{ ucfirst($user->roles[0]->name ?? '') }}</td>
                                                 <td>{{ $user->email }}</td>
+                                                <td>{{ $user->phone }}</td>
+                                                <td>{{ $user->location ?? '' }}</td>
                                                 <td>
                                                     {{-- <input type="checkbox" data-offstyle="danger" class="isVerified" name="isVerified" data-id="{{ $user->id }}" data-toggle="toggle" data-on="ON" data-off="OFF" {{ $user->isVerified ? 'checked' : '' }} data-style="ios"> --}}
                                                     <label class="switch">
