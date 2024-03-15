@@ -43,6 +43,5 @@ Route::controller(ApiController::class)->group(function () {
         Route::get('project/{project_id}/surveyors/get', 'getProjectSurveyors');
         Route::post('project/surveyors/add', 'addProjectSurveyors');
         Route::get('project/shipDetials/{project_id}', 'getShipDetail');
-        Route::get('')
     });
 });
