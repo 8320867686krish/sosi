@@ -32,14 +32,12 @@ class ProjectsController extends Controller
 
         $projects = $projects->get();
 
-        // if ($projects->isNotEmpty()) {
-        //     $projects->transform(function ($item) {
-        //         $imagePath = $item->image ? url("images/ship/{$item->image}") : asset('assets/images/dribbble.png');
-        //         $item->imagePath = $imagePath;
-        //         return $item;
-        //     });
-        // }
-        // dd($projects);
+        if ($projects->isNotEmpty()) {
+            $projects = $projects->map(function ($item) {
+                $item->imagePath = $item->image ? url("images/ship/{$item->image}") : asset('assets/images/dribbble.png');
+                return $item;
+            });
+        }
 
         return view('projects.project', compact('projects'));
     }
@@ -75,7 +73,7 @@ class ProjectsController extends Controller
 
     public function projectInfo($project_id)
     {
-        return view('projects.projectInfo', ['head_title' => 'Ship Particulars', 'button' => 'View']);
+        return view('projects.projectInfo1', ['head_title' => 'Ship Particulars', 'button' => 'View']);
     }
 
     public function store(ProjectRequest $request)

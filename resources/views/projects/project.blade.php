@@ -28,8 +28,7 @@
             </div>
             <div class="col-12 mb-4">
                 @can('projects.add')
-                    <a href="{{ route('projects.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New
-                        Project</a>
+                    <a href="{{ route('projects.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New Project</a>
                 @endcan
             </div>
             @if (isset($projects) && $projects->count() > 0)
@@ -38,7 +37,7 @@
                         <div class="card campaign-card text-center pt-0 pb-0">
                             <div class="card-body">
                                 <div class="campaign-img">
-                                    <img src="{{ $project->image }}" alt="user" class="user-avatar-xl rounded-circle">
+                                    <img src="{{ $project->imagePath }}" alt="user" class="user-avatar-xl rounded-circle">
                                     {{-- user-avatar-xl --}}
                                 </div>
                                 <div class="campaign-info">
@@ -70,11 +69,6 @@
                                             <i class="fas fa-eye text-info" style="font-size: 1rem"></i>
                                         </a>
                                     @endcan
-                                    <a href="{{ route('projects.info', ['project_id' => $project->id]) }}"
-                                        rel="noopener noreferrer" title="View" class="ml-2">
-                                        <i class="fas fa-eye text-info" style="font-size: 1rem"></i>
-                                    </a>
-                                    {{-- <a href="#"><i class="fab fa-twitter-square fa-sm twitter-color"></i> </a><a href="#"><i class="fab fa-snapchat-square fa-sm snapchat-color"></i></a> --}}
                                 </div>
                             </div>
                         </div>

@@ -36,8 +36,7 @@
             <div class="showSuccessMsg col-12" style="display: none;"></div>
             <div class="col-12 mb-4">
                 @can('clients.add')
-                    <a href="{{ route('clients.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New
-                        Client</a>
+                    <a href="{{ route('clients.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New Client</a>
                 @endcan
             </div>
             @if (isset($clients) && $clients->count() > 0)
@@ -49,13 +48,6 @@
                             @else
                                 <a href="#" class="product-wishlist-btn active" style="border-color: #017cc0 !important; line-height: 2.1 !important;background-color: #017cc0 !important; color: #fff !important;">{{ $client->total_projects ?? 0 }}</a>
                             @endcan
-
-                            {{-- <div class="card-header">
-                                <h4 class="d-flex justify-content-between align-items-center mb-0">
-                                    <span class="text-muted">Projects</span>
-                                    <span class="badge badge-secondary badge-pill">{{ $client->total_projects ?? 0 }}</span>
-                                </h4>
-                            </div> --}}
                             <div class="card-body">
                                 <div class="campaign-img">
                                     <img src="{{ $client->managerLogoPath }}" alt="user" class="user-avatar-xl rounded-circle">

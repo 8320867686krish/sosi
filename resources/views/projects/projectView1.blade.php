@@ -1,70 +1,40 @@
-<!doctype html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}">
-    <link href="{{ asset('assets/vendor/fonts/circular-std/style.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('assets/libs/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/fontawesome/css/fontawesome-all.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('assets/vendor/fonts/material-design-iconic-font/css/materialdesignicons.min.css') }}">
-    <link rel="stylesheet" type="text/css"
-        href="{{ asset('assets/vendor/bootstrap-select/css/bootstrap-select.css') }}">
-    <title>{{ ucfirst(Request::segment(1)) }}</title>
-</head>
+@section('css')
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/bootstrap-select/css/bootstrap-select.css') }}">
+@endsection
 
-<body>
-
-    <div class="dashboard-main-wrapper">
-
-        @include('layouts.navbar')
-
-        @include('layouts.sidebar')
-
-        <div class="dashboard-wrapper">
-            <div class="container-fluid">
-                <aside class="page-aside">
-                    <div class="aside-content">
-                        <div class="aside-header">
-                            <button class="navbar-toggle" data-target=".aside-nav" data-toggle="collapse"
-                                type="button"><span class="icon"><i
-                                        class="fas fa-caret-down"></i></span></button><span class="title">Project
-                                Information</span>
-                            <p class="description">Service description</p>
-                        </div>
-                        <div class="aside-nav collapse">
-                            <ul class="nav">
-                                <li class="active">
-                                    <a href="#ship_particulars">
-                                        <span class="icon"><i class="fas fa-ship"></i></span>Ship Particulars
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#assign_project"><span class="icon"><i
-                                                class="fas fa-fw fa-briefcase"></i></span>Assign Project</a>
-                                </li>
-                                <li>
-                                    <a href="#onboard_survey"><span class="icon"><i
-                                                class="fas fa-fw fa-envelope"></i></span>Onboard Survey</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </aside>
-
-                <div class="main-content container-fluid p-0" id="ship_particulars">
-                    <div class="email-head">
-                        <div class="email-head-subject">
-                            <div class="title"><a class="active" href="#"><span class="icon"><i
-                                            class="fas fa-star"></i></span></a> <span>Ship Particulars</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="email-body">
+@section('content')
+    <div class="container-fluid dashboard-content">
+        <!-- ============================================================== -->
+        <!-- pageheader -->
+        <!-- ============================================================== -->
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="page-header">
+                    <h2 class="pageheader-title">Project Management</h2>
+                    {{-- <div class="page-breadcrumb">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{{ route('projects') }}"
+                                        class="breadcrumb-link">Projects</a></li>
+                                <li class="breadcrumb-item active"><a href="#"
+                                        class="breadcrumb-link">{{ $head_title ?? 'Ship Particulars' }}</a></li>
+                            </ol>
+                        </nav>
+                    </div> --}}
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- end pageheader -->
+        <!-- ============================================================== -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                @include('layouts.message')
+                <div class="card">
+                    <h5 class="card-header">{{ $head_title ?? '' }} Projects</h5>
+                    <div class="card-body">
                         <div class="alert alert-success sucessMsg" role="alert" style="display: none" ;>
                             Save Successfully!!<a href="#" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">×</span>
@@ -74,27 +44,11 @@
                             enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="id" value="{{ $project->id ?? '' }}">
-                            <div class="row mb-5">
-                                <div class="col-offset-2 col-sm-12 col-md-6 col-lg-3">
-                                    <img id="previewImg" src="{{ $project->imagePath }}" height="200px"
-                                        alt="Upload Image">
-                                </div>
-                                <div class="col-sm-12 col-md-6 col-lg-2 pt-10">
-                                    <div class="form-group">
-                                        <input type="file" class="form-control  @error('image') is-invalid @enderror"
-                                            id="image" name="image" autocomplete="off"
-                                            onchange="previewFile(this); removeInvalidClass(this)" {{ $readonly }}
-                                            accept="image/*">
-                                        <div class="invalid-feedback" id="imageError"></div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="row">
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="ship_name">Ship Name</label>
-                                        <input type="text"
-                                            class="form-control  @error('ship_name') is-invalid @enderror"
+                                        <input type="text" class="form-control @error('ship_name') is-invalid @enderror"
                                             id="ship_name" value="{{ old('ship_name', $project->ship_name ?? '') }}"
                                             name="ship_name" placeholder="Ship Name..." autocomplete="off"
                                             onchange="removeInvalidClass(this)" {{ $readonly }} required>
@@ -103,8 +57,7 @@
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="imo_number">Ship IMO Number</label>
-                                        <input type="text"
-                                            class="form-control  @error('imo_number') is-invalid @enderror"
+                                        <input type="text" class="form-control @error('imo_number') is-invalid @enderror"
                                             id="imo_number" name="imo_number" placeholder="IMO Number..."
                                             value="{{ old('imo_number', $project->imo_number ?? '') }}">
                                         @error('imo_number')
@@ -116,8 +69,7 @@
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="call_sign">Call Sign</label>
-                                        <input type="text"
-                                            class="form-control  @error('call_sign') is-invalid @enderror"
+                                        <input type="text" class="form-control @error('call_sign') is-invalid @enderror"
                                             id="call_sign" name="call_sign" placeholder="Call Sign..."
                                             value="{{ old('call_sign', $project->call_sign ?? '') }}">
                                         @error('call_sign')
@@ -131,7 +83,7 @@
                                     <div class="form-group">
                                         <label for="manager_name">Manager Name</label>
                                         <input type="text"
-                                            class="form-control  @error('manager_name') is-invalid @enderror"
+                                            class="form-control @error('manager_name') is-invalid @enderror"
                                             id="manager_name"
                                             value="{{ old('manager_name', $project->client->manager_name ?? '') }}"
                                             name="manager_name" placeholder="Manager Name..." autocomplete="off"
@@ -146,16 +98,14 @@
                                         <label for="client_id">Ship Owner</label>
                                         <input type="hidden" name="client_id" id="client_id"
                                             value="{{ old('client_id', $project->client->id ?? '') }}">
-                                        <input type="text" class="form-control " name="owner_name"
-                                            id="owner_name"
+                                        <input type="text" class="form-control"
                                             value="{{ old('owner_name', $project->client->owner_name ?? '') }}">
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-4">
                                     <div class="form-group">
                                         <label for="ship_type">Type of ship</label>
-                                        <input type="text"
-                                            class="form-control  @error('ship_type') is-invalid @enderror"
+                                        <input type="text" class="form-control @error('ship_type') is-invalid @enderror"
                                             id="ship_type" name="ship_type"
                                             value="{{ old('ship_type', $project->ship_type ?? '') }}"
                                             placeholder="Ship Type..." autocomplete="off"
@@ -171,7 +121,7 @@
                                     <div class="form-group">
                                         <label for="port_of_registry">Port Of Registry</label>
                                         <input type="text"
-                                            class="form-control  @error('port_of_registry') is-invalid @enderror"
+                                            class="form-control @error('port_of_registry') is-invalid @enderror"
                                             id="port_of_registry"
                                             value="{{ old('port_of_registry', $project->port_of_registry ?? '') }}"
                                             name="port_of_registry" placeholder="Port Of Registry" autocomplete="off"
@@ -182,7 +132,7 @@
                                     <div class="form-group">
                                         <label for="vessel_class">Vessel Class</label>
                                         <input type="text"
-                                            class="form-control  @error('vessel_class') is-invalid @enderror"
+                                            class="form-control @error('vessel_class') is-invalid @enderror"
                                             id="vessel_class"
                                             value="{{ old('vessel_class', $project->vessel_class ?? '') }}"
                                             name="vessel_class" placeholder="Vessel Class" autocomplete="off"
@@ -193,23 +143,42 @@
                                     <div class="form-group">
                                         <label for="ihm_class">IHM Certifying Class</label>
                                         <input type="text"
-                                            class="form-control  @error('ihm_class') is-invalid @enderror"
-                                            id="ihm_class" value="{{ old('ihm_class', $project->ihm_class ?? '') }}"
-                                            name="ihm_class" placeholder="Ihm Class" autocomplete="off"
+                                            class="form-control @error('ihm_class') is-invalid @enderror" id="ihm_class"
+                                            value="{{ old('ihm_class', $project->ihm_class ?? '') }}" name="ihm_class"
+                                            placeholder="Ihm Class" autocomplete="off"
                                             onchange="removeInvalidClass(this)" {{ $readonly }}>
                                         @error('ihm_class')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
-
+                                {{-- <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="manager_name">Manager Details</label>
+                                        <input type="text"
+                                            class="form-control @error('manager_details') is-invalid @enderror"
+                                            id="manager_name"
+                                            value="{{ old('manager_details', $project->manager_details ?? '') }}"
+                                            name="manager_details" placeholder="Manager Details.." autocomplete="off"
+                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="dimensions">Dimensions</label>
+                                        <input type="text" class="form-control @error('dimensions') is-invalid @enderror"
+                                            id="dimensions" value="{{ old('dimensions', $project->dimensions ?? '') }}"
+                                            name="dimensions" placeholder="Dimensions" autocomplete="off"
+                                            onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                    </div>
+                                </div> --}}
                             </div>
                             <div class="row">
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
                                         <label for="flag_of_ship">Flag of ship</label>
                                         <input type="text"
-                                            class="form-control  @error('flag_of_ship') is-invalid @enderror"
+                                            class="form-control @error('flag_of_ship') is-invalid @enderror"
                                             id="flag_of_ship"
                                             value="{{ old('flag_of_ship', $project->flag_of_ship ?? '') }}"
                                             name="flag_of_ship" placeholder="Flag of ship..." autocomplete="off"
@@ -224,7 +193,7 @@
                                     <div class="form-group">
                                         <label for="delivery_date">Delivery Date</label>
                                         <input type="date"
-                                            class="form-control  @error('delivery_date') is-invalid @enderror"
+                                            class="form-control @error('delivery_date') is-invalid @enderror"
                                             id="delivery_date"
                                             value="{{ old('delivery_date', $project->delivery_date ?? '') }}"
                                             name="delivery_date" placeholder="Delivery Date" autocomplete="off"
@@ -236,7 +205,7 @@
                                     <div class="form-group">
                                         <label for="building_details">Building Yard Details</label>
                                         <input type="text"
-                                            class="form-control  @error('building_details') is-invalid @enderror"
+                                            class="form-control @error('building_details') is-invalid @enderror"
                                             id="building_details"
                                             value="{{ old('building_details', $project->building_details ?? '') }}"
                                             name="building_details" placeholder="Builder Details" autocomplete="off"
@@ -253,12 +222,11 @@
                                     <div class="form-group">
                                         <label for="x_breadth_depth">Length x breadth x depth</label>
                                         <input type="text"
-                                            class="form-control  @error('x_breadth_depth') is-invalid @enderror"
+                                            class="form-control @error('x_breadth_depth') is-invalid @enderror"
                                             id="x_breadth_depth"
                                             value="{{ old('x_breadth_depth', $project->x_breadth_depth ?? '') }}"
                                             name="x_breadth_depth" placeholder="Length x breadth x depth"
-                                            autocomplete="off" onchange="removeInvalidClass(this)"
-                                            {{ $readonly }}>
+                                            autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
                                         @error('x_breadth_depth')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -269,7 +237,7 @@
                                     <div class="form-group">
                                         <label for="gross_tonnage">Gross Registered Tonnage (GRT)</label>
                                         <input type="text"
-                                            class="form-control  @error('gross_tonnage') is-invalid @enderror"
+                                            class="form-control @error('gross_tonnage') is-invalid @enderror"
                                             id="gross_tonnage"
                                             value="{{ old('gross_tonnage', $project->gross_tonnage ?? '') }}"
                                             name="gross_tonnage" placeholder="GRT" autocomplete="off"
@@ -284,19 +252,44 @@
                                     <div class="form-group">
                                         <label for="vessel_previous_name">Vessel Previous Name (If Any) </label>
                                         <input type="text"
-                                            class="form-control  @error('vessel_previous_name') is-invalid @enderror"
+                                            class="form-control @error('vessel_previous_name') is-invalid @enderror"
                                             id="vessel_previous_name"
                                             value="{{ old('vessel_previous_name', $project->vessel_previous_name ?? '') }}"
                                             name="vessel_previous_name" placeholder="Vessel Previous Name"
-                                            autocomplete="off" onchange="removeInvalidClass(this)"
-                                            {{ $readonly }}>
+                                            autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
                                         @error('vessel_previous_names')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="image">Ship Photo</label>
+                                        <input type="file" class="form-control @error('image') is-invalid @enderror"
+                                            id="image" name="image" autocomplete="off"
+                                            onchange="previewFile(this); removeInvalidClass(this)" {{ $readonly }}
+                                            accept="image/*">
+                                        @error('image')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    {{-- <div class="form-group">
+                                        <label for="ga_plan">General Arrangement (GA)</label>
+                                        <input type="file" class="form-control @error('ga_plan') is-invalid @enderror" id="ga_plan" name="ga_plan" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        @error('ga_plan')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div> --}}
+                                </div>
+                                <div class="col-12">
+                                    <img id="previewImg" src="{{ $project->imagePath }}" width="20%"
+                                        alt="Upload Image">
+                                </div>
+                            </div>
                             <div class="row mt-3">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
@@ -308,7 +301,7 @@
                                     <div class="form-group">
                                         @can('projects.edit')
                                             <button class="btn btn-primary float-right btn-rounded formSubmitBtn"
-                                                type="submit">Save</button>
+                                                type="submit" style="display:none">Save</button>
                                         @endcan
                                     </div>
                                 </div>
@@ -316,172 +309,248 @@
                         </form>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="main-content container-fluid p-0" id="assign_project">
-                    <div class="email-head">
-                        <div class="email-head-subject">
-                            <div class="title"><a class="active" href="#"><span class="icon"><i
-                                            class="fas fa-star"></i></span></a> <span>Assign Project</span>
-                            </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="card">
+                    <h5 class="card-header">Assign Project</h5>
+                    <div class="card-body">
+                        <div class="alert alert-success sucessteamMsg" role="alert" style="display: none" ;>
+                            Save Successfully!!<a href="#" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </a>
                         </div>
-                    </div>
-                    <div class="email-body">
-                        <div class="row">
-                            <div class="col-8 offset-2">
-                                <div class="alert alert-success sucessteamMsg" role="alert" style="display: none;">
-                                    Save Successfully!!<a href="#" class="close" data-dismiss="alert"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </a>
-                                </div>
-                                <form method="post" action="#" class="needs-validation" novalidate id="teamsForm">
-                                    @csrf
-                                    <input type="hidden" name="project_id" value="{{ $project->id ?? '' }}">
+                        <form method="post" action="#" class="needs-validation" novalidate id="teamsForm">
+                            @csrf
+                            <input type="hidden" name="project_id" value="{{ $project->id ?? '' }}">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-4">
                                     <div class="form-group">
                                         <label for="project_no">User</label>
-                                        <select class="selectpicker show-tick form-control form-control-lg @error('user_id') is-invalid @enderror"
+                                        <select
+                                            class="selectpicker show-tick form-control @error('user_id') is-invalid @enderror"
                                             name="user_id[]" id="user_id" multiple data-live-search="true"
                                             data-actions-box="true" {{ $readonly }}>
                                             @if ($users->count() > 0)
                                                 @foreach ($users as $user)
                                                     @if (in_array($user->id, $project->user_id))
-                                                        <option value="{{ $user->id }}" selected>
-                                                            {{ $user->name }}
+                                                        <option value="{{ $user->id }}" selected>{{ $user->name }}
                                                         </option>
                                                     @else
-                                                        <option value="{{ $user->id }}">
-                                                            {{ $user->name }}
-                                                        </option>
+                                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
                                                     @endif
                                                 @endforeach
                                             @endif
                                         </select>
                                     </div>
+                                </div>
+                                <div class="col-sm-12 col-md-4">
                                     <div class="form-group">
                                         <label for="assign_date">Assign Date</label>
                                         <input type="date"
-                                            class="form-control form-control-lg  @error('assign_date') is-invalid @enderror"
+                                            class="form-control @error('assign_date') is-invalid @enderror"
                                             id="assign_date"
                                             value="{{ old('assign_date', $project->assign_date[0] ?? '') }}"
                                             name="assign_date" autocomplete="off" onchange="removeInvalidClass(this)"
                                             {{ $readonly }}>
                                     </div>
+                                </div>
+                                <div class="col-sm-12 col-md-4">
                                     <div class="form-group">
                                         <label for="assign_date">End Date</label>
                                         <input type="date"
-                                            class="form-control form-control-lg @error('end_date') is-invalid @enderror"
-                                            id="end_date" value="{{ old('end_date', $project->end_date[0] ?? '') }}"
-                                            name="end_date" autocomplete="off" onchange="removeInvalidClass(this)"
-                                            {{ $readonly }}>
+                                            class="form-control @error('end_date') is-invalid @enderror" id="end_date"
+                                            value="{{ old('end_date', $project->end_date[0] ?? '') }}" name="end_date"
+                                            autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
                                     </div>
-                                    <div class="row pt-3">
-                                        <div class="col-sm-12 col-md-6">
-                                            <div class="form-group">
-                                                <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i class="fas fa-arrow-left"></i> <b>Back</b></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12 col-md-6">
-                                            <div class="form-group">
-                                                @can('projects.edit')
-                                                    <button class="btn btn-primary float-right formteamButton" type="button">Save</button>
-                                                @endcan
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
+                                </div>
                             </div>
-                        </div>
+                            <div class="row mt-3">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i
+                                                class="fas fa-arrow-left"></i> <b>Back</b></a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        @can('projects.edit')
+                                            <button class="btn btn-primary float-right btn-rounded formteamButton"
+                                                type="button">Save</button>
+                                        @endcan
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="main-content container-fluid p-0" id="onboard_survey">
-                    <div class="email-head">
-                        <div class="email-head-subject">
-                            <div class="title"><a class="active" href="#"><span class="icon"><i
-                                            class="fas fa-star"></i></span></a> <span>Onboard Survey</span>
-                            </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                @include('layouts.message')
+                <div class="card">
+                    <h5 class="card-header">Survey Information</h5>
+                    <div class="card-body">
+                        <div class="alert alert-success sucessSurveylMsg" role="alert" style="display: none" ;>
+                            Save Successfully!!<a href="#" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </a>
                         </div>
-                    </div>
-                    <div class="email-body">
-                        <div class="row">
-                            <div class="col-8 offset-2">
-                                <div class="alert alert-success sucessSurveylMsg" role="alert"
-                                    style="display: none" ;>
-                                    Save Successfully!!<a href="#" class="close" data-dismiss="alert"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </a>
-                                </div>
-                                <form method="post" action="#" class="needs-validation" novalidate
-                                    id="SurveyForm">
-                                    @csrf
-                                    <input type="hidden" name="id" value="{{ $project->id ?? '' }}">
+                        <form method="post" action="#" class="needs-validation" novalidate id="SurveyForm">
+                            @csrf
+
+                            <input type="hidden" name="id" value="{{ $project->id ?? '' }}">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
                                         <label for="project_no">Survey Location Name</label>
                                         <input type="text"
-                                            class="form-control  form-control-lg @error('survey_location_name') is-invalid @enderror"
+                                            class="form-control @error('survey_location_name') is-invalid @enderror"
                                             id="survey_location_name"
                                             value="{{ old('survey_location_name', $project->survey_location_name ?? '') }}"
                                             name="survey_location_name" placeholder="Survey Location Name"
-                                            autocomplete="off" onchange="removeInvalidClass(this)"
-                                            {{ $readonly }}>
+                                            autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+
                                     </div>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
                                         <label for="additional_hazmats">Survey Location Address</label>
                                         <input type="text"
-                                            class="form-control form-control-lg @error('survey_location_address') is-invalid @enderror"
+                                            class="form-control @error('survey_location_address') is-invalid @enderror"
                                             id="survey_location_address"
-                                            value="{{ old('survey_location_address', $project->survey_location_address ?? '') }}"
+                                            value="{{ old('survey_location_address', $project->additional_hazmats ?? '') }}"
                                             name="survey_location_address" placeholder="Survey Location Address..."
-                                            autocomplete="off" onchange="removeInvalidClass(this)"
-                                            {{ $readonly }}>
+                                            autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+
                                     </div>
+                                </div>
+
+
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
                                         <label for="client_name">Survey Type</label>
                                         <input type="text"
-                                            class="form-control form-control-lg @error('survey_type') is-invalid @enderror"
+                                            class="form-control @error('survey_type') is-invalid @enderror"
                                             id="survey_type" name="survey_type"
                                             value="{{ old('survey_type', $project->survey_type ?? '') }}"
                                             placeholder="Survey Type..." autocomplete="off"
                                             onchange="removeInvalidClass(this)" {{ $readonly }}>
+
                                     </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
                                         <label for="survey_date">Survey Date</label>
-                                        <input type="date"
-                                            class="form-control form-control-lg @error('survey_date') is-invalid @enderror"
+                                        <input type="text"
+                                            class="form-control @error('survey_date') is-invalid @enderror"
                                             id="survey_date"
                                             value="{{ old('survey_date', $project->survey_date ?? '') }}"
                                             name="survey_date" placeholder="Survey Date.." autocomplete="off"
                                             onchange="removeInvalidClass(this)" {{ $readonly }}>
+
                                     </div>
-                                    <div class="row pt-3">
-                                        <div class="col-sm-12 col-md-6">
-                                            <div class="form-group">
-                                                <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i
-                                                        class="fas fa-arrow-left"></i> <b>Back</b></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12 col-md-6">
-                                            <div class="form-group">
-                                                @can('projects.edit')
-                                                    <button class="btn btn-primary float-right SurveyFormButton"
-                                                        type="button">Save</button>
-                                                @endcan
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
+                                </div>
                             </div>
+                            <div class="row mt-3">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i
+                                                class="fas fa-arrow-left"></i> <b>Back</b></a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        @can('projects.edit')
+                                            <button class="btn btn-primary float-right btn-rounded SurveyFormButton"
+                                                type="button" style="display:none">Save</button>
+                                        @endcan
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12 mb-5">
+                {{-- <div class="section-block">
+                    <h5 class="section-title">Vertical tabs</h5>
+                    <p>Takes the basic nav from above and adds the .nav-tabs class to generate a tabbed interface..</p>
+                </div> --}}
+                <div class="tab-vertical">
+                    <ul class="nav nav-tabs" id="myTab3" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-vertical-tab" data-toggle="tab" href="#home-vertical"
+                                role="tab" aria-controls="home" aria-selected="true">Ship Particulars Projects</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-vertical-tab" data-toggle="tab" href="#profile-vertical"
+                                role="tab" aria-controls="profile" aria-selected="false">Tab Vertical #2</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="contact-vertical-tab" data-toggle="tab" href="#contact-vertical"
+                                role="tab" aria-controls="contact" aria-selected="false">Tab Vertical #3</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent3">
+                        <div class="tab-pane fade show active" id="home-vertical" role="tabpanel"
+                            aria-labelledby="home-vertical-tab">
+                            <p class="lead"> All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks
+                                as necessary, making this the first true generator on the Internet. </p>
+                            <p>Phasellus non ante gravida, ultricies neque a, fermentum leo. Etiam ornare enim arcu, at
+                                venenatis odio mollis quis. Mauris fermentum elementum ligula in efficitur. Aliquam id congue
+                                lorem. Proin consectetur feugiasse platea dictumst. Pellentesque sed justo aliquet, posuere sem
+                                nec, elementum ante.</p>
+                            <a href="#" class="btn btn-secondary">Go somewhere</a>
+                        </div>
+                        <div class="tab-pane fade" id="profile-vertical" role="tabpanel"
+                            aria-labelledby="profile-vertical-tab">
+                            <h3>Tab Heading Vertical Title</h3>
+                            <p>Nullam et tellus ac ligula condimentum sodales. Aenean tincidunt viverra suscipit. Maecenas id
+                                molestie est, a commodo nisi. Quisque fringilla turpis nec elit eleifend vestibulum. Aliquam sed
+                                purus in odio ullamcorper congue consectetur in neque. Aenean sem ex, tempor et auctor sed,
+                                congue id neque. </p>
+                            <p> Fusce a eros pellentesque, ultricies urna nec, consectetur dolor. Nam dapibus scelerisque risus,
+                                a commodo mi tempus eu.</p>
+                        </div>
+                        <div class="tab-pane fade" id="contact-vertical" role="tabpanel"
+                            aria-labelledby="contact-vertical-tab">
+                            <h3>Tab Heading Vertical Title</h3>
+                            <p>Vivamus pellentesque vestibulum lectus vitae auctor. Maecenas eu sodales arcu. Fusce lobortis,
+                                libero ac cursus feugiat, nibh ex ultricies tortor, id dictum massa nisl ac nisi. Fusce a eros
+                                pellentesque, ultricies urna nec, consectetur dolor. Nam dapibus scelerisque risus, a commodo mi
+                                tempus eu.</p>
+                            <p> Fusce a eros pellentesque, ultricies urna nec, consectetur dolor. Nam dapibus scelerisque risus,
+                                a commodo mi tempus eu.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
 
-    @include('layouts.script')
+@section('js')
     <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
     <script>
+        function removeInvalidClass(input) {
+            // Check if the input value is empty or whitespace only
+            const isValid = input.value.trim() !== '';
+
+            // Toggle the 'is-invalid' class based on the validity
+            input.classList.toggle('is-invalid', !isValid);
+        }
+
         function previewFile(input) {
             let file = $("input[type=file]").get(0).files[0];
 
@@ -496,47 +565,35 @@
             }
         }
 
-        function removeInvalidClass(input) {
-
-            const isValid = input.value.trim() !== '';
-
-            input.classList.toggle('is-invalid', !isValid);
-
-            const errorMessageElement = input.parentElement.querySelector('.invalid-feedback');
-
-            if (errorMessageElement) {
-                errorMessageElement.style.display = isValid ? 'none' : 'block';
-            }
-        }
-
         $(document).ready(function() {
-            // Hide all sections initially
-            $('.main-content').hide();
-
-            // Show the default section
-            $('#ship_particulars').show();
-
-            // Handle click event on sidebar menu items
-            $('.aside-nav .nav li a').click(function() {
-                // Remove active class from all <li> tags
-                $('.aside-nav .nav li').removeClass('active');
-                // Add active class to the parent <li> tag
-                $(this).parent('li').addClass('active');
-
-                // Hide all sections
-                $('.main-content').hide();
-                // Get the ID of the section to show
-                var targetId = $(this).attr('href');
-                // Show the corresponding section
-                $(targetId).show();
-                // Prevent default anchor behavior
-                return false;
-            });
 
             setTimeout(function() {
                 $('.alert-success').fadeOut();
             }, 15000);
 
+            var ship_identi = $("#client_id").find('option:selected').data('identi');
+            var imo = $('#imo_number').val();
+
+            $('#imo_number').blur(function() {
+                imo = $(this).val();
+                $("#project_no").val("sosi/" + ship_identi + "/" + imo);
+            });
+            $('#client_id').change(function() {
+                ship_identi = $(this).find('option:selected').data('identi');
+                $("#project_no").val("sosi/" + ship_identi + (imo ? "/" + imo : ""));
+            })
+
+            $("#projectForm").on("input", function() {
+                $(".formSubmitBtn").show();
+            });
+
+            $("#teamsForm").on("input select", function() {
+                $(".formteamButton").show();
+            });
+
+            $("#SurveyForm").on("input", function() {
+                $(".SurveyFormButton").show();
+            });
             $(".SurveyFormButton").click(function() {
                 $('span').html("");
 
@@ -585,10 +642,13 @@
             $('#projectForm').submit(function(e) {
                 e.preventDefault();
 
+                let $submitButton = $(this).find('button[type="submit"]');
+                let originalText = $submitButton.html();
+                $submitButton.text('Wait...');
+                $submitButton.prop('disabled', true);
+
                 // Clear previous error messages and invalid classes
-                $('.error').empty().hide();
-                $('input').removeClass('is-invalid');
-                $('select').removeClass('is-invalid');
+                $('.error-message').remove("");
 
                 var formData = new FormData(this);
 
@@ -608,21 +668,21 @@
                         var errors = xhr.responseJSON.errors;
                         if (errors) {
                             // Loop through errors and display them
-                            $.each(errors, function(field, messages) {
-                                // Display error message for each field
-                                $('#' + field + 'Error').text(messages[0]).show();
-                                // Add is-invalid class to input or select field
-                                $('[name="' + field + '"]').addClass('is-invalid');
-                            });
+                            $.each(errors.responseJSON.errors, function(i, error) {
+                                var el = $(document).find('[name="' + i + '"]');
+                                el.after($('<span class="error-message" style="color: red;">' +
+                                    error[0] + '</span>'));
+                            })
                         } else {
                             console.error('Error submitting form:', error);
                         }
                     },
+                    complete: function() {
+                        $submitButton.html(originalText);
+                        $submitButton.prop('disabled', false);
+                    }
                 });
             });
         });
     </script>
-
-</body>
-
-</html>
+@endsection
