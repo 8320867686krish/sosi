@@ -297,7 +297,7 @@ class ApiController extends Controller
             if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
                 $project = Projects::with('client:id,manager_name,manager_logo');
             } else {
-                $project = $user->projects()->with('client:id,manager_name,manager_logo');
+                $project = $user->projects()->with('client:id,manager_name,manager_logo')->where('isExpire', 0);
             }
 
             $project = $project->get();
@@ -319,7 +319,6 @@ class ApiController extends Controller
 
             return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $modifiedProjects]);
         } catch (Throwable $th) {
-            dd($th->getMessage());
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.', 'projectList' => []]);
         }
     }

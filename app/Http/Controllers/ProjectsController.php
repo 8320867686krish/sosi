@@ -23,7 +23,7 @@ class ProjectsController extends Controller
         if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
             $projects = Projects::with('client:id,manager_name');
         } else {
-            $projects = $user->projects()->with('client:id,manager_name,manager_logo');
+            $projects = $user->projects()->with('client:id,manager_name,manager_logo')->where('isExpire', 0);
         }
 
         if ($client_id) {
