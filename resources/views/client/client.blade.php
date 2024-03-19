@@ -29,7 +29,7 @@
         <!-- ============================================================== -->
         <!-- end pageheader -->
         <!-- ============================================================== -->
-        <div class="row">
+        <div class="row equal-height">
             <div class="col-12">
                 @include('layouts.message')
             </div>
@@ -44,31 +44,38 @@
                     <div class="col-lg-3 col-md-6 col-sm-12 col-12 clientShowCard">
                         <div class="card campaign-card text-center">
                             @can('projects.read')
-                                <a href="{{ route('projects.client', ['client_id' => $client->id]) }}" class="product-wishlist-btn active" style="border-color: #017cc0 !important; line-height: 2.1 !important;background-color: #017cc0 !important; color: #fff !important;">{{ $client->total_projects ?? 0 }}</a>
+                                <a href="{{ route('projects.client', ['client_id' => $client->id]) }}"
+                                    class="product-wishlist-btn active"
+                                    style="border-color: #017cc0 !important; line-height: 2.1 !important;background-color: #017cc0 !important; color: #fff !important;">{{ $client->total_projects ?? 0 }}</a>
                             @else
-                                <a href="#" class="product-wishlist-btn active" style="border-color: #017cc0 !important; line-height: 2.1 !important;background-color: #017cc0 !important; color: #fff !important;">{{ $client->total_projects ?? 0 }}</a>
+                                <a href="#" class="product-wishlist-btn active"
+                                    style="border-color: #017cc0 !important; line-height: 2.1 !important;background-color: #017cc0 !important; color: #fff !important;">{{ $client->total_projects ?? 0 }}</a>
                             @endcan
                             <div class="card-body">
                                 <div class="campaign-img">
-                                    <img src="{{ $client->managerLogoPath }}" alt="user" class="user-avatar-xl rounded-circle">
+                                    <img src="{{ $client->managerLogoPath }}" alt="user"
+                                        class="user-avatar-xl rounded-circle">
                                 </div>
                                 <div class="campaign-info">
                                     <h3 class="mb-1">{{ ucfirst($client->manager_name) ?? '' }}</h3>
-                                    {{-- <p class="mb-3">Total Project:<span
-                                            class="text-dark font-medium ml-2">{{ $client->total_projects ?? 0 }}</span>
+                                    {{-- <p class="mb-3">Total Project:<span class="text-dark font-medium ml-2">{{ $client->total_projects ?? 0 }}</span>
                                     </p> --}}
                                     @if (!empty($client->manager_contact_person_name))
-                                        <p class="mb-1">Contact Person: <span class="text-dark font-medium ml-2">{{ $client->manager_contact_person_name ?? '' }}</span></p>
+                                        <p class="mb-1">Contact Person: <span class="text-dark font-medium ml-2">{{ $client->manager_contact_person_name ?? '' }}</span>
+                                        </p>
                                     @endif
-                                    <p>Ship owner.:<span class="text-dark font-medium ml-2">{{ ucwords($client->owner_name) ?? '' }}</span>
+                                    <p>Ship owner.:<span
+                                            class="text-dark font-medium ml-2">{{ ucwords($client->owner_name) ?? '' }}</span>
                                     </p>
                                     @can('clients.edit')
-                                        <a href="{{ route('clients.edit', ['id' => $client->id]) }}" rel="noopener noreferrer" title="Edit">
+                                        <a href="{{ route('clients.edit', ['id' => $client->id]) }}" rel="noopener noreferrer"
+                                            title="Edit">
                                             <i class="fas fa-edit text-primary" style="font-size: 1rem !important"></i>
                                         </a>
                                     @endcan
                                     @can('clients.remove')
-                                        <a href="javascript:;" data-id="{{ $client->id }}" class="ml-2 delete-btn" title="Delete">
+                                        <a href="javascript:;" data-id="{{ $client->id }}" class="ml-2 delete-btn"
+                                            title="Delete">
                                             <i class="fas fa-trash-alt text-danger" style="font-size: 1rem !important"></i>
                                         </a>
                                     @endcan
