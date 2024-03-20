@@ -181,4 +181,8 @@ class ProjectsController extends Controller
             return response()->json(['error' => $th->getMessage()]);
         }
     }
+    public function pdfcrop(Request $request){
+        return view('projects.pdfCrop');
+
+    }
 }
