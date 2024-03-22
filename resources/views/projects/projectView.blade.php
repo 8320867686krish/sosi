@@ -245,7 +245,8 @@
         <div class="email-body">
             <div class="container-fluid dashboard-content">
                 <input type="file" id="pdfFile" accept=".pdf">
-                <button onclick="convertToImage()">Convert to Image</button>
+                <button id="get">Get!</button>
+
 
                 <div class="row">
                 <div id="bottom-container"></div>
@@ -397,87 +398,104 @@
 </div>
 @endsection
 @section('js')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
+<script src="../../../assets/vendor/jquery.areaSelect.js"></script>
+
 
 <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
 <script>
-    async function convertToImage() {
-        const pdfFile = document.getElementById('pdfFile').files[0];
-        if (!pdfFile) {
-            alert('Please select a PDF file.');
-            return;
-        }
+ 
+ $(document).ready(function() {
+    $('#pdfFile').change(function() {
+        convertToImage();
+    });
 
-        const fileReader = new FileReader();
-        fileReader.onload = async function() {
-            const pdfData = new Uint8Array(this.result);
-            const pdf = await pdfjsLib.getDocument({
-                data: pdfData
-            }).promise;
+    $('#get').click(function () {
+        // Initialize an empty array to store area selections
+        var areas = [];
 
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const viewport = page.getViewport({
-                    scale: 1
-                });
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.width = viewport.width;
-                canvas.height = viewport.height;
-                await page.render({
-                    canvasContext: context,
-                    viewport
-                }).promise;
+        // Loop through each selected area
+        $('img').each(function() {
+            // Retrieve area selections for each image
+            var imageAreas = $(this).areaSelect('get');
+            
+            // Push area selections into the main areas array
+            areas.push(imageAreas);
+        });
 
-                const imageData = canvas.toDataURL('image/png');
-                const img = document.createElement('img');
-                img.src = imageData;
+        // Display area selections
+        alert(JSON.stringify(areas));
+    });
+});
 
-                const container = document.getElementById('img-container');
-                container.appendChild(img);
-                const aspectRatio = viewport.width / viewport.height;
-
-                // Adjust container size if necessary
-                container.style.width = viewport.width + 'px';
-                container.style.height = viewport.height + 'px';
-
-                // Initialize Cropper.js on the image
-                const cropper = new Cropper(img, {
-                    aspectRatio:null, // Allow free cropping
-                    viewMode: 1, // Display the cropped area in the container
-                    autoCropArea: 1.5, // Show the entire image initially
-                    zoomable: false, // Disable zooming
-                    scalable: false,
-                    responsive: true, // Ensure that the cropping box fits the entire image
-                    preview: '.img-preview',
-                    resize:false,
-                    multiple:true,
-                    crop(event) {
-                    const cropBoxData = cropper.getData();
-                    // Adjust aspect ratio based on the change in crop box dimensions
-                    if (event.detail.width !== cropBoxData.width || event.detail.height !== cropBoxData.height) {
-                        cropper.setAspectRatio(event.detail.width / event.detail.height);
-                    }
-                },
-              
-
-                    ready() {
-                    // Adjust container size to match image size
-                    cropper.setCropBoxData({ width: 160, height: 90 }); // Adjust the width and height as needed
-
-                }
-               
-                });
-
-             
-            }
-        };
-        fileReader.readAsArrayBuffer(pdfFile);
-       
+async function convertToImage() {
+    const pdfFile = document.getElementById('pdfFile').files[0];
+    if (!pdfFile) {
+        alert('Please select a PDF file.');
+        return;
     }
 
+    const fileReader = new FileReader();
+    fileReader.onload = async function() {
+        const pdfData = new Uint8Array(this.result);
+        const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const viewport = page.getViewport({ scale: 1 });
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            await page.render({ canvasContext: context, viewport }).promise;
+
+            const imageData = canvas.toDataURL('image/png');
+            const img = document.createElement('img');
+            img.src = imageData;
+            img.classList.add('pdf-image'); // Add a class to the image
+            const container = document.getElementById('img-container');
+            container.appendChild(img);
+
+            
+        }
+
+        // Bind event listeners after images are loaded
+        $('.pdf-image').on('load', function() {
+            var options = {
+                deleteMethod: 'doubleClick',
+                handles: true,
+                onSelectEnd: function(image, selection) {
+                    console.log("Selection End:", selection);
+                },
+                initAreas: [
+                    {"x": 280, "y": 93, "width": 50, "height": 50},
+                    {"x": 309, "y": 195, "width": 183, "height": 386},
+                    {"x": 298, "y": 5, "width": 45, "height": 55}
+                ]
+            };
+            $(this).areaSelect(options);
+        });
+    };
+    fileReader.readAsArrayBuffer(pdfFile);
+}
+
+    function showPreview(areas) {
+			var $preview = $('#preview');
+			$preview.empty();
+			for (var index in areas) {
+				var area = areas[index];
+				var $img = $('<div/>').css({
+					'height': area.height,
+					'display': 'inline-block',
+					'width': area.width,
+					'margin': '10px',
+					'background-image': 'url("saber.jpg")',
+					'background-position': -area.x + 'px ' + (-area.y + 'px')
+				});
+				$preview.append($img);
+			}
+		}
     function previewFile(input) {
         let file = $("input[type=file]").get(0).files[0];
 
