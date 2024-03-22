@@ -20,8 +20,8 @@
             font-size: 14px;
         }
     </style>
-        <link rel="icon" href="{{ asset('assets/images/favicon.png') }}" type="image/x-icon"/>
+    <link rel="icon" href="{{ asset('assets/images/favicon.png') }}" type="image/x-icon" />
 
     @yield('css')
-    @show
+@show
 </head>
