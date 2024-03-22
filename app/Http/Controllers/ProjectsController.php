@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProjectDetailRequest;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Client;
+use App\Models\Image;
+use App\Models\ImageHotspot;
 use App\Models\Projects;
 use App\Models\ProjectTeam;
 use App\Models\User;
@@ -53,14 +55,13 @@ class ProjectsController extends Controller
     {
         $clients = Client::orderBy('id', 'desc')->get(['id', 'manager_name', 'manager_initials']);
         $users = User::where('isVerified', 1)->get();
-
+        $check = ImageHotspot::get();
         $project = Projects::with('project_teams')->with('client:id,manager_name,owner_name')->find($project_id);
         $project['imagePath'] = $project->image != null ? url("images/ship/{$project->image}") : asset('assets/images/giphy.gif');
-        // dd($project);
+
         $project['user_id'] = $project->project_teams->pluck('user_id')->toArray();
         $project->assign_date = $project->project_teams->pluck('assign_date')->unique()->values()->toArray();
         $project->end_date = $project->project_teams->pluck('end_date')->unique()->values()->toArray();
-
         unset($project->project_teams);
 
         if (!Gate::allows('projects.edit')) {
@@ -68,7 +69,7 @@ class ProjectsController extends Controller
         } else {
             $readonly = "";
         }
-        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id]);
+        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id, 'check'=>$check]);
     }
 
     public function projectInfo($project_id)
@@ -181,8 +182,53 @@ class ProjectsController extends Controller
             return response()->json(['error' => $th->getMessage()]);
         }
     }
-    public function pdfcrop(Request $request){
-        return view('projects.pdfCrop');
 
+    public function pdfcrop(Request $request)
+    {
+        return view('projects.pdfCrop');
+    }
+
+    public function addImageHotspots(Request $request)
+    {
+        try {
+            $id = $request->input('id');
+            $inputData = $request->input();
+
+            if ($request->hasFile('img_hotspot')) {
+                $file = $request->file('img_hotspot');
+
+                $imageName = time() . rand(10, 99) . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('images/img_hotspot'), $imageName);
+
+                $inputData['name'] = $imageName;
+
+                if (!empty($id)) {
+                    $exitingImg = Image::findOrFail($id);
+                    $path = public_path('images/img_hotspot/' . $exitingImg->name);
+                    if (file_exists($path)) {
+                        unlink($path);
+                    }
+                }
+            }
+
+            $image = Image::updateOrCreate(['id' => $id], $inputData);
+
+            $dots = json_decode($request->input('dots'));
+            $insertData = array_map(function ($item) use ($image) {
+                $itemArray = (array) $item;
+                $itemArray['image_id'] = $image->id;
+                return $itemArray;
+            }, $dots);
+
+            ImageHotspot::where('image_id', $image->id)->delete();
+
+            ImageHotspot::insert($insertData);
+
+            $message = empty($id) ? "Image added successfully" : "Image updated successfully";
+
+            return response()->json(['isStatus' => true, 'message' => $message, "id"=>$image->id]);
+        } catch (\Throwable $th) {
+            return response()->json(['isStatus' => false, 'error' => $th->getMessage()]);
+        }
     }
 }
