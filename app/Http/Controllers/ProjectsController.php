@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Throwable;
+use Illuminate\Support\Str;
 
 class ProjectsController extends Controller
 {
@@ -181,8 +182,48 @@ class ProjectsController extends Controller
             return response()->json(['error' => $th->getMessage()]);
         }
     }
-    public function pdfcrop(Request $request){
-        return view('projects.pdfCrop');
 
+    public function pdfcrop(Request $request)
+    {
+        return view('projects.pdfCrop');
+    }
+
+    public function saveImage(Request $request)
+    {
+        try {
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+
+            $project_name = Projects::where('id',$request->input('project_id'))->pluck('ship_name')->first();
+            $withoutSpaces = Str::replace(' ', '', $project_name);
+            $lowercaseWithoutSpaces = strtolower($withoutSpaces);
+
+
+            $file = $request->file('image');
+            $imagePath = "1.png";
+            $file->move(public_path('images/pdf'), $lowercaseWithoutSpaces.".png");
+            $areas = $request->input('areas');
+
+            // Decode the JSON data to PHP array
+            $areasArray = json_decode($areas, true);
+
+            // For example, you can print it using print_r
+            $image = imagecreatefrompng(public_path('images/pdf/'.$lowercaseWithoutSpaces.'.png'));
+            foreach ($areasArray as $area) {
+                $x = $area['x'];
+                $y = $area['y'];
+                $width = $area['width'];
+                $height = $area['height'];
+                $text = $area['text'];
+
+                $croppedImage = imagecrop($image, ['x' => $x, 'y' => $y, 'width' => $width, 'height' => $height]);
+                imagepng($croppedImage, public_path("images/pdf/{$text}_{$width}_{$height}.png"));
+            }
+
+            return response()->json(['image_path' => $imagePath]);
+        } catch (Throwable $th) {
+            return response()->json(['error' => $th->getMessage()]);
+        }
     }
 }

@@ -494,26 +494,59 @@
     <script src="{{ asset('assets/vendor/jquery.areaSelect.js') }}"></script>
     <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
     <script>
-            $('#pdfFile').change(function() {
-                convertToImage();
+        $('#pdfFile').change(function() {
+            convertToImage();
+        });
+
+        $('#get').click(function() {
+            let textareas = [];
+            let areas = $('.pdf-image').areaSelect('get');
+            let projectId = {{$project->id}} || '';
+
+            areas.forEach(area => {
+                var input = document.getElementById(area.id);
+                if (input) {
+                    textareas.push({
+                        ...area, // Copy existing area properties
+                        'text': input.value // Add 'text' key with input value
+                    });
+                }
+
             });
 
-            $('#get').click(function() {
-                // Initialize an empty array to store area selections
-                var areas = [];
+            let areasJSON = JSON.stringify(textareas);
+            let images = document.querySelectorAll('.pdf-image');
 
-                // Loop through each selected area
-                $('.pdf-image').each(function() {
-                    // Retrieve area selections for each image
-                    var imageAreas = $(this).areaSelect('get');
+            let imageFiles = [];
+            images.forEach(function(image, index) {
+                // Convert the image data URL to a blob
+                fetch(image.src)
+                    .then(res => res.blob())
+                    .then(blob => {
+                        // Create a new FormData object
+                        var formData = new FormData();
+                        formData.append('image', blob, 'page_' + (index + 1) + '.png');
+                        formData.append('_token', '{{ csrf_token() }}');
+                        formData.append('project_id', projectId);
+                        formData.append('areas', areasJSON);
 
-                    // Push area selections into the main areas array
-                    areas.push(imageAreas);
-                });
-
-                // Display area selections
-                alert(JSON.stringify(areas));
+                        $.ajax({
+                            type: 'POST',
+                            url: "{{ url('project/save-image') }}",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(response) {
+                                console.log('Image saved successfully:', response);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Failed to save image:', error);
+                            }
+                        });
+                    });
             });
+
+        });
 
         async function convertToImage() {
             const pdfFile = document.getElementById('pdfFile').files[0];
@@ -549,8 +582,6 @@
                     img.classList.add('pdf-image'); // Add a class to the image
                     const container = document.getElementById('img-container');
                     container.appendChild(img);
-
-
                 }
 
                 // Bind event listeners after images are loaded
@@ -569,22 +600,7 @@
             fileReader.readAsArrayBuffer(pdfFile);
         }
 
-        function showPreview(areas) {
-            var $preview = $('#preview');
-            $preview.empty();
-            for (var index in areas) {
-                var area = areas[index];
-                var $img = $('<div/>').css({
-                    'height': area.height,
-                    'display': 'inline-block',
-                    'width': area.width,
-                    'margin': '10px',
-                    'background-image': 'url("saber.jpg")',
-                    'background-position': -area.x + 'px ' + (-area.y + 'px')
-                });
-                $preview.append($img);
-            }
-        }
+
 
         function previewFile(input) {
             let file = $("input[type=file]").get(0).files[0];
@@ -697,7 +713,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ url('detail/save') }}", // Change this to the URL where you handle the form submission
+                    url: "{{ url('detail/save') }}",
                     type: 'POST',
                     data: formData,
                     dataType: 'json',

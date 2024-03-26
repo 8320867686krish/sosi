@@ -88,7 +88,7 @@
                 this.dragAreaOffset = { x: this.currentArea.x - x, y: this.currentArea.y - y };
                 break;
             case AreaSelectStatus.CREATE:
-                var newArea = { x: x, y: y, width: 0, height: 0 };
+                var newArea = { id: generateUniqueId(), x: x, y: y, width: 0, height: 0 };
                 this.areas.push(newArea);
                 this.currentArea = newArea;
                 this.status = AreaSelectStatus.RESIZE;
@@ -109,14 +109,12 @@
                         setAreaDirection(this.currentArea, Direction.SE);
                         this.triggerChange();
                     }
-                    // console.log(this.currentArea);
-                    if(this.currentArea ){
-
-                    }
                 }
-                // if(this.currentArea.x != undefined && this.currentArea.y != undefined && this.currentArea.width != undefined && this.currentArea.height != undefined) {
-                    // addInput(document.getElementById('img-container'), this.currentArea.x, this.currentArea.y, this.currentArea.width, this.currentArea.height);
-                // }
+                if (this.currentArea) {
+                    //let exitsInputTag = img-container
+                    // var dynamicId = 'textbox_' + this.areas.length; // Example: textbox_0, textbox_1, ...
+                    addInput(document.getElementById('img-container'), this.currentArea.id, this.currentArea.x, this.currentArea.y, this.currentArea.width, this.currentArea.height);
+                }
                 break;
             case AreaSelectStatus.MOVE:
                 this.triggerChange();
@@ -124,22 +122,40 @@
         }
     };
 
-    function addInput(container, x, y, width, height) {
-        var input = document.createElement('input');
-
-        input.type = 'text';
-        input.style.position = 'absolute';
-        input.style.left = (x + 15)+ 'px';
-        input.style.top = (y + 10) + 'px'; // Position at the bottom of the selected area
-        input.style.width = width + 'px';
-        input.style.zIndex = '1'; // Adjust z-index as needed
-
-        container.appendChild(input); // Append input box to the provided container
-
-        input.focus();
-
-        hasInput = true;
+    function generateUniqueId() {
+        return 'area_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
     }
+
+    function addInput(container, dynamicId, x, y, width, shouldFocus) {
+        var input = document.getElementById(dynamicId);
+
+        if (!input) {
+            input = document.createElement('input');
+            input.type = 'text'; // Default to 'text' if inputType is not provided
+            input.id = dynamicId;
+            input.setAttribute('data-area-id', dynamicId); // Set data-area-id attribute
+
+            input.style.position = 'absolute';
+            input.style.left = (x + 15) + 'px';
+            input.style.top = (y + 10) + 'px'; // Position at the bottom of the selected area
+            input.style.width = width + 'px';
+            // input.style.zIndex = '1'; // Adjust z-index as needed
+
+            container.appendChild(input); // Append input box to the provided container
+
+            input.focus();
+
+            hasInput = true;
+        } else {
+            // Update the position and size of the existing textbox
+            input.style.left = (x + 15) + 'px';
+            input.style.top = (y + 10) + 'px';
+            input.style.width = width + 'px';
+
+            input.focus();
+        }
+    }
+
 
     AreaSelect.prototype.onMouseMoving = function (x, y) {
         var area = this.getArea(x, y, this.options.padding);
@@ -184,8 +200,33 @@
                 area.height = y - area.y;
                 break;
             case AreaSelectStatus.MOVE:
-                area.x = (x + this.dragAreaOffset.x);
-                area.y = (y + this.dragAreaOffset.y);
+                var newX = x + this.dragAreaOffset.x;
+                var newY = y + this.dragAreaOffset.y;
+
+                // Move the area to the new position
+                area.x = newX;
+                area.y = newY;
+
+                // Update the position of the input element
+                var inputElements = document.querySelectorAll('#img-container input');
+                if (inputElements) {
+                    inputElements.forEach(function (input) {
+                        var inputAreaId = input.getAttribute('data-area-id');
+                        if (inputAreaId === area.id) {
+                            input.style.left = (newX + 15) + 'px';
+                            input.style.top = (newY + 10) + 'px';
+                        }
+                    });
+                    // Update the position of the select box
+                    var selectBox = document.querySelector('#img-container select');
+                    if (selectBox) {
+                        selectBox.style.left = (newX + 15) + 'px';
+                        selectBox.style.top = (newY + 10) + 'px';
+                    }
+                }
+
+                // Redraw to reflect changes
+                this.draw();
                 break;
             case AreaSelectStatus.CREATE:
                 break;
@@ -204,11 +245,18 @@
 
     AreaSelect.prototype.onClick = function (x, y) {
         var area = this.getArea(x, y, this.options.padding);
-        if (area != undefined && this.options.deleteMethod == DeleteMethod.CLICK) {
+        if (area !== undefined && this.options.deleteMethod === DeleteMethod.CLICK) {
             this.deleteArea(area);
             this.draw();
         }
+
+        // Focus on the first input element within #img-container, if any
+        var exitsInput = document.getElementById(area.id);;
+        if (exitsInput) {
+            exitsInput.focus();
+        }
     };
+
 
     AreaSelect.prototype.draw = function () {
         var g2d = this.g2d;
@@ -245,6 +293,10 @@
         var index = areas.indexOf(area);
         if (index >= 0) {
             areas.splice(areas.indexOf(area), 1);
+            var inputElement = document.getElementById(this.currentArea.id); // Find the input element by ID
+            if (inputElement) {
+                inputElement.remove(); // Remove the input element from the DOM
+            }
             this.currentArea = undefined;
             this.triggerChange();
             this.status = AreaSelectStatus.CREATE;
