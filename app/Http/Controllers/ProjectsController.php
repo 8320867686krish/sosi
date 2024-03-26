@@ -243,8 +243,7 @@ class ProjectsController extends Controller
         try {
             $request->validate([
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'project_id' => 'required|exists:projects,id',
-                'areas' => 'required|array',
+                'project_id' => 'required|exists:projects,id'
             ]);
 
             $project = Projects::findOrFail($request->input('project_id'));
