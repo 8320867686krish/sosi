@@ -137,7 +137,7 @@
 
             input.style.position = 'absolute';
             input.style.left = (x + 15) + 'px';
-            input.style.top = (y + 10) + 'px'; // Position at the bottom of the selected area
+            input.style.top = (y + 22) + 'px'; // Position at the bottom of the selected area
             input.style.width = width + 'px';
             // input.style.zIndex = '1'; // Adjust z-index as needed
 
@@ -149,7 +149,7 @@
         } else {
             // Update the position and size of the existing textbox
             input.style.left = (x + 15) + 'px';
-            input.style.top = (y + 10) + 'px';
+            input.style.top = (y + 22) + 'px';
             input.style.width = width + 'px';
 
             input.focus();

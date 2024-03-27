@@ -299,38 +299,61 @@
         <div class="main-content container-fluid p-0" id="create_vscp">
             <div class="email-head">
                 <div class="email-head-subject">
-                    <div class="title"><a class="active" href="#"><span class="icon"><i
-                                    class="fas fa-star"></i></span></a> <span>VSCP</span>
-                    </div>
-                </div>
-            </div>
-            <div class="email-body">
-                <div class="container-fluid dashboard-content">
-                    <input type="file" id="pdfFile" accept=".pdf">
-                    <button id="get">Get!</button>
-                    <div class="row">
-                        <div id="bottom-container"></div>
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-9">
-                                            <!-- <h3>Demo:</h3> -->
-                                            <div class="container" id="container"></div>
-                                            <div id="img-container">
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="title">
+                        <a class="active" href="#">
+                            <span class="icon"><i class="fas fa-star"></i></span>
+                        </a> <span>VSCP</span>
+                        <div style="float:right">
+                            <button class="btn btn-primary" onclick="triggerFileInput('pdfFile')">Add</button>
+                            <input type="file" id="pdfFile" accept=".pdf" style="display: none;">
                         </div>
                     </div>
-                    <!-- ============================================================== -->
-                    <!-- end cropper  -->
-                    <!-- ============================================================== -->
                 </div>
             </div>
+            <div class="modal fade" data-backdrop="static" id="pdfModal" tabindex="-1" role="dialog"
+            aria-labelledby="pdfModalLabel" aria-hidden="true"
+            style="padding-right: 0px !important;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl"
+                role="document" style="width: 98% !important; max-width: none !important;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Deck Title</h5>
+                        <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </a>
+                    </div>
+                    <div class="modal-body"
+                        style="overflow-x: auto; overflow-y: auto; height: calc(81vh - 1rem);">
+                        <div id="img-container"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-secondary" data-dismiss="modal">Close</a>
+                        <button class="btn btn-primary" id="get">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+                <div class="row mt-4 deckView">
+                    @if (isset($project->decks) && $project->decks->count() > 0)
+
+                    @foreach ($project->decks as $deck)
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                            <div class="card">
+                                <img class="img-fluid px-3" src="{{ $deck->imagePath }}" alt="Card image cap">
+                                <div class="card-body">
+                                    <h3 class="card-title">{{ ucwords($deck->name) }}</h3>
+                                </div>
+                                <div class="card-footer">
+                                    <button href="#" class="btn btn-primary deckImgEditBtn">Edit</button>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    @endforeach
+                    @endif
+                </div>
+
         </div>
 
         <div class="main-content container-fluid p-0" id="assign_project">
@@ -494,6 +517,10 @@
     <script src="{{ asset('assets/vendor/jquery.areaSelect.js') }}"></script>
     <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
     <script>
+        function triggerFileInput(inputId) {
+            document.getElementById(inputId).click();
+        }
+
         $('#pdfFile').change(function() {
             convertToImage();
         });
@@ -501,7 +528,7 @@
         $('#get').click(function() {
             let textareas = [];
             let areas = $('.pdf-image').areaSelect('get');
-            let projectId = {{$project->id}} || '';
+            let projectId = {{ $project->id }} || '';
 
             areas.forEach(area => {
                 var input = document.getElementById(area.id);
@@ -520,8 +547,7 @@
             let imageFiles = [];
             images.forEach(function(image, index) {
                 // Convert the image data URL to a blob
-                fetch(image.src)
-                    .then(res => res.blob())
+                fetch(image.src).then(res => res.blob())
                     .then(blob => {
                         // Create a new FormData object
                         var formData = new FormData();
@@ -537,6 +563,16 @@
                             processData: false,
                             contentType: false,
                             success: function(response) {
+                                $('.deckView').html();
+                                $('.deckView').html(response.html);
+                                $('#pdfModal').modal('hide');
+//hide the modal
+
+$('body').removeClass('modal-open');
+//modal-open class is added on body so it has to be removed
+
+$('.modal-backdrop').remove();
+
                                 console.log('Image saved successfully:', response);
                             },
                             error: function(xhr, status, error) {
@@ -545,7 +581,11 @@
                         });
                     });
             });
+        });
 
+        $('#pdfModal').on('hidden.bs.modal', function() {
+            $(this).remove(); // Remove the modal element
+            $('.modal-backdrop').remove(); // Remove the backdrop element
         });
 
         async function convertToImage() {
@@ -598,6 +638,8 @@
                 });
             };
             fileReader.readAsArrayBuffer(pdfFile);
+            $('#pdfModal').modal('show');
+
         }
 
 

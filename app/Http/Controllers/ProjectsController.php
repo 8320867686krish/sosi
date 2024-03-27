@@ -57,21 +57,30 @@ class ProjectsController extends Controller
         $clients = Client::orderBy('id', 'desc')->get(['id', 'manager_name', 'manager_initials']);
         $users = User::where('isVerified', 1)->get();
 
-        $project = Projects::with('project_teams')->with('client:id,manager_name,owner_name')->find($project_id);
+        $project = Projects::with('project_teams', 'client:id,manager_name,owner_name', 'decks:id,project_id,name,image')->find($project_id);
         $project['imagePath'] = $project->image != null ? url("images/ship/{$project->image}") : asset('assets/images/giphy.gif');
-        // dd($project);
+
         $project['user_id'] = $project->project_teams->pluck('user_id')->toArray();
         $project->assign_date = $project->project_teams->pluck('assign_date')->unique()->values()->toArray();
         $project->end_date = $project->project_teams->pluck('end_date')->unique()->values()->toArray();
 
         unset($project->project_teams);
 
+        if ($project->decks) {
+            foreach ($project->decks as $deck) {
+                $imagePath = public_path("images/pdf/{$deck->image}");
+                if (file_exists($imagePath)) {
+                    $deck->imagePath = url("images/pdf/{$deck->image}");
+                }
+            }
+        }
+
         if (!Gate::allows('projects.edit')) {
             $readonly = "readOnly";
         } else {
             $readonly = "";
         }
-        $decks = Deck::where('project_id',$project_id)->get();
+
         return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id]);
     }
 
@@ -186,101 +195,66 @@ class ProjectsController extends Controller
         }
     }
 
-
-
-    // public function saveImage(Request $request)
-    // {
-    //     try {
-    //         $request->validate([
-    //             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-    //         ]);
-
-    //         $project_name = Projects::where('id',$request->input('project_id'))->pluck('ship_name')->first();
-    //         $withoutSpaces = Str::replace(' ', '', $project_name);
-    //         $lowercaseWithoutSpaces = strtolower($withoutSpaces);
-
-    //         $file = $request->file('image');
-    //         $mainFileName = "{$lowercaseWithoutSpaces}_". time() . ".png";
-    //         $file->move(public_path('images/pdf'), $mainFileName);
-    //         $areas = $request->input('areas');
-
-    //         Projects::where('id', $request->input('project_id'))->update(['deck_image' => $mainFileName]);
-
-    //         // Decode the JSON data to PHP array
-    //         $areasArray = json_decode($areas, true);
-
-    //         // For example, you can print it using print_r
-    //         $image = imagecreatefrompng(public_path('images/pdf/'.$mainFileName));
-    //         foreach ($areasArray as $area) {
-    //             $x = $area['x'];
-    //             $y = $area['y'];
-    //             $width = $area['width'];
-    //             $height = $area['height'];
-    //             $text = $area['text'] ?? " ";
-
-    //             $withoutSpacesName = Str::replace(' ', '', $text);
-    //             $lowercaseName = strtolower($withoutSpacesName);
-
-    //             $croppedImage = imagecrop($image, ['x' => $x, 'y' => $y, 'width' => $width, 'height' => $height]);
-    //             $croppedImageName = "{$lowercaseName}_{$width}_{$height}_". time() .".png";
-    //             imagepng($croppedImage, public_path("images/pdf/$croppedImageName"));
-
-    //             Deck::create([
-    //                 'project_id' => $request->input('project_id'),
-    //                 'name' => $text,
-    //                 'image' => $croppedImageName
-    //             ]);
-    //         }
-
-    //         return response()->json(["status"=>true, "message"=> "Image saved successfully"]);
-    //     } catch (Throwable $th) {
-    //         return response()->json(['error' => $th->getMessage()]);
-    //     }
-    // }
-
     public function saveImage(Request $request)
     {
         try {
             $request->validate([
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'project_id' => 'required|exists:projects,id'
+                'project_id' => 'required|exists:projects,id',
             ]);
 
             $project = Projects::findOrFail($request->input('project_id'));
             $projectName = Str::slug($project->ship_name);
-
-            $image = $request->file('image');
-            if (!$image->isValid()) {
+            $projectId = $request->input('project_id');
+            $file = $request->file('image');
+            if (!$file->isValid()) {
                 throw new \Exception('Uploaded image is not valid.');
             }
-
             $mainFileName = "{$projectName}_" . time() . ".png";
-            $imagePath = $image->storeAs('images/pdf', $mainFileName);
+            $file->move(public_path('images/pdf/'.$projectName."/"), $mainFileName);
+            $areas = $request->input('areas');
 
-            $areas = json_decode($request->input('areas'), true);
+            Projects::where('id', $request->input('project_id'))->update(['deck_image' => $mainFileName]);
 
-            $image = imagecreatefrompng(storage_path('app/' . $imagePath));
-            foreach ($areas as $area) {
+            $areasArray = json_decode($areas, true);
+
+            $image = imagecreatefrompng(public_path('images/pdf/'.$projectName.'/' . $mainFileName));
+            foreach ($areasArray as $area) {
                 $x = $area['x'];
                 $y = $area['y'];
                 $width = $area['width'];
                 $height = $area['height'];
-                $text = $area['text'] ?? '';
+                $text = $area['text'] ?? " ";
+
+                $withoutSpacesName = Str::slug($text);
+                $croppedImageName = "{$withoutSpacesName}_{$width}_{$height}_" . time() . ".png";
 
                 $croppedImage = imagecrop($image, ['x' => $x, 'y' => $y, 'width' => $width, 'height' => $height]);
+
                 if ($croppedImage) {
-                    $croppedImageName = Str::slug($text) . "_{$width}_{$height}_" . time() . ".png";
-                    imagepng($croppedImage, storage_path("app/images/pdf/$croppedImageName"));
+                    imagepng($croppedImage, public_path("images/pdf/{$projectName}/{$croppedImageName}"));
 
                     Deck::create([
-                        'project_id' => $project->id,
+                        'project_id' => $request->input('project_id'),
                         'name' => $text,
                         'image' => $croppedImageName
                     ]);
                 }
             }
+            $decks = Deck::where('project_id', $request->input('project_id'))->get();
 
-            return response()->json(["status" => true, "message" => "Image saved successfully"]);
+            if ($decks) {
+                foreach ($decks as $deck) {
+                    $imagePath = public_path("images/pdf/{$deck->image}");
+                    if (file_exists($imagePath)) {
+                        $deck->imagePath = url("images/pdf/{$deck->image}");
+                    }
+                }
+            }
+
+            $html = view('projects.create_vsp', compact('decks'))->render();
+
+            return response()->json(["status" => true, "message" => "Image saved successfully", 'html' => $html]);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
         } catch (\Throwable $th) {
