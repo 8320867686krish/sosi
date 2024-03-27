@@ -68,9 +68,9 @@ class ProjectsController extends Controller
 
         if ($project->decks) {
             foreach ($project->decks as $deck) {
-                $imagePath = public_path("images/pdf/{$deck->image}");
+                $imagePath = public_path("images/pdf/{$project->id}/{$deck->image}");
                 if (file_exists($imagePath)) {
-                    $deck->imagePath = url("images/pdf/{$deck->image}");
+                    $deck->imagePath = url("images/pdf/{$project->id}/{$deck->image}");
                 }
             }
         }
@@ -211,14 +211,14 @@ class ProjectsController extends Controller
                 throw new \Exception('Uploaded image is not valid.');
             }
             $mainFileName = "{$projectName}_" . time() . ".png";
-            $file->move(public_path('images/pdf/'.$projectName."/"), $mainFileName);
+            $file->move(public_path('images/pdf/'.$projectId."/"), $mainFileName);
             $areas = $request->input('areas');
 
             Projects::where('id', $request->input('project_id'))->update(['deck_image' => $mainFileName]);
 
             $areasArray = json_decode($areas, true);
 
-            $image = imagecreatefrompng(public_path('images/pdf/'.$projectName.'/' . $mainFileName));
+            $image = imagecreatefrompng(public_path('images/pdf/'.$projectId.'/' . $mainFileName));
             foreach ($areasArray as $area) {
                 $x = $area['x'];
                 $y = $area['y'];
@@ -232,7 +232,7 @@ class ProjectsController extends Controller
                 $croppedImage = imagecrop($image, ['x' => $x, 'y' => $y, 'width' => $width, 'height' => $height]);
 
                 if ($croppedImage) {
-                    imagepng($croppedImage, public_path("images/pdf/{$projectName}/{$croppedImageName}"));
+                    imagepng($croppedImage, public_path("images/pdf/{$projectId}/{$croppedImageName}"));
 
                     Deck::create([
                         'project_id' => $request->input('project_id'),
@@ -245,9 +245,9 @@ class ProjectsController extends Controller
 
             if ($decks) {
                 foreach ($decks as $deck) {
-                    $imagePath = public_path("images/pdf/{$deck->image}");
+                    $imagePath = public_path("images/pdf/{$projectId}/{$deck->image}");
                     if (file_exists($imagePath)) {
-                        $deck->imagePath = url("images/pdf/{$deck->image}");
+                        $deck->imagePath = url("images/pdf/{$projectId}/{$deck->image}");
                     }
                 }
             }

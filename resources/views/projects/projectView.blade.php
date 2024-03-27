@@ -297,63 +297,7 @@
         </div>
 
         <div class="main-content container-fluid p-0" id="create_vscp">
-            <div class="email-head">
-                <div class="email-head-subject">
-                    <div class="title">
-                        <a class="active" href="#">
-                            <span class="icon"><i class="fas fa-star"></i></span>
-                        </a> <span>VSCP</span>
-                        <div style="float:right">
-                            <button class="btn btn-primary" onclick="triggerFileInput('pdfFile')">Add</button>
-                            <input type="file" id="pdfFile" accept=".pdf" style="display: none;">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade" data-backdrop="static" id="pdfModal" tabindex="-1" role="dialog"
-            aria-labelledby="pdfModalLabel" aria-hidden="true"
-            style="padding-right: 0px !important;">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl"
-                role="document" style="width: 98% !important; max-width: none !important;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Deck Title</h5>
-                        <a href="#" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </a>
-                    </div>
-                    <div class="modal-body"
-                        style="overflow-x: auto; overflow-y: auto; height: calc(81vh - 1rem);">
-                        <div id="img-container"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="#" class="btn btn-secondary" data-dismiss="modal">Close</a>
-                        <button class="btn btn-primary" id="get">Save</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-                <div class="row mt-4 deckView">
-                    @if (isset($project->decks) && $project->decks->count() > 0)
-
-                    @foreach ($project->decks as $deck)
-                        <div class="col-lg-4 col-md-6 col-sm-12 col-12">
-                            <div class="card">
-                                <img class="img-fluid px-3" src="{{ $deck->imagePath }}" alt="Card image cap">
-                                <div class="card-body">
-                                    <h3 class="card-title">{{ ucwords($deck->name) }}</h3>
-                                </div>
-                                <div class="card-footer">
-                                    <button href="#" class="btn btn-primary deckImgEditBtn">Edit</button>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    @endforeach
-                    @endif
-                </div>
-
+            @include('projects.addVscp')
         </div>
 
         <div class="main-content container-fluid p-0" id="assign_project">
@@ -518,14 +462,11 @@
     <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
     <script>
         function triggerFileInput(inputId) {
+            $(`#${inputId}`).val('');
             document.getElementById(inputId).click();
         }
 
-        $('#pdfFile').change(function() {
-            convertToImage();
-        });
-
-        $('#get').click(function() {
+        $('#getDeckCropImg').click(function() {
             let textareas = [];
             let areas = $('.pdf-image').areaSelect('get');
             let projectId = {{ $project->id }} || '';
@@ -565,14 +506,10 @@
                             success: function(response) {
                                 $('.deckView').html();
                                 $('.deckView').html(response.html);
+                                $("#img-container").empty();
                                 $('#pdfModal').modal('hide');
-//hide the modal
-
-$('body').removeClass('modal-open');
-//modal-open class is added on body so it has to be removed
-
-$('.modal-backdrop').remove();
-
+                                $('body').removeClass('modal-open');
+                                $('.modal-backdrop').remove();
                                 console.log('Image saved successfully:', response);
                             },
                             error: function(xhr, status, error) {
@@ -581,11 +518,6 @@ $('.modal-backdrop').remove();
                         });
                     });
             });
-        });
-
-        $('#pdfModal').on('hidden.bs.modal', function() {
-            $(this).remove(); // Remove the modal element
-            $('.modal-backdrop').remove(); // Remove the backdrop element
         });
 
         async function convertToImage() {
@@ -615,7 +547,7 @@ $('.modal-backdrop').remove();
                         canvasContext: context,
                         viewport
                     }).promise;
-
+                    $("#img-container").empty();
                     const imageData = canvas.toDataURL('image/png');
                     const img = document.createElement('img');
                     img.src = imageData;
@@ -641,8 +573,6 @@ $('.modal-backdrop').remove();
             $('#pdfModal').modal('show');
 
         }
-
-
 
         function previewFile(input) {
             let file = $("input[type=file]").get(0).files[0];
@@ -677,6 +607,10 @@ $('.modal-backdrop').remove();
 
             // Show the default section
             $('#ship_particulars').show();
+
+            $('#pdfFile').change(function() {
+                convertToImage();
+            });
 
             // Handle click event on sidebar menu items
             $('.aside-nav .nav li a').click(function() {
