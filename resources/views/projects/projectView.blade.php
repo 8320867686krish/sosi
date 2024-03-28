@@ -297,40 +297,7 @@
         </div>
 
         <div class="main-content container-fluid p-0" id="create_vscp">
-            <div class="email-head">
-                <div class="email-head-subject">
-                    <div class="title"><a class="active" href="#"><span class="icon"><i
-                                    class="fas fa-star"></i></span></a> <span>VSCP</span>
-                    </div>
-                </div>
-            </div>
-            <div class="email-body">
-                <div class="container-fluid dashboard-content">
-                    <input type="file" id="pdfFile" accept=".pdf">
-                    <button id="get">Get!</button>
-                    <div class="row">
-                        <div id="bottom-container"></div>
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-9">
-                                            <!-- <h3>Demo:</h3> -->
-                                            <div class="container" id="container"></div>
-                                            <div id="img-container">
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ============================================================== -->
-                    <!-- end cropper  -->
-                    <!-- ============================================================== -->
-                </div>
-            </div>
+            @include('projects.addVscp')
         </div>
 
         <div class="main-content container-fluid p-0" id="assign_project">
@@ -494,59 +461,10 @@
     <script src="{{ asset('assets/vendor/jquery.areaSelect.js') }}"></script>
     <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
     <script>
-        $('#pdfFile').change(function() {
-            convertToImage();
-        });
-
-        $('#get').click(function() {
-            let textareas = [];
-            let areas = $('.pdf-image').areaSelect('get');
-            let projectId = {{$project->id}} || '';
-
-            areas.forEach(area => {
-                var input = document.getElementById(area.id);
-                if (input) {
-                    textareas.push({
-                        ...area, // Copy existing area properties
-                        'text': input.value // Add 'text' key with input value
-                    });
-                }
-
-            });
-
-            let areasJSON = JSON.stringify(textareas);
-            let images = document.querySelectorAll('.pdf-image');
-
-            let imageFiles = [];
-            images.forEach(function(image, index) {
-                // Convert the image data URL to a blob
-                fetch(image.src)
-                    .then(res => res.blob())
-                    .then(blob => {
-                        // Create a new FormData object
-                        var formData = new FormData();
-                        formData.append('image', blob, 'page_' + (index + 1) + '.png');
-                        formData.append('_token', '{{ csrf_token() }}');
-                        formData.append('project_id', projectId);
-                        formData.append('areas', areasJSON);
-
-                        $.ajax({
-                            type: 'POST',
-                            url: "{{ url('project/save-image') }}",
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            success: function(response) {
-                                console.log('Image saved successfully:', response);
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('Failed to save image:', error);
-                            }
-                        });
-                    });
-            });
-
-        });
+        function triggerFileInput(inputId) {
+            $(`#${inputId}`).val('');
+            document.getElementById(inputId).click();
+        }
 
         async function convertToImage() {
             const pdfFile = document.getElementById('pdfFile').files[0];
@@ -575,7 +493,7 @@
                         canvasContext: context,
                         viewport
                     }).promise;
-
+                    $("#img-container").empty();
                     const imageData = canvas.toDataURL('image/png');
                     const img = document.createElement('img');
                     img.src = imageData;
@@ -598,9 +516,9 @@
                 });
             };
             fileReader.readAsArrayBuffer(pdfFile);
+            $('#pdfModal').modal('show');
+
         }
-
-
 
         function previewFile(input) {
             let file = $("input[type=file]").get(0).files[0];
@@ -635,6 +553,10 @@
 
             // Show the default section
             $('#ship_particulars').show();
+
+            $('#pdfFile').change(function() {
+                convertToImage();
+            });
 
             // Handle click event on sidebar menu items
             $('.aside-nav .nav li a').click(function() {
@@ -740,6 +662,67 @@
                     },
                 });
             });
+
+            $('#getDeckCropImg').click(function() {
+                let textareas = [];
+                let areas = $('.pdf-image').areaSelect('get');
+                let projectId = {{ $project->id }} || '';
+
+                areas.forEach(area => {
+                    var input = document.getElementById(area.id);
+                    if (input) {
+                        textareas.push({
+                            ...area, // Copy existing area properties
+                            'text': input.value // Add 'text' key with input value
+                        });
+                    }
+                });
+
+                let areasJSON = JSON.stringify(textareas);
+                let images = document.querySelectorAll('.pdf-image');
+
+                let imageFiles = [];
+                images.forEach(function(image, index) {
+                    // Convert the image data URL to a blob
+                    fetch(image.src).then(res => res.blob())
+                        .then(blob => {
+                            // Create a new FormData object
+                            var formData = new FormData();
+                            formData.append('image', blob, 'page_' + (index + 1) + '.png');
+                            formData.append('_token', '{{ csrf_token() }}');
+                            formData.append('project_id', projectId);
+                            formData.append('areas', areasJSON);
+
+                            $.ajax({
+                                type: 'POST',
+                                url: "{{ url('project/save-image') }}",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                success: function(response) {
+                                    $('.deckView').html();
+                                    $('.deckView').html(response.html);
+                                    $("#img-container").empty();
+                                    $('#pdfModal').modal('hide');
+                                    $('body').removeClass('modal-open');
+                                    $('.modal-backdrop').remove();
+                                    console.log('Image saved successfully:',
+                                        response);
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Failed to save image:', error);
+                                }
+                            });
+                        });
+                });
+            });
+
+            $('#pdfModal').on('hidden.bs.modal', function(e) {
+                $(this).find('.modal-body').empty(); // Clear modal body content
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+            });
+
         });
     </script>
 @endsection
