@@ -79,6 +79,8 @@ Route::middleware('auth')->group(function () {
             Route::post('detail/save', 'saveDetail')->name('projects.detail');
             Route::post('detail/assignProject', 'assignProject')->name('projects.assign');
             Route::post('project/save-image','saveImage');
+            Route::post('project/updateDeckTitle','updateDeckTitle');
+            Route::get('project/deleteDeckImg/{id}', 'deleteDeckImg')->name('deleteDeckImg');
         });
     });
 
