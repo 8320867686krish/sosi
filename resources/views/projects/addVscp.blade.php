@@ -42,7 +42,8 @@
             </div>
             <div class="modal-body" style="overflow-x: auto; overflow-y: auto; height: calc(81vh - 1rem);">
                 <div id="img-container" class="text-center">
-                    <img src="{{ asset('assets/images/giphy.gif') }}" class="mx-auto" alt="" srcset="">
+                    {{-- <img src="{{ asset('assets/images/giphy.gif') }}" class="mx-auto" alt="" srcset=""> --}}
+                    <span class="dashboard-spinner spinner-xxl"></span>
                 </div>
             </div>
             <div class="modal-footer">

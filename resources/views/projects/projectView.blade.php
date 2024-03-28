@@ -466,60 +466,6 @@
             document.getElementById(inputId).click();
         }
 
-        $('#getDeckCropImg').click(function() {
-            let textareas = [];
-            let areas = $('.pdf-image').areaSelect('get');
-            let projectId = {{ $project->id }} || '';
-
-            areas.forEach(area => {
-                var input = document.getElementById(area.id);
-                if (input) {
-                    textareas.push({
-                        ...area, // Copy existing area properties
-                        'text': input.value // Add 'text' key with input value
-                    });
-                }
-
-            });
-
-            let areasJSON = JSON.stringify(textareas);
-            let images = document.querySelectorAll('.pdf-image');
-
-            let imageFiles = [];
-            images.forEach(function(image, index) {
-                // Convert the image data URL to a blob
-                fetch(image.src).then(res => res.blob())
-                    .then(blob => {
-                        // Create a new FormData object
-                        var formData = new FormData();
-                        formData.append('image', blob, 'page_' + (index + 1) + '.png');
-                        formData.append('_token', '{{ csrf_token() }}');
-                        formData.append('project_id', projectId);
-                        formData.append('areas', areasJSON);
-
-                        $.ajax({
-                            type: 'POST',
-                            url: "{{ url('project/save-image') }}",
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            success: function(response) {
-                                $('.deckView').html();
-                                $('.deckView').html(response.html);
-                                $("#img-container").empty();
-                                $('#pdfModal').modal('hide');
-                                $('body').removeClass('modal-open');
-                                $('.modal-backdrop').remove();
-                                console.log('Image saved successfully:', response);
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('Failed to save image:', error);
-                            }
-                        });
-                    });
-            });
-        });
-
         async function convertToImage() {
             const pdfFile = document.getElementById('pdfFile').files[0];
             if (!pdfFile) {
@@ -716,6 +662,67 @@
                     },
                 });
             });
+
+            $('#getDeckCropImg').click(function() {
+                let textareas = [];
+                let areas = $('.pdf-image').areaSelect('get');
+                let projectId = {{ $project->id }} || '';
+
+                areas.forEach(area => {
+                    var input = document.getElementById(area.id);
+                    if (input) {
+                        textareas.push({
+                            ...area, // Copy existing area properties
+                            'text': input.value // Add 'text' key with input value
+                        });
+                    }
+                });
+
+                let areasJSON = JSON.stringify(textareas);
+                let images = document.querySelectorAll('.pdf-image');
+
+                let imageFiles = [];
+                images.forEach(function(image, index) {
+                    // Convert the image data URL to a blob
+                    fetch(image.src).then(res => res.blob())
+                        .then(blob => {
+                            // Create a new FormData object
+                            var formData = new FormData();
+                            formData.append('image', blob, 'page_' + (index + 1) + '.png');
+                            formData.append('_token', '{{ csrf_token() }}');
+                            formData.append('project_id', projectId);
+                            formData.append('areas', areasJSON);
+
+                            $.ajax({
+                                type: 'POST',
+                                url: "{{ url('project/save-image') }}",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                success: function(response) {
+                                    $('.deckView').html();
+                                    $('.deckView').html(response.html);
+                                    $("#img-container").empty();
+                                    $('#pdfModal').modal('hide');
+                                    $('body').removeClass('modal-open');
+                                    $('.modal-backdrop').remove();
+                                    console.log('Image saved successfully:',
+                                        response);
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Failed to save image:', error);
+                                }
+                            });
+                        });
+                });
+            });
+
+            $('#pdfModal').on('hidden.bs.modal', function(e) {
+                $(this).find('.modal-body').empty(); // Clear modal body content
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+            });
+
         });
     </script>
 @endsection
