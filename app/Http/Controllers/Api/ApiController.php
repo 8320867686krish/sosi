@@ -391,7 +391,7 @@ class ApiController extends Controller
     {
         try {
             $decks = Deck::select('id', 'project_id', 'name','image')->where('project_id', $project_id)->get();
-            return response()->json(['isStatus' => true, 'message' => 'Project deck list retrieved successfully.', 'projectDeckList' => $decks,'mainPath' => public_path('images/projects/pdf')]);
+            return response()->json(['isStatus' => true, 'message' => 'Project deck list retrieved successfully.', 'projectDeckList' => $decks,'mainPath' => url('images/projects/pdf/'.$project_id)]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
@@ -399,7 +399,7 @@ class ApiController extends Controller
     public function getCheckList($deckId)
     {
         try {
-            $checks = Checks::where('deck_id', $deckId)->get();
+            $checks = Checks::withCount('checks')->where('deck_id', $deckId)->get();
             return response()->json(['isStatus' => true, 'message' => 'Project checks list retrieved successfully.', 'projectChecks' => $checks]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
