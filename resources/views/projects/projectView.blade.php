@@ -95,7 +95,6 @@
                                         class="fas fa-fw fa-briefcase"></i></span>Image Hotspots</a>
                         </li>
                         <li>
-
                             <a href="#assign_project"><span class="icon"><i
                                         class="fas fa-fw fa-briefcase"></i></span>Assign Project</a>
                         </li>
@@ -352,51 +351,53 @@
             @include('projects.addVscp')
         </div>
 
-
         <div class="main-content container-fluid p-0" id="image_hotspots">
             <div class="email-head">
                 <div class="email-head-subject">
                     <div class="title"><a class="active" href="#"><span class="icon"><i
                                     class="fas fa-star"></i></span></a> <span>Image Hotspots</span>
-            </div>
-            <div class="email-body">
-                <form id="imageForm" action="{{ route('addImageHotspots') }}" method="post"
-                    enctype="multipart/form-data">
-                    @csrf
-                    <div class="form-group">
-                        <input type="hidden" name="id" id="imageId">
-                        <input type="hidden" name="project_id" value="{{ $project->id ?? '' }}">
-                        <input type="file" id="img_hotspot" name="img_hotspot"
-                            onchange="previewFile(this, '#previewImg1');" accept="image/*">
                     </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="outfit">
-                                <img id="previewImg1" src="../../assets/images/welcame_mail_img.jpg" class="mt-1"
-                                    alt="Upload Image">
-                                {{-- @foreach ($check as $dot)
+                    <div class="email-body">
+                        <form id="imageForm" action="{{ route('addImageHotspots') }}" method="post"
+                            enctype="multipart/form-data">
+                            @csrf
+                            <div class="form-group">
+                                <input type="hidden" name="id" id="imageId">
+                                <input type="hidden" name="project_id" value="{{ $project->id ?? '' }}">
+                                <input type="file" id="img_hotspot" name="img_hotspot"
+                                    onchange="previewFile(this, '#previewImg1');" accept="image/*">
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="outfit">
+                                        <img id="previewImg1" src="{{ asset('assets/images/welcame_mail_img.jpg') }}"
+                                            class="mt-1" alt="Upload Image">
+                                        {{-- @foreach ($check as $dot)
                                     <div class="dot ui-draggable ui-draggable-handle"
                                         style="top: {{ $dot->top }}%; left: {{ $dot->left }}%;">
                                         {{ $loop->iteration }}</div>
                                 @endforeach --}}
+                                    </div>
+                                </div>
+                                <div class="col-6" id="hotsportNameType"></div>
+                            </div>
+                            <div class="output">Dot Positions goes here.</div>
+                            <button type="submit">Save</button>
+                        </form>
+                        <div id="hotsportNameTypeDiv">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" name="name" id="name" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="type">Type</label>
+                                <input type="text" name="type" id="type" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-primary float-right btn-rounded formSubmitBtn"
+                                    id="addNameTypeBtn">Add</button>
                             </div>
                         </div>
-                        <div class="col-6" id="hotsportNameType"></div>
-                    </div>
-                    <div class="output">Dot Positions goes here.</div>
-                    <button type="submit">Save</button>
-                </form>
-                <div id="hotsportNameTypeDiv">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" name="name" id="name" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="type">Type</label>
-                        <input type="text" name="type" id="type" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-primary float-right btn-rounded formSubmitBtn" id="addNameTypeBtn">Add</button>
                     </div>
                 </div>
             </div>
@@ -423,8 +424,7 @@
                             <input type="hidden" name="project_id" value="{{ $project->id ?? '' }}">
                             <div class="form-group">
                                 <label for="project_no">User</label>
-                                <select
-                                    class="selectpicker show-tick form-control form-control-lg @error('user_id') is-invalid @enderror"
+                                <select class="selectpicker show-tick form-control form-control-lg @error('user_id') is-invalid @enderror"
                                     name="user_id[]" id="user_id" multiple data-live-search="true"
                                     data-actions-box="true" {{ $readonly }}>
                                     @if ($users->count() > 0)
@@ -578,7 +578,6 @@
             }
         }
 
-
         function removeInvalidClass(input) {
 
             const isValid = input.value.trim() !== '';
@@ -624,6 +623,7 @@
                     const context = canvas.getContext('2d');
                     canvas.width = viewport.width;
                     canvas.height = viewport.height;
+
                     $(".dashboard-spinner").show();
 
                     await page.render({
@@ -637,7 +637,6 @@
                     const container = document.getElementById('img-container');
                     container.appendChild(img);
                     $(".dashboard-spinner").hide();
-
                 }
 
                 // Bind event listeners after images are loaded
@@ -645,7 +644,10 @@
                     var options = {
                         deleteMethod: 'doubleClick',
                         handles: true,
-                        area: {strokeStyle:'green', lineWidth: 2},
+                        area: {
+                            strokeStyle: 'green',
+                            lineWidth: 2
+                        },
 
                         onSelectEnd: function(image, selection) {
                             console.log("Selection End:", selection);
@@ -661,29 +663,35 @@
 
 
         $(document).ready(function() {
-            $('#pdfModal').on('hidden.bs.modal', function () {
+
+            $('#pdfModal').on('hidden.bs.modal', function() {
                 $("#img-container").empty();
                 $(".pdf-image").empty();
             });
 
-            $('.main-content').hide();
-            $('#ship_particulars').show();
+
             $('#pdfFile').change(function() {
                 convertToImage();
             });
-            $('.aside-nav .nav li a').click(function() {
-                // Remove active class from all <li> tags
-                $('.aside-nav .nav li').removeClass('active');
-                // Add active class to the parent <li> tag
-                $(this).parent('li').addClass('active');
 
-                // Hide all sections
+            $('.main-content').hide();
+            $('#ship_particulars').show();
+
+            $('.aside-nav .nav li a').click(function() {
+                $('.aside-nav .nav li').removeClass('active');
+                $(this).parent('li').addClass('active');
                 $('.main-content').hide();
-                // Get the ID of the section to show
-                var targetId = $(this).attr('href');
-                // Show the corresponding section
+
+                let targetId = $(this).attr('href');
+                console.log(targetId);
                 $(targetId).show();
-                // Prevent default anchor behavior
+
+                return false;
+            });
+
+            $('.aside-nav .nav li a[href="#assign_project"]').click(function() {
+                $('.main-content').hide();
+                $('#assign_project').show();
                 return false;
             });
 
@@ -881,10 +889,8 @@
                 cloneHtml.find('input').each(function() {
                     let currentId = $(this).attr('id');
                     let currentName = $(this).attr('name');
-                    let newId = currentId + '_' + dotCounText
-                .trim(); // Appending index to make IDs unique
-                    let newName = currentName + '_' + dotCounText
-                .trim(); // Appending index to make Names unique
+                    let newId = currentId + '_' + dotCounText.trim();
+                    let newName = currentName + '_' + dotCounText.trim();
                     $(this).attr('id', newId);
                     $(this).attr('name', newName);
                 });
@@ -972,7 +978,6 @@
                             if (response.status) {
                                 $('.deckView').html();
                                 $('.deckView').html(response.html);
-                                console.log(response.message);
                             }
                         },
                         error: function(xhr, status, error) {

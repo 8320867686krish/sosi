@@ -37,8 +37,6 @@ class ProjectsController extends Controller
 
         $projects = $projects->get();
 
-      
-
         return view('projects.project', compact('projects'));
     }
 
@@ -53,22 +51,21 @@ class ProjectsController extends Controller
     {
         $clients = Client::orderBy('id', 'desc')->get(['id', 'manager_name', 'manager_initials']);
         $users = User::where('isVerified', 1)->get();
-        $project = Projects::with('project_teams', 'client:id,manager_name,owner_name', 'decks:id,project_id,name,image')->find($project_id);
+        $project = Projects::with([
+            'project_teams',
+            'client:id,manager_name,owner_name'
+        ])->find($project_id);
+
+        if ($project) {
+            $project->decks = $project->decks()->orderBy('id', 'desc')->get();
+        }
+
         $project['imagePath'] = $project->image != null ? url("images/ship/{$project->image}") : asset('assets/images/giphy.gif');
 
         $project['user_id'] = $project->project_teams->pluck('user_id')->toArray();
         $project->assign_date = $project->project_teams->pluck('assign_date')->unique()->values()->toArray();
         $project->end_date = $project->project_teams->pluck('end_date')->unique()->values()->toArray();
         unset($project->project_teams);
-
-        if ($project->decks) {
-            foreach ($project->decks as $deck) {
-                $imagePath = public_path("images/pdf/{$project->id}/{$deck->image}");
-                if (file_exists($imagePath)) {
-                    $deck->imagePath = url("images/pdf/{$project->id}/{$deck->image}");
-                }
-            }
-        }
 
         if (!Gate::allows('projects.edit')) {
             $readonly = "readOnly";
@@ -288,15 +285,6 @@ class ProjectsController extends Controller
 
             $decks = Deck::where('project_id', $request->input('project_id'))->orderByDesc('id')->get();
 
-            if ($decks) {
-                foreach ($decks as $deck) {
-                    $imagePath = public_path("images/pdf/{$projectId}/{$deck->image}");
-                    if (file_exists($imagePath)) {
-                        $deck->imagePath = url("images/pdf/{$projectId}/{$deck->image}");
-                    }
-                }
-            }
-
             $html = view('projects.list_vsp_ajax', compact('decks'))->render();
 
             return response()->json(["status" => true, "message" => "Image saved successfully", 'html' => $html]);
@@ -352,15 +340,6 @@ class ProjectsController extends Controller
             $deck->delete();
 
             $decks = Deck::where('project_id', $projectId)->orderByDesc('id')->get();
-
-            if ($decks) {
-                foreach ($decks as $deck) {
-                    $imagePath = public_path("images/pdf/{$projectId}/{$deck->image}");
-                    if (file_exists($imagePath)) {
-                        $deck->imagePath = url("images/pdf/{$projectId}/{$deck->image}");
-                    }
-                }
-            }
 
             $html = view('projects.list_vsp_ajax', compact('decks'))->render();
 
