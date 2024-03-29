@@ -126,8 +126,8 @@
         return 'area_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
     }
 
-    function addInput(container, dynamicId, x, y, width, shouldFocus) {
-        var input = document.getElementById(dynamicId);
+    function addInput(container, dynamicId, x, y, width) {
+        let input = document.getElementById(dynamicId);
 
         if (!input) {
             input = document.createElement('input');
@@ -137,7 +137,7 @@
 
             input.style.position = 'absolute';
             input.style.left = (x + 15) + 'px';
-            input.style.top = (y + 22) + 'px'; // Position at the bottom of the selected area
+            input.style.top = (y + 17) + 'px'; // Position at the bottom of the selected area
             input.style.width = width + 'px';
             // input.style.zIndex = '1'; // Adjust z-index as needed
 
@@ -149,7 +149,7 @@
         } else {
             // Update the position and size of the existing textbox
             input.style.left = (x + 15) + 'px';
-            input.style.top = (y + 22) + 'px';
+            input.style.top = (y + 17) + 'px';
             input.style.width = width + 'px';
 
             input.focus();
@@ -214,7 +214,7 @@
                         var inputAreaId = input.getAttribute('data-area-id');
                         if (inputAreaId === area.id) {
                             input.style.left = (newX + 15) + 'px';
-                            input.style.top = (newY + 10) + 'px';
+                            input.style.top = (newY + 17) + 'px';
                         }
                     });
                     // Update the position of the select box

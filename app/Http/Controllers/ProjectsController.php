@@ -211,14 +211,14 @@ class ProjectsController extends Controller
                 throw new \Exception('Uploaded image is not valid.');
             }
             $mainFileName = "{$projectName}_" . time() . ".png";
-            $file->move(public_path('images/pdf/'.$projectId."/"), $mainFileName);
+            $file->move(public_path('images/pdf/' . $projectId . "/"), $mainFileName);
             $areas = $request->input('areas');
 
             Projects::where('id', $request->input('project_id'))->update(['deck_image' => $mainFileName]);
 
             $areasArray = json_decode($areas, true);
 
-            $image = imagecreatefrompng(public_path('images/pdf/'.$projectId.'/' . $mainFileName));
+            $image = imagecreatefrompng(public_path('images/pdf/' . $projectId . '/' . $mainFileName));
             foreach ($areasArray as $area) {
                 $x = $area['x'];
                 $y = $area['y'];
@@ -241,7 +241,8 @@ class ProjectsController extends Controller
                     ]);
                 }
             }
-            $decks = Deck::where('project_id', $request->input('project_id'))->get();
+
+            $decks = Deck::where('project_id', $request->input('project_id'))->orderByDesc('id')->get();
 
             if ($decks) {
                 foreach ($decks as $deck) {
@@ -252,11 +253,74 @@ class ProjectsController extends Controller
                 }
             }
 
-            $html = view('projects.create_vsp', compact('decks'))->render();
+            $html = view('projects.list_vsp_ajax', compact('decks'))->render();
 
             return response()->json(["status" => true, "message" => "Image saved successfully", 'html' => $html]);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function updateDeckTitle(Request $request)
+    {
+        try {
+            $updated = Deck::where('id', $request->input('id'))->update(['name' => $request->input('name')]);
+            if ($updated) {
+                // Fetch the updated record
+                $deck = Deck::select('id', 'name')->find($request->input('id'));
+
+                if ($deck) {
+                    return response()->json(["status" => true, "message" => "Deck updated successfully", 'deck' => $deck]);
+                } else {
+                    return response()->json(["status" => false, "message" => "Deck not found"]);
+                }
+            } else {
+                return response()->json(["status" => false, "message" => "Failed to update deck"]);
+            }
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function deleteDeckImg($id)
+    {
+        try {
+            // Find the deck by ID
+            $deck = Deck::find($id);
+            $projectId = $deck->project_id;
+
+            // Check if the deck exists
+            if (!$deck) {
+                return response()->json(['error' => 'Deck not found'], 404);
+            }
+
+            // Construct the image path
+            $imagePath = public_path("images/pdf/{$projectId}/{$deck->image}");
+
+            // Check if the image file exists before attempting to delete
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+
+            // Delete the deck
+            $deck->delete();
+
+            $decks = Deck::where('project_id', $projectId)->orderByDesc('id')->get();
+
+            if ($decks) {
+                foreach ($decks as $deck) {
+                    $imagePath = public_path("images/pdf/{$projectId}/{$deck->image}");
+                    if (file_exists($imagePath)) {
+                        $deck->imagePath = url("images/pdf/{$projectId}/{$deck->image}");
+                    }
+                }
+            }
+
+            $html = view('projects.list_vsp_ajax', compact('decks'))->render();
+
+            return response()->json(["status" => true, "message" => "Deck deleted successfully", 'html' => $html]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }

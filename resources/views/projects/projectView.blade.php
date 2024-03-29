@@ -461,12 +461,44 @@
     <script src="{{ asset('assets/vendor/jquery.areaSelect.js') }}"></script>
     <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
     <script>
+        function previewFile(input) {
+            let file = $("input[type=file]").get(0).files[0];
+
+            if (file) {
+                let reader = new FileReader();
+
+                reader.onload = function() {
+                    $("#previewImg").attr("src", reader.result);
+                }
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+
+        function removeInvalidClass(input) {
+
+            const isValid = input.value.trim() !== '';
+
+            input.classList.toggle('is-invalid', !isValid);
+
+            const errorMessageElement = input.parentElement.querySelector('.invalid-feedback');
+
+            if (errorMessageElement) {
+                errorMessageElement.style.display = isValid ? 'none' : 'block';
+            }
+        }
+
         function triggerFileInput(inputId) {
             $(`#${inputId}`).val('');
             document.getElementById(inputId).click();
+            $(".dashboard-spinner").show();
+
         }
 
         async function convertToImage() {
+                        $(".dashboard-spinner").show();
+
             const pdfFile = document.getElementById('pdfFile').files[0];
             if (!pdfFile) {
                 alert('Please select a PDF file.');
@@ -489,17 +521,20 @@
                     const context = canvas.getContext('2d');
                     canvas.width = viewport.width;
                     canvas.height = viewport.height;
+                    $(".dashboard-spinner").show();
+
                     await page.render({
                         canvasContext: context,
                         viewport
                     }).promise;
-                    $("#img-container").empty();
                     const imageData = canvas.toDataURL('image/png');
                     const img = document.createElement('img');
                     img.src = imageData;
                     img.classList.add('pdf-image'); // Add a class to the image
                     const container = document.getElementById('img-container');
                     container.appendChild(img);
+                    $(".dashboard-spinner").hide();
+
                 }
 
                 // Bind event listeners after images are loaded
@@ -507,6 +542,8 @@
                     var options = {
                         deleteMethod: 'doubleClick',
                         handles: true,
+                        area: {strokeStyle:'green', lineWidth: 2},
+
                         onSelectEnd: function(image, selection) {
                             console.log("Selection End:", selection);
                         },
@@ -518,47 +555,20 @@
             fileReader.readAsArrayBuffer(pdfFile);
             $('#pdfModal').modal('show');
 
+
         }
 
-        function previewFile(input) {
-            let file = $("input[type=file]").get(0).files[0];
-
-            if (file) {
-                let reader = new FileReader();
-
-                reader.onload = function() {
-                    $("#previewImg").attr("src", reader.result);
-                }
-
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function removeInvalidClass(input) {
-
-            const isValid = input.value.trim() !== '';
-
-            input.classList.toggle('is-invalid', !isValid);
-
-            const errorMessageElement = input.parentElement.querySelector('.invalid-feedback');
-
-            if (errorMessageElement) {
-                errorMessageElement.style.display = isValid ? 'none' : 'block';
-            }
-        }
 
         $(document).ready(function() {
-            // Hide all sections initially
+            $('#pdfModal').on('hidden.bs.modal', function () {
+                $("#img-container").empty();
+                $(".pdf-image").empty();
+        });
             $('.main-content').hide();
-
-            // Show the default section
             $('#ship_particulars').show();
-
             $('#pdfFile').change(function() {
                 convertToImage();
             });
-
-            // Handle click event on sidebar menu items
             $('.aside-nav .nav li a').click(function() {
                 // Remove active class from all <li> tags
                 $('.aside-nav .nav li').removeClass('active');
@@ -593,7 +603,6 @@
             });
 
             $(".formteamButton").click(function() {
-                // $('span').html("");
                 $.ajax({
                     type: "POST",
                     url: "{{ url('detail/assignProject') }}",
@@ -627,12 +636,11 @@
             $('#projectForm').submit(function(e) {
                 e.preventDefault();
 
-                // Clear previous error messages and invalid classes
                 $('.error').empty().hide();
                 $('input').removeClass('is-invalid');
                 $('select').removeClass('is-invalid');
 
-                var formData = new FormData(this);
+                let formData = new FormData(this);
 
                 $.ajax({
                     url: "{{ url('detail/save') }}",
@@ -642,18 +650,13 @@
                     contentType: false,
                     processData: false,
                     success: function(response) {
-                        // Handle success response
                         $(".sucessMsg").show();
                     },
                     error: function(xhr, status, error) {
-                        // If there are errors, display them
                         var errors = xhr.responseJSON.errors;
                         if (errors) {
-                            // Loop through errors and display them
                             $.each(errors, function(field, messages) {
-                                // Display error message for each field
                                 $('#' + field + 'Error').text(messages[0]).show();
-                                // Add is-invalid class to input or select field
                                 $('[name="' + field + '"]').addClass('is-invalid');
                             });
                         } else {
@@ -700,14 +703,15 @@
                                 processData: false,
                                 contentType: false,
                                 success: function(response) {
+                                    $('.pdf-image').empty();
+                                    $("#pdfFile").val();
+                                    $("#pdfModal").removeClass('show');
+                                    $("body").removeClass('modal-open');
+                                    $("#img-container").empty();
+                                    $(".modal-backdrop").remove();
                                     $('.deckView').html();
                                     $('.deckView').html(response.html);
-                                    $("#img-container").empty();
                                     $('#pdfModal').modal('hide');
-                                    $('body').removeClass('modal-open');
-                                    $('.modal-backdrop').remove();
-                                    console.log('Image saved successfully:',
-                                        response);
                                 },
                                 error: function(xhr, status, error) {
                                     console.error('Failed to save image:', error);
@@ -717,10 +721,62 @@
                 });
             });
 
-            $('#pdfModal').on('hidden.bs.modal', function(e) {
-                $(this).find('.modal-body').empty(); // Clear modal body content
-                $('body').removeClass('modal-open');
-                $('.modal-backdrop').remove();
+            $(document).on('click', '.deckImgEditBtn', function() {
+                let deckId = $(this).data('id');
+                let deckName = $(`#deckTitle_${deckId}`).text();
+                $("#deckEditFormId").val(deckId);
+                $("#name").val(deckName);
+                $("#deckEditFormModal").modal('show');
+            });
+
+            $(document).on('click', '.deckImgDeleteBtn', function(event) {
+                event.preventDefault();
+
+                if (confirm("Are you sure you want to delete this deck?")) {
+
+                    let deckId = $(this).data('id');
+
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{ route('deleteDeckImg', ['id' => ':id']) }}".replace(':id',
+                            deckId),
+                        success: function(response) {
+                            if (response.status) {
+                                $('.deckView').html();
+                                $('.deckView').html(response.html);
+                                console.log(response.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error deleting item:', error);
+                        }
+                    });
+                }
+            });
+
+            $('#deckEditForm').submit(function(event) {
+                event.preventDefault();
+
+                let formData = $(this).serialize();
+
+                let form = $(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ url('project/updateDeckTitle') }}",
+                    data: formData,
+                    success: function(response) {
+                        let deckData = response.deck;
+                        if (response.status) {
+                            $(`#deckTitle_${deckData.id}`).text(deckData.name);
+                            form.trigger('reset');
+                            $("#deckEditFormModal").modal('hide');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
             });
 
         });

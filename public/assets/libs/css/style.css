@@ -6971,7 +6971,17 @@ Media Query
 }
 
 
+.deck-img{
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    height: 12rem;
+    width: auto;
 
+}
+.deck-img img{
+    height: 100% !important;
+}
 
 /* Custom, iPhone Retina */
 @media only screen and (max-width:320px) {}
