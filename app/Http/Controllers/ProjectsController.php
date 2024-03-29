@@ -37,12 +37,7 @@ class ProjectsController extends Controller
 
         $projects = $projects->get();
 
-        if ($projects->isNotEmpty()) {
-            $projects = $projects->map(function ($item) {
-                $item->imagePath = $item->image ? url("images/ship/{$item->image}") : asset('assets/images/dribbble.png');
-                return $item;
-            });
-        }
+      
 
         return view('projects.project', compact('projects'));
     }

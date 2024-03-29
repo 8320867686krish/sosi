@@ -37,7 +37,7 @@
                         <div class="card campaign-card text-center pt-0 pb-0">
                             <div class="card-body">
                                 <div class="campaign-img">
-                                    <img src="{{ $project->imagePath }}" alt="user" class="user-avatar-xl rounded-circle">
+                                    <img src="{{ asset('images/ship/'.$project->image) }}" alt="user" class="user-avatar-xl rounded-circle">
                                     {{-- user-avatar-xl --}}
                                 </div>
                                 <div class="campaign-info">
