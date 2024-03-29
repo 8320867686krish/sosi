@@ -374,11 +374,11 @@
                             <div class="outfit">
                                 <img id="previewImg1" src="../../assets/images/welcame_mail_img.jpg" class="mt-1"
                                     alt="Upload Image">
-                                @foreach ($check as $dot)
+                                {{-- @foreach ($check as $dot)
                                     <div class="dot ui-draggable ui-draggable-handle"
                                         style="top: {{ $dot->top }}%; left: {{ $dot->left }}%;">
                                         {{ $loop->iteration }}</div>
-                                @endforeach
+                                @endforeach --}}
                             </div>
                         </div>
                         <div class="col-6" id="hotsportNameType"></div>
@@ -560,6 +560,7 @@
 
 @section('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="{{ asset('assets/vendor/jquery.areaSelect.js') }}"></script>
     <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
     <script>
@@ -664,7 +665,7 @@
                 $("#img-container").empty();
                 $(".pdf-image").empty();
             });
-            
+
             $('.main-content').hide();
             $('#ship_particulars').show();
             $('#pdfFile').change(function() {
