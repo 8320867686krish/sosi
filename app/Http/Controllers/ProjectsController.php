@@ -60,7 +60,7 @@ class ProjectsController extends Controller
             $project->decks = $project->decks()->orderBy('id', 'desc')->get();
         }
 
-        $project['imagePath'] = $project->image != null ? url("images/ship/{$project->image}") : asset('assets/images/giphy.gif');
+        $project['imagePath'] = $project->image != null ? asset("images/ship/{$project->image}") : asset('assets/images/giphy.gif');
 
         $project['user_id'] = $project->project_teams->pluck('user_id')->toArray();
         $project->assign_date = $project->project_teams->pluck('assign_date')->unique()->values()->toArray();
