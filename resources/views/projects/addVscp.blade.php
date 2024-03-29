@@ -25,8 +25,10 @@
                     </div>
                 </div>
                     <div class="card-footer">
+                        <div class="float-right">
                         <button class="btn btn-primary deckImgEditBtn" data-id="{{ $deck->id }}">Edit</button>
-                        <button class="btn btn-danger float-right deckImgDeleteBtn" data-id="{{ $deck->id }}">Delete</button>
+                        <button class="btn btn-danger  deckImgDeleteBtn" data-id="{{ $deck->id }}">Delete</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -75,7 +77,7 @@
             <div class="modal-body" style="overflow-x: auto; overflow-y: auto; height: calc(81vh - 1rem);">
                 <div id="img-container" class="text-center">
                     {{-- <img src="{{ asset('assets/images/giphy.gif') }}" class="mx-auto" alt="" srcset=""> --}}
-                    <span class="dashboard-spinner spinner-xxl"></span>
+                    <span class="dashboard-spinner spinner-xxl" style="display:none"></span>
                 </div>
             </div>
             <div class="modal-footer">

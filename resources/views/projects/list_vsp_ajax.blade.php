@@ -10,9 +10,10 @@
 
             </div>
             <div class="card-footer">
+                <div class="float-right">
                 <button class="btn btn-primary deckImgEditBtn" data-id="{{ $deck->id }}">Edit</button>
-                <button class="btn btn-danger float-right deckImgDeleteBtn"
-                    data-id="{{ $deck->id }}">Delete</button>
+                <button class="btn btn-danger float-right deckImgDeleteBtn" data-id="{{ $deck->id }}">Delete</button>
+                </div>
             </div>
         </div>
     </div>

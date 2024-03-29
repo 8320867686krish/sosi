@@ -475,6 +475,7 @@
             }
         }
 
+
         function removeInvalidClass(input) {
 
             const isValid = input.value.trim() !== '';
@@ -491,9 +492,13 @@
         function triggerFileInput(inputId) {
             $(`#${inputId}`).val('');
             document.getElementById(inputId).click();
+            $(".dashboard-spinner").show();
+
         }
 
         async function convertToImage() {
+                        $(".dashboard-spinner").show();
+
             const pdfFile = document.getElementById('pdfFile').files[0];
             if (!pdfFile) {
                 alert('Please select a PDF file.');
@@ -516,17 +521,20 @@
                     const context = canvas.getContext('2d');
                     canvas.width = viewport.width;
                     canvas.height = viewport.height;
+                    $(".dashboard-spinner").show();
+
                     await page.render({
                         canvasContext: context,
                         viewport
                     }).promise;
-                    $("#img-container").empty();
                     const imageData = canvas.toDataURL('image/png');
                     const img = document.createElement('img');
                     img.src = imageData;
                     img.classList.add('pdf-image'); // Add a class to the image
                     const container = document.getElementById('img-container');
                     container.appendChild(img);
+                    $(".dashboard-spinner").hide();
+
                 }
 
                 // Bind event listeners after images are loaded
@@ -534,6 +542,8 @@
                     var options = {
                         deleteMethod: 'doubleClick',
                         handles: true,
+                        area: {strokeStyle:'green', lineWidth: 2},
+
                         onSelectEnd: function(image, selection) {
                             console.log("Selection End:", selection);
                         },
@@ -545,10 +555,15 @@
             fileReader.readAsArrayBuffer(pdfFile);
             $('#pdfModal').modal('show');
 
+
         }
 
 
         $(document).ready(function() {
+            $('#pdfModal').on('hidden.bs.modal', function () {
+                $("#img-container").empty();
+                $(".pdf-image").empty();
+        });
             $('.main-content').hide();
             $('#ship_particulars').show();
             $('#pdfFile').change(function() {
@@ -588,7 +603,6 @@
             });
 
             $(".formteamButton").click(function() {
-
                 $.ajax({
                     type: "POST",
                     url: "{{ url('detail/assignProject') }}",
