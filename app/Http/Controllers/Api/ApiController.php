@@ -400,7 +400,7 @@ class ApiController extends Controller
     public function getCheckList($deckId)
     {
         try {
-            $checks = Checks::where('deck_id', $deckId)->get();
+            $checks = Checks::select('id','project_id','deck_id','name','compartment')->where('deck_id', $deckId)->get();
             return response()->json(['isStatus' => true, 'message' => 'Project checks list retrieved successfully.', 'projectChecks' => $checks]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
