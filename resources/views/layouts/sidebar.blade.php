@@ -58,6 +58,7 @@
                                         if(Request::segment(1) == $permission['name']) {
                                             $isActive = true;
                                         }
+
                                     @endphp
                                     <a class="nav-link {{ $isActive ? 'active' : '' }} " href="{{ route($permission['name']) }}"><i
                                             class="fa fa-fw fa-user-circle"></i>{{ ucwords($newPermissionName) }}<span

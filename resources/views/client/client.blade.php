@@ -16,13 +16,13 @@
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
                     <h2 class="pageheader-title">Client Management</h2>
-                    <div class="page-breadcrumb">
+                    {{-- <div class="page-breadcrumb">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item active"><a href="#" class="breadcrumb-link">Client</a></li>
                             </ol>
                         </nav>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -61,8 +61,9 @@
                                     {{-- <p class="mb-3">Total Project:<span class="text-dark font-medium ml-2">{{ $client->total_projects ?? 0 }}</span>
                                     </p> --}}
                                     @if (!empty($client->manager_contact_person_name))
-                                        <p class="mb-1">Contact Person: <span class="text-dark font-medium ml-2">{{ $client->manager_contact_person_name ?? '' }}</span>
-                                        </p>
+                                        <p class="mb-1">Contact Person: <span class="text-dark font-medium ml-2">{{ $client->manager_contact_person_name ?? '' }}</span></p>
+                                    @else
+                                        <p class="mb-1">Contact Person: <span class="text-dark font-medium ml-2">-</span></p>
                                     @endif
                                     <p>Ship owner.:<span
                                             class="text-dark font-medium ml-2">{{ ucwords($client->owner_name) ?? '' }}</span>
