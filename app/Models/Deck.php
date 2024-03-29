@@ -12,6 +12,6 @@ class Deck extends Model
     protected $fillable = ["project_id", "name", "image"];
     public function checks()
     {
-        return $this->hasMany(checks::class, 'deck_id', 'id');
+        return $this->hasMany(checks::class,'deck_id', 'id');
     }
 }

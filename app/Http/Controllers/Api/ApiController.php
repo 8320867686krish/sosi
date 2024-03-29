@@ -391,7 +391,7 @@ class ApiController extends Controller
     {
         try {
             $decks = Deck::withCount('checks')->select('id', 'project_id', 'name','image')->where('project_id', $project_id)->get();
-            print_r(   $decks);
+            print_r($decks);
             return response()->json(['isStatus' => true, 'message' => 'Project deck list retrieved successfully.', 'projectDeckList' => $decks,'mainPath' => url('images/projects/pdf/'.$project_id)]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
