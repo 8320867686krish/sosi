@@ -123,6 +123,7 @@ class ProjectsController extends Controller
     {
         $inputData = $request->input();
         unset($inputData['manager_name']);
+        unset($inputData['owner_name']);
         if ($request->hasFile('image')) {
 
             $image = $request->file('image');
@@ -239,7 +240,7 @@ class ProjectsController extends Controller
     {
         try {
             $request->validate([
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif',
                 'project_id' => 'required|exists:projects,id',
             ]);
 

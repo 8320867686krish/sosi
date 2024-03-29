@@ -20,6 +20,8 @@ use Throwable;
 use  App\Jobs\SendVerificationEmail;
 use App\Models\AppUserVerify;
 use App\Models\Deck;
+use App\Models\Checks;
+
 use Illuminate\Support\Facades\App;
 
 class ApiController extends Controller
@@ -388,20 +390,17 @@ class ApiController extends Controller
     public function getDeckList($project_id)
     {
         try {
-            $decks = Deck::select('id', 'project_id', 'name', 'image')->where('project_id', $project_id)->get();
-
-            if ($decks->count() > 0) {
-                foreach ($decks as $deck) {
-                    $imagePath = public_path("images/pdf/{$project_id}/{$deck->image}");
-                    if (file_exists($imagePath)) {
-                        $deck->imagePath = url("images/pdf/{$project_id}/{$deck->image}");
-                    } else {
-                        $deck->imagePath = "";
-                    }
-                }
-            }
-
+            $decks = Deck::select('id', 'project_id', 'name')->where('project_id', $project_id)->get();
             return response()->json(['isStatus' => true, 'message' => 'Project deck list retrieved successfully.', 'projectDeckList' => $decks]);
+        } catch (Throwable $th) {
+            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
+        }
+    }
+    public function getCheckList($deckId)
+    {
+        try {
+            $checks = Checks::where('deck_id', $deckId)->get();
+            return response()->json(['isStatus' => true, 'message' => 'Project checks list retrieved successfully.', 'projectChecks' => $checks]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
