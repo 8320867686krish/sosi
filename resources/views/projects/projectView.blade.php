@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('css')
     <link rel="stylesheet" type="text/css" href="../../assets/vendor/cropper/dist/cropper.min.css">
     <style>
@@ -18,10 +19,57 @@
             width: 100%;
             overflow: hidden;
         }
+
+        .output {
+            padding: 10px 0;
+            color: #fff;
+            background: #525252;
+            width: 100%;
+            max-width: 420px;
+            padding-left: 5px;
+        }
+
+        .outfit {
+            line-height: 0;
+            position: relative;
+            width: auto;
+            height: auto;
+            background: gray;
+            display: inline-block;
+            max-width: 420px;
+
+            img {
+                width: 100%;
+                height: auto;
+                cursor: pointer;
+            }
+        }
+
+        .dot {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            /* background: rgba(white, 1); */
+            background: #fff;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 0 3px 0 rgba(0, 0, 0, .2);
+            line-height: 24px;
+            font-size: 12px;
+            font-weight: bold;
+            transition: box-shadow .214s ease-in-out, transform .214s ease-in-out, background .214s ease-in-out;
+            text-align: center;
+
+            &.ui-draggable-dragging {
+                box-shadow: 0 0 25px 0 rgba(0, 0, 0, .5);
+                transform: scale3d(1.2, 1.2, 1.2);
+                background: rgba(white, .7);
+            }
+        }
     </style>
 @endsection
 @section('content')
-
     <div class="container-fluid dashboard-content">
         <aside class="page-aside">
             <div class="aside-content">
@@ -43,6 +91,11 @@
                                 VSCP</a>
                         </li>
                         <li>
+                            <a href="#image_hotspots"><span class="icon"><i
+                                        class="fas fa-fw fa-briefcase"></i></span>Image Hotspots</a>
+                        </li>
+                        <li>
+
                             <a href="#assign_project"><span class="icon"><i
                                         class="fas fa-fw fa-briefcase"></i></span>Assign Project</a>
                         </li>
@@ -189,7 +242,6 @@
                                 @enderror
                             </div>
                         </div>
-
                     </div>
                     <div class="row">
                         <div class="col-sm-12 col-md-6 col-lg-4">
@@ -298,6 +350,56 @@
 
         <div class="main-content container-fluid p-0" id="create_vscp">
             @include('projects.addVscp')
+        </div>
+
+
+        <div class="main-content container-fluid p-0" id="image_hotspots">
+            <div class="email-head">
+                <div class="email-head-subject">
+                    <div class="title"><a class="active" href="#"><span class="icon"><i
+                                    class="fas fa-star"></i></span></a> <span>Image Hotspots</span>
+            </div>
+            <div class="email-body">
+                <form id="imageForm" action="{{ route('addImageHotspots') }}" method="post"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group">
+                        <input type="hidden" name="id" id="imageId">
+                        <input type="hidden" name="project_id" value="{{ $project->id ?? '' }}">
+                        <input type="file" id="img_hotspot" name="img_hotspot"
+                            onchange="previewFile(this, '#previewImg1');" accept="image/*">
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="outfit">
+                                <img id="previewImg1" src="../../assets/images/welcame_mail_img.jpg" class="mt-1"
+                                    alt="Upload Image">
+                                @foreach ($check as $dot)
+                                    <div class="dot ui-draggable ui-draggable-handle"
+                                        style="top: {{ $dot->top }}%; left: {{ $dot->left }}%;">
+                                        {{ $loop->iteration }}</div>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="col-6" id="hotsportNameType"></div>
+                    </div>
+                    <div class="output">Dot Positions goes here.</div>
+                    <button type="submit">Save</button>
+                </form>
+                <div id="hotsportNameTypeDiv">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" name="name" id="name" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="type">Type</label>
+                        <input type="text" name="type" id="type" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary float-right btn-rounded formSubmitBtn" id="addNameTypeBtn">Add</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="main-content container-fluid p-0" id="assign_project">
@@ -497,7 +599,7 @@
         }
 
         async function convertToImage() {
-                        $(".dashboard-spinner").show();
+            $(".dashboard-spinner").show();
 
             const pdfFile = document.getElementById('pdfFile').files[0];
             if (!pdfFile) {
@@ -554,8 +656,6 @@
             };
             fileReader.readAsArrayBuffer(pdfFile);
             $('#pdfModal').modal('show');
-
-
         }
 
 
@@ -563,7 +663,8 @@
             $('#pdfModal').on('hidden.bs.modal', function () {
                 $("#img-container").empty();
                 $(".pdf-image").empty();
-        });
+            });
+            
             $('.main-content').hide();
             $('#ship_particulars').show();
             $('#pdfFile').change(function() {
@@ -665,6 +766,132 @@
                     },
                 });
             });
+
+            var positionsArray = [];
+
+            $(".outfit img").click(function(e) {
+
+                var dot_count = $(".dot").length;
+
+                var top_offset = $(this).offset().top - $(window).scrollTop();
+                var left_offset = $(this).offset().left - $(window).scrollLeft();
+
+                var top_px = Math.round((e.clientY - top_offset - 12));
+                var left_px = Math.round((e.clientX - left_offset - 12));
+
+                var top_perc = top_px / $(this).height() * 100;
+                var left_perc = left_px / $(this).width() * 100;
+
+                // alert('Top: ' + top_px + 'px = ' + top_perc + '%');
+                // alert('Left: ' + left_px + 'px = ' + left_perc + '%');
+
+                var dot = '<div class="dot" style="top: ' + top_perc + '%; left: ' + left_perc + '%;">' + (
+                    dot_count +
+                    1) + '</div>';
+
+                $(dot).hide().appendTo($(this).parent()).fadeIn(350);
+                var position = {
+                    left: left_perc,
+                    top: top_perc
+                };
+
+                positionsArray.push(position);
+                $(".dot").draggable({
+                    containment: ".outfit",
+                    stop: function(event, ui) {
+                        var new_left_perc = parseInt($(this).css("left")) / ($(".outfit")
+                                .width() / 100) +
+                            "%";
+                        var new_top_perc = parseInt($(this).css("top")) / ($(".outfit")
+                                .height() / 100) +
+                            "%";
+                        var output = 'Top: ' + parseInt(new_top_perc) + '%, Left: ' + parseInt(
+                            new_left_perc) + '%';
+                        var position = {
+                            left: new_left_perc,
+                            top: new_top_perc
+                        };
+
+                        positionsArray.push(position);
+
+                        $(this).css("left", parseInt($(this).css("left")) / ($(".outfit")
+                                .width() / 100) +
+                            "%");
+                        $(this).css("top", parseInt($(this).css("top")) / ($(".outfit")
+                                .height() / 100) +
+                            "%");
+
+                        $('.output').html('CSS Position: ' + output);
+                    }
+                });
+
+                // console.log("Left: " + left_perc + "%; Top: " + top_perc + '%;');
+                $('.output').html("CSS Position: Left: " + parseInt(left_perc) + "%; Top: " + parseInt(
+                        top_perc) +
+                    '%;');
+            });
+
+            $("#imageForm").submit(function(e) {
+                e.preventDefault();
+
+                let formData = new FormData(this);
+
+                let dots = [];
+                $(".dot").each(function(index) {
+                    let containerWidth = $(this).parent().width();
+                    let containerHeight = $(this).parent().height();
+
+                    let left = parseFloat($(this).css('left')) / containerWidth * 100;
+                    let top = parseFloat($(this).css('top')) / containerHeight * 100;
+
+                    dots.push({
+                        left: left,
+                        top: top
+                    });
+                });
+
+                formData.append('dots', JSON.stringify(dots));
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.isStatus) {
+                            $("#imageId").val(response.id);
+                        }
+                        // Handle success response
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        // Handle error response
+                    }
+                });
+            });
+
+            $("#hotsportNameTypeDiv").hide();
+
+            $(document).on("click", ".dot", function() {
+                let dotCounText = $(this).text();
+                let cloneHtml = $("#hotsportNameTypeDiv .form-group").clone();
+
+                cloneHtml.find('input').each(function() {
+                    let currentId = $(this).attr('id');
+                    let currentName = $(this).attr('name');
+                    let newId = currentId + '_' + dotCounText
+                .trim(); // Appending index to make IDs unique
+                    let newName = currentName + '_' + dotCounText
+                .trim(); // Appending index to make Names unique
+                    $(this).attr('id', newId);
+                    $(this).attr('name', newName);
+                });
+
+                $("#hotsportNameType").append(cloneHtml);
+            });
+
+            // });
 
             $('#getDeckCropImg').click(function() {
                 let textareas = [];
@@ -778,7 +1005,6 @@
                     }
                 });
             });
-
         });
     </script>
 @endsection

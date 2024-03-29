@@ -78,6 +78,7 @@ Route::middleware('auth')->group(function () {
             Route::get('project/{id}/delete', 'destroy')->name('projects.delete')->middleware('can:projects.remove');
             Route::post('detail/save', 'saveDetail')->name('projects.detail');
             Route::post('detail/assignProject', 'assignProject')->name('projects.assign');
+            Route::post('addImageHotspots', 'addImageHotspots')->name('addImageHotspots');
             Route::post('project/save-image','saveImage');
             Route::post('project/updateDeckTitle','updateDeckTitle');
             Route::get('project/deleteDeckImg/{id}', 'deleteDeckImg')->name('deleteDeckImg');
