@@ -390,8 +390,8 @@ class ApiController extends Controller
     public function getDeckList($project_id)
     {
         try {
-            $decks = Deck::select('id', 'project_id', 'name')->where('project_id', $project_id)->get();
-            return response()->json(['isStatus' => true, 'message' => 'Project deck list retrieved successfully.', 'projectDeckList' => $decks]);
+            $decks = Deck::select('id', 'project_id', 'name','image')->where('project_id', $project_id)->get();
+            return response()->json(['isStatus' => true, 'message' => 'Project deck list retrieved successfully.', 'projectDeckList' => $decks,'mainPath' => public_path('images/projects/pdf')]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
