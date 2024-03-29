@@ -19,6 +19,7 @@ use Illuminate\Validation\ValidationException;
 use Throwable;
 use  App\Jobs\SendVerificationEmail;
 use App\Models\AppUserVerify;
+use App\Models\Deck;
 use Illuminate\Support\Facades\App;
 
 class ApiController extends Controller
@@ -129,14 +130,14 @@ class ApiController extends Controller
 
             // Create a new token
             $token = $user->createToken('ApiToken')->plainTextToken;
-            if( $isOtpSend == true){
+            if ($isOtpSend == true) {
                 AppUserVerify::create([
                     'token' => $token,
                     'code' => $code
                 ]);
             }
 
-            $userData = $user->makeHidden(['roles','permissions','email_verified_at','firebase_token','created_at','updated_at'])->toArray();
+            $userData = $user->makeHidden(['roles', 'permissions', 'email_verified_at', 'firebase_token', 'created_at', 'updated_at'])->toArray();
 
             foreach ($userData as $key => $value) {
                 $userData[$key] = $value ?? ''; // Replace null with empty string
@@ -369,18 +370,40 @@ class ApiController extends Controller
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
     }
-    public function verifyCode(Request $request){
+
+    public function verifyCode(Request $request)
+    {
         $post = $request->input();
         $token = $request->bearerToken();
-        $otpVerify = AppUserVerify::where(['token' => $token,'code' => $post['code']])->first();
-        if( $otpVerify){
+        $otpVerify = AppUserVerify::where(['token' => $token, 'code' => $post['code']])->first();
+        if ($otpVerify) {
             $otpVerify->delete();
             return response()->json(['isStatus' => true, 'message' => 'successfully verified!!']);
-
-        }else{
+        } else {
             return response()->json(['isStatus' => false, 'message' => 'enter valid code.']);
-
         }
+    }
 
+    // project decks
+    public function getDeckList($project_id)
+    {
+        try {
+            $decks = Deck::select('id', 'project_id', 'name', 'image')->where('project_id', $project_id)->get();
+
+            if ($decks->count() > 0) {
+                foreach ($decks as $deck) {
+                    $imagePath = public_path("images/pdf/{$project_id}/{$deck->image}");
+                    if (file_exists($imagePath)) {
+                        $deck->imagePath = url("images/pdf/{$project_id}/{$deck->image}");
+                    } else {
+                        $deck->imagePath = "";
+                    }
+                }
+            }
+
+            return response()->json(['isStatus' => true, 'message' => 'Project deck list retrieved successfully.', 'projectDeckList' => $decks]);
+        } catch (Throwable $th) {
+            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
+        }
     }
 }

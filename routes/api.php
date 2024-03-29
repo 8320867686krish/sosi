@@ -3,7 +3,6 @@
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,5 +42,8 @@ Route::controller(ApiController::class)->group(function () {
         Route::get('project/{project_id}/surveyors/get', 'getProjectSurveyors');
         Route::post('project/surveyors/add', 'addProjectSurveyors');
         Route::get('project/shipDetials/{project_id}', 'getShipDetail');
+
+        //project deck route
+        Route::get('getDeckList/{project_id}', 'getDeckList');
     });
 });

@@ -7,6 +7,7 @@ use App\Http\Requests\ProjectRequest;
 use App\Models\Client;
 use App\Models\Image;
 use App\Models\ImageHotspot;
+use App\Models\Deck;
 use App\Models\Projects;
 use App\Models\ProjectTeam;
 use App\Models\User;
@@ -14,6 +15,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Throwable;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class ProjectsController extends Controller
 {
@@ -55,8 +58,7 @@ class ProjectsController extends Controller
     {
         $clients = Client::orderBy('id', 'desc')->get(['id', 'manager_name', 'manager_initials']);
         $users = User::where('isVerified', 1)->get();
-        $check = ImageHotspot::get();
-        $project = Projects::with('project_teams')->with('client:id,manager_name,owner_name')->find($project_id);
+        $project = Projects::with('project_teams', 'client:id,manager_name,owner_name', 'decks:id,project_id,name,image')->find($project_id);
         $project['imagePath'] = $project->image != null ? url("images/ship/{$project->image}") : asset('assets/images/giphy.gif');
 
         $project['user_id'] = $project->project_teams->pluck('user_id')->toArray();
@@ -64,12 +66,21 @@ class ProjectsController extends Controller
         $project->end_date = $project->project_teams->pluck('end_date')->unique()->values()->toArray();
         unset($project->project_teams);
 
+        if ($project->decks) {
+            foreach ($project->decks as $deck) {
+                $imagePath = public_path("images/pdf/{$project->id}/{$deck->image}");
+                if (file_exists($imagePath)) {
+                    $deck->imagePath = url("images/pdf/{$project->id}/{$deck->image}");
+                }
+            }
+        }
+
         if (!Gate::allows('projects.edit')) {
             $readonly = "readOnly";
         } else {
             $readonly = "";
         }
-        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id, 'check'=>$check]);
+        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id]);
     }
 
     public function projectInfo($project_id)
@@ -229,6 +240,137 @@ class ProjectsController extends Controller
             return response()->json(['isStatus' => true, 'message' => $message, "id"=>$image->id]);
         } catch (\Throwable $th) {
             return response()->json(['isStatus' => false, 'error' => $th->getMessage()]);
+        }
+    }
+
+    public function saveImage(Request $request)
+    {
+        try {
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'project_id' => 'required|exists:projects,id',
+            ]);
+
+            $project = Projects::findOrFail($request->input('project_id'));
+            $projectName = Str::slug($project->ship_name);
+            $projectId = $request->input('project_id');
+            $file = $request->file('image');
+            if (!$file->isValid()) {
+                throw new \Exception('Uploaded image is not valid.');
+            }
+            $mainFileName = "{$projectName}_" . time() . ".png";
+            $file->move(public_path('images/pdf/' . $projectId . "/"), $mainFileName);
+            $areas = $request->input('areas');
+
+            Projects::where('id', $request->input('project_id'))->update(['deck_image' => $mainFileName]);
+
+            $areasArray = json_decode($areas, true);
+
+            $image = imagecreatefrompng(public_path('images/pdf/' . $projectId . '/' . $mainFileName));
+            foreach ($areasArray as $area) {
+                $x = $area['x'];
+                $y = $area['y'];
+                $width = $area['width'];
+                $height = $area['height'];
+                $text = $area['text'] ?? " ";
+
+                $withoutSpacesName = Str::slug($text);
+                $croppedImageName = "{$withoutSpacesName}_{$width}_{$height}_" . time() . ".png";
+
+                $croppedImage = imagecrop($image, ['x' => $x, 'y' => $y, 'width' => $width, 'height' => $height]);
+
+                if ($croppedImage) {
+                    imagepng($croppedImage, public_path("images/pdf/{$projectId}/{$croppedImageName}"));
+
+                    Deck::create([
+                        'project_id' => $request->input('project_id'),
+                        'name' => $text,
+                        'image' => $croppedImageName
+                    ]);
+                }
+            }
+
+            $decks = Deck::where('project_id', $request->input('project_id'))->orderByDesc('id')->get();
+
+            if ($decks) {
+                foreach ($decks as $deck) {
+                    $imagePath = public_path("images/pdf/{$projectId}/{$deck->image}");
+                    if (file_exists($imagePath)) {
+                        $deck->imagePath = url("images/pdf/{$projectId}/{$deck->image}");
+                    }
+                }
+            }
+
+            $html = view('projects.list_vsp_ajax', compact('decks'))->render();
+
+            return response()->json(["status" => true, "message" => "Image saved successfully", 'html' => $html]);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function updateDeckTitle(Request $request)
+    {
+        try {
+            $updated = Deck::where('id', $request->input('id'))->update(['name' => $request->input('name')]);
+            if ($updated) {
+                // Fetch the updated record
+                $deck = Deck::select('id', 'name')->find($request->input('id'));
+
+                if ($deck) {
+                    return response()->json(["status" => true, "message" => "Deck updated successfully", 'deck' => $deck]);
+                } else {
+                    return response()->json(["status" => false, "message" => "Deck not found"]);
+                }
+            } else {
+                return response()->json(["status" => false, "message" => "Failed to update deck"]);
+            }
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function deleteDeckImg($id)
+    {
+        try {
+            // Find the deck by ID
+            $deck = Deck::find($id);
+            $projectId = $deck->project_id;
+
+            // Check if the deck exists
+            if (!$deck) {
+                return response()->json(['error' => 'Deck not found'], 404);
+            }
+
+            // Construct the image path
+            $imagePath = public_path("images/pdf/{$projectId}/{$deck->image}");
+
+            // Check if the image file exists before attempting to delete
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+
+            // Delete the deck
+            $deck->delete();
+
+            $decks = Deck::where('project_id', $projectId)->orderByDesc('id')->get();
+
+            if ($decks) {
+                foreach ($decks as $deck) {
+                    $imagePath = public_path("images/pdf/{$projectId}/{$deck->image}");
+                    if (file_exists($imagePath)) {
+                        $deck->imagePath = url("images/pdf/{$projectId}/{$deck->image}");
+                    }
+                }
+            }
+
+            $html = view('projects.list_vsp_ajax', compact('decks'))->render();
+
+            return response()->json(["status" => true, "message" => "Deck deleted successfully", 'html' => $html]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 }

@@ -70,7 +70,6 @@
     </style>
 @endsection
 @section('content')
-
     <div class="container-fluid dashboard-content">
         <aside class="page-aside">
             <div class="aside-content">
@@ -96,6 +95,7 @@
                                         class="fas fa-fw fa-briefcase"></i></span>Image Hotspots</a>
                         </li>
                         <li>
+
                             <a href="#assign_project"><span class="icon"><i
                                         class="fas fa-fw fa-briefcase"></i></span>Assign Project</a>
                         </li>
@@ -349,55 +349,15 @@
         </div>
 
         <div class="main-content container-fluid p-0" id="create_vscp">
-            <div class="email-head">
-                <div class="email-head-subject">
-                    <div class="title"><a class="active" href="#"><span class="icon"><i
-                                    class="fas fa-star"></i></span></a> <span>VSCP</span>
-                    </div>
-                </div>
-            </div>
-            <div class="email-body">
-                <div class="container-fluid dashboard-content">
-                    <input type="file" id="pdfFile" accept=".pdf">
-                    <button onclick="convertToImage()">Convert to Image</button>
-
-                    <div class="row">
-                        <div id="bottom-container"></div>
-
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-
-                                        <div class="col-md-9">
-                                            <!-- <h3>Demo:</h3> -->
-                                            <div id="img-container">
-
-                                            </div>
-
-
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ============================================================== -->
-                    <!-- end cropper  -->
-                    <!-- ============================================================== -->
-                </div>
-            </div>
+            @include('projects.addVscp')
         </div>
+
 
         <div class="main-content container-fluid p-0" id="image_hotspots">
             <div class="email-head">
                 <div class="email-head-subject">
                     <div class="title"><a class="active" href="#"><span class="icon"><i
                                     class="fas fa-star"></i></span></a> <span>Image Hotspots</span>
-                    </div>
-                </div>
             </div>
             <div class="email-body">
                 <form id="imageForm" action="{{ route('addImageHotspots') }}" method="post"
@@ -597,16 +557,50 @@
         </div>
     </div>
 @endsection
+
 @section('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
-
+    <script src="{{ asset('assets/vendor/jquery.areaSelect.js') }}"></script>
     <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script>
+        function previewFile(input) {
+            let file = $("input[type=file]").get(0).files[0];
+
+            if (file) {
+                let reader = new FileReader();
+
+                reader.onload = function() {
+                    $("#previewImg").attr("src", reader.result);
+                }
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+
+        function removeInvalidClass(input) {
+
+            const isValid = input.value.trim() !== '';
+
+            input.classList.toggle('is-invalid', !isValid);
+
+            const errorMessageElement = input.parentElement.querySelector('.invalid-feedback');
+
+            if (errorMessageElement) {
+                errorMessageElement.style.display = isValid ? 'none' : 'block';
+            }
+        }
+
+        function triggerFileInput(inputId) {
+            $(`#${inputId}`).val('');
+            document.getElementById(inputId).click();
+            $(".dashboard-spinner").show();
+
+        }
+
         async function convertToImage() {
+            $(".dashboard-spinner").show();
+
             const pdfFile = document.getElementById('pdfFile').files[0];
             if (!pdfFile) {
                 alert('Please select a PDF file.');
@@ -629,94 +623,53 @@
                     const context = canvas.getContext('2d');
                     canvas.width = viewport.width;
                     canvas.height = viewport.height;
+                    $(".dashboard-spinner").show();
+
                     await page.render({
                         canvasContext: context,
                         viewport
                     }).promise;
-
                     const imageData = canvas.toDataURL('image/png');
                     const img = document.createElement('img');
                     img.src = imageData;
-
+                    img.classList.add('pdf-image'); // Add a class to the image
                     const container = document.getElementById('img-container');
                     container.appendChild(img);
-                    const aspectRatio = viewport.width / viewport.height;
+                    $(".dashboard-spinner").hide();
 
-                    // Adjust container size if necessary
-                    container.style.width = viewport.width + 'px';
-                    container.style.height = viewport.height + 'px';
-
-                    // Initialize Cropper.js on the image
-                    const cropper = new Cropper(img, {
-                        aspectRatio: null, // Allow free cropping
-                        viewMode: 1, // Display the cropped area in the container
-                        autoCropArea: 1.5, // Show the entire image initially
-                        zoomable: false, // Disable zooming
-                        scalable: false,
-                        responsive: true, // Ensure that the cropping box fits the entire image
-                        preview: '.img-preview',
-                        resize: false,
-                        multiple: true,
-                        crop(event) {
-                            const cropBoxData = cropper.getData();
-                            // Adjust aspect ratio based on the change in crop box dimensions
-                            if (event.detail.width !== cropBoxData.width || event.detail.height !==
-                                cropBoxData.height) {
-                                cropper.setAspectRatio(event.detail.width / event.detail.height);
-                            }
-                        },
-
-
-                        ready() {
-                            // Adjust container size to match image size
-                            cropper.setCropBoxData({
-                                width: 160,
-                                height: 90
-                            }); // Adjust the width and height as needed
-
-                        }
-
-                    });
                 }
+
+                // Bind event listeners after images are loaded
+                $('.pdf-image').on('load', function() {
+                    var options = {
+                        deleteMethod: 'doubleClick',
+                        handles: true,
+                        area: {strokeStyle:'green', lineWidth: 2},
+
+                        onSelectEnd: function(image, selection) {
+                            console.log("Selection End:", selection);
+                        },
+                        initAreas: []
+                    };
+                    $(this).areaSelect(options);
+                });
             };
             fileReader.readAsArrayBuffer(pdfFile);
+            $('#pdfModal').modal('show');
         }
 
-        function previewFile(input, viewid = "#previewImg") {
-            let file = input.files[0]; // using the 'input' parameter directly
-
-            if (file) {
-                let reader = new FileReader();
-
-                reader.onload = function() {
-                    $(viewid).attr("src", reader.result);
-                }
-
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function removeInvalidClass(input) {
-
-            const isValid = input.value.trim() !== '';
-
-            input.classList.toggle('is-invalid', !isValid);
-
-            const errorMessageElement = input.parentElement.querySelector('.invalid-feedback');
-
-            if (errorMessageElement) {
-                errorMessageElement.style.display = isValid ? 'none' : 'block';
-            }
-        }
 
         $(document).ready(function() {
-            // Hide all sections initially
+            $('#pdfModal').on('hidden.bs.modal', function () {
+                $("#img-container").empty();
+                $(".pdf-image").empty();
+            });
+            
             $('.main-content').hide();
-
-            // Show the default section
             $('#ship_particulars').show();
-
-            // Handle click event on sidebar menu items
+            $('#pdfFile').change(function() {
+                convertToImage();
+            });
             $('.aside-nav .nav li a').click(function() {
                 // Remove active class from all <li> tags
                 $('.aside-nav .nav li').removeClass('active');
@@ -751,7 +704,6 @@
             });
 
             $(".formteamButton").click(function() {
-                // $('span').html("");
                 $.ajax({
                     type: "POST",
                     url: "{{ url('detail/assignProject') }}",
@@ -785,33 +737,27 @@
             $('#projectForm').submit(function(e) {
                 e.preventDefault();
 
-                // Clear previous error messages and invalid classes
                 $('.error').empty().hide();
                 $('input').removeClass('is-invalid');
                 $('select').removeClass('is-invalid');
 
-                var formData = new FormData(this);
+                let formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ url('detail/save') }}", // Change this to the URL where you handle the form submission
+                    url: "{{ url('detail/save') }}",
                     type: 'POST',
                     data: formData,
                     dataType: 'json',
                     contentType: false,
                     processData: false,
                     success: function(response) {
-                        // Handle success response
                         $(".sucessMsg").show();
                     },
                     error: function(xhr, status, error) {
-                        // If there are errors, display them
                         var errors = xhr.responseJSON.errors;
                         if (errors) {
-                            // Loop through errors and display them
                             $.each(errors, function(field, messages) {
-                                // Display error message for each field
                                 $('#' + field + 'Error').text(messages[0]).show();
-                                // Add is-invalid class to input or select field
                                 $('[name="' + field + '"]').addClass('is-invalid');
                             });
                         } else {
@@ -821,7 +767,7 @@
                 });
             });
 
-            var positionsArray = []; // Array to store positions
+            var positionsArray = [];
 
             $(".outfit img").click(function(e) {
 
@@ -943,6 +889,121 @@
                 });
 
                 $("#hotsportNameType").append(cloneHtml);
+            });
+
+            // });
+
+            $('#getDeckCropImg').click(function() {
+                let textareas = [];
+                let areas = $('.pdf-image').areaSelect('get');
+                let projectId = {{ $project->id }} || '';
+
+                areas.forEach(area => {
+                    var input = document.getElementById(area.id);
+                    if (input) {
+                        textareas.push({
+                            ...area, // Copy existing area properties
+                            'text': input.value // Add 'text' key with input value
+                        });
+                    }
+                });
+
+                let areasJSON = JSON.stringify(textareas);
+                let images = document.querySelectorAll('.pdf-image');
+
+                let imageFiles = [];
+                images.forEach(function(image, index) {
+                    // Convert the image data URL to a blob
+                    fetch(image.src).then(res => res.blob())
+                        .then(blob => {
+                            // Create a new FormData object
+                            var formData = new FormData();
+                            formData.append('image', blob, 'page_' + (index + 1) + '.png');
+                            formData.append('_token', '{{ csrf_token() }}');
+                            formData.append('project_id', projectId);
+                            formData.append('areas', areasJSON);
+
+                            $.ajax({
+                                type: 'POST',
+                                url: "{{ url('project/save-image') }}",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                success: function(response) {
+                                    $('.pdf-image').empty();
+                                    $("#pdfFile").val();
+                                    $("#pdfModal").removeClass('show');
+                                    $("body").removeClass('modal-open');
+                                    $("#img-container").empty();
+                                    $(".modal-backdrop").remove();
+                                    $('.deckView').html();
+                                    $('.deckView').html(response.html);
+                                    $('#pdfModal').modal('hide');
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Failed to save image:', error);
+                                }
+                            });
+                        });
+                });
+            });
+
+            $(document).on('click', '.deckImgEditBtn', function() {
+                let deckId = $(this).data('id');
+                let deckName = $(`#deckTitle_${deckId}`).text();
+                $("#deckEditFormId").val(deckId);
+                $("#name").val(deckName);
+                $("#deckEditFormModal").modal('show');
+            });
+
+            $(document).on('click', '.deckImgDeleteBtn', function(event) {
+                event.preventDefault();
+
+                if (confirm("Are you sure you want to delete this deck?")) {
+
+                    let deckId = $(this).data('id');
+
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{ route('deleteDeckImg', ['id' => ':id']) }}".replace(':id',
+                            deckId),
+                        success: function(response) {
+                            if (response.status) {
+                                $('.deckView').html();
+                                $('.deckView').html(response.html);
+                                console.log(response.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error deleting item:', error);
+                        }
+                    });
+                }
+            });
+
+            $('#deckEditForm').submit(function(event) {
+                event.preventDefault();
+
+                let formData = $(this).serialize();
+
+                let form = $(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ url('project/updateDeckTitle') }}",
+                    data: formData,
+                    success: function(response) {
+                        let deckData = response.deck;
+                        if (response.status) {
+                            $(`#deckTitle_${deckData.id}`).text(deckData.name);
+                            form.trigger('reset');
+                            $("#deckEditFormModal").modal('hide');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
             });
         });
     </script>

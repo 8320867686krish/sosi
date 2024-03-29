@@ -12,8 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('projects', function (Blueprint $table) {
-            // Drop columns
-            $table->dropColumn(['manager_details', 'dimensions', 'builder_name', 'additional_hazmats', 'build_date']);
+            if (Schema::hasColumn('projects', 'manager_details')) {
+                $table->dropColumn('manager_details');
+            }
+            if (Schema::hasColumn('projects', 'dimensions')) {
+                $table->dropColumn('dimensions');
+            }
+            if (Schema::hasColumn('projects', 'builder_name')) {
+                $table->dropColumn('builder_name');
+            }
+            if (Schema::hasColumn('projects', 'additional_hazmats')) {
+                $table->dropColumn('additional_hazmats');
+            }
+            if (Schema::hasColumn('projects', 'build_date')) {
+                $table->dropColumn('build_date');
+            }
 
             // Alter columns to make them nullable
             $table->string('building_details')->nullable()->change();
@@ -30,12 +43,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('projects', function (Blueprint $table) {
-            // Recreate dropped columns
-            $table->string('manager_details');
-            $table->string('dimensions');
-            $table->string('builder_name');
-            $table->string('additional_hazmats');
-            $table->string('build_date');
+            // Recreate dropped columns with appropriate types and default values if needed
+            $table->string('manager_details')->nullable();
+            $table->string('dimensions')->nullable();
+            $table->string('builder_name')->nullable();
+            $table->string('additional_hazmats')->nullable();
+            $table->string('build_date')->nullable();
 
             // Revert nullable changes
             $table->string('building_details')->nullable(false)->change();
@@ -46,4 +59,3 @@ return new class extends Migration
         });
     }
 };
-

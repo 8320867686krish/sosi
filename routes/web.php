@@ -69,7 +69,6 @@ Route::middleware('auth')->group(function () {
     Route::middleware('can:projects')->group(function () {
         Route::controller(ProjectsController::class)->group(function () {
             Route::get('projects', 'index')->name('projects')->middleware('can:projects');
-            Route::get('project/pdfcrop', 'pdfcrop');
 
             Route::get('projects/client/{client_id}', 'index')->name('projects.client');
             Route::get('project/add', 'create')->name('projects.add')->middleware('can:projects.add');
@@ -80,6 +79,9 @@ Route::middleware('auth')->group(function () {
             Route::post('detail/save', 'saveDetail')->name('projects.detail');
             Route::post('detail/assignProject', 'assignProject')->name('projects.assign');
             Route::post('addImageHotspots', 'addImageHotspots')->name('addImageHotspots');
+            Route::post('project/save-image','saveImage');
+            Route::post('project/updateDeckTitle','updateDeckTitle');
+            Route::get('project/deleteDeckImg/{id}', 'deleteDeckImg')->name('deleteDeckImg');
         });
     });
 
