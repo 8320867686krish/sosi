@@ -37,8 +37,9 @@
                         <div class="card campaign-card text-center pt-0 pb-0">
                             <div class="card-body">
                                 <div class="campaign-img">
-                                    <img src="{{ $project->imagePath }}" alt="user" class="user-avatar-xl rounded-circle">
-                                    {{-- user-avatar-xl --}}
+                                    <img src="{{ asset("images/ship/{$project->image}") }}"
+                                    onerror="this.onerror=null;this.src='{{ asset("assets/images/dribbble.png") }}';"
+                                    class="user-avatar-xl rounded-circle">
                                 </div>
                                 <div class="campaign-info">
                                     <h3 class="mb-1">{{ ucfirst($project->ship_name) }}</h3>

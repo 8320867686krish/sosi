@@ -19,15 +19,18 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title text-center" id="deckTitle_{{$deck->id}}">{{ $deck->name }}</h5>
-
                     <div class="deck-img">
-                        <img class="img-fluid px-3" src="{{ $deck->imagePath }}" alt="Card image cap">
+                        <img class="img-fluid px-3" src="{{ asset("images/pdf/{$deck->project_id}/{$deck->image}") }}" alt="Card image cap">
                     </div>
                 </div>
                     <div class="card-footer">
                         <div class="float-right">
-                        <button class="btn btn-primary deckImgEditBtn" data-id="{{ $deck->id }}">Edit</button>
-                        <button class="btn btn-danger  deckImgDeleteBtn" data-id="{{ $deck->id }}">Delete</button>
+                            <a class="deckImgEditBtn" data-id="{{ $deck->id }}" rel="noopener noreferrer" title="Edit">
+                                <i class="fas fa-edit text-primary" style="font-size: 1rem;"></i>
+                            </a>
+                            <a class="ml-2 deckImgDeleteBtn" data-id="{{ $deck->id }}">
+                                <i class="fas fa-trash-alt text-danger" style="font-size: 1rem;"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -75,10 +78,11 @@
                 </a>
             </div>
             <div class="modal-body" style="overflow-x: auto; overflow-y: auto; height: calc(81vh - 1rem);">
-                <div id="img-container" class="text-center">
-                    {{-- <img src="{{ asset('assets/images/giphy.gif') }}" class="mx-auto" alt="" srcset=""> --}}
-                    <span class="dashboard-spinner spinner-xxl" style="display:none"></span>
+                <div class="d-flex justify-content-center align-items-center spinnerDiv">
+                    {{-- style="height: 100%;" --}}
+                    <span class="dashboard-spinner spinner-md text-center"></span>
                 </div>
+                <div id="img-container" class="text-center"></div>
             </div>
             <div class="modal-footer">
                 <a href="#" class="btn btn-secondary" data-dismiss="modal">Close</a>
