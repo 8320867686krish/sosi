@@ -1,9 +1,6 @@
 <div class="email-head">
     <div class="email-head-subject">
-        <div class="title">
-            <a class="active" href="#">
-                <span class="icon"><i class="fas fa-star"></i></span>
-            </a> <span>VSCP</span>
+        <div class="title"><span>VSCP</span>
             <div style="float:right">
                 <button class="btn btn-primary" onclick="triggerFileInput('pdfFile')">Add</button>
                 <input type="file" id="pdfFile" accept=".pdf" style="display: none;">

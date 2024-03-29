@@ -111,8 +111,8 @@
         <div class="main-content container-fluid p-0" id="ship_particulars">
             <div class="email-head">
                 <div class="email-head-subject">
-                    <div class="title"><a class="active" href="#"><span class="icon"><i
-                                    class="fas fa-star"></i></span></a> <span>Ship Particulars</span>
+                    <div class="title">
+                        <span>Ship Particulars</span>
                     </div>
                 </div>
             </div>
@@ -355,8 +355,7 @@
         <div class="main-content container-fluid p-0" id="image_hotspots">
             <div class="email-head">
                 <div class="email-head-subject">
-                    <div class="title"><a class="active" href="#"><span class="icon"><i
-                                    class="fas fa-star"></i></span></a> <span>Image Hotspots</span>
+                    <div class="title"><span>Image Hotspots</span>
                     </div>
                     <div class="email-body">
                         <form id="imageForm" action="{{ route('addImageHotspots') }}" method="post"
@@ -407,8 +406,7 @@
         <div class="main-content container-fluid p-0" id="assign_project">
             <div class="email-head">
                 <div class="email-head-subject">
-                    <div class="title"><a class="active" href="#"><span class="icon"><i
-                                    class="fas fa-star"></i></span></a> <span>Assign Project</span>
+                    <div class="title"><span>Assign Project</span>
                     </div>
                 </div>
             </div>
@@ -484,8 +482,7 @@
         <div class="main-content container-fluid p-0" id="onboard_survey">
             <div class="email-head">
                 <div class="email-head-subject">
-                    <div class="title"><a class="active" href="#"><span class="icon"><i
-                                    class="fas fa-star"></i></span></a> <span>Onboard Survey</span>
+                    <div class="title"><span>Onboard Survey</span>
                     </div>
                 </div>
             </div>

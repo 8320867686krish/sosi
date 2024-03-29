@@ -1,22 +1,48 @@
-.pageheader-title{
-    color: #3d405c !important;
+.pageheader-title {
+    color: #000 !important;
+    font-weight: 500;
+    /* color: #2e81b9 !important; */
+    /* color: #3d405c !important; */
+
 }
 
 .invalid-feedback {
     font-size: 14px !important;
 }
 
-.addNewBtn{
-    background-color: #017cc0 !important;
+.addNewBtn {
+    background-color: #2e81b9 !important;
+    /* background-color: #017cc0 !important; */
+}
+
+.addNewBtn:hover {
+    background-color: #2e81b9 !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .formSubmitBtn{
-    background-color: #017cc0 !important;
+    background-color: #2e81b9 !important;
     outline: none;
 }
 
 .formSubmitBtn:hover {
-    background-color: #017cc0 !important;
+    background-color: #2e81b9 !important;
     outline: none;
 }
 
+.sidebar-dark{
+    background-color: #3c414c !important;
+}
+
+.sidebar-dark.nav-left-sidebar .navbar-nav .nav-link{
+    color:#fff !important;
+}
+
+.sidebar-dark.nav-left-sidebar .navbar-nav .nav-link:focus, .sidebar-dark.nav-left-sidebar .navbar-nav .nav-link.active {
+    background-color: #007cc0 !important;
+}
+
+.sidebar-dark.nav-left-sidebar .nav-link i{
+    color: #fff !important;
+}
