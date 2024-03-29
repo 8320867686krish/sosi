@@ -43,6 +43,8 @@ Route::controller(ApiController::class)->group(function () {
         Route::post('project/surveyors/add', 'addProjectSurveyors');
         Route::get('project/shipDetials/{project_id}', 'getShipDetail');
         Route::get('checks/{deckId}','getCheckList');
+        Route::get('check/details/{checkId}','getCheckDetail');
+
 
         //project deck route
         Route::get('getDeckList/{project_id}', 'getDeckList');
