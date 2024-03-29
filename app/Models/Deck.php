@@ -10,4 +10,8 @@ class Deck extends Model
     use HasFactory;
 
     protected $fillable = ["project_id", "name", "image"];
+    public function checks()
+    {
+        return $this->hasMany(checks::class, 'deck_id', 'id');
+    }
 }
