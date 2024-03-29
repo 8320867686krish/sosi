@@ -131,6 +131,7 @@ class ProjectsController extends Controller
     {
         $inputData = $request->input();
         unset($inputData['manager_name']);
+        unset($inputData['owner_name']);
         if ($request->hasFile('image')) {
 
             $image = $request->file('image');
