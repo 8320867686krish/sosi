@@ -408,19 +408,12 @@ class ApiController extends Controller
                 return response()->json(['isStatus' => false, 'message' => 'Deck not found.']);
             }
 
-            $checks = Checks::with(['check_image' => function($query) {
-                $query->latest()->take(1); // Order by insertion timestamp and take only the latest image
-            }])
-            ->select('id', 'project_id', 'deck_id', 'name', 'compartment')
-            ->where('deck_id', $deckId)
-            ->get()
-            ->map(function ($check) {
-                $mainPath = url("public/images/checks/{$check->id}") . "/";
-                $check->mainPath = $mainPath;
-                $check->image = optional($check->check_image->first())->image; // Access the image directly
+            $checks = Checks::with('check_image:check_id,image')->select('id','project_id', 'deck_id', 'name', 'compartment')->where('deck_id', $deckId)->get()->map(function ($check) {
+                $check->image = url('public/images/checkes/' . $check->check_image->check_id . '/' . $check->check_image->image);
                 unset($check->check_image);
                 return $check;
             });
+
 
             return response()->json(['isStatus' => true, 'message' => 'Project checks list retrieved successfully.', 'projectChecks' => $checks]);
         } catch (Throwable $th) {

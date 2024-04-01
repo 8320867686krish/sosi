@@ -11,7 +11,8 @@ class Checks extends Model
 
     protected $hidden = ['created_at', 'updated_at'];
 
-    public function check_image() {
-        return $this->hasMany(CheckImage::class, 'check_id', 'id');
+    public function check_image(){
+        return $this->hasOne(CheckImage::class, 'check_id', 'id')->latest()->limit(1);
     }
+
 }
