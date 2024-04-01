@@ -45,8 +45,12 @@ Route::controller(ApiController::class)->group(function () {
         Route::get('checks/{deckId}','getCheckList');
         Route::get('check/details/{checkId}','getCheckDetail');
 
-
         //project deck route
         Route::get('getDeckList/{project_id}', 'getDeckList');
+
+        // Check image api
+        Route::post('check/image', 'addCheckImg');
+        Route::get('check/image/{check_id}', 'getCheckImgList');
+        Route::delete('check/image/{id}', 'deleteCheckImg');
     });
 });
