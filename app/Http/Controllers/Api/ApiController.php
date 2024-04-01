@@ -421,7 +421,7 @@ class ApiController extends Controller
     {
         try {
             $checkImgs = CheckImage::where('check_id', $check_id)->get();
-            return response()->json(['isStatus' => true, 'message' => 'Check images retrieved successfully.', 'mainPath' => url('images/checks/' . $check_id), 'checkImagesList' => $checkImgs]);
+            return response()->json(['isStatus' => true, 'message' => 'Check images retrieved successfully.', 'mainPath' => url('images/checks/' . $check_id . '/'), 'checkImagesList' => $checkImgs]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
@@ -437,6 +437,12 @@ class ApiController extends Controller
 
             if ($validator->fails()) {
                 throw new ValidationException($validator);
+            }
+
+            $check = CheckImage::find($request->input('check_id'));
+
+            if (!$check) {
+                return response()->json(['isStatus' => false, 'message' => 'Check not found.']);
             }
 
             $inputData = $request->only(['check_id']);
