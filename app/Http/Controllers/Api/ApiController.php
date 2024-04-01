@@ -402,7 +402,26 @@ class ApiController extends Controller
     public function getCheckList($deckId)
     {
         try {
-            $checks = Checks::select('id', 'project_id', 'deck_id', 'name', 'compartment')->where('deck_id', $deckId)->get();
+            $deck = Deck::find($deckId);
+
+            if (!$deck) {
+                return response()->json(['isStatus' => false, 'message' => 'Deck not found.']);
+            }
+
+            $checks = Checks::with(['check_image' => function($query) {
+                $query->latest()->take(1); // Order by insertion timestamp and take only the latest image
+            }])
+            ->select('id', 'project_id', 'deck_id', 'name', 'compartment')
+            ->where('deck_id', $deckId)
+            ->get()
+            ->map(function ($check) {
+                $mainPath = url("public/images/checks/{$check->id}") . "/";
+                $check->mainPath = $mainPath;
+                $check->image = optional($check->check_image->first())->image; // Access the image directly
+                unset($check->check_image);
+                return $check;
+            });
+
             return response()->json(['isStatus' => true, 'message' => 'Project checks list retrieved successfully.', 'projectChecks' => $checks]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
