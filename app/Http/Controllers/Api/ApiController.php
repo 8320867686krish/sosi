@@ -398,6 +398,7 @@ class ApiController extends Controller
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
     }
+
     public function getCheckList($deckId)
     {
         try {
@@ -407,6 +408,7 @@ class ApiController extends Controller
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
     }
+
     public function getCheckDetail($checkId)
     {
         try {
@@ -417,11 +419,30 @@ class ApiController extends Controller
         }
     }
 
+    public function deleteCheck($id)
+    {
+        try {
+            $check = Checks::find($id);
+
+            if (!$check) {
+                return response()->json(['isStatus' => false, 'message' => 'Check not found.']);
+            }
+
+            $check->delete();
+
+            return response()->json(['isStatus' => true, 'message' => 'Check deleted successfully.']);
+        } catch (Throwable $th) {
+            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
+        }
+    }
+
     public function getCheckImgList($check_id)
     {
         try {
             $checkImgs = CheckImage::where('check_id', $check_id)->get();
-            return response()->json(['isStatus' => true, 'message' => 'Check images retrieved successfully.', 'mainPath' => url('images/checks/' . $check_id . '/'), 'checkImagesList' => $checkImgs]);
+            $mainPath = url("public/images/checks/{$check_id}") . "/";
+
+            return response()->json(['isStatus' => true, 'message' => 'Check images retrieved successfully.', 'mainPath' => $mainPath, 'checkImagesList' => $checkImgs]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
@@ -439,7 +460,7 @@ class ApiController extends Controller
                 throw new ValidationException($validator);
             }
 
-            $check = CheckImage::find($request->input('check_id'));
+            $check = Checks::find($request->input('check_id'));
 
             if (!$check) {
                 return response()->json(['isStatus' => false, 'message' => 'Check not found.']);
