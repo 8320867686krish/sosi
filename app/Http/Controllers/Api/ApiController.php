@@ -440,7 +440,7 @@ class ApiController extends Controller
     {
         try {
             $checkImgs = CheckImage::where('check_id', $check_id)->get();
-            $mainPath = url("images/checks/{$check_id}") . "/";
+            $mainPath = url("public/images/checks/{$check_id}") . "/";
 
             return response()->json(['isStatus' => true, 'message' => 'Check images retrieved successfully.', 'mainPath' => $mainPath, 'checkImagesList' => $checkImgs]);
         } catch (Throwable $th) {
