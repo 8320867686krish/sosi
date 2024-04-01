@@ -29,16 +29,19 @@
         <!-- ============================================================== -->
         <!-- end pageheader -->
         <!-- ============================================================== -->
-        <div class="row equal-height">
+        <div class="row">
             <div class="col-12">
                 @include('layouts.message')
             </div>
             <div class="showSuccessMsg col-12" style="display: none;"></div>
             <div class="col-12 mb-4">
                 @can('clients.add')
-                    <a href="{{ route('clients.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New Client</a>
+                    <a href="{{ route('clients.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New
+                        Client</a>
                 @endcan
             </div>
+        </div>
+        <div class="row equal-height">
             @if (isset($clients) && $clients->count() > 0)
                 @foreach ($clients as $client)
                     <div class="col-lg-3 col-md-6 col-sm-12 col-12 clientShowCard">
@@ -57,15 +60,18 @@
                                         class="user-avatar-xl rounded-circle">
                                 </div>
                                 <div class="campaign-info">
-                                    <h3 class="mb-1">{{ ucfirst($client->manager_name) ?? '' }}</h3>
+                                    <h3 class="mb-1 line-clamp">{{ ucfirst($client->manager_name) ?? '' }}</h3>
                                     {{-- <p class="mb-3">Total Project:<span class="text-dark font-medium ml-2">{{ $client->total_projects ?? 0 }}</span>
                                     </p> --}}
                                     @if (!empty($client->manager_contact_person_name))
-                                        <p class="mb-1">Contact Person: <span class="text-dark font-medium ml-2">{{ $client->manager_contact_person_name ?? '' }}</span></p>
+                                        <p class="mb-1 line-clamp">Contact Person: <span
+                                                class="text-dark font-medium ml-2">{{ $client->manager_contact_person_name ?? '' }}</span>
+                                        </p>
                                     @else
-                                        <p class="mb-1">Contact Person: <span class="text-dark font-medium ml-2">-</span></p>
+                                        <p class="mb-1 line-clamp">Contact Person: <span
+                                                class="text-dark font-medium ml-2">-</span></p>
                                     @endif
-                                    <p>Ship owner.:<span
+                                    <p class="line-clamp">Ship owner.:<span
                                             class="text-dark font-medium ml-2">{{ ucwords($client->owner_name) ?? '' }}</span>
                                     </p>
                                     @can('clients.edit')
@@ -105,6 +111,8 @@
     <script src="{{ asset('assets/vendor/datatables/js/data-table.js') }}"></script>
     <script>
         $(document).ready(function() {
+            matchHeight();
+            $(window).resize(matchHeight);
 
             let message = localStorage.getItem('message');
             if (message) {

@@ -21,7 +21,7 @@
     box-shadow: none !important;
 }
 
-.formSubmitBtn{
+.formSubmitBtn {
     background-color: #2e81b9 !important;
     outline: none;
 }
@@ -31,18 +31,41 @@
     outline: none;
 }
 
-.sidebar-dark{
+.sidebar-dark {
     background-color: #3c414c !important;
 }
 
-.sidebar-dark.nav-left-sidebar .navbar-nav .nav-link{
-    color:#fff !important;
+.sidebar-dark.nav-left-sidebar .navbar-nav .nav-link {
+    color: #fff !important;
 }
 
-.sidebar-dark.nav-left-sidebar .navbar-nav .nav-link:focus, .sidebar-dark.nav-left-sidebar .navbar-nav .nav-link.active {
+.sidebar-dark.nav-left-sidebar .navbar-nav .nav-link:focus,
+.sidebar-dark.nav-left-sidebar .navbar-nav .nav-link.active {
     background-color: #007cc0 !important;
 }
 
-.sidebar-dark.nav-left-sidebar .nav-link i{
+.sidebar-dark.nav-left-sidebar .nav-link i {
     color: #fff !important;
+}
+
+.line-clamp {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.equal-height {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.equal-height [class*="col-"] {
+    display: flex;
+    flex-direction: column;
+}
+
+.equal-height .card {
+    flex: 1;
 }
