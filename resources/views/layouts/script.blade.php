@@ -7,6 +7,17 @@
     setTimeout(function() {
         $('.alert-dismissible').fadeOut();
     }, 15000);
+
+    function matchHeight() {
+        var maxHeight = 0;
+        $('.equal-height .card').each(function() {
+            var cardHeight = $(this).outerHeight();
+            if (cardHeight > maxHeight) {
+                maxHeight = cardHeight;
+            }
+        });
+        $('.equal-height .card').css('height', maxHeight);
+    }
 </script>
 @yield('js')
 @show
