@@ -23,6 +23,11 @@ return new class extends Migration
             $table->string('compartment')->nullable();
             $table->string('material')->nullable();
             $table->string('color')->nullable();
+            $table->string('suspected_hazmat')->nullable();
+            $table->string('equipment')->nullable();
+            $table->string('component')->nullable();
+            $table->string('position')->nullable();
+            $table->string('sub_position')->nullable();
             $table->string('remarks')->nullable();
             $table->string('position_left')->nullable();
             $table->string('position_top')->nullable();

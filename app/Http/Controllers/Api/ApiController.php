@@ -387,6 +387,57 @@ class ApiController extends Controller
         }
     }
 
+    public function addNewCheck(Request $request) {
+
+        try {
+            $validator = Validator::make($request->all(), [
+                'project_id' => 'required|exists:projects,id',
+                'deck_id' => 'required|exists:decks,id',
+                'type' => 'required',
+                'position_left' => 'required',
+                'position_top' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                throw new ValidationException($validator);
+            }
+
+            $projectId = $request->input('project_id');
+            $deckId = $request->input('deck_id');
+
+            // Eager load project and deck to reduce database queries
+            $project = Projects::find($projectId);
+
+            // Check if project and deck exist
+            if (!$project) {
+                return response()->json(['isStatus' => false, 'message' => 'Project not found.']);
+            }
+
+            $deckExists = Deck::where([
+                ['id', $deckId],
+                ['project_id', $projectId]
+            ])->exists();
+
+            if (!$deckExists) {
+                return response()->json(['isStatus' => false, 'message' => 'Deck not found.']);
+            }
+
+            $id = $request->input('id');
+            $inputData = $request->except('id');
+
+            Checks::updateOrCreate(['id' => $id], $inputData);
+
+            $message = empty($id) ? "Check added successfully" : "Check updated successfully";
+
+            return response()->json(['isStatus' => true, 'message' => $message]);
+        } catch (ValidationException $e) {
+            return response()->json(['isStatus' => false, 'message' => $e->validator->errors()->first()]);
+        } catch (Throwable $th) {
+            Log::error('Error occurred while processing addNewCheck API: ' . $th->getMessage());
+            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
+        }
+    }
+
     // project decks
     public function getDeckList($project_id)
     {
@@ -408,12 +459,18 @@ class ApiController extends Controller
                 return response()->json(['isStatus' => false, 'message' => 'Deck not found.']);
             }
 
-            $checks = Checks::with('check_image:check_id,image')->select('id','project_id', 'deck_id', 'name', 'compartment')->where('deck_id', $deckId)->get()->map(function ($check) {
-                $check->image = url('public/images/checkes/' . $check->check_image->check_id . '/' . $check->check_image->image);
+            $checks = Checks::with(['check_image' => function($query) {
+                $query->latest()->take(1); // Order by insertion timestamp and take only the latest image
+            }])->where('deck_id', $deckId)
+            ->get()
+            ->map(function ($check) {
+                $image = $check->check_image->isNotEmpty() ? url("public/images/checks/{$check->id}/" . $check->check_image->first()->image) : url("public/assets/images/logo.png");
+                $check->image = $image;
                 unset($check->check_image);
                 return $check;
             });
 
+            // ->select('id', 'project_id', 'deck_id', 'name', 'compartment')
 
             return response()->json(['isStatus' => true, 'message' => 'Project checks list retrieved successfully.', 'projectChecks' => $checks]);
         } catch (Throwable $th) {
