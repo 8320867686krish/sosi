@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectDetailRequest;
 use App\Http\Requests\ProjectRequest;
+use App\Models\Checks;
 use App\Models\Client;
 use App\Models\Image;
 use App\Models\ImageHotspot;
@@ -155,16 +156,6 @@ class ProjectsController extends Controller
     public function assignProject(Request $request)
     {
         try {
-            // $validator = Validator::make($request->all(), [
-            //     'user_id' => 'required',
-            // ],[
-            //     'user_id.required' => 'Please select user.',
-            // ]);
-
-            // if ($validator->fails()) {
-            //     return response()->json(['message' => $validator->errors()->first()]);
-            // }
-
             $inputData = $request->input();
 
             ProjectTeam::where('project_id', $inputData['project_id'])->delete();
@@ -192,45 +183,78 @@ class ProjectsController extends Controller
         return view('projects.pdfCrop');
     }
 
+    public function deckBasedCheckView($id)
+    {
+        $deck = Deck::find($id);
+        $deck['imagePath'] = asset("images/pdf/{$deck->project_id}/{$deck->image}");
+        return view('check.check', ['deck' => $deck]);
+    }
+
+    // public function addImageHotspots(Request $request)
+    // {
+    //     try {
+    //         $id = $request->input('id');
+    //         $inputData = $request->input();
+
+    //         if ($request->hasFile('img_hotspot')) {
+    //             $file = $request->file('img_hotspot');
+
+    //             $imageName = time() . rand(10, 99) . '.' . $file->getClientOriginalExtension();
+    //             $file->move(public_path('images/img_hotspot'), $imageName);
+
+    //             $inputData['name'] = $imageName;
+
+    //             if (!empty($id)) {
+    //                 $exitingImg = Image::findOrFail($id);
+    //                 $path = public_path('images/img_hotspot/' . $exitingImg->name);
+    //                 if (file_exists($path)) {
+    //                     unlink($path);
+    //                 }
+    //             }
+    //         }
+
+    //         $image = Image::updateOrCreate(['id' => $id], $inputData);
+
+    //         $dots = json_decode($request->input('dots'));
+    //         $insertData = array_map(function ($item) use ($image) {
+    //             $itemArray = (array) $item;
+    //             $itemArray['image_id'] = $image->id;
+    //             return $itemArray;
+    //         }, $dots);
+
+    //         ImageHotspot::where('image_id', $image->id)->delete();
+
+    //         ImageHotspot::insert($insertData);
+
+    //         $message = empty($id) ? "Image added successfully" : "Image updated successfully";
+
+    //         return response()->json(['isStatus' => true, 'message' => $message, "id"=>$image->id]);
+    //     } catch (\Throwable $th) {
+    //         return response()->json(['isStatus' => false, 'error' => $th->getMessage()]);
+    //     }
+    // }
+
     public function addImageHotspots(Request $request)
     {
         try {
-            $id = $request->input('id');
             $inputData = $request->input();
 
-            if ($request->hasFile('img_hotspot')) {
-                $file = $request->file('img_hotspot');
-
-                $imageName = time() . rand(10, 99) . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('images/img_hotspot'), $imageName);
-
-                $inputData['name'] = $imageName;
-
-                if (!empty($id)) {
-                    $exitingImg = Image::findOrFail($id);
-                    $path = public_path('images/img_hotspot/' . $exitingImg->name);
-                    if (file_exists($path)) {
-                        unlink($path);
-                    }
-                }
-            }
-
-            $image = Image::updateOrCreate(['id' => $id], $inputData);
-
             $dots = json_decode($request->input('dots'));
-            $insertData = array_map(function ($item) use ($image) {
+
+            $insertData = array_map(function ($item) use ($inputData) {
                 $itemArray = (array) $item;
-                $itemArray['image_id'] = $image->id;
+                $itemArray['project_id'] = $inputData['project_id'];
+                $itemArray['deck_id'] = $inputData['deck_id'];
                 return $itemArray;
             }, $dots);
 
-            ImageHotspot::where('image_id', $image->id)->delete();
+            Checks::where('deck_id', $inputData['deck_id'])->delete();
 
-            ImageHotspot::insert($insertData);
+            Checks::insert($insertData);
 
-            $message = empty($id) ? "Image added successfully" : "Image updated successfully";
+            // $message = empty($id) ? "Image check added successfully" : "Image updated successfully";
 
-            return response()->json(['isStatus' => true, 'message' => $message, "id"=>$image->id]);
+            return response()->json(['isStatus' => true, 'message' => "Image check added successfully", "project_id"=>$inputData['project_id']]);
         } catch (\Throwable $th) {
             return response()->json(['isStatus' => false, 'error' => $th->getMessage()]);
         }

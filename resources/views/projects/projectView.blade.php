@@ -331,8 +331,7 @@
                     <div class="row mt-3">
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
-                                <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i
-                                        class="fas fa-arrow-left"></i> <b>Back</b></a>
+                                <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i class="fas fa-arrow-left"></i> <b>Back</b></a>
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-6">
@@ -774,8 +773,6 @@
                 });
             });
 
-            var positionsArray = [];
-
             $(".outfit img").click(function(e) {
 
                 var dot_count = $(".dot").length;
@@ -802,7 +799,6 @@
                     top: top_perc
                 };
 
-                positionsArray.push(position);
                 $(".dot").draggable({
                     containment: ".outfit",
                     stop: function(event, ui) {
@@ -818,8 +814,6 @@
                             left: new_left_perc,
                             top: new_top_perc
                         };
-
-                        positionsArray.push(position);
 
                         $(this).css("left", parseInt($(this).css("left")) / ($(".outfit")
                                 .width() / 100) +
