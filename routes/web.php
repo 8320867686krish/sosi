@@ -27,6 +27,7 @@ Route::get('/home', function () {
     return view('home');
 })->name('home');
 Route::get('otp',[UserController::class,'otp']);
+Route::get('zoomLoad',[UserController::class,'zoomLoad']);
 Route::post('verify/otp',[UserController::class,'verifyOtp']);
 
 Route::get('/dashboard', function () {
