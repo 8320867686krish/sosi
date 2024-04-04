@@ -21,7 +21,7 @@ class Checks extends Model
     public function deck(){
         return $this->belongsTo(Deck::class);
     }
-    public function getpairWitthTagAttribute($value){
+    public function getSuspectedHazmatAttribute($value){
         return json_decode($value,true);
     }
 
