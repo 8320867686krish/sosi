@@ -503,7 +503,10 @@ class ApiController extends Controller
     {
         try {
             $checks = Checks::find($checkId);
-            return response()->json(['isStatus' => true, 'message' => 'check details retrieved successfully.', 'checkDetails' => $checks]);
+            $locationDetails = $checks->only(['compartment','position','sub_position','position_left','position_top','project_id','deck_id']);
+            $checkDetails = $checks->only(['component','equipment','name','type','suspected_hazmat','remarks','color','material','project_id','deck_id','description']);
+
+            return response()->json(['isStatus' => true, 'message' => 'check details retrieved successfully.', 'checkDetails' => $checkDetails,'locationDetails' => $locationDetails]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
