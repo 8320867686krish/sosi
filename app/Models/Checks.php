@@ -19,7 +19,7 @@ class Checks extends Model
         return $this->hasMany(CheckImage::class, 'check_id', 'id');
     }
     public function deck(){
-        return $this->hasOne(Deck::class,'deck_id','id');
+        return $this->belongsTo(Deck::class);
     }
 
 }
