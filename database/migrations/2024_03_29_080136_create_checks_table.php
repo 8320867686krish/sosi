@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('remarks')->nullable();
             $table->string('position_left')->nullable();
             $table->string('position_top')->nullable();
+            $table->string('pairWitthTag')->nullable();
             $table->timestamps();
         });
     }

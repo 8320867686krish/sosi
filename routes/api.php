@@ -47,7 +47,9 @@ Route::controller(ApiController::class)->group(function () {
         Route::get('getDeckList/{project_id}', 'getDeckList');
 
         // check api route
-        Route::post('check', 'addNewCheck');
+        Route::post('check', 'editCheck');
+        Route::post('check/add', 'addCheck');
+
         Route::get('checks/{deckId}','getCheckList');
         Route::get('check/details/{checkId}','getCheckDetail');
         Route::delete('check/{id}','deleteCheck');

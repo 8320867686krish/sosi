@@ -387,7 +387,7 @@ class ApiController extends Controller
         }
     }
 
-    public function addNewCheck(Request $request)
+    public function editCheck(Request $request)
     {
         try {
 
@@ -456,7 +456,70 @@ class ApiController extends Controller
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
     }
+    public function addCheck(Request $request)
+    {
+        try {
 
+         
+
+            $validator = Validator::make($request->all(), [
+                'project_id' => 'required|exists:projects,id',
+                'deck_id' => 'required|exists:decks,id',
+                'type' => 'required_if:apiType,check', // Require type only if apiType is 'check'
+                'position_left' => 'required_if:apiType,location', // Require position_left only if apiType is 'location'
+                'position_top' => 'required_if:apiType,location', // Require position_top only if apiType is 'location'
+            ]);
+
+            if ($validator->fails()) {
+                throw new ValidationException($validator);
+            }
+
+            $projectId = $request->input('project_id');
+            $deckId = $request->input('deck_id');
+            $inputData = $request->input();
+            if($inputData['pairWitthTag']){
+                $inputData['name'] = $inputData['pairWitthTag'];
+            }
+           
+            // Eager load project and deck to reduce database queries
+            $project = Projects::find($projectId);
+
+            // Check if project and deck exist
+            if (!$project) {
+                return response()->json(['isStatus' => false, 'message' => 'Project not found.']);
+            }
+
+            $deckExists = Deck::where([
+                ['id', $deckId],
+                ['project_id', $projectId]
+            ])->exists();
+
+            if (!$deckExists) {
+                return response()->json(['isStatus' => false, 'message' => 'Deck not found.']);
+            }
+            $checkAdd =  Checks::create($inputData);
+            $checkId = $checkAdd->id;
+           if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/checks/' .  $checkId), $imageName);
+            $checkData['image'] = $imageName;
+            $checkData['check_id '] = $checkId;
+            CheckImage::create($checkData);
+        }
+
+       
+
+            $message = "Check added successfully";
+
+            return response()->json(['isStatus' => true, 'message' => $message]);
+        } catch (ValidationException $e) {
+            return response()->json(['isStatus' => false, 'message' => $e->validator->errors()->first()]);
+        } catch (Throwable $th) {
+            Log::error('Error occurred while processing addNewCheck API: ' . $th->getMessage());
+            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
+        }
+    }
     // project decks
     public function getDeckList($project_id)
     {
