@@ -462,8 +462,6 @@ class ApiController extends Controller
     {
         try {
             $decks = Deck::withCount('checks')->where('project_id', $project_id)->get();
-            $decks = $decks->makeHidden(['image']);
-
             return response()->json(['isStatus' => true, 'message' => 'Project deck list retrieved successfully.', 'projectDeckList' => $decks]);
         } catch (Throwable $th) {
             print_r($th->getMessage());
