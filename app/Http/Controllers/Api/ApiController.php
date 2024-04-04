@@ -3,25 +3,27 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\SendVerificationEmail;
-use App\Models\AppUserVerify;
-use App\Models\CheckImage;
-use App\Models\Checks;
-use App\Models\Deck;
 use App\Models\Projects;
+use App\Models\ProjectSurveyor;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 use Laravel\Sanctum\PersonalAccessToken;
 use Spatie\Permission\Models\Role;
+use Illuminate\Validation\ValidationException;
 use Throwable;
+use  App\Jobs\SendVerificationEmail;
+use App\Models\AppUserVerify;
+use App\Models\CheckImage;
+use App\Models\Deck;
+use App\Models\Checks;
+
+use Illuminate\Support\Facades\App;
 
 class ApiController extends Controller
 {
@@ -53,6 +55,7 @@ class ApiController extends Controller
         return response()->json($response);
     }
 
+
     // User Api
     public function register(Request $request)
     {
@@ -61,7 +64,7 @@ class ApiController extends Controller
             $validator = Validator::make($request->all(), [
                 'email' => ['unique:' . User::class],
             ], [
-                'email.unique' => 'Already this user registered',
+                'email.unique' => 'Already this user registered'
             ]);
 
             if ($validator->fails()) {
@@ -133,7 +136,7 @@ class ApiController extends Controller
             if ($isOtpSend == true) {
                 AppUserVerify::create([
                     'token' => $token,
-                    'code' => $code,
+                    'code' => $code
                 ]);
             }
 
@@ -143,11 +146,12 @@ class ApiController extends Controller
                 $userData[$key] = $value ?? ''; // Replace null with empty string
             }
 
+
             return response()->json([
                 'isStatus' => true,
                 'message' => 'User login successful.',
                 'isOtpSend' => $isOtpSend,
-                'user' => $userData,
+                'user' =>   $userData,
                 'token' => $token,
             ]);
         } catch (ValidationException $e) {
@@ -169,12 +173,12 @@ class ApiController extends Controller
             return response()->json([
                 'isStatus' => true,
                 'message' => 'Token refreshed successfully',
-                'token' => $token,
+                'token' => $token
             ]);
         } catch (Throwable $th) {
             return response()->json([
                 'isStatus' => false,
-                'message' => 'Failed to refresh token',
+                'message' => 'Failed to refresh token'
             ]);
         }
     }
@@ -430,7 +434,7 @@ class ApiController extends Controller
 
             $deckExists = Deck::where([
                 ['id', $deckId],
-                ['project_id', $projectId],
+                ['project_id', $projectId]
             ])->exists();
 
             if (!$deckExists) {
@@ -457,7 +461,9 @@ class ApiController extends Controller
     public function getDeckList($project_id)
     {
         try {
-            $decks = Deck::withCount('checks')->where('project_id', $project_id)->makeHidden('image')->get();
+            $decks = Deck::withCount('checks')->where('project_id', $project_id)->get();
+            $decks = $decks->makeHidden(['image']);
+
             return response()->json(['isStatus' => true, 'message' => 'Project deck list retrieved successfully.', 'projectDeckList' => $decks]);
         } catch (Throwable $th) {
             print_r($th->getMessage());
@@ -511,6 +517,7 @@ class ApiController extends Controller
             if (!$check) {
                 return response()->json(['isStatus' => false, 'message' => 'Check not found.']);
             }
+
             $check->delete();
 
             return response()->json(['isStatus' => true, 'message' => 'Check deleted successfully.']);
