@@ -21,5 +21,8 @@ class Checks extends Model
     public function deck(){
         return $this->belongsTo(Deck::class);
     }
+    public function getpairWitthTagAttribute($value){
+        return json_decode($value,true);
+    }
 
 }
