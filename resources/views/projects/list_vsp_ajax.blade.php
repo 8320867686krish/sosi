@@ -7,14 +7,16 @@
                 <div class="deck-img">
                     <a href="{{route('deck.detail', ['id' => $deck->id])}}"><img class="img-fluid px-3" src="{{ asset("images/pdf/{$deck->project_id}/{$deck->image}") }}" alt="Card image cap"></a>
                 </div>
-
             </div>
             <div class="card-footer">
                 <div class="float-right">
-                    <a class="deckImgEditBtn" data-id="{{ $deck->id }}" rel="noopener noreferrer" title="Edit">
+                    <a href="{{route('generatorQRcode', [ 'deckId'=>$deck->id ])}}" data-id="{{ $deck->id }}">
+                        <i class="fas fa-qrcode" style="font-size: 1rem;"></i>
+                    </a>
+                    <a href="javascript:;" class="ml-2 deckImgEditBtn" data-id="{{ $deck->id }}" rel="noopener noreferrer" title="Edit">
                         <i class="fas fa-edit text-primary" style="font-size: 1rem;"></i>
                     </a>
-                    <a class="ml-2 deckImgDeleteBtn" data-id="{{ $deck->id }}">
+                    <a href="javascript:;" class="ml-2 deckImgDeleteBtn" data-id="{{ $deck->id }}">
                         <i class="fas fa-trash-alt text-danger" style="font-size: 1rem;"></i>
                     </a>
                 </div>
