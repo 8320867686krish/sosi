@@ -508,6 +508,7 @@ class ApiController extends Controller
 
             return response()->json(['isStatus' => true, 'message' => 'check details retrieved successfully.', 'checkDetails' => $checkDetails,'locationDetails' => $locationDetails]);
         } catch (Throwable $th) {
+            echo $th->getMessage();
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
     }
