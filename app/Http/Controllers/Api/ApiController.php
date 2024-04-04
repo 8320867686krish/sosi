@@ -502,7 +502,7 @@ class ApiController extends Controller
     public function getCheckDetail($checkId)
     {
         try {
-            $checks = Checks::with('deck')->find($checkId);
+            $checks = Checks::with('deck.image')->find($checkId);
             print_r($checks['deck']);
             $locationDetails = $checks->only(['compartment','position','sub_position','position_left','position_top','project_id','deck_id']);
             $checkDetails = $checks->only(['component','equipment','name','type','suspected_hazmat','remarks','color','material','project_id','deck_id','description']);
