@@ -22,7 +22,7 @@ class Checks extends Model
         return $this->belongsTo(Deck::class);
     }
     public function getSuspectedHazmatAttribute($value){
-        if ($value === null) {
+        if (!@$value) {
             return []; // Return an empty array if the value is null
         }
     
@@ -33,11 +33,7 @@ class Checks extends Model
         $decodedArray = json_decode($jsonString, true);
         
         // Check if the decoded value is an array
-        if (is_array($decodedArray)) {
-            return $decodedArray;
-        } else {
-            return []; // Return an empty array if the decoded value is not an array
-        }
+        return $decodedArray;
     }
 
 }
