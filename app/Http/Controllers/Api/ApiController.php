@@ -502,9 +502,13 @@ class ApiController extends Controller
     public function getCheckDetail($checkId)
     {
         try {
-            $checks = Checks::with('deck.image')->find($checkId);
-            print_r($checks['deck']);
-            $locationDetails = $checks->only(['compartment','position','sub_position','position_left','position_top','project_id','deck_id']);
+            $checks = Checks::with('deck')->find($checkId);
+            $deckImage = $checks['deck']['image'];
+
+            $locationDetails = array_merge(
+                $checks->only(['compartment', 'position', 'sub_position', 'position_left', 'position_top', 'project_id', 'deck_id']),
+                ['deck_image' => $deckImage]
+            );
             $checkDetails = $checks->only(['component','equipment','name','type','suspected_hazmat','remarks','color','material','project_id','deck_id','description']);
 
             return response()->json(['isStatus' => true, 'message' => 'check details retrieved successfully.', 'checkDetails' => $checkDetails,'locationDetails' => $locationDetails]);
