@@ -66,7 +66,12 @@ class QrCodeController extends Controller
 
             $qrCode = QrCode::size(75)->generate($check->id);
             $qrCodeDataUri = 'data:image/png;base64,' . base64_encode($qrCode);
-            $html .= '<td class="qr-code"><img src="' . $qrCodeDataUri . '" alt="QR Code for Check ' . $check->id . '"></br><span style="padding-top: 20px;">' . $check->id . '</span></td>';
+            $html .= '<td class="qr-code">';
+            $html .= '<img src="' . $qrCodeDataUri . '" alt="QR Code for Check ' . $check->id . '" style="margin-bottom: 8px;">';
+            $html .= '<span>' . $check->id . '</span>';
+            $html .= '</td>';
+
+
 
             if (($counter + 1) % 6 == 0 || $key == $totalChecks - 1) {
                 // Calculate colspan for the last row
