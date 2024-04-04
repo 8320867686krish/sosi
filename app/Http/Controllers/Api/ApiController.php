@@ -582,7 +582,7 @@ class ApiController extends Controller
                 return response()->json(['isStatus' => false, 'message' => 'Check image not found.']);
             }
 
-            $path = public_path('images/checks/' . $checkImg->image);
+            $path = public_path("images/checks/{$checkImg->check_id}/{$checkImg->image}");
 
             if (file_exists($path)) {
                 unlink($path);
