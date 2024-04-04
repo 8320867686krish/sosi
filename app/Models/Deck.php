@@ -18,6 +18,6 @@ class Deck extends Model
         return $this->hasMany(Checks::class,'deck_id', 'id');
     }
     public function getImageAttribute($value){
-        return url("images/pdf/{$this->project_id}/{$value}");
+        return public_path("images/pdf/{$this->project_id}/{$value}");
     }
 }
