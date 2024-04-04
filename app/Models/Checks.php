@@ -22,9 +22,10 @@ class Checks extends Model
         return $this->belongsTo(Deck::class);
     }
     public function getSuspectedHazmatAttribute($value){
-        if(@($value)) {
-            return [];
+        if ($value === null) {
+            return []; // Return an empty array if the value is null
         }
+    
     
         // Replace single quotes with double quotes to ensure valid JSON
         $jsonString = str_replace("'", '"', $value);
