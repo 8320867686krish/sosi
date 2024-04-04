@@ -504,7 +504,7 @@ class ApiController extends Controller
             $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
             $image->move(public_path('images/checks/' .  $checkId), $imageName);
             $checkData['image'] = $imageName;
-            $checkData['check_id '] = $checkId;
+            $checkData['check_id'] = $checkId;
             CheckImage::create($checkData);
         }
 
