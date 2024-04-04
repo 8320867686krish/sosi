@@ -22,7 +22,7 @@ class Checks extends Model
         return $this->belongsTo(Deck::class);
     }
     public function getSuspectedHazmatAttribute($value){
-        if(empty($value)) {
+        if(@($value)) {
             return [];
         }
     
