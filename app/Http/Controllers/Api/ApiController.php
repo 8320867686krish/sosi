@@ -387,15 +387,34 @@ class ApiController extends Controller
         }
     }
 
-    public function addNewCheck(Request $request) {
-
+    public function addNewCheck(Request $request)
+    {
         try {
+
+            // $validator = Validator::make($request->all(), [
+            //     'project_id' => 'required|exists:projects,id',
+            //     'deck_id' => 'required|exists:decks,id',
+            //     'type' => 'required',
+            //     'position_left' => 'required',
+            //     'position_top' => 'required'
+            // ]);
+
+            // $validator = Validator::make($request->all(), [
+            //     'project_id' => 'required|exists:projects,id',
+            //     'deck_id' => 'required|exists:decks,id',
+            //     'apiType' => 'required|in:check,location', // Ensure apiType is required and has either 'check' or 'location' value
+            //     'type' => 'required_if:apiType,check', // Require type only if apiType is 'check'
+            //     'position_left' => 'required_if:apiType,location', // Require position_left only if apiType is 'location'
+            //     'position_top' => 'required_if:apiType,location', // Require position_top only if apiType is 'location'
+            // ]);
+
             $validator = Validator::make($request->all(), [
                 'project_id' => 'required|exists:projects,id',
                 'deck_id' => 'required|exists:decks,id',
-                'type' => 'required',
-                'position_left' => 'required',
-                'position_top' => 'required'
+                'apiType' => 'required|in:check,location', // Ensure apiType is required and has either 'check' or 'location' value
+                'type' => 'required_if:apiType,check', // Require type only if apiType is 'check'
+                'position_left' => 'required_if:apiType,location', // Require position_left only if apiType is 'location'
+                'position_top' => 'required_if:apiType,location', // Require position_top only if apiType is 'location'
             ]);
 
             if ($validator->fails()) {
@@ -443,7 +462,7 @@ class ApiController extends Controller
     {
         try {
             $decks = Deck::withCount('checks')->where('project_id', $project_id)->get();
-            return response()->json(['isStatus' => true, 'message' => 'Project deck list retrieved successfully.', 'projectDeckList' => $decks, 'mainPath' => url('images/projects/pdf/' . $project_id)]);
+            return response()->json(['isStatus' => true, 'message' => 'Project deck list retrieved successfully.', 'projectDeckList' => $decks]);
         } catch (Throwable $th) {
             print_r($th->getMessage());
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
@@ -459,16 +478,16 @@ class ApiController extends Controller
                 return response()->json(['isStatus' => false, 'message' => 'Deck not found.']);
             }
 
-            $checks = Checks::with(['check_image' => function($query) {
+            $checks = Checks::with(['check_image' => function ($query) {
                 $query->latest()->take(1); // Order by insertion timestamp and take only the latest image
             }])->where('deck_id', $deckId)
-            ->get()
-            ->map(function ($check) {
-                $image = $check->check_image->isNotEmpty() ? url("public/images/checks/{$check->id}/" . $check->check_image->first()->image) : url("public/assets/images/logo.png");
-                $check->image = $image;
-                unset($check->check_image);
-                return $check;
-            });
+                ->get()
+                ->map(function ($check) {
+                    $image = $check->check_image->isNotEmpty() ? url("public/images/checks/{$check->id}/" . $check->check_image->first()->image) : url("public/assets/images/logo.png");
+                    $check->image = $image;
+                    unset($check->check_image);
+                    return $check;
+                });
 
             // ->select('id', 'project_id', 'deck_id', 'name', 'compartment')
 
