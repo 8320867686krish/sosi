@@ -26,12 +26,18 @@ class Checks extends Model
             return []; // Return an empty array if the value is null
         }
     
-    
         // Replace single quotes with double quotes to ensure valid JSON
         $jsonString = str_replace("'", '"', $value);
         
         // Decode the JSON string into a PHP array
-        return json_decode($jsonString, true);
+        $decodedArray = json_decode($jsonString, true);
+        
+        // Check if the decoded value is an array
+        if (is_array($decodedArray)) {
+            return $decodedArray;
+        } else {
+            return []; // Return an empty array if the decoded value is not an array
+        }
     }
 
 }
