@@ -100,10 +100,10 @@ class QrCodeController extends Controller
         // Render PDF
         $dompdf->render();
         // Output PDF
-        return $dompdf->stream('qr_codes.pdf', ['Attachment' => false]);
-        // $pdfContent = $dompdf->output();
-        // return response($pdfContent, 200)
-        //     ->header('Content-Type', 'application/pdf')
-        //     ->header('Content-Disposition', 'attachment; filename="qr_codes_' . $deckId . '.pdf"');
+        // return $dompdf->stream('qr_codes.pdf', ['Attachment' => false]);
+        $pdfContent = $dompdf->output();
+        return response($pdfContent, 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="qr_codes_' . $deckId . '.pdf"');
     }
 }
