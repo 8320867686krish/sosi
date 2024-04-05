@@ -8,12 +8,11 @@
     <meta name="robots" content="noindex,nofollow">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="canonical" href="https://www.ajax-zoom.com/examples/example12.php" />
-
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('assets/vendor/zoom/examples.css')}}" type="text/css">
 
     <!-- Include jQuery core into head section if not already present -->
-    <script type="text/javascript" src="{{ asset('assets/vendor/zoom/jquery-1.8.3.min.js') }}"></script>
 
     <!-- JSON -->
     <script type="text/javascript" src="{{ asset('assets/vendor/zoom/jquery.json-2.3.min.js') }}"></script>
