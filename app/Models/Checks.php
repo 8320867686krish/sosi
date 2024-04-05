@@ -21,9 +21,7 @@ class Checks extends Model
     public function deck(){
         return $this->belongsTo(Deck::class);
     }
-    public function setSuspectedHazmatAttribute($value){
-        return $value ?? "";
-    }
+    
     public function getSuspectedHazmatAttribute($value){
         if (!@$value) {
             return []; // Return an empty array if the value is null
