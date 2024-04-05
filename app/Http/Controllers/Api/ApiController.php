@@ -460,7 +460,7 @@ class ApiController extends Controller
     {
         try {
 
-         
+
 
             $validator = Validator::make($request->all(), [
                 'project_id' => 'required|exists:projects,id',
@@ -480,7 +480,7 @@ class ApiController extends Controller
             if($inputData['pairWitthTag']){
                 $inputData['name'] = $inputData['pairWitthTag'];
             }
-           
+
             // Eager load project and deck to reduce database queries
             $project = Projects::find($projectId);
 
@@ -508,7 +508,7 @@ class ApiController extends Controller
             CheckImage::create($checkData);
         }
 
-       
+
 
             $message = "Check added successfully";
 
@@ -564,6 +564,11 @@ class ApiController extends Controller
     {
         try {
             $checks = Checks::with('deck')->find($checkId);
+
+            if(!$checks) {
+                return response()->json(['isStatus' => false, 'message' => 'Check not found.']);
+            }
+
             $deckImage = $checks['deck']['image'];
 
             $locationDetails = array_merge(
@@ -574,7 +579,6 @@ class ApiController extends Controller
 
             return response()->json(['isStatus' => true, 'message' => 'check details retrieved successfully.', 'checkDetails' => $checkDetails,'locationDetails' => $locationDetails]);
         } catch (Throwable $th) {
-            echo $th->getMessage();
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
     }
