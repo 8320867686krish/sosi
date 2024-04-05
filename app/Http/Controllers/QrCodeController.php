@@ -68,7 +68,7 @@ class QrCodeController extends Controller
             $qrCodeDataUri = 'data:image/png;base64,' . base64_encode($qrCode);
             $html .= '<td class="qr-code">';
             $html .= '<img src="' . $qrCodeDataUri . '" alt="QR Code for Check ' . $check->id . '" style="margin-bottom: 8px;">';
-            $html .= '<span>' . $check->id . '</span>';
+            $html .= '<span>' . str_pad($check->id, 2, '0', STR_PAD_LEFT) . '</span>';
             $html .= '</td>';
 
 

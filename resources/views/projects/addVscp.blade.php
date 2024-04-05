@@ -17,9 +17,7 @@
                     <div class="card-body">
                         <h5 class="card-title text-center" id="deckTitle_{{ $deck->id }}">{{ $deck->name }}</h5>
                         <div class="deck-img">
-                            <a href="{{ route('deck.detail', ['id' => $deck->id]) }}"><img class="img-fluid px-3"
-                                    src="{{ asset("images/pdf/{$deck->project_id}/{$deck->image}") }}"
-                                    alt="Card image cap"></a>
+                            <a href="{{ route('deck.detail', ['id' => $deck->id]) }}"><img class="img-fluid px-3" src="{{ $deck->image }}" alt="{{ $deck->name }}"></a>
                         </div>
                     </div>
                     <div class="card-footer">
