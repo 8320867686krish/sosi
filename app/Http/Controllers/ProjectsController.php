@@ -186,7 +186,7 @@ class ProjectsController extends Controller
     public function deckBasedCheckView($id)
     {
         $deck = Deck::with('checks:id,deck_id,position_left,position_top')->find($id);
-        $deck['imagePath'] = asset("images/pdf/{$deck->project_id}/{$deck->image}");
+        // $deck['imagePath'] = asset("images/pdf/{$deck->project_id}/{$deck->image}");
         return view('check.check', ['deck' => $deck]);
     }
 
