@@ -28,40 +28,44 @@
                 cursor: pointer;
             }
         }
+
         .btnzoom {
-  width: 30px;
-  height: 30px;
-  background: #FFF;
-  border: 1px solid #005bac;
-  border-radius: 50%;
-  -moz-border-radius: 50%;
-  -webkit-border-radius: 50%;
-  color: #005bac;
-  padding: 5px 10px 5px;
-  position: fixed;
-  text-align: center;
-  -ms-user-select: none;
-  -moz-user-select: -moz-none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-	transition: all 0.3s ease;
-  z-index: 1;
-}
-.btnzoom:hover {
-  background: #eef;
-}
+            width: 30px;
+            height: 30px;
+            background: #FFF;
+            border: 1px solid #005bac;
+            border-radius: 50%;
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+            color: #005bac;
+            padding: 5px 10px 5px;
+            position: fixed;
+            text-align: center;
+            -ms-user-select: none;
+            -moz-user-select: -moz-none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
 
-.zoom {
-  bottom: 190px;
-}
+        .btnzoom:hover {
+            background: #eef;
+        }
 
-.zoom-out {
-  bottom: 120px;
-}
-.zoom-init {
-  bottom: 50px;
-}
+        .zoom {
+            bottom: 190px;
+        }
+
+        .zoom-out {
+            bottom: 120px;
+        }
+
+        .zoom-init {
+            bottom: 50px;
+        }
+
         .dot {
             position: absolute;
             width: 24px;
@@ -125,20 +129,101 @@
                         <input type="hidden" name="deck_id" value="{{ $deck->id ?? '' }}">
                     </div>
                     <a class="btnzoom zoom"><i class="fas fa-search-plus"></i></a>
-<a class="btnzoom zoom-out"><i class="fas fa-search-minus"></i></a>
-                    <div class="outfit target">
-                        <img id="previewImg1" src="{{ $deck->image }}" alt="Upload Image">
-                        @foreach ($deck->checks as $dot)
-                            <div class="dot ui-draggable ui-draggable-handle"
-                                style="top: {{ $dot->position_top }}px; left: {{ $dot->position_left }}px;">
-                                {{ $loop->iteration }}</div>
-                        @endforeach
+                    <a class="btnzoom zoom-out"><i class="fas fa-search-minus"></i></a>
+                    <div class="outfit">
+                        <div class="target">
+                            <img id="previewImg1" src="{{ $deck->image }}" alt="Upload Image">
+                            @foreach ($deck->checks as $dot)
+                                <div class="dot ui-draggable ui-draggable-handle" data-checkId="{{ $dot->id }}"
+                                    data-check="{{ $dot }}"
+                                    style="top: {{ $dot->position_top }}px; left: {{ $dot->position_left }}px;"
+                                    id="dot_{{ $loop->iteration }}">{{ $loop->iteration }}</div>
+                            @endforeach
+                        </div>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary float-right formSubmitBtn">Save</button>
                     </div>
                 </form>
                 <div class="output">Dot Positions goes here.</div>
+            </div>
+        </div>
+
+        <div class="modal fade" data-backdrop="static" id="checkDataAddModal" tabindex="-1" role="dialog"
+            aria-labelledby="checkDataAddModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document" style="width: 50% !important; max-width: none !important;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Title</h5>
+                        <a href="#" class="close" data-dismiss="modal" aria-label="Close" id="checkDataAddCloseBtn">
+                            <span aria-hidden="true">×</span>
+                        </a>
+                    </div>
+                    <form method="post" id="checkDataAddForm">
+                        <div class="modal-body">
+                            @csrf
+                            <input type="hidden" id="id" name="id">
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="name">Name</label>
+                                        <input type="text" id="name" name="name" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="type">Type</label>
+                                        <select name="type" id="type" class="form-control" required>
+                                            <option value="">Select Type</option>
+                                            <option value="sample">Sample</option>
+                                            <option value="visual">Visual</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="description">Description</label>
+                                        <input type="text" id="description" name="description" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="compartment">Compartment</label>
+                                        <input type="text" id="compartment" name="compartment" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="material">Material</label>
+                                        <input type="text" id="material" name="material" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="color">Color</label>
+                                        <input type="text" id="color" name="color" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="suspected_hazmat">Suspected Hazmat</label>
+                                        <input type="text" id="suspected_hazmat" name="suspected_hazmat"
+                                            class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="equipment">Equipment</label>
+                                        <input type="text" id="equipment" name="equipment" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="checkDataAddSubmitBtn">Save</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -148,72 +233,76 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
     <script>
+        function makeDotsDraggable() {
+            $(".dot").draggable({
+                containment: "#previewImg1",
+                stop: function(event, ui) {
+                    var new_left_perc = parseInt($(this).css("left")) + "px";
+                    var new_top_perc = parseInt($(this).css("top")) + "px";
+
+                    var new_left_in_px = Math.round((parseInt($(this).css(
+                        "left"))));
+                    var new_top_in_px = Math.round((parseInt($(this).css(
+                        "top"))));
+
+                    var output =
+                        `Left: ${new_left_in_px}px; Top: ${new_top_in_px} px;`;
+
+                    $(this).css("left", new_left_perc);
+                    $(this).css("top", new_top_perc);
+
+                    $('.output').html('Position in Pixels: ' + output);
+                }
+            });
+        }
+
+        function openAddModalBox(dot) {
+            var $dot = $(dot);
+
+            // Remove the "selected" class from all dots
+            $(".dot").removeClass("selected");
+
+            // Add the "selected" class to the clicked dot
+            $dot.addClass("selected");
+
+            // Retrieve data attributes from the clicked dot
+            var checkId = $dot.attr('data-checkId');
+            var data = $dot.attr('data-check');
+
+            // Populate form fields if data is available
+            if (data) {
+                var jsonObject = JSON.parse(data);
+                for (var key in jsonObject) {
+                    if (jsonObject.hasOwnProperty(key)) {
+                        $("#" + key).val(jsonObject[key]);
+                    }
+                }
+            }
+
+            // Show the modal box
+            $("#checkDataAddModal").modal('show');
+        }
+
+        let checkId;
+
         $(document).ready(function() {
             var zoom = 1;
-		
-		$('.zoom').on('click', function(){
-			zoom += 0.1;
-			$('.target').css('transform', 'scale(' + zoom + ')');
-		});
-		$('.zoom-init').on('click', function(){
-			zoom = 1;
-			$('.target').css('transform', 'scale(' + zoom + ')');
-		});
-		$('.zoom-out').on('click', function(){
-			zoom -= 0.1;
-			$('.target').css('transform', 'scale(' + zoom + ')');
-		});
+
+            $('.zoom').on('click', function() {
+                zoom += 0.1;
+                $('.target').css('transform', 'scale(' + zoom + ')');
+            });
+            $('.zoom-init').on('click', function() {
+                zoom = 1;
+                $('.target').css('transform', 'scale(' + zoom + ')');
+            });
+            $('.zoom-out').on('click', function() {
+                zoom -= 0.1;
+                $('.target').css('transform', 'scale(' + zoom + ')');
+            });
+
             let imageWidth = $('#previewImg1').width();
             $('.output').css('max-width', imageWidth);
-
-            // $(".outfit img").click(function(e) {
-            //     var dot_count = $(".dot").length;
-
-            //     var top_offset = $(this).offset().top - $(window).scrollTop();
-            //     var left_offset = $(this).offset().left - $(window).scrollLeft();
-
-            //     var top_px = Math.round((e.clientY - top_offset - 12));
-            //     var left_px = Math.round((e.clientX - left_offset - 12));
-
-            //     var top_perc = top_px / $(this).height() * 100;
-            //     var left_perc = left_px / $(this).width() * 100;
-
-            //     // alert('Top: ' + top_px + 'px = ' + top_perc + '%');
-            //     // alert('Left: ' + left_px + 'px = ' + left_perc + '%');
-
-            //     var dot = '<div class="dot" style="top: ' + top_perc + '%; left: ' + left_perc + '%;">' + (
-            //         dot_count + 1) + '</div>';
-
-            //     $(dot).hide().appendTo($(this).parent()).fadeIn(350);
-
-            //     $(".dot").draggable({
-            //         containment: ".outfit",
-            //         stop: function(event, ui) {
-            //             var new_left_perc = parseInt($(this).css("left")) / ($(".outfit")
-            //                     .width() / 100) +
-            //                 "%";
-            //             var new_top_perc = parseInt($(this).css("top")) / ($(".outfit")
-            //                     .height() / 100) +
-            //                 "%";
-            //             var output = 'Top: ' + parseInt(new_top_perc) + '%, Left: ' + parseInt(
-            //                 new_left_perc) + '%';
-
-            //             $(this).css("left", parseInt($(this).css("left")) / ($(".outfit")
-            //                     .width() / 100) +
-            //                 "%");
-            //             $(this).css("top", parseInt($(this).css("top")) / ($(".outfit")
-            //                     .height() / 100) +
-            //                 "%");
-
-            //             $('.output').html('CSS Position: ' + output);
-            //         }
-            //     });
-
-            //     // console.log("Left: " + left_perc + "%; Top: " + top_perc + '%;');
-            //     $('.output').html("CSS Position: Left: " + parseInt(left_perc) + "%; Top: " + parseInt(
-            //             top_perc) +
-            //         '%;');
-            // });
 
             $(".outfit img").click(function(e) {
                 var dot_count = $(".dot").length;
@@ -234,34 +323,18 @@
                 var left_in_px = Math.round((left_perc / 100) * container_width);
 
                 var dot = '<div class="dot" style="top: ' + top_in_px + 'px; left: ' + left_in_px +
-                    'px;">' + (dot_count + 1) + '</div>';
+                    'px;" id="dot_' + (dot_count + 1) + '">' + (dot_count + 1) + '</div>';
 
                 $(dot).hide().appendTo($(this).parent()).fadeIn(350, function() {
-                    $(".dot").draggable({
-                        containment: ".outfit",
-                        stop: function(event, ui) {
-                            var new_left_perc = parseInt($(this).css("left")) + "px";
-                            var new_top_perc = parseInt($(this).css("top")) + "px";
-
-                            var new_left_in_px = Math.round((parseInt($(this).css(
-                                "left"))));
-                            var new_top_in_px = Math.round((parseInt($(this).css(
-                                "top"))));
-
-                            var output =
-                                `Left: ${new_left_in_px}px; Top: ${new_top_in_px} px;`;
-
-                            $(this).css("left", new_left_perc);
-                            $(this).css("top", new_top_perc);
-
-                            $('.output').html('Position in Pixels: ' + output);
-                        }
-                    });
+                    openAddModalBox(this); // Call the function with the newly created dot
+                    makeDotsDraggable();
                 });
 
                 $('.output').html("Position in Pixels: Left: " + left_in_px + "px; Top: " + top_in_px +
                     "px;");
             });
+
+            makeDotsDraggable();
 
             $("#imageForm").submit(function(e) {
                 e.preventDefault();
@@ -281,6 +354,8 @@
                     let left = parseFloat($(this).css('left'));
                     let top = parseFloat($(this).css('top'));
 
+
+
                     dots.push({
                         position_left: left,
                         position_top: top
@@ -289,26 +364,72 @@
 
                 formData.append('dots', JSON.stringify(dots));
 
-                $.ajax({
-                    url: $(this).attr('action'),
-                    method: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        if (response.isStatus) {
-                            setTimeout(function() {
-                                window.location.href = "{{ route('projects.view', ['project_id']) }}/" + response.project_id;
-                            }, 3000);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
-                        // Handle error response
-                        $submitButton.html(originalText);
-                        $submitButton.prop('disabled', false);
-                    }
-                });
+                // $.ajax({
+                //     url: $(this).attr('action'),
+                //     method: 'POST',
+                //     data: formData,
+                //     contentType: false,
+                //     processData: false,
+                //     success: function(response) {
+                //         if (response.isStatus) {
+                //             setTimeout(function() {
+                //                 window.location.href =
+                //                     "{{ route('projects.view', ['project_id']) }}/" +
+                //                     response.project_id;
+                //             }, 3000);
+                //         }
+                //     },
+                //     error: function(xhr, status, error) {
+                //         console.error(xhr.responseText);
+                //         // Handle error response
+                //         $submitButton.html(originalText);
+                //         $submitButton.prop('disabled', false);
+                //     }
+                // });
+            });
+
+            $(document).on("click", ".dot", function() {
+                openAddModalBox(this);
+            });
+
+            // Add event listener for Save button click
+            $(document).on("click", "#checkDataAddSubmitBtn", function() {
+                var checkData = {
+                    id: $("#id").val(),
+                    name: $("#name").val(),
+                    type: $("#type").val(),
+                    description: $("#description").val(),
+                    compartment: $("#compartment").val(),
+                    material: $("#material").val(),
+                    color: $("#color").val(),
+                    suspected_hazmat: $("#suspected_hazmat").val(),
+                    equipment: $("#equipment").val()
+                };
+
+                var checkDataJson = JSON.stringify(checkData);
+
+                // If checkId is not available, create a new attribute "data-checkId" for the selected dot
+                if (!checkId) {
+                    checkId = "new"; // Set a temporary value for the new checkId
+                    $(".dot.selected").attr('data-checkId', checkId);
+                }
+
+                // Update the "data-check" attribute of the selected dot
+                $(".dot.selected").attr('data-check', checkDataJson);
+
+                // Reset form fields, including hidden inputs, to their default values
+                $("#checkDataAddForm")[0].reset();
+                $("#id").val("");
+
+                // Hide the modal box
+                $("#checkDataAddModal").modal('hide');
+            });
+
+
+            $(document).on("click", "#checkDataAddCloseBtn", function() {
+                // Reset form fields to their default values
+                $("#checkDataAddForm")[0].reset();
+                $("#id").val("");
             });
         });
     </script>
