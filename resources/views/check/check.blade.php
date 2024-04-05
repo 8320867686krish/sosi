@@ -16,16 +16,52 @@
             position: relative;
             width: 100%;
             height: auto;
-            background: gray;
+            /* background: gray; */
             display: inline-block;
             overflow-x: auto;
+            width: 100%;
+            display: inline-block;
 
             img {
+                /* width: 100%; */
                 height: auto;
                 cursor: pointer;
             }
         }
+        .btnzoom {
+  width: 30px;
+  height: 30px;
+  background: #FFF;
+  border: 1px solid #005bac;
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  color: #005bac;
+  padding: 5px 10px 5px;
+  position: fixed;
+  text-align: center;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+	transition: all 0.3s ease;
+  z-index: 1;
+}
+.btnzoom:hover {
+  background: #eef;
+}
 
+.zoom {
+  bottom: 190px;
+}
+
+.zoom-out {
+  bottom: 120px;
+}
+.zoom-init {
+  bottom: 50px;
+}
         .dot {
             position: absolute;
             width: 24px;
@@ -88,10 +124,14 @@
                         <input type="hidden" name="project_id" value="{{ $deck->project_id ?? '' }}">
                         <input type="hidden" name="deck_id" value="{{ $deck->id ?? '' }}">
                     </div>
-                    <div class="outfit">
+                    <a class="btnzoom zoom"><i class="fas fa-search-plus"></i></a>
+<a class="btnzoom zoom-out"><i class="fas fa-search-minus"></i></a>
+                    <div class="outfit target">
                         <img id="previewImg1" src="{{ $deck->image }}" alt="Upload Image">
                         @foreach ($deck->checks as $dot)
-                            <div class="dot ui-draggable ui-draggable-handle" style="top: {{ $dot->position_top }}px; left: {{ $dot->position_left }}px;">{{ $loop->iteration }}</div>
+                            <div class="dot ui-draggable ui-draggable-handle"
+                                style="top: {{ $dot->position_top }}px; left: {{ $dot->position_left }}px;">
+                                {{ $loop->iteration }}</div>
                         @endforeach
                     </div>
                     <div class="form-group">
@@ -109,56 +149,71 @@
 
     <script>
         $(document).ready(function() {
+            var zoom = 1;
+		
+		$('.zoom').on('click', function(){
+			zoom += 0.1;
+			$('.target').css('transform', 'scale(' + zoom + ')');
+		});
+		$('.zoom-init').on('click', function(){
+			zoom = 1;
+			$('.target').css('transform', 'scale(' + zoom + ')');
+		});
+		$('.zoom-out').on('click', function(){
+			zoom -= 0.1;
+			$('.target').css('transform', 'scale(' + zoom + ')');
+		});
             let imageWidth = $('#previewImg1').width();
             $('.output').css('max-width', imageWidth);
 
-            $(".outfit img").click(function(e) {
-                var dot_count = $(".dot").length;
+            // $(".outfit img").click(function(e) {
+            //     var dot_count = $(".dot").length;
 
-                var top_offset = $(this).offset().top - $(window).scrollTop();
-                var left_offset = $(this).offset().left - $(window).scrollLeft();
+            //     var top_offset = $(this).offset().top - $(window).scrollTop();
+            //     var left_offset = $(this).offset().left - $(window).scrollLeft();
 
-                var top_px = Math.round((e.clientY - top_offset - 12));
-                var left_px = Math.round((e.clientX - left_offset - 12));
+            //     var top_px = Math.round((e.clientY - top_offset - 12));
+            //     var left_px = Math.round((e.clientX - left_offset - 12));
 
-                var top_perc = top_px / $(this).height() * 100;
-                var left_perc = left_px / $(this).width() * 100;
+            //     var top_perc = top_px / $(this).height() * 100;
+            //     var left_perc = left_px / $(this).width() * 100;
 
-                // alert('Top: ' + top_px + 'px = ' + top_perc + '%');
-                // alert('Left: ' + left_px + 'px = ' + left_perc + '%');
+            //     // alert('Top: ' + top_px + 'px = ' + top_perc + '%');
+            //     // alert('Left: ' + left_px + 'px = ' + left_perc + '%');
 
-                var dot = '<div class="dot" style="top: ' + top_perc + '%; left: ' + left_perc + '%;">' + (dot_count + 1) + '</div>';
+            //     var dot = '<div class="dot" style="top: ' + top_perc + '%; left: ' + left_perc + '%;">' + (
+            //         dot_count + 1) + '</div>';
 
-                $(dot).hide().appendTo($(this).parent()).fadeIn(350);
+            //     $(dot).hide().appendTo($(this).parent()).fadeIn(350);
 
-                $(".dot").draggable({
-                    containment: ".outfit",
-                    stop: function(event, ui) {
-                        var new_left_perc = parseInt($(this).css("left")) / ($(".outfit")
-                                .width() / 100) +
-                            "%";
-                        var new_top_perc = parseInt($(this).css("top")) / ($(".outfit")
-                                .height() / 100) +
-                            "%";
-                        var output = 'Top: ' + parseInt(new_top_perc) + '%, Left: ' + parseInt(
-                            new_left_perc) + '%';
+            //     $(".dot").draggable({
+            //         containment: ".outfit",
+            //         stop: function(event, ui) {
+            //             var new_left_perc = parseInt($(this).css("left")) / ($(".outfit")
+            //                     .width() / 100) +
+            //                 "%";
+            //             var new_top_perc = parseInt($(this).css("top")) / ($(".outfit")
+            //                     .height() / 100) +
+            //                 "%";
+            //             var output = 'Top: ' + parseInt(new_top_perc) + '%, Left: ' + parseInt(
+            //                 new_left_perc) + '%';
 
-                        $(this).css("left", parseInt($(this).css("left")) / ($(".outfit")
-                                .width() / 100) +
-                            "%");
-                        $(this).css("top", parseInt($(this).css("top")) / ($(".outfit")
-                                .height() / 100) +
-                            "%");
+            //             $(this).css("left", parseInt($(this).css("left")) / ($(".outfit")
+            //                     .width() / 100) +
+            //                 "%");
+            //             $(this).css("top", parseInt($(this).css("top")) / ($(".outfit")
+            //                     .height() / 100) +
+            //                 "%");
 
-                        $('.output').html('CSS Position: ' + output);
-                    }
-                });
+            //             $('.output').html('CSS Position: ' + output);
+            //         }
+            //     });
 
-                // console.log("Left: " + left_perc + "%; Top: " + top_perc + '%;');
-                $('.output').html("CSS Position: Left: " + parseInt(left_perc) + "%; Top: " + parseInt(
-                        top_perc) +
-                    '%;');
-            });
+            //     // console.log("Left: " + left_perc + "%; Top: " + top_perc + '%;');
+            //     $('.output').html("CSS Position: Left: " + parseInt(left_perc) + "%; Top: " + parseInt(
+            //             top_perc) +
+            //         '%;');
+            // });
 
             $(".outfit img").click(function(e) {
                 var dot_count = $(".dot").length;
