@@ -443,7 +443,6 @@ class ApiController extends Controller
 
             $id = $request->input('id');
             $inputData = $request->except('id');
-print_r($inputData);
             Checks::updateOrCreate(['id' => $id], $inputData);
 
             $message = empty($id) ? "Check added successfully" : "Check updated successfully";
