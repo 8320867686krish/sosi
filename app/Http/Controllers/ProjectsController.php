@@ -238,23 +238,25 @@ class ProjectsController extends Controller
     {
         try {
             $inputData = $request->input();
+            $id = $request->input('id');
 
-            $dots = json_decode($request->input('dots'));
+            // $dots = json_decode($request->input('dots'));
 
-            $insertData = array_map(function ($item) use ($inputData) {
-                $itemArray = (array) $item;
-                $itemArray['project_id'] = $inputData['project_id'];
-                $itemArray['deck_id'] = $inputData['deck_id'];
-                return $itemArray;
-            }, $dots);
+            // $insertData = array_map(function ($item) use ($inputData) {
+            //     $itemArray = (array) $item;
+            //     $itemArray['project_id'] = $inputData['project_id'];
+            //     $itemArray['deck_id'] = $inputData['deck_id'];
+            //     return $itemArray;
+            // }, $dots);
 
-            Checks::where('deck_id', $inputData['deck_id'])->delete();
+            // Checks::where('deck_id', $inputData['deck_id'])->delete();
 
-            Checks::insert($insertData);
+            // Checks::insert($insertData);
+            Checks::updateOrCreate(['id' => $id], $inputData);
 
-            // $message = empty($id) ? "Image check added successfully" : "Image updated successfully";
+            $message = empty($id) ? "Image check added successfully" : "Image check updated successfully";
 
-            return response()->json(['isStatus' => true, 'message' => "Image check added successfully", "project_id"=>$inputData['project_id']]);
+            return response()->json(['isStatus' => true, 'message' => $message]);
         } catch (\Throwable $th) {
             return response()->json(['isStatus' => false, 'error' => $th->getMessage()]);
         }
