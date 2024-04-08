@@ -1,13 +1,32 @@
 @extends('layouts.app')
 
 @section('css')
+    <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+    <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+
+
     <style>
+        #box {
+            width: 400px;
+            height: 300px;
+            margin: 50px auto;
+            border: 3px solid #222;
+            background: #fafafa;
+            position: relative;
+            overflow: hidden;
+            border-radius: 5px;
+        }
+
+        #box>img {
+            width: 300px;
+            height: 225px;
+        }
+
         .output {
             padding: 10px 0;
             color: #fff;
             background: #525252;
             width: 100%;
-            /* max-width: 420px; */
             padding-left: 5px;
         }
 
@@ -16,54 +35,13 @@
             position: relative;
             width: 100%;
             height: auto;
-            /* background: gray; */
             display: inline-block;
-            overflow-x: auto;
-            width: 100%;
-            display: inline-block;
+            overflow: hidden;
 
             img {
-                /* width: 100%; */
                 height: auto;
                 cursor: pointer;
             }
-        }
-
-        .btnzoom {
-            width: 30px;
-            height: 30px;
-            background: #FFF;
-            border: 1px solid #005bac;
-            border-radius: 50%;
-            -moz-border-radius: 50%;
-            -webkit-border-radius: 50%;
-            color: #005bac;
-            padding: 5px 10px 5px;
-            position: fixed;
-            text-align: center;
-            -ms-user-select: none;
-            -moz-user-select: -moz-none;
-            -khtml-user-select: none;
-            -webkit-user-select: none;
-            user-select: none;
-            transition: all 0.3s ease;
-            z-index: 1;
-        }
-
-        .btnzoom:hover {
-            background: #eef;
-        }
-
-        .zoom {
-            bottom: 190px;
-        }
-
-        .zoom-out {
-            bottom: 120px;
-        }
-
-        .zoom-init {
-            bottom: 50px;
         }
 
         .dot {
@@ -128,8 +106,7 @@
                         <input type="hidden" name="project_id" value="{{ $deck->project_id ?? '' }}">
                         <input type="hidden" name="deck_id" value="{{ $deck->id ?? '' }}">
                     </div>
-                    <a class="btnzoom zoom"><i class="fas fa-search-plus"></i></a>
-                    <a class="btnzoom zoom-out"><i class="fas fa-search-minus"></i></a>
+
                     <div class="outfit">
                         <div class="target">
                             <img id="previewImg1" src="{{ $deck->image }}" alt="Upload Image">
@@ -141,6 +118,8 @@
                             @endforeach
                         </div>
                     </div>
+
+
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary float-right formSubmitBtn">Save</button>
                     </div>
@@ -232,6 +211,11 @@
 @section('js')
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
+    <script src="{{ asset('assets/vendor/dragZoom.js') }}"></script>
     <script>
         function makeDotsDraggable() {
             $(".dot").draggable({
@@ -285,22 +269,13 @@
 
         let checkId;
 
+
         $(document).ready(function() {
-            var zoom = 1;
+            $('.target').dragZoom({
+                scope: $("body"),
+                zoom: 1,
 
-            $('.zoom').on('click', function() {
-                zoom += 0.1;
-                $('.target').css('transform', 'scale(' + zoom + ')');
             });
-            $('.zoom-init').on('click', function() {
-                zoom = 1;
-                $('.target').css('transform', 'scale(' + zoom + ')');
-            });
-            $('.zoom-out').on('click', function() {
-                zoom -= 0.1;
-                $('.target').css('transform', 'scale(' + zoom + ')');
-            });
-
             let imageWidth = $('#previewImg1').width();
             $('.output').css('max-width', imageWidth);
 
