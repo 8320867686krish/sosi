@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Http\Request;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,12 +38,24 @@ class Checks extends Model
         return $decodedArray;
     }
 
-    public function getPositionTopAttribute($value){
-        return ($this->isApp == 1) ? ($value - 24) : $value;
+    public function getPositionTopAttribute($value, Request $request){
+        if ($request->is('web/*')) {
+            // This is a request from the web
+            return $value; // No conversion needed
+        } else {
+            // This is a request from the app
+            return $value - 24;
+        }
     }
-
-    public function getPositionLeftAttribute($value){
-        return ($this->isApp == 1) ? ($value - 24) : $value;
+    
+    public function getPositionLeftAttribute($value, Request $request){
+        if ($request->is('web/*')) {
+            // This is a request from the web
+            return $value; // No conversion needed
+        } else {
+            // This is a request from the app
+            return $value - 24;
+        }
     }
 
 }
