@@ -459,8 +459,6 @@ class ApiController extends Controller
     {
         try {
 
-
-
             $validator = Validator::make($request->all(), [
                 'project_id' => 'required|exists:projects,id',
                 'deck_id' => 'required|exists:decks,id',
@@ -476,7 +474,7 @@ class ApiController extends Controller
             $projectId = $request->input('project_id');
             $deckId = $request->input('deck_id');
             $inputData = $request->input();
-            if($inputData['pairWitthTag']){
+            if ($inputData['pairWitthTag']) {
                 $inputData['name'] = $inputData['pairWitthTag'];
             }
 
@@ -496,18 +494,18 @@ class ApiController extends Controller
             if (!$deckExists) {
                 return response()->json(['isStatus' => false, 'message' => 'Deck not found.']);
             }
+
             $checkAdd =  Checks::create($inputData);
+
             $checkId = $checkAdd->id;
-           if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/checks/' .  $checkId), $imageName);
-            $checkData['image'] = $imageName;
-            $checkData['check_id'] = $checkId;
-            CheckImage::create($checkData);
-        }
-
-
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('images/checks/' .  $checkId), $imageName);
+                $checkData['image'] = $imageName;
+                $checkData['check_id'] = $checkId;
+                CheckImage::create($checkData);
+            }
 
             $message = "Check added successfully";
 
@@ -564,7 +562,7 @@ class ApiController extends Controller
         try {
             $checks = Checks::with('deck')->find($checkId);
 
-            if(!$checks) {
+            if (!$checks) {
                 return response()->json(['isStatus' => false, 'message' => 'Check not found.']);
             }
 
@@ -574,9 +572,9 @@ class ApiController extends Controller
                 $checks->only(['compartment', 'position', 'sub_position', 'position_left', 'position_top', 'project_id', 'deck_id']),
                 ['deck_image' => $deckImage]
             );
-            $checkDetails = $checks->only(['component','equipment','name','type','suspected_hazmat','remarks','color','material','project_id','deck_id','description','pairWitthTag']);
+            $checkDetails = $checks->only(['component', 'equipment', 'name', 'type', 'suspected_hazmat', 'remarks', 'color', 'material', 'project_id', 'deck_id', 'description', 'pairWitthTag']);
 
-            return response()->json(['isStatus' => true, 'message' => 'check details retrieved successfully.', 'checkDetails' => $checkDetails,'locationDetails' => $locationDetails]);
+            return response()->json(['isStatus' => true, 'message' => 'check details retrieved successfully.', 'checkDetails' => $checkDetails, 'locationDetails' => $locationDetails]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }

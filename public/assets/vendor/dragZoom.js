@@ -35,7 +35,7 @@
 
             //缩放
             self.$element.on('mouseout', function(e) {
-                console.log("out");
+                // console.log("out");
                 $('.target').css('transform', 'scale(1)');
 
                 $("body").css('cursor', 'default');
@@ -48,7 +48,7 @@
              //   self.wheel(e, self);
                 return false;
             }).on('mousedown', function(e) {
-                console.log("mousedown");
+                // console.log("mousedown");
 
                 $("body").css("cursor", "move")
                 self.start(e, self);
@@ -59,16 +59,16 @@
 
             //拖拽
             $(document).on('mousemove', function(e) {
-                console.log("mousemove");
+                // console.log("mousemove");
 
                 // if (self.options.zoom > 1) {
                 //     self.move(e, self);
                 // }
                 self.move(e, self);
-                
+
                 return false;
             }).on('mouseup', function(e) {
-                console.log("mouseup");
+                // console.log("mouseup");
 
                 self.end(e, self);
                 return false;
@@ -106,7 +106,7 @@
                 (self.options.zoom > self.options.maxzoom ? self.options.maxzoom : self.options.zoom);
         },
         start: function(ev, self) {
-            console.log("start");
+            // console.log("start");
 
             self.isMoved = true;
             var selfOffset = self.$element.offset();
@@ -118,7 +118,7 @@
 
         },
         move: function(ev, self) {
-            console.log("move");
+            // console.log("move");
 
             if (self.isMoved) {
                 self.y = ev.clientY - self.relY;
@@ -137,7 +137,7 @@
             }
         },
         end: function(ev, self) {
-            console.log("end");
+            // console.log("end");
             self.isMoved = false;
             // $(document).off('mousemove').off('mouseup');
 

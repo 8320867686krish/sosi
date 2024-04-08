@@ -21,20 +21,26 @@ class Checks extends Model
     public function deck(){
         return $this->belongsTo(Deck::class);
     }
-    
+
     public function getSuspectedHazmatAttribute($value){
         if (!@$value) {
             return []; // Return an empty array if the value is null
         }
-    
+
         // Replace single quotes with double quotes to ensure valid JSON
         $jsonString = str_replace("'", '"', $value);
-        
+
         // Decode the JSON string into a PHP array
         $decodedArray = json_decode($jsonString, true);
-        
+
         // Check if the decoded value is an array
         return $decodedArray;
+    }
+    public function getPositionTop($value){
+        return ($this->isApp == 1) ? ($value - 24) : $value;
+    }
+    public function getPositionLeft($value){
+        return ($this->isApp == 1) ? ($value - 24) : $value;
     }
 
 }

@@ -142,6 +142,8 @@
                         <div class="modal-body">
                             @csrf
                             <input type="hidden" id="id" name="id">
+                            <input type="hidden" name="project_id" value="{{ $deck->project_id ?? '' }}">
+                            <input type="hidden" name="deck_id" value="{{ $deck->id ?? '' }}">
                             <div class="row">
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
@@ -269,13 +271,13 @@
 
         let checkId;
 
-
         $(document).ready(function() {
+
             $('.target').dragZoom({
                 scope: $("body"),
                 zoom: 1,
-
             });
+
             let imageWidth = $('#previewImg1').width();
             $('.output').css('max-width', imageWidth);
 
@@ -329,8 +331,6 @@
                     let left = parseFloat($(this).css('left'));
                     let top = parseFloat($(this).css('top'));
 
-
-
                     dots.push({
                         position_left: left,
                         position_top: top
@@ -369,6 +369,7 @@
 
             // Add event listener for Save button click
             $(document).on("click", "#checkDataAddSubmitBtn", function() {
+
                 var checkData = {
                     id: $("#id").val(),
                     name: $("#name").val(),
@@ -391,6 +392,46 @@
 
                 // Update the "data-check" attribute of the selected dot
                 $(".dot.selected").attr('data-check', checkDataJson);
+
+                // Serialize form data
+                let checkFormData = $("#checkDataAddForm").serializeArray();
+
+                // Get the position of the selected dot
+                let position_left = parseFloat($(".dot.selected").css('left'));
+                let position_top = parseFloat($(".dot.selected").css('top'));
+
+                // Append position data to formData
+                checkFormData.push({
+                    name: 'position_left',
+                    value: position_left
+                });
+
+                checkFormData.push({
+                    name: 'position_top',
+                    value: position_top
+                });
+
+                // Convert formData to query string
+                let queryString = $.param(checkFormData);
+
+
+                let $submitButton = $(this);
+                let originalText = $(this).html();
+                console.log(queryString);
+                // $submitButton.text('Wait...');
+                // $submitButton.prop('disabled', true);
+
+                // $.ajax({
+                //     type: 'POST',
+                //     url: '',
+                //     data: formData,
+                //     success: function(response) {
+                //         alert(response.message); // Show success message
+                //     },
+                //     error: function(xhr, status, error) {
+                //         console.error(xhr.responseText);
+                //     }
+                // });
 
                 // Reset form fields, including hidden inputs, to their default values
                 $("#checkDataAddForm")[0].reset();
