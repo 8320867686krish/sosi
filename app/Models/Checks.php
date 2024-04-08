@@ -37,17 +37,6 @@ class Checks extends Model
         return $decodedArray;
     }
 
-    public function getPositionTopAttribute($value){
-        return ($this->isApp == 1) ? ($value - 24) : $value;
-    }
 
-    public function getPositionLeftAttribute($value){
-        if($this->isApp == 1){
-            $count = $value - 24;
-            return strval($count);
-        }else{
-            return $value;
-        }
-    }
 
 }
