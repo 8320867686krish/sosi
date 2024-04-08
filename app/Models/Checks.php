@@ -36,10 +36,12 @@ class Checks extends Model
         // Check if the decoded value is an array
         return $decodedArray;
     }
-    public function getPositionTop($value){
+
+    public function getPositionTopAttribute($value){
         return ($this->isApp == 1) ? ($value - 24) : $value;
     }
-    public function getPositionLeft($value){
+
+    public function getPositionLeftAttribute($value){
         return ($this->isApp == 1) ? ($value - 24) : $value;
     }
 
