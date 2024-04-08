@@ -15,7 +15,8 @@
             onWheelEnd: null,
             onDragStart: null,
             onDragMove: null,
-            onDragEnd: null
+            onDragEnd: null,
+            
         };
 
         this.options = $.extend({}, this.defaults, opt);
@@ -35,9 +36,8 @@
 
             //缩放
             self.$element.on('mouseout', function(e) {
-                // console.log("out");
+                 console.log("out");
                 $('.target').css('transform', 'scale(1)');
-
                 $("body").css('cursor', 'default');
                 return false;
             }).on('mousewheel', function(e, delta) {
@@ -59,12 +59,11 @@
 
             //拖拽
             $(document).on('mousemove', function(e) {
-                // console.log("mousemove");
 
-                // if (self.options.zoom > 1) {
-                //     self.move(e, self);
-                // }
-                self.move(e, self);
+                 console.log("mousemove",isDragable);
+                if(isDragable){
+                    self.move(e, self);
+                }
 
                 return false;
             }).on('mouseup', function(e) {

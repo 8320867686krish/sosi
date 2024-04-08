@@ -209,9 +209,15 @@
     <script src="{{ asset('assets/vendor/dragZoom.js') }}"></script>
 
     <script>
+        var isDragable = true;
         function makeDotsDraggable() {
             $(".dot").draggable({
                 containment: "#previewImg1",
+                start: function(e) {
+                    isDragable = false;
+                    console.log(isDragable);
+
+    },
                 stop: function(event, ui) {
                     var new_left_perc = parseInt($(this).css("left")) + "px";
                     var new_top_perc = parseInt($(this).css("top")) + "px";
@@ -228,6 +234,7 @@
                     $(this).css("top", new_top_perc);
 
                     $('.output').html('Position in Pixels: ' + output);
+                    isDragable = true;
                 }
             });
         }
@@ -262,11 +269,15 @@
         let checkId;
 
         $(document).ready(function() {
+            
+        $('.target').dragZoom({
+            scope: $("body"),
+            zoom: 1,
+            onWheelStart: function() {
 
-            $('.target').dragZoom({
-                scope: $("body"),
-                zoom: 1,
-            });
+            }
+        }, function() {});
+    
 
             let imageWidth = $('#previewImg1').width();
             $('.output').css('max-width', imageWidth);
@@ -291,14 +302,17 @@
 
                 var dot = '<div class="dot" style="top: ' + top_in_px + 'px; left: ' + left_in_px +
                     'px;" id="dot_' + (dot_count + 1) + '">' + (dot_count + 1) + '</div>';
+               
+                 
+                        $(dot).hide().appendTo($(this).parent()).fadeIn(350, function() {
+                        openAddModalBox(this); // Call the function with the newly created dot
+                        makeDotsDraggable();
+                    });
 
-                $(dot).hide().appendTo($(this).parent()).fadeIn(350, function() {
-                    openAddModalBox(this); // Call the function with the newly created dot
-                    makeDotsDraggable();
-                });
-
-                $('.output').html("Position in Pixels: Left: " + left_in_px + "px; Top: " + top_in_px +
-                    "px;");
+                    $('.output').html("Position in Pixels: Left: " + left_in_px + "px; Top: " + top_in_px +
+                        "px;");
+                    
+                
             });
 
             makeDotsDraggable();
