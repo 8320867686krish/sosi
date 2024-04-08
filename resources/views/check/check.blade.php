@@ -3,7 +3,8 @@
 @section('css')
     <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
     <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
-
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/bootstrap-select/css/bootstrap-select.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/select2/css/select2.css') }}">
 
     <style>
         #box {
@@ -46,20 +47,19 @@
 
         .dot {
             position: absolute;
-            width: 24px;
-            height: 24px;
-            /* background: rgba(white, 1); */
-            background: #000000;
-            /* background: #fff; */
+            width: 20px;
+            height: 20px;
+            background: #000;
             border-radius: 50%;
             overflow: hidden;
             cursor: pointer;
             box-shadow: 0 0 3px 0 rgba(0, 0, 0, .2);
-            line-height: 24px;
+            line-height: 20px;
             font-size: 12px;
             font-weight: bold;
             transition: box-shadow .214s ease-in-out, transform .214s ease-in-out, background .214s ease-in-out;
             text-align: center;
+            opacity: 0.7;
 
             &.ui-draggable-dragging {
                 box-shadow: 0 0 25px 0 rgba(0, 0, 0, .5);
@@ -97,6 +97,7 @@
         {{-- <div class="row"> --}}
         {{-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"> --}}
         @include('layouts.message')
+        <div id="showSuccessMsg"></div>
         <div class="card">
             <div class="card-body">
                 <form id="imageForm" action="{{ route('addImageHotspots') }}" method="post" enctype="multipart/form-data">
@@ -105,8 +106,9 @@
                         <div class="target">
                             <img id="previewImg1" src="{{ $deck->image }}" alt="Upload Image">
                             @foreach ($deck->checks as $dot)
-                                <div class="dot ui-draggable ui-draggable-handle" data-checkId="{{ $dot->id }}" data-check="{{ $dot }}"
-                                    style="top: {{ $dot->position_top - ($dot->isApp == 1 ? 24 : 0) }}px; left: {{ $dot->position_left - ($dot->isApp == 1 ? 24 : 0) }}px;"
+                                <div class="dot ui-draggable ui-draggable-handle" data-checkId="{{ $dot->id }}"
+                                    data-check="{{ $dot }}"
+                                    style="top: {{ $dot->position_top - ($deck->isApp == 1 ? 20 : 0) }}px; left: {{ $dot->position_left - ($deck->isApp == 1 ? 20 : 0) }}px;"
                                     id="dot_{{ $loop->iteration }}">
                                     {{ $loop->iteration }}
                                 </div>
@@ -181,14 +183,42 @@
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
                                         <label for="suspected_hazmat">Suspected Hazmat</label>
-                                        <input type="text" id="suspected_hazmat" name="suspected_hazmat"
-                                            class="form-control">
+                                        <input type="text" class="form-control" id="suspected_hazmat" name="suspected_hazmat">
+                                        {{-- <select class="form-control select2" data-live-search="true"
+                                            id="suspected_hazmat" name="suspected_hazmat" multiple="multiple">
+                                            <option value="">Select Hazmat</option>
+                                        </select> --}}
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
                                         <label for="equipment">Equipment</label>
                                         <input type="text" id="equipment" name="equipment" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="component">Component</label>
+                                        <input type="text" id="component" name="component" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="position">Position</label>
+                                        <input type="text" id="position" name="position" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="sub_position">Sub Position</label>
+                                        <input type="text" id="sub_position" name="sub_position"
+                                            class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="remarks">Remarks</label>
+                                        <textarea name="remarks" id="remarks" class="form-control" rows="1"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -207,6 +237,8 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
     <script src="{{ asset('assets/vendor/dragZoom.js') }}"></script>
+    <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
+    <script src="{{ asset('assets/vendor/select2/js/select2.min.js') }}"></script>
 
     <script>
         var isDragable = true;
@@ -234,6 +266,8 @@
                     $(this).css("top", new_top_perc);
 
                     $('.output').html('Position in Pixels: ' + output);
+
+                    dotsDrugUpdatePositionForDB(this);
                     isDragable = true;
                 }
             });
@@ -266,17 +300,51 @@
             $("#checkDataAddModal").modal('show');
         }
 
-        let checkId;
+        function dotsDrugUpdatePositionForDB(dot) {
+            let $dots = $(dot);
+
+            let check_id = $dots.attr('data-checkId');
+            let position_left = parseFloat($dots.css('left'));
+            let position_top = parseFloat($dots.css('top'));
+
+            $.ajax({
+                url: "{{ route('addImageHotspots') }}",
+                method: 'POST',
+                data: {
+                    id: check_id,
+                    position_left: position_left,
+                    position_top: position_top,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
+                        ${response.message}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>`;
+
+                    $("#showSuccessMsg").html(messages);
+                    $('.showSuccessMsg').fadeIn().delay(20000).fadeOut();
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
 
         $(document).ready(function() {
-            
-        $('.target').dragZoom({
-            scope: $("body"),
-            zoom: 1,
-            onWheelStart: function() {
+            let checkId;
 
-            }
-        }, function() {});
+            $(".select2").select2({
+                tags: true,
+                tokenSeparators: [',', ' ']
+            })
+            
+            $('.target').dragZoom({
+                scope: $("body"),
+                zoom: 1,
+            });
     
 
             let imageWidth = $('#previewImg1').width();
@@ -317,56 +385,6 @@
 
             makeDotsDraggable();
 
-            $("#imageForm").submit(function(e) {
-                e.preventDefault();
-
-                let $submitButton = $(this).find('button[type="submit"]');
-                let originalText = $submitButton.html();
-                $submitButton.text('Wait...');
-                $submitButton.prop('disabled', true);
-
-                let formData = new FormData(this);
-
-                let dots = [];
-                $(".dot").each(function(index) {
-                    let containerWidth = $(this).parent().width();
-                    let containerHeight = $(this).parent().height();
-
-                    let left = parseFloat($(this).css('left'));
-                    let top = parseFloat($(this).css('top'));
-
-                    dots.push({
-                        position_left: left,
-                        position_top: top
-                    });
-                });
-
-                formData.append('dots', JSON.stringify(dots));
-
-                // $.ajax({
-                //     url: $(this).attr('action'),
-                //     method: 'POST',
-                //     data: formData,
-                //     contentType: false,
-                //     processData: false,
-                //     success: function(response) {
-                //         if (response.isStatus) {
-                //             setTimeout(function() {
-                //                 window.location.href =
-                //                     "{{ route('projects.view', ['project_id']) }}/" +
-                //                     response.project_id;
-                //             }, 3000);
-                //         }
-                //     },
-                //     error: function(xhr, status, error) {
-                //         console.error(xhr.responseText);
-                //         // Handle error response
-                //         $submitButton.html(originalText);
-                //         $submitButton.prop('disabled', false);
-                //     }
-                // });
-            });
-
             $(document).on("click", ".dot", function() {
                 openAddModalBox(this);
             });
@@ -383,7 +401,11 @@
                     material: $("#material").val(),
                     color: $("#color").val(),
                     suspected_hazmat: $("#suspected_hazmat").val(),
-                    equipment: $("#equipment").val()
+                    equipment: $("#equipment").val(),
+                    equipment: $("#component").val(),
+                    equipment: $("#position").val(),
+                    equipment: $("#sub_position").val(),
+                    equipment: $("#remarks").val()
                 };
 
                 var checkDataJson = JSON.stringify(checkData);
@@ -428,7 +450,18 @@
                     url: $("#checkDataAddForm").attr('action'),
                     data: checkFormData,
                     success: function(response) {
-                        alert(response.message); // Show success message
+                        // alert(response.message); // Show success message
+                        $(".dot.selected").attr('data-checkId', response.id);
+                        $("#id").val(response.id);
+                        let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
+                            ${response.message}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>`;
+
+                        $("#showSuccessMsg").html(messages);
+                        $('.showSuccessMsg').fadeIn().delay(20000).fadeOut();
                         $submitButton.html(originalText);
                         $submitButton.prop('disabled', false);
                     },
