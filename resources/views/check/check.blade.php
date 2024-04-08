@@ -101,12 +101,6 @@
             <div class="card-body">
                 <form id="imageForm" action="{{ route('addImageHotspots') }}" method="post" enctype="multipart/form-data">
                     @csrf
-                    <div class="form-group">
-                        {{-- <input type="hidden" name="id" id="imageId"> --}}
-                        <input type="hidden" name="project_id" value="{{ $deck->project_id ?? '' }}">
-                        <input type="hidden" name="deck_id" value="{{ $deck->id ?? '' }}">
-                    </div>
-
                     <div class="outfit">
                         <div class="target">
                             <img id="previewImg1" src="{{ $deck->image }}" alt="Upload Image">
@@ -118,11 +112,9 @@
                             @endforeach
                         </div>
                     </div>
-
-
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <button type="submit" class="btn btn-primary float-right formSubmitBtn">Save</button>
-                    </div>
+                    </div> --}}
                 </form>
                 <div class="output">Dot Positions goes here.</div>
             </div>
@@ -138,7 +130,7 @@
                             <span aria-hidden="true">×</span>
                         </a>
                     </div>
-                    <form method="post" id="checkDataAddForm">
+                    <form method="post" action="{{ route('addImageHotspots') }}" id="checkDataAddForm">
                         <div class="modal-body">
                             @csrf
                             <input type="hidden" id="id" name="id">
@@ -212,12 +204,9 @@
 
 @section('js')
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-
-
-
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
     <script src="{{ asset('assets/vendor/dragZoom.js') }}"></script>
+
     <script>
         function makeDotsDraggable() {
             $(".dot").draggable({
@@ -414,24 +403,26 @@
                 // Convert formData to query string
                 let queryString = $.param(checkFormData);
 
-
                 let $submitButton = $(this);
-                let originalText = $(this).html();
-                console.log(queryString);
-                // $submitButton.text('Wait...');
-                // $submitButton.prop('disabled', true);
+                let originalText = $submitButton.html();
+                $submitButton.text('Wait...');
+                $submitButton.prop('disabled', true);
 
-                // $.ajax({
-                //     type: 'POST',
-                //     url: '',
-                //     data: formData,
-                //     success: function(response) {
-                //         alert(response.message); // Show success message
-                //     },
-                //     error: function(xhr, status, error) {
-                //         console.error(xhr.responseText);
-                //     }
-                // });
+                $.ajax({
+                    type: 'POST',
+                    url: $("#checkDataAddForm").attr('action'),
+                    data: checkFormData,
+                    success: function(response) {
+                        alert(response.message); // Show success message
+                        $submitButton.html(originalText);
+                        $submitButton.prop('disabled', false);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        $submitButton.html(originalText);
+                        $submitButton.prop('disabled', false);
+                    }
+                });
 
                 // Reset form fields, including hidden inputs, to their default values
                 $("#checkDataAddForm")[0].reset();
