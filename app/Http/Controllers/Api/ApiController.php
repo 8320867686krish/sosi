@@ -443,6 +443,9 @@ class ApiController extends Controller
 
             $id = $request->input('id');
             $inputData = $request->except('id');
+            //Determine if it's created by the app side.
+            $inputData['isApp'] = 1;
+
             Checks::updateOrCreate(['id' => $id], $inputData);
 
             $message = empty($id) ? "Check added successfully" : "Check updated successfully";
@@ -474,7 +477,8 @@ class ApiController extends Controller
             $projectId = $request->input('project_id');
             $deckId = $request->input('deck_id');
             $inputData = $request->input();
-            if ($inputData['pairWitthTag']) {
+            $inputData['isApp'] = 1;
+            if($inputData['pairWitthTag']){
                 $inputData['name'] = $inputData['pairWitthTag'];
             }
 
