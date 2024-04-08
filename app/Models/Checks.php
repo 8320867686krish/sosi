@@ -42,7 +42,12 @@ class Checks extends Model
     }
 
     public function getPositionLeftAttribute($value){
-        return ($this->isApp == 1) ? ($value - 24) : $value;
+        if($this->isApp == 1){
+            $count = $value - 24;
+            return strval($count);
+        }else{
+            return $value;
+        }
     }
 
 }
