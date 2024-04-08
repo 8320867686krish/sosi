@@ -105,10 +105,11 @@
                         <div class="target">
                             <img id="previewImg1" src="{{ $deck->image }}" alt="Upload Image">
                             @foreach ($deck->checks as $dot)
-                                <div class="dot ui-draggable ui-draggable-handle" data-checkId="{{ $dot->id }}"
-                                    data-check="{{ $dot }}"
-                                    style="top: {{ $dot->position_top }}px; left: {{ $dot->position_left }}px;"
-                                    id="dot_{{ $loop->iteration }}">{{ $loop->iteration }}</div>
+                                <div class="dot ui-draggable ui-draggable-handle" data-checkId="{{ $dot->id }}" data-check="{{ $dot }}"
+                                    style="top: {{ $dot->position_top - ($deck->isApp == 1 ? 24 : 0) }}px; left: {{ $dot->position_left - ($deck->isApp == 1 ? 24 : 0) }}px;"
+                                    id="dot_{{ $loop->iteration }}">
+                                    {{ $loop->iteration }}
+                                </div>
                             @endforeach
                         </div>
                     </div>

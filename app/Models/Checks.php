@@ -37,6 +37,6 @@ class Checks extends Model
         return $decodedArray;
     }
 
-   
+
 
 }
