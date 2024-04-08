@@ -252,11 +252,11 @@ class ProjectsController extends Controller
             // Checks::where('deck_id', $inputData['deck_id'])->delete();
 
             // Checks::insert($insertData);
-            Checks::updateOrCreate(['id' => $id], $inputData);
+            $data = Checks::updateOrCreate(['id' => $id], $inputData);
 
             $message = empty($id) ? "Image check added successfully" : "Image check updated successfully";
 
-            return response()->json(['isStatus' => true, 'message' => $message]);
+            return response()->json(['isStatus' => true, 'message' => $message, "id"=>$data->id]);
         } catch (\Throwable $th) {
             return response()->json(['isStatus' => false, 'error' => $th->getMessage()]);
         }
