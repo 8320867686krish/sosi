@@ -183,7 +183,8 @@
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
                                         <label for="suspected_hazmat">Suspected Hazmat</label>
-                                        <input type="text" class="form-control" id="suspected_hazmat" name="suspected_hazmat">
+                                        <input type="text" class="form-control" id="suspected_hazmat"
+                                            name="suspected_hazmat">
                                         {{-- <select class="form-control select2" data-live-search="true"
                                             id="suspected_hazmat" name="suspected_hazmat" multiple="multiple">
                                             <option value="">Select Hazmat</option>
@@ -235,21 +236,16 @@
 
 @section('js')
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
-    <script src="{{ asset('assets/vendor/dragZoom.js') }}"></script>
     <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
     <script src="{{ asset('assets/vendor/select2/js/select2.min.js') }}"></script>
 
     <script>
-        var isDragable = true;
+        var isStopped = false;
+
         function makeDotsDraggable() {
             $(".dot").draggable({
                 containment: "#previewImg1",
-                start: function(e) {
-                    isDragable = false;
-                    console.log(isDragable);
 
-    },
                 stop: function(event, ui) {
                     var new_left_perc = parseInt($(this).css("left")) + "px";
                     var new_top_perc = parseInt($(this).css("top")) + "px";
@@ -268,7 +264,6 @@
                     $('.output').html('Position in Pixels: ' + output);
 
                     dotsDrugUpdatePositionForDB(this);
-                    isDragable = true;
                 }
             });
         }
@@ -304,33 +299,35 @@
             let $dots = $(dot);
 
             let check_id = $dots.attr('data-checkId');
+
             let position_left = parseFloat($dots.css('left'));
             let position_top = parseFloat($dots.css('top'));
+            if(check_id || check_id != "new"){
+                $.ajax({
+                    url: "{{ route('addImageHotspots') }}",
+                    method: 'POST',
+                    data: {
+                        id: check_id,
+                        position_left: position_left,
+                        position_top: position_top,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
+                            ${response.message}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>`;
 
-            $.ajax({
-                url: "{{ route('addImageHotspots') }}",
-                method: 'POST',
-                data: {
-                    id: check_id,
-                    position_left: position_left,
-                    position_top: position_top,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
-                        ${response.message}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>`;
-
-                    $("#showSuccessMsg").html(messages);
-                    $('.showSuccessMsg').fadeIn().delay(20000).fadeOut();
-                },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
-            });
+                        $("#showSuccessMsg").html(messages);
+                        $('.showSuccessMsg').fadeIn().delay(20000).fadeOut();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
         }
 
         $(document).ready(function() {
@@ -340,47 +337,55 @@
                 tags: true,
                 tokenSeparators: [',', ' ']
             })
-            
-            $('.target').dragZoom({
-                scope: $("body"),
-                zoom: 1,
+
+            $('.target').draggable({
+                stop: function(event, ui) {
+                    // Add your code here to handle the drag stop event
+                    console.log('Dragging stopped');
+                    isStopped = true;
+                }
             });
-    
+
 
             let imageWidth = $('#previewImg1').width();
             $('.output').css('max-width', imageWidth);
 
             $(".outfit img").click(function(e) {
-                var dot_count = $(".dot").length;
+                if(!isStopped){
 
-                var top_offset = $(this).offset().top - $(window).scrollTop();
-                var left_offset = $(this).offset().left - $(window).scrollLeft();
+                    var dot_count = $(".dot").length;
 
-                var top_px = Math.round((e.clientY - top_offset - 12));
-                var left_px = Math.round((e.clientX - left_offset - 12));
+                    var top_offset = $(this).offset().top - $(window).scrollTop();
+                    var left_offset = $(this).offset().left - $(window).scrollLeft();
 
-                var top_perc = top_px / $(this).height() * 100;
-                var left_perc = left_px / $(this).width() * 100;
+                    var top_px = Math.round((e.clientY - top_offset - 12));
+                    var left_px = Math.round((e.clientX - left_offset - 12));
 
-                var container_width = $(this).width();
-                var container_height = $(this).height();
+                    var top_perc = top_px / $(this).height() * 100;
+                    var left_perc = left_px / $(this).width() * 100;
 
-                var top_in_px = Math.round((top_perc / 100) * container_height);
-                var left_in_px = Math.round((left_perc / 100) * container_width);
+                    var container_width = $(this).width();
+                    var container_height = $(this).height();
 
-                var dot = '<div class="dot" style="top: ' + top_in_px + 'px; left: ' + left_in_px +
-                    'px;" id="dot_' + (dot_count + 1) + '">' + (dot_count + 1) + '</div>';
-               
-                 
-                        $(dot).hide().appendTo($(this).parent()).fadeIn(350, function() {
+                    var top_in_px = Math.round((top_perc / 100) * container_height);
+                    var left_in_px = Math.round((left_perc / 100) * container_width);
+
+                    var dot = '<div class="dot" style="top: ' + top_in_px + 'px; left: ' + left_in_px +
+                        'px;" id="dot_' + (dot_count + 1) + '">' + (dot_count + 1) + '</div>';
+
+
+                    $(dot).hide().appendTo($(this).parent()).fadeIn(350, function() {
                         openAddModalBox(this); // Call the function with the newly created dot
                         makeDotsDraggable();
                     });
 
                     $('.output').html("Position in Pixels: Left: " + left_in_px + "px; Top: " + top_in_px +
                         "px;");
-                    
-                
+                }
+                if(isStopped){
+                    isStopped = false;
+                }
+
             });
 
             makeDotsDraggable();
