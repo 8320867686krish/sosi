@@ -2,33 +2,29 @@
 
 @section('css')
     <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
-    <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/bootstrap-select/css/bootstrap-select.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/select2/css/select2.css') }}">
 
     <style>
-        #box {
-            width: 400px;
-            height: 300px;
-            margin: 50px auto;
-            border: 3px solid #222;
-            background: #fafafa;
-            position: relative;
-            overflow: hidden;
-            border-radius: 5px;
-        }
-
-        #box>img {
-            width: 300px;
-            height: 225px;
-        }
-
-        .output {
-            padding: 10px 0;
-            color: #fff;
-            background: #525252;
+        .zoom-tool-bar {
+            bottom: 0px;
             width: 100%;
-            padding-left: 5px;
+            height: 20px;
+            right: 0;
+            top: 0px;
+            padding: 3px 0;
+            font-size: 13px;
+            z-index: 9999;
+            color: #007cc0;
+        }
+
+        .zoom-tool-bar i {
+            color: #007cc0;
+            font-size: 16px;
+        }
+
+        .zoom-tool-bar input {
+            width: 20%;
         }
 
         .outfit {
@@ -98,11 +94,14 @@
         {{-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"> --}}
         @include('layouts.message')
         <div id="showSuccessMsg"></div>
+
         <div class="card">
+            <div class="zoom-tool-bar"></div>
             <div class="card-body">
+
                 <form id="imageForm" action="{{ route('addImageHotspots') }}" method="post" enctype="multipart/form-data">
                     @csrf
-                    <div class="outfit">
+                    <div class="outfit" style="top:30px;">
                         <div class="target">
                             <img id="previewImg1" src="{{ $deck->image }}" alt="Upload Image">
                             @foreach ($deck->checks as $dot)
@@ -119,8 +118,8 @@
                         <button type="submit" class="btn btn-primary float-right formSubmitBtn">Save</button>
                     </div> --}}
                 </form>
-                <div class="output">Dot Positions goes here.</div>
             </div>
+
         </div>
 
         <div class="modal fade" data-backdrop="static" id="checkDataAddModal" tabindex="-1" role="dialog"
@@ -184,11 +183,12 @@
                                     <div class="form-group">
                                         <label for="suspected_hazmat">Suspected Hazmat</label>
                                         {{-- <input type="text" class="form-control" id="suspected_hazmat" name="suspected_hazmat"> --}}
-                                        <select class="form-control select2" id="suspected_hazmat" name="suspected_hazmat" multiple="multiple">
+                                        <select class="form-control select2" id="suspected_hazmat"
+                                            name="suspected_hazmat" multiple="multiple">
                                             <option value="">Select Hazmat</option>
                                             @if (isset($hazmats) && $hazmats->count() > 0)
                                                 @foreach ($hazmats as $hazmat)
-                                                    <option value="{{ $hazmat->id }}">{{$hazmat->name}}</option>
+                                                    <option value="{{ $hazmat->id }}">{{ $hazmat->name }}</option>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -238,12 +238,15 @@
 @stop
 
 @section('js')
+
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
     <script src="{{ asset('assets/vendor/select2/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/content-zoom-slider.min.js') }}"></script>
 
     <script>
         var isStopped = false;
+        var initialLeft, initialTop;
 
         function makeDotsDraggable() {
             $(".dot").draggable({
@@ -258,13 +261,11 @@
                     var new_top_in_px = Math.round((parseInt($(this).css(
                         "top"))));
 
-                    var output =
-                        `Left: ${new_left_in_px}px; Top: ${new_top_in_px} px;`;
+
 
                     $(this).css("left", new_left_perc);
                     $(this).css("top", new_top_perc);
 
-                    $('.output').html('Position in Pixels: ' + output);
 
                     dotsDrugUpdatePositionForDB(this);
                 }
@@ -305,7 +306,7 @@
 
             let position_left = parseFloat($dots.css('left'));
             let position_top = parseFloat($dots.css('top'));
-            if(check_id && check_id != "new"){
+            if (check_id && check_id != "new") {
                 $.ajax({
                     url: "{{ route('addImageHotspots') }}",
                     method: 'POST',
@@ -341,6 +342,27 @@
                 tags: true,
                 tokenSeparators: [',', ' '],
             });
+            // Store initial position of the image
+
+            $(".target").contentZoomSlider({
+                toolContainer: ".zoom-tool-bar",
+
+            });
+
+            function reset() {
+                $(".target").css({
+                    left: "0px",
+                    top: "0px"
+                });
+            }
+
+            $(".zoom-in").click(function() {
+                reset();
+            });
+
+            $(".zoom-out").click(function() {
+                reset();
+            });
 
             $('.target').draggable({
                 stop: function(event, ui) {
@@ -350,12 +372,11 @@
                 }
             });
 
-
             let imageWidth = $('#previewImg1').width();
-            $('.output').css('max-width', imageWidth);
+            /// $('.output').css('max-width', imageWidth);
 
             $(".outfit img").click(function(e) {
-                if(!isStopped){
+                if (!isStopped) {
 
                     var dot_count = $(".dot").length;
 
@@ -374,19 +395,19 @@
                     var top_in_px = Math.round((top_perc / 100) * container_height);
                     var left_in_px = Math.round((left_perc / 100) * container_width);
 
-                    var dot = '<div class="dot" style="top: ' + top_in_px + 'px; left: ' + left_in_px +
+                    var dot = '<div class="dot" style="top: ' + top_in_px + 'px; left: ' +
+                        left_in_px +
                         'px;" id="dot_' + (dot_count + 1) + '">' + (dot_count + 1) + '</div>';
 
 
                     $(dot).hide().appendTo($(this).parent()).fadeIn(350, function() {
-                        openAddModalBox(this); // Call the function with the newly created dot
+                        openAddModalBox(
+                            this); // Call the function with the newly created dot
                         makeDotsDraggable();
                     });
 
-                    $('.output').html("Position in Pixels: Left: " + left_in_px + "px; Top: " + top_in_px +
-                        "px;");
                 }
-                if(isStopped){
+                if (isStopped) {
                     isStopped = false;
                 }
 
