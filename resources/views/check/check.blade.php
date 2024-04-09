@@ -183,12 +183,15 @@
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
                                         <label for="suspected_hazmat">Suspected Hazmat</label>
-                                        <input type="text" class="form-control" id="suspected_hazmat"
-                                            name="suspected_hazmat">
-                                        {{-- <select class="form-control select2" data-live-search="true"
-                                            id="suspected_hazmat" name="suspected_hazmat" multiple="multiple">
+                                        {{-- <input type="text" class="form-control" id="suspected_hazmat" name="suspected_hazmat"> --}}
+                                        <select class="form-control select2" id="suspected_hazmat" name="suspected_hazmat" multiple="multiple">
                                             <option value="">Select Hazmat</option>
-                                        </select> --}}
+                                            @if (isset($hazmats) && $hazmats->count() > 0)
+                                                @foreach ($hazmats as $hazmat)
+                                                    <option value="{{ $hazmat->id }}">{{$hazmat->name}}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -334,9 +337,10 @@
             let checkId;
 
             $(".select2").select2({
+                placeholder: "Select a hazmat",
                 tags: true,
-                tokenSeparators: [',', ' ']
-            })
+                tokenSeparators: [',', ' '],
+            });
 
             $('.target').draggable({
                 stop: function(event, ui) {

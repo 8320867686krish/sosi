@@ -9,6 +9,7 @@ use App\Models\Client;
 use App\Models\Image;
 use App\Models\ImageHotspot;
 use App\Models\Deck;
+use App\Models\Hazmat;
 use App\Models\Projects;
 use App\Models\ProjectTeam;
 use App\Models\User;
@@ -186,8 +187,9 @@ class ProjectsController extends Controller
     public function deckBasedCheckView($id)
     {
         $deck = Deck::with('checks')->find($id);
+        $hazmats = Hazmat::get(['id', 'name', 'table_type']);
         // $deck['imagePath'] = asset("images/pdf/{$deck->project_id}/{$deck->image}");
-        return view('check.check', ['deck' => $deck]);
+        return view('check.check', ['deck' => $deck, 'hazmats'=>$hazmats]);
     }
 
     // public function addImageHotspots(Request $request)
