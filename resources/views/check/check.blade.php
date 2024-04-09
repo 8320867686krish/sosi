@@ -302,7 +302,7 @@
 
             let position_left = parseFloat($dots.css('left'));
             let position_top = parseFloat($dots.css('top'));
-            if(check_id || check_id != "new"){
+            if(check_id && check_id != "new"){
                 $.ajax({
                     url: "{{ route('addImageHotspots') }}",
                     method: 'POST',
