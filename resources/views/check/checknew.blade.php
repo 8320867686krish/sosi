@@ -42,14 +42,14 @@
 
         .dot {
             position: absolute;
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             background: #000;
             border-radius: 50%;
             overflow: hidden;
             cursor: pointer;
             box-shadow: 0 0 3px 0 rgba(0, 0, 0, .2);
-            line-height: 24px;
+            line-height: 20px;
             font-size: 12px;
             font-weight: bold;
             transition: box-shadow .214s ease-in-out, transform .214s ease-in-out, background .214s ease-in-out;
@@ -93,17 +93,21 @@
         {{-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"> --}}
         @include('layouts.message')
         <div id="showSuccessMsg"></div>
+
         <div class="card">
             <div class="zoom-tool-bar"></div>
             <div class="card-body">
+
                 <form id="imageForm" action="{{ route('addImageHotspots') }}" method="post" enctype="multipart/form-data">
                     @csrf
-                    <div class="outfit">
+                    <div class="outfit" style="top:30px;">
                         <div class="target">
                             <img id="previewImg1" src="{{ $deck->image }}" alt="Upload Image">
                             @foreach ($deck->checks as $dot)
-                                <div class="dot ui-draggable ui-draggable-handle" data-checkId="{{ $dot->id }}" data-check="{{ $dot }}"
-                                    style="top: {{ $dot->position_top - ($deck->isApp == 1 ? 24 : 0) }}px; left: {{ $dot->position_left - ($deck->isApp == 1 ? 24 : 0) }}px;" id="dot_{{ $loop->iteration }}">
+                                <div class="dot ui-draggable ui-draggable-handle" data-checkId="{{ $dot->id }}"
+                                    data-check="{{ $dot }}"
+                                    style="top: {{ $dot->position_top - ($deck->isApp == 1 ? 20 : 0) }}px; left: {{ $dot->position_left - ($deck->isApp == 1 ? 20 : 0) }}px;"
+                                    id="dot_{{ $loop->iteration }}">
                                     {{ $loop->iteration }}
                                 </div>
                             @endforeach
@@ -232,6 +236,7 @@
 @stop
 
 @section('js')
+
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
     <script src="{{ asset('assets/vendor/select2/js/select2.min.js') }}"></script>
@@ -356,15 +361,21 @@
             $('.target').draggable({
                 stop: function(event, ui) {
                     // Add your code here to handle the drag stop event
+                    console.log('Dragging stopped');
                     isStopped = true;
                 }
             });
 
             let imageWidth = $('#previewImg1').width();
             /// $('.output').css('max-width', imageWidth);
-
-            $(".outfit img").click(function(e) {
-
+            function getRelativeCoordinates(e, container) {
+        let rect = container.getBoundingClientRect();
+        return {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        };
+    }
+            $("#previewImg1").click(function(e) {
                 if (!isStopped) {
 
                     var dot_count = $(".dot").length;
