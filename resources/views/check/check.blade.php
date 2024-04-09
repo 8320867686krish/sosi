@@ -2,34 +2,32 @@
 
 @section('css')
     <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
-    <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/bootstrap-select/css/bootstrap-select.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/select2/css/select2.css') }}">
 
     <style>
-        #box {
-            width: 400px;
-            height: 300px;
-            margin: 50px auto;
-            border: 3px solid #222;
-            background: #fafafa;
-            position: relative;
-            overflow: hidden;
-            border-radius: 5px;
-        }
+          .zoom-tool-bar {
+        bottom: 0px;
+        width: 100%;
+        height: 20px;
+        right: 0;
+        top: 0px;
+        padding: 3px 0;
+        font-size: 13px;
+        z-index: 9999;
+        color: #007cc0;
+      }
 
-        #box>img {
-            width: 300px;
-            height: 225px;
-        }
+      .zoom-tool-bar i {
+        color: #007cc0;
+        font-size: 16px;
+      }
+      .zoom-tool-bar input{
+        width:20%;
+      }
 
-        .output {
-            padding: 10px 0;
-            color: #fff;
-            background: #525252;
-            width: 100%;
-            padding-left: 5px;
-        }
+
 
         .outfit {
             line-height: 0;
@@ -98,11 +96,14 @@
         {{-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"> --}}
         @include('layouts.message')
         <div id="showSuccessMsg"></div>
+       
         <div class="card">
+                <div class="zoom-tool-bar"></div>
             <div class="card-body">
+           
                 <form id="imageForm" action="{{ route('addImageHotspots') }}" method="post" enctype="multipart/form-data">
                     @csrf
-                    <div class="outfit">
+                    <div class="outfit" style="top:30px;">
                         <div class="target">
                             <img id="previewImg1" src="{{ $deck->image }}" alt="Upload Image">
                             @foreach ($deck->checks as $dot)
@@ -119,8 +120,8 @@
                         <button type="submit" class="btn btn-primary float-right formSubmitBtn">Save</button>
                     </div> --}}
                 </form>
-                <div class="output">Dot Positions goes here.</div>
             </div>
+           
         </div>
 
         <div class="modal fade" data-backdrop="static" id="checkDataAddModal" tabindex="-1" role="dialog"
@@ -235,12 +236,15 @@
 @stop
 
 @section('js')
+
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
     <script src="{{ asset('assets/vendor/select2/js/select2.min.js') }}"></script>
+    <script src="{{asset('assets/vendor/content-zoom-slider.min.js')}}"></script>
 
     <script>
         var isStopped = false;
+        var initialLeft, initialTop;
 
         function makeDotsDraggable() {
             $(".dot").draggable({
@@ -255,13 +259,11 @@
                     var new_top_in_px = Math.round((parseInt($(this).css(
                         "top"))));
 
-                    var output =
-                        `Left: ${new_left_in_px}px; Top: ${new_top_in_px} px;`;
+
 
                     $(this).css("left", new_left_perc);
                     $(this).css("top", new_top_perc);
 
-                    $('.output').html('Position in Pixels: ' + output);
 
                     dotsDrugUpdatePositionForDB(this);
                 }
@@ -333,7 +335,25 @@
         $(document).ready(function() {
             let checkId;
 
-            $(".select2").select2({
+// Store initial position of the image
+
+            $(".target").contentZoomSlider({
+        toolContainer: ".zoom-tool-bar",
+
+    });
+    function reset(){
+        $(".target").css({
+                left: "0px",
+                top: "0px"
+            });
+    }
+    $(".zoom-in").click(function(){
+        reset();
+    });
+    $(".zoom-out").click(function(){
+        reset();
+    });
+             $(".select2").select2({
                 tags: true,
                 tokenSeparators: [',', ' ']
             })
@@ -348,7 +368,7 @@
 
 
             let imageWidth = $('#previewImg1').width();
-            $('.output').css('max-width', imageWidth);
+           /// $('.output').css('max-width', imageWidth);
 
             $(".outfit img").click(function(e) {
                 if(!isStopped){
@@ -379,8 +399,7 @@
                         makeDotsDraggable();
                     });
 
-                    $('.output').html("Position in Pixels: Left: " + left_in_px + "px; Top: " + top_in_px +
-                        "px;");
+
                 }
                 if(isStopped){
                     isStopped = false;
