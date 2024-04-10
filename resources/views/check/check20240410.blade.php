@@ -88,7 +88,7 @@
             {{-- <div class="zoom-tool-bar"></div> --}}
             <div class="card-body">
                 <div class="row">
-                    <div class="col-12 col-md-12 col-lg-3">
+                    <div class="col-3">
                         <div class="card" id="checkList">
                             <h5 class="card-header">Checks list</h5>
                             <div class="card-body p-0">
@@ -105,7 +105,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-12 col-lg-9">
+                    <div class="col-9">
                         <button class="btn btn-primary" id="zoom-out">Out</button>
                         <button class="btn btn-primary" id="zoom-in">In</button>
                         <div class="outfit">
@@ -250,7 +250,6 @@
     <script>
         var isStopped = false;
         var initialLeft, initialTop;
-        let widthPercent = 100;
 
         function makeDotsDraggable() {
             $(".dot").draggable({
@@ -304,9 +303,9 @@
 
             let check_id = $dots.attr('data-checkId');
 
-            let position_left = parseFloat($dots.css('left')) * (100 / widthPercent);
-            let position_top = parseFloat($dots.css('top')) * (100 / widthPercent) ;
-            if (check_id && check_id != "0") {
+            let position_left = parseFloat($dots.css('left'));
+            let position_top = parseFloat($dots.css('top'));
+            if (check_id && check_id != "new") {
                 $.ajax({
                     url: "{{ route('addImageHotspots') }}",
                     method: 'POST',
@@ -373,44 +372,66 @@
             let imageWidth = $('#previewImg1').width();
             /// $('.output').css('max-width', imageWidth);
 
+            let widthPercent = 100;
             let previewImgInWidth = $("#previewImg1").width();
-            let currectWithPercent = widthPercent;
+            let previewImgInHeight = $("#previewImg1").height();
+            let dotPositions = [];
 
-            function setDotPosition() {
-                $(".dot").each(function(index) {
-                    let left = parseFloat($(this).css('left'));
-                    let top = parseFloat($(this).css('top'));
-
-                    left = left * (widthPercent / currectWithPercent);
-                    top = top * (widthPercent / currectWithPercent);
-
-                    $(this).css('left', left);
-                    $(this).css('top', top);
-                    $(this).width(24 * (widthPercent / 100));
-                    $(this).height(24 * (widthPercent / 100));
-                    $(this).css('line-height', 24 * (widthPercent / 100) + "px");
+            $(".dot").each(function() {
+                let left = parseFloat($(this).css('left'));
+                let top = parseFloat($(this).css('top'));
+                dotPositions.push({
+                    left: left,
+                    top: top
                 });
-            }
+            });
 
             $(document).on("click", "#zoom-in", function() {
                 reset();
-                currectWithPercent = widthPercent;
                 if (widthPercent <= 175) {
                     widthPercent += 25;
+                    // Update image size
                     let newWidth = previewImgInWidth * (widthPercent / 100);
+                    let newHeight = previewImgInHeight * (widthPercent / 100);
+
                     $("#previewImg1").width(newWidth);
-                    setDotPosition();
+                    $("#previewImg1").height(newHeight);
+
+                    // Update dot positions
+                    $(".dot").each(function(index) {
+                        let left = dotPositions[index].left * (widthPercent / 100);
+                        let top = dotPositions[index].top * (widthPercent / 100);
+                        $(this).css('left', left);
+                        $(this).css('top', top);
+                        $(this).width(24 * (widthPercent / 100));
+                        $(this).height(24 * (widthPercent / 100));
+                        $(this).css('line-height', 24 * (widthPercent / 100) + "px");
+                    });
                 }
             });
 
             $(document).on("click", "#zoom-out", function() {
                 reset();
-                currectWithPercent = widthPercent;
                 if (widthPercent >= 75) {
                     widthPercent -= 25;
+
+                    // Update image size
                     let newWidth = previewImgInWidth * (widthPercent / 100);
+                    let newHeight = previewImgInHeight * (widthPercent / 100);
+
                     $("#previewImg1").width(newWidth);
-                    setDotPosition();
+                    $("#previewImg1").height(newHeight);
+
+                    // Update dot positions
+                    $(".dot").each(function(index) {
+                        let left = dotPositions[index].left * (widthPercent / 100);
+                        let top = dotPositions[index].top * (widthPercent / 100);
+                        $(this).css('left', left);
+                        $(this).css('top', top);
+                        $(this).width(24 * (widthPercent / 100));
+                        $(this).height(24 * (widthPercent / 100));
+                        $(this).css('line-height', 24 * (widthPercent / 100) + "px");
+                    });
                 }
             });
 
@@ -439,17 +460,20 @@
                         left_in_px +
                         'px;" id="dot_' + (dot_count + 1) + '">' + (dot_count + 1) + '</div>';
 
+                        dotPositions.push({
+                            left: left_in_px,
+                            top: top_in_px
+                        });
+
                     $(dot).hide().appendTo($(this).parent()).fadeIn(350, function() {
-                        // openAddModalBox(this); // Call the function with the newly created dot
+                        openAddModalBox(this); // Call the function with the newly created dot
                         makeDotsDraggable();
                     });
-
-                    setDotPosition();
                 }
-
                 if (isStopped) {
                     isStopped = false;
                 }
+
             });
 
             makeDotsDraggable();
@@ -471,10 +495,10 @@
                     color: $("#color").val(),
                     suspected_hazmat: $("#suspected_hazmat").val(),
                     equipment: $("#equipment").val(),
-                    component: $("#component").val(),
-                    position: $("#position").val(),
-                    sub_position: $("#sub_position").val(),
-                    remarks: $("#remarks").val()
+                    equipment: $("#component").val(),
+                    equipment: $("#position").val(),
+                    equipment: $("#sub_position").val(),
+                    equipment: $("#remarks").val()
                 };
 
                 var checkDataJson = JSON.stringify(checkData);
@@ -492,8 +516,8 @@
                 let checkFormData = $("#checkDataAddForm").serializeArray();
 
                 // Get the position of the selected dot
-                let position_left = parseFloat($(".dot.selected").css('left')) * (100 / widthPercent);
-                let position_top = parseFloat($(".dot.selected").css('top')) * (100 / widthPercent);
+                let position_left = parseFloat($(".dot.selected").css('left'));
+                let position_top = parseFloat($(".dot.selected").css('top'));
 
                 // Append position data to formData
                 checkFormData.push({
