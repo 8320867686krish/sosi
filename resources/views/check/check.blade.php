@@ -6,6 +6,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/select2/css/select2.css') }}">
 
     <style>
+        #checkList{
+            overflow: auto;
+        }
         .zoom-tool-bar {
             bottom: 0px;
             width: 100%;
@@ -142,10 +145,10 @@
                             <input type="hidden" name="project_id" value="{{ $deck->project_id ?? '' }}">
                             <input type="hidden" name="deck_id" value="{{ $deck->id ?? '' }}">
                             <div class="row">
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-6" id="chkName">
                                     <div class="form-group">
                                         <label for="name">Name</label>
-                                        <input type="text" id="name" name="name" class="form-control" required>
+                                        <input type="text" id="name" name="name" class="form-control" readonly>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -292,7 +295,9 @@
                     }
                 }
             }
-
+            if(!checkId){
+                $("#chkName").hide();
+            }
             // Show the modal box
             $("#checkDataAddModal").modal('show');
         }
@@ -334,7 +339,7 @@
 
         $(document).ready(function() {
             let checkId;
-
+            $("#checkList").css('height',$("#previewImg1").height());
             $(".select2").select2({
                 placeholder: "Select a hazmat",
                 tags: true,
@@ -460,33 +465,18 @@
 
             // Add event listener for Save button click
             $(document).on("click", "#checkDataAddSubmitBtn", function() {
+               var checkId = $(".dot.selected").attr('data-checkId');
+               $("#id").val(checkId);
 
-                var checkData = {
-                    id: $("#id").val(),
-                    name: $("#name").val(),
-                    type: $("#type").val(),
-                    description: $("#description").val(),
-                    compartment: $("#compartment").val(),
-                    material: $("#material").val(),
-                    color: $("#color").val(),
-                    suspected_hazmat: $("#suspected_hazmat").val(),
-                    equipment: $("#equipment").val(),
-                    equipment: $("#component").val(),
-                    equipment: $("#position").val(),
-                    equipment: $("#sub_position").val(),
-                    equipment: $("#remarks").val()
-                };
-
-                var checkDataJson = JSON.stringify(checkData);
 
                 // If checkId is not available, create a new attribute "data-checkId" for the selected dot
                 if (!checkId) {
-                    checkId = "new"; // Set a temporary value for the new checkId
+                    checkId = 0; // Set a temporary value for the new checkId
                     $(".dot.selected").attr('data-checkId', checkId);
                 }
 
                 // Update the "data-check" attribute of the selected dot
-                $(".dot.selected").attr('data-check', checkDataJson);
+              
 
                 // Serialize form data
                 let checkFormData = $("#checkDataAddForm").serializeArray();
@@ -519,9 +509,27 @@
                     url: $("#checkDataAddForm").attr('action'),
                     data: checkFormData,
                     success: function(response) {
-                        // alert(response.message); // Show success message
-                        $(".dot.selected").attr('data-checkId', response.id);
-                        $("#id").val(response.id);
+                     $(".dot.selected").attr('data-checkId', response.id);
+                     var checkData = {
+                    id:  response.id,
+                    name:  response.name,
+                    type: $("#type").val(),
+                    description: $("#description").val(),
+                    compartment: $("#compartment").val(),
+                    material: $("#material").val(),
+                    color: $("#color").val(),
+                    suspected_hazmat: $("#suspected_hazmat").val(),
+                    equipment: $("#equipment").val(),
+                    equipment: $("#component").val(),
+                    equipment: $("#position").val(),
+                    equipment: $("#sub_position").val(),
+                    equipment: $("#remarks").val()
+                };
+
+                console.log(checkData);
+                var checkDataJson = JSON.stringify(checkData);
+                $(".dot.selected").attr('data-check', checkDataJson);
+                        $('#checkListUl').append('<li class="country-sales-content list-group-item"><span class="mr-2"><i class="flag-icon flag-icon-us" title="us" id="us"></i>' + response.name + '</span> </li>');
                         let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
                             ${response.message}
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -529,21 +537,25 @@
                                 </button>
                             </div>`;
 
+                            $("#chkName").show();
                         $("#showSuccessMsg").html(messages);
                         $('.showSuccessMsg').fadeIn().delay(20000).fadeOut();
                         $submitButton.html(originalText);
                         $submitButton.prop('disabled', false);
+                        $("#checkDataAddForm")[0].reset();
+                $("#id").val("");
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
                         $submitButton.html(originalText);
                         $submitButton.prop('disabled', false);
+                        $("#checkDataAddForm")[0].reset();
+                $("#id").val("");
                     }
                 });
 
                 // Reset form fields, including hidden inputs, to their default values
-                $("#checkDataAddForm")[0].reset();
-                $("#id").val("");
+               
 
                 // Hide the modal box
                 $("#checkDataAddModal").modal('hide');
