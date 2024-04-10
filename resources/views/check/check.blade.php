@@ -74,15 +74,6 @@
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
                     <h2 class="pageheader-title">Check Management</h2>
-                    {{-- <div class="page-breadcrumb">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Role</a></li>
-                                <!-- <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Pages</a></li> -->
-                                <!-- <li class="breadcrumb-item active" aria-current="page">Blank Pageheader</li> -->
-                            </ol>
-                        </nav>
-                    </div> --}}
                 </div>
             </div>
         </div>
@@ -96,6 +87,24 @@
         <div class="card">
             <div class="zoom-tool-bar"></div>
             <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="card" id="checkList">
+                            <h5 class="card-header">Checks list</h5>
+                            <div class="card-body p-0">
+                                    <ul class="country-sales list-group list-group-flush" id="checkListUl">
+                                    @foreach ($deck->checks as $dot)
+                                    <li class="country-sales-content list-group-item"><span class="mr-2"><i class="flag-icon flag-icon-us" title="us" id="us"></i> </span>
+                                    <span class="">{{ $loop->iteration }}.{{$dot->name}}</span>
+                                    </li>
+                                    @endforeach
+                                    </ul>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-8">
+                <button class="btn btn-primary" id="in">In</button>
+                <button class="btn btn-primary" id="out">Out</button>
                 <form id="imageForm" action="{{ route('addImageHotspots') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="outfit">
@@ -109,10 +118,10 @@
                             @endforeach
                         </div>
                     </div>
-                    {{-- <div class="form-group">
-                        <button type="submit" class="btn btn-primary float-right formSubmitBtn">Save</button>
-                    </div> --}}
+
                 </form>
+                     </div>
+                </div>
             </div>
         </div>
 
@@ -333,9 +342,8 @@
             });
             // Store initial position of the image
 
-            $(".target").contentZoomSlider({
+            $("#previewImg1").contentZoomSlider({
                 toolContainer: ".zoom-tool-bar",
-
             });
 
             function reset() {
@@ -346,6 +354,17 @@
             }
 
             $(".zoom-in").click(function() {
+                widthPercent+=25;
+                $("#previewImg1").width($("#previewImg1").width()*(widthPercent/100));
+                $(".dot").each(function(index) {
+                    let left = parseFloat($(this).css('left'));
+                    let top = parseFloat($(this).css('top'));
+                    left = left*(widthPercent/100);
+                    top = top*(widthPercent/100);
+                    $(this).css('left',left);
+                    $(this).css('top',top);
+                });
+
                 reset();
             });
 
@@ -362,6 +381,37 @@
 
             let imageWidth = $('#previewImg1').width();
             /// $('.output').css('max-width', imageWidth);
+
+            var widthPercent = 100;
+
+            $("#in").click(function(){
+                widthPercent+=25;
+                $("#previewImg1").width($("#previewImg1").width()*(widthPercent/100));
+                $(".dot").each(function(index) {
+                    let left = parseFloat($(this).css('left'));
+                    let top = parseFloat($(this).css('top'));
+                    left = left*(widthPercent/100);
+                    top = top*(widthPercent/100);
+                    $(this).css('left',left);
+                    $(this).css('top',top);
+                });
+
+                // $("#previewImg1").height($("#previewImg1").height()+100);
+           });
+
+           $("#out").click(function(){
+                widthPercent-=25;
+                $("#previewImg1").width($("#previewImg1").width()*(widthPercent/100));
+                $(".dot").each(function(index) {
+                    let left = parseFloat($(this).css('left'));
+                    let top = parseFloat($(this).css('top'));
+                    left = left*(widthPercent/100);
+                    top = top*(widthPercent/100);
+                    $(this).css('left',left);
+                    $(this).css('top',top);
+                });
+                // $("img").height($("img").height()-100);
+           });
 
             $(".outfit img").click(function(e) {
 
