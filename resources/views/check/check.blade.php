@@ -4,8 +4,12 @@
     <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/bootstrap-select/css/bootstrap-select.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/select2/css/select2.css') }}">
-
+    <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+ 
     <style>
+        #checkList{
+            overflow-y: auto;
+        }
         .zoom-tool-bar {
             bottom: 0px;
             width: 100%;
@@ -96,6 +100,22 @@
         <div class="card">
             <div class="zoom-tool-bar"></div>
             <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="card" id="checkList">
+                            <h5 class="card-header">Checks list</h5>
+                            <div class="card-body p-0">
+                                    <ul class="country-sales list-group list-group-flush" id="checkListUl">
+                                    @foreach ($deck->checks as $dot)
+                                    <li class="country-sales-content list-group-item"><span class="mr-2"><i class="flag-icon flag-icon-us" title="us" id="us"></i> </span>
+                                    <span class="">{{ $loop->iteration }}.{{$dot->name}}</span>
+                                    </li>
+                                    @endforeach
+                                    </ul>
+                            </div>
+                        </div>
+                    </div>
+                <div class="col-9">
                 <form id="imageForm" action="{{ route('addImageHotspots') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="outfit">
@@ -113,6 +133,8 @@
                         <button type="submit" class="btn btn-primary float-right formSubmitBtn">Save</button>
                     </div> --}}
                 </form>
+                </div>
+                </div>
             </div>
         </div>
 
@@ -233,6 +255,8 @@
 
 @section('js')
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
+    <script src="{{ asset('assets/vendor/dragZoom.js')}}"></script>
     <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
     <script src="{{ asset('assets/vendor/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/content-zoom-slider.min.js') }}"></script>
@@ -325,7 +349,9 @@
 
         $(document).ready(function() {
             let checkId;
-
+            var imageHeight = document.getElementById('previewImg1').clientHeight;
+        var card = document.getElementById('checkList');
+        card.style.height = imageHeight + 'px';
             $(".select2").select2({
                 placeholder: "Select a hazmat",
                 tags: true,
@@ -353,13 +379,19 @@
                 reset();
             });
 
-            $('.target').draggable({
-                stop: function(event, ui) {
-                    // Add your code here to handle the drag stop event
-                    isStopped = true;
-                }
-            });
+            // $('.target').draggable({
+            //     stop: function(event, ui) {
+            //         // Add your code here to handle the drag stop event
+            //         isStopped = true;
+            //     }
+            // });
+            $('.target').dragZoom({
+            scope: $("body"),
+            zoom: 1,
+            onWheelStart: function() {
 
+            }
+        }, function() {});
             let imageWidth = $('#previewImg1').width();
             /// $('.output').css('max-width', imageWidth);
 
@@ -471,6 +503,7 @@
                     success: function(response) {
                         // alert(response.message); // Show success message
                         $(".dot.selected").attr('data-checkId', response.id);
+                        $('.checkListUl').append('<li>sss</li>')
                         $("#id").val(response.id);
                         let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
                             ${response.message}
