@@ -649,9 +649,21 @@ class ApiController extends Controller
     public function qrCodePair(Request $request){
         $checkId = $request->input('checkId');
         $pairWitthTag = $request->input('pairWitthTag');
-        Checks::where('id',$checkId)->update(['pairWitthTag' => $pairWitthTag]);
-        return response()->json(['isStatus' => true, 'message' => 'Successfully creted qr code pair']);
+       
+        try {
+            $check = Checks::find($checkId);
 
+            if (!$check) {
+                return response()->json(['isStatus' => false, 'message' => 'Check not found.']);
+            }
+
+            $check->pairWitthTag = $pairWitthTag;
+            $check->save();
+
+            return response()->json(['isStatus' => true, 'message' => 'Successfully creted qr code pair.']);
+        } catch (Throwable $th) {
+            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
+        }
     }
     public function deleteCheckImg($id)
     {
