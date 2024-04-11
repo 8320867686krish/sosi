@@ -411,10 +411,8 @@ class ApiController extends Controller
             $validator = Validator::make($request->all(), [
                 'project_id' => 'required|exists:projects,id',
                 'deck_id' => 'required|exists:decks,id',
-                'apiType' => 'required|in:check,location', // Ensure apiType is required and has either 'check' or 'location' value
-                'type' => 'required_if:apiType,check', // Require type only if apiType is 'check'
-                'position_left' => 'required_if:apiType,location', // Require position_left only if apiType is 'location'
-                'position_top' => 'required_if:apiType,location', // Require position_top only if apiType is 'location'
+                'position_left' => 'required', // Require position_left only if apiType is 'location'
+                'position_top' => 'required', // Require position_top only if apiType is 'location'
             ]);
 
             if ($validator->fails()) {
@@ -465,7 +463,6 @@ class ApiController extends Controller
             $validator = Validator::make($request->all(), [
                 'project_id' => 'required|exists:projects,id',
                 'deck_id' => 'required|exists:decks,id',
-                'type' => 'required_if:apiType,check', // Require type only if apiType is 'check'
                 'position_left' => 'required_if:apiType,location', // Require position_left only if apiType is 'location'
                 'position_top' => 'required_if:apiType,location', // Require position_top only if apiType is 'location'
             ]);
@@ -478,10 +475,20 @@ class ApiController extends Controller
             $deckId = $request->input('deck_id');
             $inputData = $request->input();
             $inputData['isApp'] = 1;
-            if($inputData['pairWitthTag']){
-                $inputData['name'] = $inputData['pairWitthTag'];
+            $projectDetail = Projects::with(['client' => function ($query) {
+                $query->select('id', 'manager_initials'); // Replace with the fields you want to select
+            }])->withCount('checks')->find($inputData['project_id']);
+            $lastCheck = Checks::where('project_id', $inputData['project_id'])
+                ->latest()
+                ->first();
+            if (!$lastCheck) {
+                $projectCount = "1001";
+            } else {
+                $projectCount = $lastCheck['initialsChekId'] + (1);
             }
-
+            $name = "sos" . $projectDetail['client']['manager_initials'] . $projectCount;
+            $inputData['name'] = $name;
+            $inputData['initialsChekId'] =  $projectCount;
             // Eager load project and deck to reduce database queries
             $project = Projects::find($projectId);
 
