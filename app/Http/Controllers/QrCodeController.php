@@ -13,7 +13,11 @@ class QrCodeController extends Controller
     public function show($deckId)
     {
         // Fetch checks from the database
-        $checks = Checks::where('deck_id', $deckId)->orderByDesc('id')->get(['id', 'name']);
+        $checks = Checks::select('id', 'name', \DB::raw('COALESCE(initialsChekId, "00000") as initialsChekId'))->where('deck_id', $deckId)->orderByDesc('id')->get();
+
+        if ($checks->count() == 0) {
+            return redirect()->back()->with('message', 'This deck check not found.');
+        }
 
         // Initialize Dompdf
         $options = new Options();
@@ -40,6 +44,7 @@ class QrCodeController extends Controller
                         padding: 10px; /* Add padding to all sides of the cell */
                         text-align: center;
                         border: 1px solid #ddd;
+                        width: 16.66%;
                     }
                     th {
                         background-color: #f2f2f2;
@@ -64,14 +69,12 @@ class QrCodeController extends Controller
                 $html .= "<tr>";
             }
 
-            $qrCode = QrCode::size(75)->generate($check->id);
+            $qrCode = QrCode::size(75)->generate($check->initialsChekId);
             $qrCodeDataUri = 'data:image/png;base64,' . base64_encode($qrCode);
             $html .= '<td class="qr-code">';
-            $html .= '<img src="' . $qrCodeDataUri . '" alt="QR Code for Check ' . $check->id . '" style="margin-bottom: 8px;">';
-            $html .= '<span>' . str_pad($check->id, 2, '0', STR_PAD_LEFT) . '</span>';
+            $html .= '<img src="' . $qrCodeDataUri . '" alt="QR Code for Check" style="margin-bottom: 8px;">';
+            $html .= '<span>' . $check->initialsChekId . '</span>';
             $html .= '</td>';
-
-
 
             if (($counter + 1) % 6 == 0 || $key == $totalChecks - 1) {
                 // Calculate colspan for the last row
@@ -93,12 +96,12 @@ class QrCodeController extends Controller
 
         // Load HTML content into Dompdf
         $dompdf->loadHtml($html);
-
         // Set paper size and orientation
         $dompdf->setPaper('A4', 'portrait');
 
         // Render PDF
         $dompdf->render();
+
         // Output PDF
         // return $dompdf->stream('qr_codes.pdf', ['Attachment' => false]);
         $pdfContent = $dompdf->output();

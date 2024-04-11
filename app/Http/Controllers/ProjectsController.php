@@ -6,8 +6,6 @@ use App\Http\Requests\ProjectDetailRequest;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Checks;
 use App\Models\Client;
-use App\Models\Image;
-use App\Models\ImageHotspot;
 use App\Models\Deck;
 use App\Models\Hazmat;
 use App\Models\Projects;
@@ -189,7 +187,7 @@ class ProjectsController extends Controller
         $deck = Deck::with('checks')->find($id);
         $hazmats = Hazmat::get(['id', 'name', 'table_type']);
         // $deck['imagePath'] = asset("images/pdf/{$deck->project_id}/{$deck->image}");
-        return view('check.check', ['deck' => $deck, 'hazmats'=>$hazmats]);
+        return view('check.check', ['deck' => $deck, 'hazmats' => $hazmats]);
     }
 
     // public function addImageHotspots(Request $request)
@@ -255,28 +253,26 @@ class ProjectsController extends Controller
 
             // Checks::insert($insertData);
 
-            if(!@$id){
+            if (!@$id) {
                 $projectDetail = Projects::with(['client' => function ($query) {
                     $query->select('id', 'manager_initials'); // Replace with the fields you want to select
-                }])->withCount('checks')->find($inputData['project_id']);
-                $lastCheck = Checks::where('project_id', $inputData['project_id'])
-                    ->latest()
-                    ->first();
-                if(!$lastCheck){
-                   $projectCount = "1001";
-                }else{
+                }])->find($inputData['project_id']);
+                $lastCheck = Checks::latest()->first();
+                if (!$lastCheck) {
+                    $projectCount = "10001";
+                } else {
                     $projectCount = $lastCheck['initialsChekId'] + (1);
                 }
-                $name = "sos".$projectDetail['client']['manager_initials'].$projectCount;
-  $inputData['name'] = $name;
-            $inputData['initialsChekId'] =  $projectCount;
+                $name = "sos" . $projectDetail['client']['manager_initials'] . $projectCount;
+                $inputData['name'] = $name;
+                $inputData['initialsChekId'] =  $projectCount;
             }
 
             $data = Checks::updateOrCreate(['id' => $id], $inputData);
 
             $message = empty($id) ? "Image check added successfully" : "Image check updated successfully";
 
-            return response()->json(['isStatus' => true, 'message' => $message, "id"=>$data->id,'name'=>$name ?? ""]);
+            return response()->json(['isStatus' => true, 'message' => $message, "id" => $data->id, 'name' => $name ?? ""]);
         } catch (\Throwable $th) {
             return response()->json(['isStatus' => false, 'error' => $th->getMessage()]);
         }
