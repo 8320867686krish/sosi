@@ -13,7 +13,7 @@ class Handler extends ExceptionHandler
 {
     protected function prepareException(Throwable $e)
     {
-        
+
         if ($e instanceof TokenMismatchException) {
             $e = new HttpException(419, 'Your session has expired. Please refresh the page to continue using the system.', $e);
         }

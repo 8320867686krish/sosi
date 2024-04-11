@@ -1,11 +1,14 @@
 @extends('layouts.app')
 
 @section('css')
-    <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/bootstrap-select/css/bootstrap-select.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/select2/css/select2.css') }}">
+<link href="https://www.jqueryscript.net/css/jquerysctipttop.css"
+    rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css"
+    href="{{ asset('assets/vendor/bootstrap-select/css/bootstrap-select.css') }}">
+<link rel="stylesheet" type="text/css"
+    href="{{ asset('assets/vendor/select2/css/select2.css') }}">
 
-    <style>
+<style>
         #checkList{
             overflow: auto;
         }
@@ -17,11 +20,12 @@
             top: 0px;
             padding: 3px 0;
             font-size: 13px;
-            color: #007cc0;
+            /* color: #007cc0; */
+            color: green;
         }
 
         .zoom-tool-bar i {
-            color: #007cc0;
+            color: green;
             font-size: 16px;
         }
 
@@ -69,189 +73,275 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid dashboard-content">
-        <!-- ============================================================== -->
-        <!-- pageheader -->
-        <!-- ============================================================== -->
-        <div class="row">
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                <div class="page-header">
-                    <h2 class="pageheader-title">Check Management</h2>
-                </div>
-            </div>
-        </div>
-        <!-- ============================================================== -->
-        <!-- end pageheader -->
-        <!-- ============================================================== -->
-        {{-- <div class="row"> --}}
-        {{-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"> --}}
-        @include('layouts.message')
-        <div id="showSuccessMsg"></div>
-        <div class="card">
-            <div class="zoom-tool-bar"></div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-3">
-                        <div class="card" id="checkList">
-                            <h5 class="card-header">Checks list</h5>
-                            <div class="card-body p-0">
-                                    <ul class="country-sales list-group list-group-flush" id="checkListUl">
-                                    @foreach ($deck->checks as $dot)
-                                    <li class="country-sales-content list-group-item"><span class="mr-2"><i class="flag-icon flag-icon-us" title="us" id="us"></i> </span>
-                                    <span class="">{{ $loop->iteration }}.{{$dot->name}}</span>
-                                    </li>
-                                    @endforeach
-                                    </ul>
-                            </div>
-                        </div>
-                    </div>
-                     <div class="col-8">
-                <button class="btn btn-primary" id="in">In</button>
-                <button class="btn btn-primary" id="out">Out</button>
-                <form id="imageForm" action="{{ route('addImageHotspots') }}" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <div class="outfit">
-                        <div class="target">
-                            <img id="previewImg1" src="{{ $deck->image }}" alt="Upload Image">
-                            @foreach ($deck->checks as $dot)
-                                <div class="dot ui-draggable ui-draggable-handle" data-checkId="{{ $dot->id }}" data-check="{{ $dot }}"
-                                    style="top: {{ $dot->position_top - ($deck->isApp == 1 ? 24 : 0) }}px; left: {{ $dot->position_left - ($deck->isApp == 1 ? 24 : 0) }}px;" id="dot_{{ $loop->iteration }}">
-                                    {{ $loop->iteration }}
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-
-                </form>
-                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" data-backdrop="static" id="checkDataAddModal" tabindex="-1" role="dialog"
-            aria-labelledby="checkDataAddModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document" style="width: 50% !important; max-width: none !important;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Title</h5>
-                        <a href="#" class="close" data-dismiss="modal" aria-label="Close" id="checkDataAddCloseBtn">
-                            <span aria-hidden="true">×</span>
-                        </a>
-                    </div>
-                    <form method="post" action="{{ route('addImageHotspots') }}" id="checkDataAddForm">
-                        <div class="modal-body">
-                            @csrf
-                            <input type="hidden" id="id" name="id">
-                            <input type="hidden" name="project_id" value="{{ $deck->project_id ?? '' }}">
-                            <input type="hidden" name="deck_id" value="{{ $deck->id ?? '' }}">
-                            <div class="row">
-                                <div class="col-12 col-md-6" id="chkName">
-                                    <div class="form-group">
-                                        <label for="name">Name</label>
-                                        <input type="text" id="name" name="name" class="form-control" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="type">Type</label>
-                                        <select name="type" id="type" class="form-control" required>
-                                            <option value="">Select Type</option>
-                                            <option value="sample">Sample</option>
-                                            <option value="visual">Visual</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="description">Description</label>
-                                        <input type="text" id="description" name="description" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="compartment">Compartment</label>
-                                        <input type="text" id="compartment" name="compartment" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="material">Material</label>
-                                        <input type="text" id="material" name="material" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="color">Color</label>
-                                        <input type="text" id="color" name="color" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="suspected_hazmat">Suspected Hazmat</label>
-                                        {{-- <input type="text" class="form-control" id="suspected_hazmat" name="suspected_hazmat"> --}}
-                                        <select class="form-control select2" id="suspected_hazmat"
-                                            name="suspected_hazmat" multiple="multiple">
-                                            <option value="">Select Hazmat</option>
-                                            @if (isset($hazmats) && $hazmats->count() > 0)
-                                                @foreach ($hazmats as $hazmat)
-                                                    <option value="{{ $hazmat->id }}">{{ $hazmat->name }}</option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="equipment">Equipment</label>
-                                        <input type="text" id="equipment" name="equipment" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="component">Component</label>
-                                        <input type="text" id="component" name="component" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="position">Position</label>
-                                        <input type="text" id="position" name="position" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="sub_position">Sub Position</label>
-                                        <input type="text" id="sub_position" name="sub_position"
-                                            class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="remarks">Remarks</label>
-                                        <textarea name="remarks" id="remarks" class="form-control" rows="1"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" id="checkDataAddSubmitBtn">Save</button>
-                        </div>
-                    </form>
-                </div>
+<div class="container-fluid dashboard-content">
+    <!-- ============================================================== -->
+    <!-- pageheader -->
+    <!-- ============================================================== -->
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="page-header">
+                <h2 class="pageheader-title">Check Management</h2>
             </div>
         </div>
     </div>
-@stop
+    <!-- ============================================================== -->
+    <!-- end pageheader -->
+    <!-- ============================================================== -->
+    {{-- <div class="row"> --}}
+        {{-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"> --}}
+            @include('layouts.message')
+            <div id="showSuccessMsg"></div>
+            <div class="card">
+                {{-- <div class="zoom-tool-bar"></div> --}}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-md-12 col-lg-3">
+                            <div class="card" id="checkList">
+                                <h5 class="card-header">Checks list</h5>
+                                <div class="card-body p-0">
+                                    <ul
+                                        class="country-sales list-group list-group-flush"
+                                        id="checkListUl">
+                                        @foreach ($deck->checks as $dot)
+                                        <li
+                                            class="country-sales-content list-group-item">
+                                            <span class="mr-2">
+                                                <i
+                                                    class="flag-icon flag-icon-us"
+                                                    title="us" id="us"></i>
+                                            </span>
+                                            <span class>{{ $loop->iteration
+                                                }}.{{ $dot->name }}</span>
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
 
-@section('js')
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
-    <script src="{{ asset('assets/vendor/select2/js/select2.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/content-zoom-slider.min.js') }}"></script>
+                        <div class="col-12 col-md-12 col-lg-9">
+                            <div class="zoom-tool-bar mb-5">
+                                <div class="row">
+                                    <div
+                                        class="col-sm-12 p-1 text-center zoominout">
+                                        <span class="zoom-value">100%</span>
+                                        <a href="javascript:;" title="Zoom Out"
+                                            class="zoom-out" id="zoom-out"> <i
+                                                class="fa fa-minus m-1"></i>
+                                        </a>
+                                        <input class="mb-1 ranger" type="range"
+                                            value="100" step="25" min="50"
+                                            max="200">
+                                        <a href="javascript:;" title="Zoom In"
+                                            class="zoom-in" id="zoom-in"> <i
+                                                class="fa fa-plus m-1"></i></a>
+                                    </div>
+                                </div>
+                            </div>
 
-    <script>
+                            <div class="outfit">
+                                <div class="target">
+                                    <img id="previewImg1"
+                                        src="{{ $deck->image }}"
+                                        alt="Upload Image">
+                                    @foreach ($deck->checks as $dot)
+                                    <div
+                                        class="dot ui-draggable ui-draggable-handle"
+                                        data-checkId="{{ $dot->id }}"
+                                        data-check="{{ $dot }}"
+                                        style="top: {{ $dot->position_top - ($deck->isApp == 1 ? 24 : 0) }}px; left: {{ $dot->position_left - ($deck->isApp == 1 ? 24 : 0) }}px;"
+                                        id="dot_{{ $loop->iteration }}">
+                                        {{ $loop->iteration }}
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" data-backdrop="static"
+                id="checkDataAddModal" tabindex="-1" role="dialog"
+                aria-labelledby="checkDataAddModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document"
+                    style="width: 50% !important; max-width: none !important;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title"
+                                id="exampleModalLabel">Title</h5>
+                            <a href="#" class="close" data-dismiss="modal"
+                                aria-label="Close" id="checkDataAddCloseBtn">
+                                <span aria-hidden="true">×</span>
+                            </a>
+                        </div>
+                        <form method="post"
+                            action="{{ route('addImageHotspots') }}"
+                            id="checkDataAddForm">
+                            <div class="modal-body">
+                                @csrf
+                                <input type="hidden" id="id" name="id">
+                                <input type="hidden" name="project_id"
+                                    value="{{ $deck->project_id ?? '' }}">
+                                <input type="hidden" name="deck_id"
+                                    value="{{ $deck->id ?? '' }}">
+                                <div class="row">
+                                    <div class="col-12 col-md-6" id="chkName">
+                                        <div class="form-group">
+                                            <label for="name">Name</label>
+                                            <input type="text" id="name"
+                                                name="name" class="form-control"
+                                                readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label for="type">Type</label>
+                                            <select name="type" id="type"
+                                                class="form-control" required>
+                                                <option value>Select
+                                                    Type</option>
+                                                <option
+                                                    value="sample">Sample</option>
+                                                <option
+                                                    value="visual">Visual</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label
+                                                for="description">Description</label>
+                                            <input type="text" id="description"
+                                                name="description"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label
+                                                for="compartment">Compartment</label>
+                                            <input type="text" id="compartment"
+                                                name="compartment"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label
+                                                for="material">Material</label>
+                                            <input type="text" id="material"
+                                                name="material"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label for="color">Color</label>
+                                            <input type="text" id="color"
+                                                name="color"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label
+                                                for="suspected_hazmat">Suspected
+                                                Hazmat</label>
+                                            {{-- <input type="text"
+                                                class="form-control"
+                                                id="suspected_hazmat"
+                                                name="suspected_hazmat"> --}}
+                                            <select class="form-control select2"
+                                                id="suspected_hazmat"
+                                                name="suspected_hazmat"
+                                                multiple="multiple">
+                                                <option value>Select
+                                                    Hazmat</option>
+                                                @if (isset($hazmats) &&
+                                                $hazmats->count() > 0)
+                                                @foreach ($hazmats as $hazmat)
+                                                <option
+                                                    value="{{ $hazmat->id }}">{{
+                                                    $hazmat->name }}</option>
+                                                @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label
+                                                for="equipment">Equipment</label>
+                                            <input type="text" id="equipment"
+                                                name="equipment"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label
+                                                for="component">Component</label>
+                                            <input type="text" id="component"
+                                                name="component"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label
+                                                for="position">Position</label>
+                                            <input type="text" id="position"
+                                                name="position"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label for="sub_position">Sub
+                                                Position</label>
+                                            <input type="text" id="sub_position"
+                                                name="sub_position"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label for="remarks">Remarks</label>
+                                            <textarea name="remarks"
+                                                id="remarks"
+                                                class="form-control"
+                                                rows="1"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary"
+                                    id="checkDataAddSubmitBtn">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @stop
+
+        @section('js')
+        <script
+            src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+        <script
+            src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
+        <script
+            src="{{ asset('assets/vendor/select2/js/select2.min.js') }}"></script>
+
+        <script>
         var isStopped = false;
         var initialLeft, initialTop;
+        let widthPercent = 100;
+        let previewImgInWidth = $("#previewImg1").width();
+        let currectWithPercent = widthPercent;
+        // let zoomValue = 100;
 
         function makeDotsDraggable() {
             $(".dot").draggable({
@@ -307,9 +397,9 @@
 
             let check_id = $dots.attr('data-checkId');
 
-            let position_left = parseFloat($dots.css('left'));
-            let position_top = parseFloat($dots.css('top'));
-            if (check_id && check_id != "new") {
+            let position_left = parseFloat($dots.css('left')) * (100 / widthPercent);
+            let position_top = parseFloat($dots.css('top')) * (100 / widthPercent);
+            if (check_id && check_id != "0") {
                 $.ajax({
                     url: "{{ route('addImageHotspots') }}",
                     method: 'POST',
@@ -337,6 +427,33 @@
             }
         }
 
+        function updateZoomValue() {
+            $('.zoom-value').text(widthPercent + '%');
+        }
+
+        function resetImagePx() {
+            $(".target").css({
+                left: "0px",
+                top: "0px"
+            });
+        }
+
+        function setDotPosition() {
+            $(".dot").each(function(index) {
+                let left = parseFloat($(this).css('left'));
+                let top = parseFloat($(this).css('top'));
+
+                left = left * (widthPercent / currectWithPercent);
+                top = top * (widthPercent / currectWithPercent);
+
+                $(this).css('left', left);
+                $(this).css('top', top);
+                $(this).width(24 * (widthPercent / 100));
+                $(this).height(24 * (widthPercent / 100));
+                $(this).css('line-height', 24 * (widthPercent / 100) + "px");
+            });
+        }
+
         $(document).ready(function() {
             let checkId;
             $("#checkList").css('height',$("#previewImg1").height());
@@ -345,81 +462,55 @@
                 tags: true,
                 tokenSeparators: [',', ' '],
             });
-            // Store initial position of the image
-
-            $("#previewImg1").contentZoomSlider({
-                toolContainer: ".zoom-tool-bar",
-            });
-
-            function reset() {
-                $(".target").css({
-                    left: "0px",
-                    top: "0px"
-                });
-            }
-
-            $(".zoom-in").click(function() {
-                widthPercent+=25;
-                $("#previewImg1").width($("#previewImg1").width()*(widthPercent/100));
-                $(".dot").each(function(index) {
-                    let left = parseFloat($(this).css('left'));
-                    let top = parseFloat($(this).css('top'));
-                    left = left*(widthPercent/100);
-                    top = top*(widthPercent/100);
-                    $(this).css('left',left);
-                    $(this).css('top',top);
-                });
-
-                reset();
-            });
-
-            $(".zoom-out").click(function() {
-                reset();
-            });
 
             $('.target').draggable({
                 stop: function(event, ui) {
-                    // Add your code here to handle the drag stop event
                     isStopped = true;
                 }
             });
 
-            let imageWidth = $('#previewImg1').width();
-            /// $('.output').css('max-width', imageWidth);
+            function updateZoom(zoomValue) {
+                let newWidth = previewImgInWidth * (zoomValue / 100);
+                $("#previewImg1").width(newWidth);
+                setDotPosition();
+                updateZoomValue(zoomValue);
+            }
 
-            var widthPercent = 100;
+            // //Update zoom value when range input changes
+            $('.ranger').on('input', function() {
+                currectWithPercent = widthPercent;
+                widthPercent = parseInt($(this).val());
+                updateZoom(widthPercent);
+            });
 
-            $("#in").click(function(){
-                widthPercent+=25;
-                $("#previewImg1").width($("#previewImg1").width()*(widthPercent/100));
-                $(".dot").each(function(index) {
-                    let left = parseFloat($(this).css('left'));
-                    let top = parseFloat($(this).css('top'));
-                    left = left*(widthPercent/100);
-                    top = top*(widthPercent/100);
-                    $(this).css('left',left);
-                    $(this).css('top',top);
-                });
+            $(document).on("click", "#zoom-in", function() {
+                resetImagePx();
+                currectWithPercent = widthPercent;
+                if (widthPercent <= 175) {
+                    widthPercent += 25;
+                    let newWidth = previewImgInWidth * (widthPercent / 100);
+                    $("#previewImg1").width(newWidth);
+                    setDotPosition();
+                    updateZoomValue();
+                    $('.ranger').val(widthPercent);
+                }
+            });
 
-                // $("#previewImg1").height($("#previewImg1").height()+100);
-           });
-
-           $("#out").click(function(){
-                widthPercent-=25;
-                $("#previewImg1").width($("#previewImg1").width()*(widthPercent/100));
-                $(".dot").each(function(index) {
-                    let left = parseFloat($(this).css('left'));
-                    let top = parseFloat($(this).css('top'));
-                    left = left*(widthPercent/100);
-                    top = top*(widthPercent/100);
-                    $(this).css('left',left);
-                    $(this).css('top',top);
-                });
-                // $("img").height($("img").height()-100);
-           });
+            $(document).on("click", "#zoom-out", function() {
+                resetImagePx();
+                currectWithPercent = widthPercent;
+                if (widthPercent >= 75) {
+                    widthPercent -= 25;
+                    let newWidth = previewImgInWidth * (widthPercent / 100);
+                    $("#previewImg1").width(newWidth);
+                    setDotPosition();
+                    updateZoomValue();
+                    $('.ranger').val(widthPercent);
+                }
+            });
 
             $(".outfit img").click(function(e) {
-
+                e.preventDefault();
                 if (!isStopped) {
 
                     var dot_count = $(".dot").length;
@@ -443,18 +534,17 @@
                         left_in_px +
                         'px;" id="dot_' + (dot_count + 1) + '">' + (dot_count + 1) + '</div>';
 
-
                     $(dot).hide().appendTo($(this).parent()).fadeIn(350, function() {
-                        openAddModalBox(
-                            this); // Call the function with the newly created dot
+                        // openAddModalBox(this); // Call the function with the newly created dot
                         makeDotsDraggable();
                     });
-
+                    currectWithPercent = widthPercent;
+                    setDotPosition();
                 }
+
                 if (isStopped) {
                     isStopped = false;
                 }
-
             });
 
             makeDotsDraggable();
@@ -482,8 +572,8 @@
                 let checkFormData = $("#checkDataAddForm").serializeArray();
 
                 // Get the position of the selected dot
-                let position_left = parseFloat($(".dot.selected").css('left'));
-                let position_top = parseFloat($(".dot.selected").css('top'));
+                let position_left = parseFloat($(".dot.selected").css('left')) * (100 / widthPercent);
+                let position_top = parseFloat($(".dot.selected").css('top')) * (100 / widthPercent);
 
                 // Append position data to formData
                 checkFormData.push({
@@ -509,6 +599,7 @@
                     url: $("#checkDataAddForm").attr('action'),
                     data: checkFormData,
                     success: function(response) {
+
                      $(".dot.selected").attr('data-checkId', response.id);
                      var checkData = {
                     id:  response.id,
@@ -526,7 +617,6 @@
                     equipment: $("#remarks").val()
                 };
 
-                console.log(checkData);
                 var checkDataJson = JSON.stringify(checkData);
                 $(".dot.selected").attr('data-check', checkDataJson);
                         $('#checkListUl').append('<li class="country-sales-content list-group-item"><span class="mr-2"><i class="flag-icon flag-icon-us" title="us" id="us"></i>' + response.name + '</span> </li>');
@@ -569,4 +659,4 @@
             });
         });
     </script>
-@endsection
+        @endsection

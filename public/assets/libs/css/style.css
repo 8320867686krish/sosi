@@ -6979,12 +6979,11 @@ Media Query
     width: auto;
 
 }
+
 .deck-img img{
     height: 100% !important;
 }
-#previewImg1{
-    width:auto !important;
-}
+
 
 /* Custom, iPhone Retina */
 @media only screen and (max-width:320px) {}
