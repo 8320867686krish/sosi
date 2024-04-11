@@ -18,6 +18,9 @@ class Checks extends Model
     public function check_image(){
         return $this->hasMany(CheckImage::class, 'check_id', 'id');
     }
+    public function checkQrCodePair(){
+        return $this->hasMany(ChecksQrCodePair::class, 'check_id', 'id');
+    }
     public function deck(){
         return $this->belongsTo(Deck::class);
     }
