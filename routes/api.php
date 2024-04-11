@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\SyncProjectController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +19,12 @@ use Illuminate\Support\Facades\Route;
 // Route::post('login',[UserAuthController::class,'login']);
 // Route::post('logout',[UserAuthController::class,'logout'])
 //   ->middleware('auth:sanctum');
+Route::controller(SyncProjectController::class)->group(function () {
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::get('sync/project', 'syncProject');
 
+    });
+});
 
 Route::controller(ApiController::class)->group(function () {
     // user Authentication api route
@@ -42,7 +49,6 @@ Route::controller(ApiController::class)->group(function () {
         Route::get('project/{project_id}/surveyors/get', 'getProjectSurveyors');
         Route::post('project/surveyors/add', 'addProjectSurveyors');
         Route::get('project/shipDetials/{project_id}', 'getShipDetail');
-
         //project deck route
         Route::get('getDeckList/{project_id}', 'getDeckList');
 
