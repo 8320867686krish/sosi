@@ -47,14 +47,14 @@
 
         .dot {
             position: absolute;
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             background: #000;
             border-radius: 50%;
             overflow: hidden;
             cursor: pointer;
             box-shadow: 0 0 3px 0 rgba(0, 0, 0, .2);
-            line-height: 24px;
+            line-height: 20px;
             font-size: 12px;
             font-weight: bold;
             transition: box-shadow .214s ease-in-out, transform .214s ease-in-out, background .214s ease-in-out;
@@ -141,7 +141,7 @@
                                 @foreach ($deck->checks as $dot)
                                     <div class="dot ui-draggable ui-draggable-handle" data-checkId="{{ $dot->id }}"
                                         data-check="{{ $dot }}"
-                                        style="top: {{ $dot->position_top - ($deck->isApp == 1 ? 24 : 0) }}px; left: {{ $dot->position_left - ($deck->isApp == 1 ? 24 : 0) }}px;"
+                                        style="top: {{ $dot->position_top - ($deck->isApp == 1 ? 20 : 0) }}px; left: {{ $dot->position_left - ($deck->isApp == 1 ? 20 : 0) }}px;"
                                         id="dot_{{ $loop->iteration }}">
                                         {{ $loop->iteration }}
                                     </div>
@@ -181,8 +181,7 @@
                                     <div class="form-group">
                                         <label for="type">Type</label>
                                         <select name="type" id="type" class="form-control" required>
-                                            <option value>Select
-                                                Type</option>
+                                            <option value>Select Type</option>
                                             <option value="sample">Sample</option>
                                             <option value="visual">Visual</option>
                                         </select>
@@ -214,8 +213,7 @@
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="suspected_hazmat">Suspected
-                                            Hazmat</label>
+                                        <label for="suspected_hazmat">Suspected Hazmat</label>
                                         {{-- <input type="text"
                                                 class="form-control"
                                                 id="suspected_hazmat"
@@ -393,9 +391,9 @@
 
                 $(this).css('left', left);
                 $(this).css('top', top);
-                $(this).width(24 * (widthPercent / 100));
-                $(this).height(24 * (widthPercent / 100));
-                $(this).css('line-height', 24 * (widthPercent / 100) + "px");
+                $(this).width(20 * (widthPercent / 100));
+                $(this).height(20 * (widthPercent / 100));
+                $(this).css('line-height', 20 * (widthPercent / 100) + "px");
             });
         }
 
@@ -463,8 +461,8 @@
                     var top_offset = $(this).offset().top - $(window).scrollTop();
                     var left_offset = $(this).offset().left - $(window).scrollLeft();
 
-                    var top_px = Math.round((e.clientY - top_offset - 12));
-                    var left_px = Math.round((e.clientX - left_offset - 12));
+                    var top_px = Math.round((e.clientY - top_offset - 10));
+                    var left_px = Math.round((e.clientX - left_offset - 10));
 
                     var top_perc = top_px / $(this).height() * 100;
                     var left_perc = left_px / $(this).width() * 100;
@@ -480,7 +478,7 @@
                         'px;" id="dot_' + (dot_count + 1) + '">' + (dot_count + 1) + '</div>';
 
                     $(dot).hide().appendTo($(this).parent()).fadeIn(350, function() {
-                        openAddModalBox(this); // Call the function with the newly created dot
+                        // openAddModalBox(this); // Call the function with the newly created dot
                         makeDotsDraggable();
                     });
                     currectWithPercent = widthPercent;
