@@ -11,8 +11,7 @@ class ClientContoller extends Controller
 {
     public function index()
     {
-        $clients = Client::
-        select('id', 'manager_name', 'manager_contact_person_name', 'manager_logo', 'owner_name')
+        $clients = Client::select('id', 'manager_name', 'manager_contact_person_name', 'manager_logo', 'owner_name')
         ->withCount('projects')
         ->get();
 

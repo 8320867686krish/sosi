@@ -71,7 +71,6 @@ Route::middleware('auth')->group(function () {
     Route::middleware('can:projects')->group(function () {
         Route::controller(ProjectsController::class)->group(function () {
             Route::get('projects', 'index')->name('projects')->middleware('can:projects');
-
             Route::get('projects/client/{client_id}', 'index')->name('projects.client');
             Route::get('project/add', 'create')->name('projects.add')->middleware('can:projects.add');
             Route::get('project/view/{project_id}', 'projectView')->name('projects.view');

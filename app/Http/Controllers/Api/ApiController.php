@@ -649,7 +649,7 @@ class ApiController extends Controller
     public function qrCodePair(Request $request){
         $checkId = $request->input('checkId');
         $pairWitthTag = $request->input('pairWitthTag');
-       
+
         try {
             $check = Checks::find($checkId);
 
