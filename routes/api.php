@@ -49,7 +49,7 @@ Route::controller(ApiController::class)->group(function () {
         // check api route
         Route::post('check', 'editCheck');
         Route::post('check/add', 'addCheck');
-        Route::poast('qrCodePair','qrCodePair');
+        Route::post('qrCodePair','qrCodePair');
 
         Route::get('checks/{deckId}','getCheckList');
         Route::get('check/details/{checkId}','getCheckDetail');
