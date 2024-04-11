@@ -254,28 +254,29 @@ class ProjectsController extends Controller
             // Checks::where('deck_id', $inputData['deck_id'])->delete();
 
             // Checks::insert($insertData);
-            $projectDetail = Projects::with(['client' => function ($query) {
-                $query->select('id', 'manager_initials'); // Replace with the fields you want to select
-            }])->withCount('checks')->find($inputData['project_id']);
-            $lastCheck = Checks::where('project_id', $inputData['project_id'])
-                ->latest()
-                ->first();
-            if(!$lastCheck){
-               $projectCount = "1001";
-            }else{
-                $projectCount = $lastCheck['initialsChekId'] + (1);
-            }
-            $name = "sos".$projectDetail['client']['manager_initials'].$projectCount;
+
             if(!@$id){
+                $projectDetail = Projects::with(['client' => function ($query) {
+                    $query->select('id', 'manager_initials'); // Replace with the fields you want to select
+                }])->withCount('checks')->find($inputData['project_id']);
+                $lastCheck = Checks::where('project_id', $inputData['project_id'])
+                    ->latest()
+                    ->first();
+                if(!$lastCheck){
+                   $projectCount = "1001";
+                }else{
+                    $projectCount = $lastCheck['initialsChekId'] + (1);
+                }
+                $name = "sos".$projectDetail['client']['manager_initials'].$projectCount;
   $inputData['name'] = $name;
             $inputData['initialsChekId'] =  $projectCount;
             }
-          
+
             $data = Checks::updateOrCreate(['id' => $id], $inputData);
 
             $message = empty($id) ? "Image check added successfully" : "Image check updated successfully";
 
-            return response()->json(['isStatus' => true, 'message' => $message, "id"=>$data->id,'name'=>$name]);
+            return response()->json(['isStatus' => true, 'message' => $message, "id"=>$data->id,'name'=>$name ?? ""]);
         } catch (\Throwable $th) {
             return response()->json(['isStatus' => false, 'error' => $th->getMessage()]);
         }
