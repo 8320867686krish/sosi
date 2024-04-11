@@ -14,11 +14,12 @@
             top: 0px;
             padding: 3px 0;
             font-size: 13px;
-            color: #007cc0;
+            /* color: #007cc0; */
+            color: green;
         }
 
         .zoom-tool-bar i {
-            color: #007cc0;
+            color: green;
             font-size: 16px;
         }
 
@@ -105,9 +106,22 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-12 col-md-12 col-lg-9">
-                        <button class="btn btn-primary" id="zoom-out">Out</button>
-                        <button class="btn btn-primary" id="zoom-in">In</button>
+                        <div class="zoom-tool-bar mb-5">
+                            <div class="row">
+                                <div class="col-sm-12 p-1 text-center zoominout">
+                                    <span class="zoom-value">100%</span>
+                                    <a href="javascript:;" title="Zoom Out" class="zoom-out" id="zoom-out"> <i
+                                            class="fa fa-minus m-1"></i> </a>
+                                    <input class="mb-1 ranger" type="range" value="100" step="25" min="50"
+                                        max="200">
+                                    <a href="javascript:;" title="Zoom In" class="zoom-in" id="zoom-in"> <i
+                                            class="fa fa-plus m-1"></i></a>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="outfit">
                             <div class="target">
                                 <img id="previewImg1" src="{{ $deck->image }}" alt="Upload Image">
@@ -146,7 +160,8 @@
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
                                         <label for="name">Name</label>
-                                        <input type="text" id="name" name="name" class="form-control" required>
+                                        <input type="text" id="name" name="name" class="form-control"
+                                            required>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -245,12 +260,14 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
     <script src="{{ asset('assets/vendor/select2/js/select2.min.js') }}"></script>
-    {{-- <script src="{{ asset('assets/vendor/content-zoom-slider.min.js') }}"></script> --}}
 
     <script>
         var isStopped = false;
         var initialLeft, initialTop;
         let widthPercent = 100;
+        let previewImgInWidth = $("#previewImg1").width();
+        let currectWithPercent = widthPercent;
+        // let zoomValue = 100;
 
         function makeDotsDraggable() {
             $(".dot").draggable({
@@ -305,7 +322,7 @@
             let check_id = $dots.attr('data-checkId');
 
             let position_left = parseFloat($dots.css('left')) * (100 / widthPercent);
-            let position_top = parseFloat($dots.css('top')) * (100 / widthPercent) ;
+            let position_top = parseFloat($dots.css('top')) * (100 / widthPercent);
             if (check_id && check_id != "0") {
                 $.ajax({
                     url: "{{ route('addImageHotspots') }}",
@@ -334,6 +351,33 @@
             }
         }
 
+        function updateZoomValue() {
+            $('.zoom-value').text(widthPercent + '%');
+        }
+
+        function resetImagePx() {
+            $(".target").css({
+                left: "0px",
+                top: "0px"
+            });
+        }
+
+        function setDotPosition() {
+            $(".dot").each(function(index) {
+                let left = parseFloat($(this).css('left'));
+                let top = parseFloat($(this).css('top'));
+
+                left = left * (widthPercent / currectWithPercent);
+                top = top * (widthPercent / currectWithPercent);
+
+                $(this).css('left', left);
+                $(this).css('top', top);
+                $(this).width(24 * (widthPercent / 100));
+                $(this).height(24 * (widthPercent / 100));
+                $(this).css('line-height', 24 * (widthPercent / 100) + "px");
+            });
+        }
+
         $(document).ready(function() {
             let checkId;
 
@@ -343,79 +387,54 @@
                 tokenSeparators: [',', ' '],
             });
 
-            // Store initial position of the image
-            // $("#previewImg1").contentZoomSlider({
-            //     toolContainer: ".zoom-tool-bar",
-            // });
-
-            function reset() {
-                $(".target").css({
-                    left: "0px",
-                    top: "0px"
-                });
-            }
-
-            $(".zoom-in").click(function() {
-                reset();
-            });
-
-            $(".zoom-out").click(function() {
-                reset();
-            });
-
             $('.target').draggable({
                 stop: function(event, ui) {
-                    // Add your code here to handle the drag stop event
                     isStopped = true;
                 }
             });
 
-            let imageWidth = $('#previewImg1').width();
-            /// $('.output').css('max-width', imageWidth);
-
-            let previewImgInWidth = $("#previewImg1").width();
-            let currectWithPercent = widthPercent;
-
-            function setDotPosition() {
-                $(".dot").each(function(index) {
-                    let left = parseFloat($(this).css('left'));
-                    let top = parseFloat($(this).css('top'));
-
-                    left = left * (widthPercent / currectWithPercent);
-                    top = top * (widthPercent / currectWithPercent);
-
-                    $(this).css('left', left);
-                    $(this).css('top', top);
-                    $(this).width(24 * (widthPercent / 100));
-                    $(this).height(24 * (widthPercent / 100));
-                    $(this).css('line-height', 24 * (widthPercent / 100) + "px");
-                });
+            function updateZoom(zoomValue) {
+                let newWidth = previewImgInWidth * (zoomValue / 100);
+                $("#previewImg1").width(newWidth);
+                setDotPosition();
+                updateZoomValue(zoomValue);
             }
 
+            // //Update zoom value when range input changes
+            $('.ranger').on('input', function() {
+                currectWithPercent = widthPercent;
+                widthPercent = parseInt($(this).val());
+                updateZoom(widthPercent);
+            });
+
             $(document).on("click", "#zoom-in", function() {
-                reset();
+                resetImagePx();
                 currectWithPercent = widthPercent;
                 if (widthPercent <= 175) {
                     widthPercent += 25;
                     let newWidth = previewImgInWidth * (widthPercent / 100);
                     $("#previewImg1").width(newWidth);
                     setDotPosition();
+                    updateZoomValue();
+                    $('.ranger').val(widthPercent);
                 }
             });
 
             $(document).on("click", "#zoom-out", function() {
-                reset();
+                resetImagePx();
                 currectWithPercent = widthPercent;
                 if (widthPercent >= 75) {
                     widthPercent -= 25;
                     let newWidth = previewImgInWidth * (widthPercent / 100);
                     $("#previewImg1").width(newWidth);
                     setDotPosition();
+                    updateZoomValue();
+                    $('.ranger').val(widthPercent);
                 }
             });
 
             $(".outfit img").click(function(e) {
-
+                e.preventDefault();
                 if (!isStopped) {
 
                     var dot_count = $(".dot").length;
@@ -443,7 +462,7 @@
                         // openAddModalBox(this); // Call the function with the newly created dot
                         makeDotsDraggable();
                     });
-
+                    currectWithPercent = widthPercent;
                     setDotPosition();
                 }
 
