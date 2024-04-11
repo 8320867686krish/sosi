@@ -1,11 +1,17 @@
 @extends('layouts.app')
 
 @section('css')
-    <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/bootstrap-select/css/bootstrap-select.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/select2/css/select2.css') }}">
+<link href="https://www.jqueryscript.net/css/jquerysctipttop.css"
+    rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css"
+    href="{{ asset('assets/vendor/bootstrap-select/css/bootstrap-select.css') }}">
+<link rel="stylesheet" type="text/css"
+    href="{{ asset('assets/vendor/select2/css/select2.css') }}">
 
-    <style>
+<style>
+        #checkList{
+            overflow: auto;
+        }
         .zoom-tool-bar {
             bottom: 0px;
             width: 100%;
@@ -67,201 +73,269 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid dashboard-content">
-        <!-- ============================================================== -->
-        <!-- pageheader -->
-        <!-- ============================================================== -->
-        <div class="row">
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                <div class="page-header">
-                    <h2 class="pageheader-title">Check Management</h2>
-                </div>
+<div class="container-fluid dashboard-content">
+    <!-- ============================================================== -->
+    <!-- pageheader -->
+    <!-- ============================================================== -->
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="page-header">
+                <h2 class="pageheader-title">Check Management</h2>
             </div>
         </div>
-        <!-- ============================================================== -->
-        <!-- end pageheader -->
-        <!-- ============================================================== -->
-        {{-- <div class="row"> --}}
+    </div>
+    <!-- ============================================================== -->
+    <!-- end pageheader -->
+    <!-- ============================================================== -->
+    {{-- <div class="row"> --}}
         {{-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"> --}}
-        @include('layouts.message')
-        <div id="showSuccessMsg"></div>
-        <div class="card">
-            {{-- <div class="zoom-tool-bar"></div> --}}
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-12 col-md-12 col-lg-3">
-                        <div class="card" id="checkList">
-                            <h5 class="card-header">Checks list</h5>
-                            <div class="card-body p-0">
-                                <ul class="country-sales list-group list-group-flush" id="checkListUl">
-                                    @foreach ($deck->checks as $dot)
-                                        <li class="country-sales-content list-group-item">
+            @include('layouts.message')
+            <div id="showSuccessMsg"></div>
+            <div class="card">
+                {{-- <div class="zoom-tool-bar"></div> --}}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-md-12 col-lg-3">
+                            <div class="card" id="checkList">
+                                <h5 class="card-header">Checks list</h5>
+                                <div class="card-body p-0">
+                                    <ul
+                                        class="country-sales list-group list-group-flush"
+                                        id="checkListUl">
+                                        @foreach ($deck->checks as $dot)
+                                        <li
+                                            class="country-sales-content list-group-item">
                                             <span class="mr-2">
-                                                <i class="flag-icon flag-icon-us" title="us" id="us"></i>
+                                                <i
+                                                    class="flag-icon flag-icon-us"
+                                                    title="us" id="us"></i>
                                             </span>
-                                            <span class="">{{ $loop->iteration }}.{{ $dot->name }}</span>
+                                            <span class>{{ $loop->iteration
+                                                }}.{{ $dot->name }}</span>
                                         </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-12 col-lg-9">
-                        <div class="zoom-tool-bar mb-5">
-                            <div class="row">
-                                <div class="col-sm-12 p-1 text-center zoominout">
-                                    <span class="zoom-value">100%</span>
-                                    <a href="javascript:;" title="Zoom Out" class="zoom-out" id="zoom-out"> <i
-                                            class="fa fa-minus m-1"></i> </a>
-                                    <input class="mb-1 ranger" type="range" value="100" step="25" min="50"
-                                        max="200">
-                                    <a href="javascript:;" title="Zoom In" class="zoom-in" id="zoom-in"> <i
-                                            class="fa fa-plus m-1"></i></a>
+                                        @endforeach
+                                    </ul>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="outfit">
-                            <div class="target">
-                                <img id="previewImg1" src="{{ $deck->image }}" alt="Upload Image">
-                                @foreach ($deck->checks as $dot)
-                                    <div class="dot ui-draggable ui-draggable-handle" data-checkId="{{ $dot->id }}"
+                        <div class="col-12 col-md-12 col-lg-9">
+                            <div class="zoom-tool-bar mb-5">
+                                <div class="row">
+                                    <div
+                                        class="col-sm-12 p-1 text-center zoominout">
+                                        <span class="zoom-value">100%</span>
+                                        <a href="javascript:;" title="Zoom Out"
+                                            class="zoom-out" id="zoom-out"> <i
+                                                class="fa fa-minus m-1"></i>
+                                        </a>
+                                        <input class="mb-1 ranger" type="range"
+                                            value="100" step="25" min="50"
+                                            max="200">
+                                        <a href="javascript:;" title="Zoom In"
+                                            class="zoom-in" id="zoom-in"> <i
+                                                class="fa fa-plus m-1"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="outfit">
+                                <div class="target">
+                                    <img id="previewImg1"
+                                        src="{{ $deck->image }}"
+                                        alt="Upload Image">
+                                    @foreach ($deck->checks as $dot)
+                                    <div
+                                        class="dot ui-draggable ui-draggable-handle"
+                                        data-checkId="{{ $dot->id }}"
                                         data-check="{{ $dot }}"
                                         style="top: {{ $dot->position_top - ($deck->isApp == 1 ? 24 : 0) }}px; left: {{ $dot->position_left - ($deck->isApp == 1 ? 24 : 0) }}px;"
                                         id="dot_{{ $loop->iteration }}">
                                         {{ $loop->iteration }}
                                     </div>
-                                @endforeach
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="modal fade" data-backdrop="static" id="checkDataAddModal" tabindex="-1" role="dialog"
-            aria-labelledby="checkDataAddModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document" style="width: 50% !important; max-width: none !important;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Title</h5>
-                        <a href="#" class="close" data-dismiss="modal" aria-label="Close" id="checkDataAddCloseBtn">
-                            <span aria-hidden="true">×</span>
-                        </a>
-                    </div>
-                    <form method="post" action="{{ route('addImageHotspots') }}" id="checkDataAddForm">
-                        <div class="modal-body">
-                            @csrf
-                            <input type="hidden" id="id" name="id">
-                            <input type="hidden" name="project_id" value="{{ $deck->project_id ?? '' }}">
-                            <input type="hidden" name="deck_id" value="{{ $deck->id ?? '' }}">
-                            <div class="row">
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="name">Name</label>
-                                        <input type="text" id="name" name="name" class="form-control"
-                                            required>
+            <div class="modal fade" data-backdrop="static"
+                id="checkDataAddModal" tabindex="-1" role="dialog"
+                aria-labelledby="checkDataAddModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document"
+                    style="width: 50% !important; max-width: none !important;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title"
+                                id="exampleModalLabel">Title</h5>
+                            <a href="#" class="close" data-dismiss="modal"
+                                aria-label="Close" id="checkDataAddCloseBtn">
+                                <span aria-hidden="true">×</span>
+                            </a>
+                        </div>
+                        <form method="post"
+                            action="{{ route('addImageHotspots') }}"
+                            id="checkDataAddForm">
+                            <div class="modal-body">
+                                @csrf
+                                <input type="hidden" id="id" name="id">
+                                <input type="hidden" name="project_id"
+                                    value="{{ $deck->project_id ?? '' }}">
+                                <input type="hidden" name="deck_id"
+                                    value="{{ $deck->id ?? '' }}">
+                                <div class="row">
+                                    <div class="col-12 col-md-6" id="chkName">
+                                        <div class="form-group">
+                                            <label for="name">Name</label>
+                                            <input type="text" id="name"
+                                                name="name" class="form-control"
+                                                readonly>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="type">Type</label>
-                                        <select name="type" id="type" class="form-control" required>
-                                            <option value="">Select Type</option>
-                                            <option value="sample">Sample</option>
-                                            <option value="visual">Visual</option>
-                                        </select>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label for="type">Type</label>
+                                            <select name="type" id="type"
+                                                class="form-control" required>
+                                                <option value>Select
+                                                    Type</option>
+                                                <option
+                                                    value="sample">Sample</option>
+                                                <option
+                                                    value="visual">Visual</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="description">Description</label>
-                                        <input type="text" id="description" name="description" class="form-control">
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label
+                                                for="description">Description</label>
+                                            <input type="text" id="description"
+                                                name="description"
+                                                class="form-control">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="compartment">Compartment</label>
-                                        <input type="text" id="compartment" name="compartment" class="form-control">
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label
+                                                for="compartment">Compartment</label>
+                                            <input type="text" id="compartment"
+                                                name="compartment"
+                                                class="form-control">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="material">Material</label>
-                                        <input type="text" id="material" name="material" class="form-control">
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label
+                                                for="material">Material</label>
+                                            <input type="text" id="material"
+                                                name="material"
+                                                class="form-control">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="color">Color</label>
-                                        <input type="text" id="color" name="color" class="form-control">
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label for="color">Color</label>
+                                            <input type="text" id="color"
+                                                name="color"
+                                                class="form-control">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="suspected_hazmat">Suspected Hazmat</label>
-                                        {{-- <input type="text" class="form-control" id="suspected_hazmat" name="suspected_hazmat"> --}}
-                                        <select class="form-control select2" id="suspected_hazmat"
-                                            name="suspected_hazmat" multiple="multiple">
-                                            <option value="">Select Hazmat</option>
-                                            @if (isset($hazmats) && $hazmats->count() > 0)
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label
+                                                for="suspected_hazmat">Suspected
+                                                Hazmat</label>
+                                            {{-- <input type="text"
+                                                class="form-control"
+                                                id="suspected_hazmat"
+                                                name="suspected_hazmat"> --}}
+                                            <select class="form-control select2"
+                                                id="suspected_hazmat"
+                                                name="suspected_hazmat"
+                                                multiple="multiple">
+                                                <option value>Select
+                                                    Hazmat</option>
+                                                @if (isset($hazmats) &&
+                                                $hazmats->count() > 0)
                                                 @foreach ($hazmats as $hazmat)
-                                                    <option value="{{ $hazmat->id }}">{{ $hazmat->name }}</option>
+                                                <option
+                                                    value="{{ $hazmat->id }}">{{
+                                                    $hazmat->name }}</option>
                                                 @endforeach
-                                            @endif
-                                        </select>
+                                                @endif
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="equipment">Equipment</label>
-                                        <input type="text" id="equipment" name="equipment" class="form-control">
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label
+                                                for="equipment">Equipment</label>
+                                            <input type="text" id="equipment"
+                                                name="equipment"
+                                                class="form-control">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="component">Component</label>
-                                        <input type="text" id="component" name="component" class="form-control">
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label
+                                                for="component">Component</label>
+                                            <input type="text" id="component"
+                                                name="component"
+                                                class="form-control">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="position">Position</label>
-                                        <input type="text" id="position" name="position" class="form-control">
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label
+                                                for="position">Position</label>
+                                            <input type="text" id="position"
+                                                name="position"
+                                                class="form-control">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="sub_position">Sub Position</label>
-                                        <input type="text" id="sub_position" name="sub_position"
-                                            class="form-control">
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label for="sub_position">Sub
+                                                Position</label>
+                                            <input type="text" id="sub_position"
+                                                name="sub_position"
+                                                class="form-control">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="remarks">Remarks</label>
-                                        <textarea name="remarks" id="remarks" class="form-control" rows="1"></textarea>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label for="remarks">Remarks</label>
+                                            <textarea name="remarks"
+                                                id="remarks"
+                                                class="form-control"
+                                                rows="1"></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" id="checkDataAddSubmitBtn">Save</button>
-                        </div>
-                    </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary"
+                                    id="checkDataAddSubmitBtn">Save</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-@stop
+        @stop
 
-@section('js')
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
-    <script src="{{ asset('assets/vendor/select2/js/select2.min.js') }}"></script>
+        @section('js')
+        <script
+            src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+        <script
+            src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
+        <script
+            src="{{ asset('assets/vendor/select2/js/select2.min.js') }}"></script>
 
-    <script>
+        <script>
         var isStopped = false;
         var initialLeft, initialTop;
         let widthPercent = 100;
@@ -311,7 +385,9 @@
                     }
                 }
             }
-
+            if(!checkId){
+                $("#chkName").hide();
+            }
             // Show the modal box
             $("#checkDataAddModal").modal('show');
         }
@@ -380,7 +456,7 @@
 
         $(document).ready(function() {
             let checkId;
-
+            $("#checkList").css('height',$("#previewImg1").height());
             $(".select2").select2({
                 placeholder: "Select a hazmat",
                 tags: true,
@@ -479,33 +555,18 @@
 
             // Add event listener for Save button click
             $(document).on("click", "#checkDataAddSubmitBtn", function() {
+               var checkId = $(".dot.selected").attr('data-checkId');
+               $("#id").val(checkId);
 
-                var checkData = {
-                    id: $("#id").val(),
-                    name: $("#name").val(),
-                    type: $("#type").val(),
-                    description: $("#description").val(),
-                    compartment: $("#compartment").val(),
-                    material: $("#material").val(),
-                    color: $("#color").val(),
-                    suspected_hazmat: $("#suspected_hazmat").val(),
-                    equipment: $("#equipment").val(),
-                    component: $("#component").val(),
-                    position: $("#position").val(),
-                    sub_position: $("#sub_position").val(),
-                    remarks: $("#remarks").val()
-                };
-
-                var checkDataJson = JSON.stringify(checkData);
 
                 // If checkId is not available, create a new attribute "data-checkId" for the selected dot
                 if (!checkId) {
-                    checkId = "new"; // Set a temporary value for the new checkId
+                    checkId = 0; // Set a temporary value for the new checkId
                     $(".dot.selected").attr('data-checkId', checkId);
                 }
 
                 // Update the "data-check" attribute of the selected dot
-                $(".dot.selected").attr('data-check', checkDataJson);
+              
 
                 // Serialize form data
                 let checkFormData = $("#checkDataAddForm").serializeArray();
@@ -538,9 +599,27 @@
                     url: $("#checkDataAddForm").attr('action'),
                     data: checkFormData,
                     success: function(response) {
-                        // alert(response.message); // Show success message
-                        $(".dot.selected").attr('data-checkId', response.id);
-                        // $("#id").val(response.id);
+
+                     $(".dot.selected").attr('data-checkId', response.id);
+                     var checkData = {
+                    id:  response.id,
+                    name:  response.name,
+                    type: $("#type").val(),
+                    description: $("#description").val(),
+                    compartment: $("#compartment").val(),
+                    material: $("#material").val(),
+                    color: $("#color").val(),
+                    suspected_hazmat: $("#suspected_hazmat").val(),
+                    equipment: $("#equipment").val(),
+                    equipment: $("#component").val(),
+                    equipment: $("#position").val(),
+                    equipment: $("#sub_position").val(),
+                    equipment: $("#remarks").val()
+                };
+
+                var checkDataJson = JSON.stringify(checkData);
+                $(".dot.selected").attr('data-check', checkDataJson);
+                        $('#checkListUl').append('<li class="country-sales-content list-group-item"><span class="mr-2"><i class="flag-icon flag-icon-us" title="us" id="us"></i>' + response.name + '</span> </li>');
                         let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
                             ${response.message}
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -548,21 +627,25 @@
                                 </button>
                             </div>`;
 
+                            $("#chkName").show();
                         $("#showSuccessMsg").html(messages);
                         $('.showSuccessMsg').fadeIn().delay(20000).fadeOut();
                         $submitButton.html(originalText);
                         $submitButton.prop('disabled', false);
+                        $("#checkDataAddForm")[0].reset();
+                $("#id").val("");
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
                         $submitButton.html(originalText);
                         $submitButton.prop('disabled', false);
+                        $("#checkDataAddForm")[0].reset();
+                $("#id").val("");
                     }
                 });
 
                 // Reset form fields, including hidden inputs, to their default values
-                $("#checkDataAddForm")[0].reset();
-                $("#id").val("");
+               
 
                 // Hide the modal box
                 $("#checkDataAddModal").modal('hide');
@@ -576,4 +659,4 @@
             });
         });
     </script>
-@endsection
+        @endsection

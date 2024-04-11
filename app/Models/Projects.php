@@ -37,6 +37,10 @@ class Projects extends Model
     {
         return $this->belongsTo(Image::class, 'project_id', 'id');
     }
+    public function checks()
+    {
+        return $this->hasMany(Checks::class,'project_id','id');
+    }
 
     // public function getImageAttribute($value)
     // {

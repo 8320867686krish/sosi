@@ -11,7 +11,7 @@ class Checks extends Model
 
     protected $table = "checks";
 
-    protected $fillable = ["project_id", "deck_id", "type", "name", "description", "compartment", "material", "color", "suspected_hazmat", "equipment", "component", "position", "sub_position", "remarks", "position_left", "position_top","pairWitthTag","isApp"];
+    protected $fillable = ["project_id", "deck_id", "type", "name", "description", "compartment", "material", "color", "suspected_hazmat", "equipment", "component", "position", "sub_position", "remarks", "position_left", "position_top","pairWitthTag","isApp",'initialsChekId'];
 
     protected $hidden = ['created_at', 'updated_at'];
 
