@@ -12,7 +12,11 @@ class Projects extends Model
     protected $table = "projects";
 
     protected $guarded = []; // This means no attributes are guarded
-
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'pivot'
+    ];
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_id', 'id');

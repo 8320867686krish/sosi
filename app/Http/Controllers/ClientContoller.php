@@ -11,21 +11,12 @@ class ClientContoller extends Controller
 {
     public function index()
     {
-        $clients = Client::with(['projects' => function ($query) {
-            $query->select('client_id', \DB::raw('count(*) as total_projects'))->groupBy('client_id');
-        }])->select('id', 'manager_name', 'manager_contact_person_name', 'manager_logo', 'owner_name')->get();
+        $clients = Client::
+        select('id', 'manager_name', 'manager_contact_person_name', 'manager_logo', 'owner_name')
+        ->withCount('projects')
+        ->get();
 
-        $modifiedClients = $clients->map(function ($client) {
-
-            $client->managerLogoPath = !empty($client->manager_logo) ? asset("/images/client/{$client->manager_logo}") : asset('assets/images/clients.png');
-
-            $client->total_projects = $client->projects->isNotEmpty() ? $client->projects->first()->total_projects : 0;
-
-            unset($client->projects);
-            return $client;
-        });
-
-        return view('client.client', ['clients' => $modifiedClients]);
+        return view('client.client', ['clients' => $clients]);
     }
 
     /**
