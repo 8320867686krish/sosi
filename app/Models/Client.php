@@ -15,4 +15,7 @@ class Client extends Model
     {
         return $this->hasMany(Projects::class, 'client_id', 'id');
     }
+    public function getManagerLogoAttribute($value){
+        return asset("images/client/{$value}");
+    }
 }

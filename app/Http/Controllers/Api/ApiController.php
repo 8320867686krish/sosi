@@ -305,20 +305,10 @@ class ApiController extends Controller
             }
 
             $project = $project->get();
-
-            $project->each(function ($project) {
-                $project->makeHidden(['created_at', 'updated_at', 'pivot']);
-            });
-
             $modifiedProjects = [];
 
             if ($project->count() > 0) {
-                $modifiedProjects = $project->map(function ($item) {
-                    if (isset($item->client->manager_logo) && !empty($item->client->manager_logo)) {
-                        $item->client->imagePath = url('public/images/client/') . '/' . $item->client->manager_logo;
-                    }
-                    return $item;
-                });
+                $modifiedProjects = $project;
             }
 
             return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $modifiedProjects]);

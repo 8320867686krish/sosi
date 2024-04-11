@@ -49,19 +49,19 @@
                             @can('projects.read')
                                 <a href="{{ route('projects.client', ['client_id' => $client->id]) }}"
                                     class="product-wishlist-btn active"
-                                    style="border-color: #017cc0 !important; line-height: 2.1 !important;background-color: #017cc0 !important; color: #fff !important;">{{ $client->total_projects ?? 0 }}</a>
+                                    style="border-color: #017cc0 !important; line-height: 2.1 !important;background-color: #017cc0 !important; color: #fff !important;">{{ $client->projects_count ?? 0 }}</a>
                             @else
                                 <a href="#" class="product-wishlist-btn active"
-                                    style="border-color: #017cc0 !important; line-height: 2.1 !important;background-color: #017cc0 !important; color: #fff !important;">{{ $client->total_projects ?? 0 }}</a>
+                                    style="border-color: #017cc0 !important; line-height: 2.1 !important;background-color: #017cc0 !important; color: #fff !important;">{{ $client->projects_count ?? 0 }}</a>
                             @endcan
                             <div class="card-body">
                                 <div class="campaign-img">
-                                    <img src="{{ $client->managerLogoPath }}" alt="user"
+                                    <img src="{{ $client->manager_logo }}" alt="user"
                                         class="user-avatar-xl rounded-circle">
                                 </div>
                                 <div class="campaign-info">
                                     <h3 class="mb-1 line-clamp">{{ ucfirst($client->manager_name) ?? '' }}</h3>
-                                    {{-- <p class="mb-3">Total Project:<span class="text-dark font-medium ml-2">{{ $client->total_projects ?? 0 }}</span>
+                                    {{-- <p class="mb-3">Total Project:<span class="text-dark font-medium ml-2">{{ $client->projects_count ?? 0 }}</span>
                                     </p> --}}
                                     @if (!empty($client->manager_contact_person_name))
                                         <p class="mb-1 line-clamp">Contact Person: <span
