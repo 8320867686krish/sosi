@@ -11,16 +11,14 @@ class Checks extends Model
 
     protected $table = "checks";
 
-    protected $fillable = ["project_id", "deck_id", "type", "name", "description", "compartment", "material", "color", "suspected_hazmat", "equipment", "component", "position", "sub_position", "remarks", "position_left", "position_top","pairWitthTag","isApp",'initialsChekId'];
+    protected $fillable = ["project_id", "deck_id", "type", "name", "equipment", "component", "location", "sub_location", "remarks", "position_left", "position_top","pairWitthTag","isApp",'initialsChekId'];
 
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['created_at','updated_at'];
 
     public function check_image(){
         return $this->hasMany(CheckImage::class, 'check_id', 'id');
     }
-    public function checkQrCodePair(){
-        return $this->hasMany(ChecksQrCodePair::class, 'check_id', 'id');
-    }
+   
     public function deck(){
         return $this->belongsTo(Deck::class);
     }
@@ -39,6 +37,7 @@ class Checks extends Model
         // Check if the decoded value is an array
         return $decodedArray;
     }
+    
 
 
 

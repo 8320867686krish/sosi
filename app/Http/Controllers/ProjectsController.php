@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProjectDetailRequest;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Checks;
+use App\Models\ChecksLog;
 use App\Models\Client;
 use App\Models\Deck;
 use App\Models\Hazmat;
@@ -125,9 +126,7 @@ class ProjectsController extends Controller
         unset($inputData['manager_name']);
         unset($inputData['owner_name']);
         if ($request->hasFile('image')) {
-
             $image = $request->file('image');
-
             $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
 
             $image->move(public_path('images/ship'), $imageName);
@@ -190,68 +189,11 @@ class ProjectsController extends Controller
         return view('check.check', ['deck' => $deck, 'hazmats' => $hazmats]);
     }
 
-    // public function addImageHotspots(Request $request)
-    // {
-    //     try {
-    //         $id = $request->input('id');
-    //         $inputData = $request->input();
-
-    //         if ($request->hasFile('img_hotspot')) {
-    //             $file = $request->file('img_hotspot');
-
-    //             $imageName = time() . rand(10, 99) . '.' . $file->getClientOriginalExtension();
-    //             $file->move(public_path('images/img_hotspot'), $imageName);
-
-    //             $inputData['name'] = $imageName;
-
-    //             if (!empty($id)) {
-    //                 $exitingImg = Image::findOrFail($id);
-    //                 $path = public_path('images/img_hotspot/' . $exitingImg->name);
-    //                 if (file_exists($path)) {
-    //                     unlink($path);
-    //                 }
-    //             }
-    //         }
-
-    //         $image = Image::updateOrCreate(['id' => $id], $inputData);
-
-    //         $dots = json_decode($request->input('dots'));
-    //         $insertData = array_map(function ($item) use ($image) {
-    //             $itemArray = (array) $item;
-    //             $itemArray['image_id'] = $image->id;
-    //             return $itemArray;
-    //         }, $dots);
-
-    //         ImageHotspot::where('image_id', $image->id)->delete();
-
-    //         ImageHotspot::insert($insertData);
-
-    //         $message = empty($id) ? "Image added successfully" : "Image updated successfully";
-
-    //         return response()->json(['isStatus' => true, 'message' => $message, "id"=>$image->id]);
-    //     } catch (\Throwable $th) {
-    //         return response()->json(['isStatus' => false, 'error' => $th->getMessage()]);
-    //     }
-    // }
-
     public function addImageHotspots(Request $request)
     {
         try {
             $inputData = $request->input();
             $id = $request->input('id');
-
-            // $dots = json_decode($request->input('dots'));
-
-            // $insertData = array_map(function ($item) use ($inputData) {
-            //     $itemArray = (array) $item;
-            //     $itemArray['project_id'] = $inputData['project_id'];
-            //     $itemArray['deck_id'] = $inputData['deck_id'];
-            //     return $itemArray;
-            // }, $dots);
-
-            // Checks::where('deck_id', $inputData['deck_id'])->delete();
-
-            // Checks::insert($insertData);
 
             if (!@$id) {
                 $projectDetail = Projects::with(['client' => function ($query) {
@@ -266,13 +208,14 @@ class ProjectsController extends Controller
                 $name = "sos" . $projectDetail['client']['manager_initials'] . $projectCount;
                 $inputData['name'] = $name;
                 $inputData['initialsChekId'] =  $projectCount;
-            }
+            } 
 
             $data = Checks::updateOrCreate(['id' => $id], $inputData);
-
+            $updatedData = $data->getAttributes();
+            $name = $updatedData['name'];
             $message = empty($id) ? "Image check added successfully" : "Image check updated successfully";
 
-            return response()->json(['isStatus' => true, 'message' => $message, "id" => $data->id, 'name' => $name ?? ""]);
+            return response()->json(['isStatus' => true, 'message' => $message, "id" => $data->id, 'name' => $name]);
         } catch (\Throwable $th) {
             return response()->json(['isStatus' => false, 'error' => $th->getMessage()]);
         }
@@ -349,10 +292,13 @@ class ProjectsController extends Controller
     public function updateDeckTitle(Request $request)
     {
         try {
+
             $updated = Deck::where('id', $request->input('id'))->update(['name' => $request->input('name')]);
             if ($updated) {
                 // Fetch the updated record
                 $deck = Deck::select('id', 'name')->find($request->input('id'));
+
+                // Your Eloquent query executed by using get()
 
                 if ($deck) {
                     return response()->json(["status" => true, "message" => "Deck updated successfully", 'deck' => $deck]);

@@ -19,11 +19,6 @@ return new class extends Migration
             $table->foreign('deck_id')->references('id')->on('decks')->onDelete('cascade');
             $table->string('type',30)->nullable();
             $table->string('name')->nullable();
-            $table->string('description')->nullable();
-            $table->string('compartment')->nullable();
-            $table->string('material')->nullable();
-            $table->string('color')->nullable();
-            $table->string('suspected_hazmat')->nullable();
             $table->string('equipment')->nullable();
             $table->string('component')->nullable();
             $table->string('position')->nullable();
