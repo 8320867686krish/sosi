@@ -19,11 +19,12 @@
             padding: 3px 0;
             font-size: 13px;
             /* color: #007cc0; */
-            color: green;
+            color: #008476 !important;
+            accent-color: #008476 !important;
         }
 
         .zoom-tool-bar i {
-            color: green;
+            color: #008476 !important;
             font-size: 16px;
         }
 
@@ -125,8 +126,7 @@
                                 <div class="col-sm-12 p-1 text-center zoominout">
                                     <span class="zoom-value">100%</span>
                                     <a href="javascript:;" title="Zoom Out" class="zoom-out" id="zoom-out"> <i
-                                            class="fa fa-minus m-1"></i>
-                                    </a>
+                                            class="fa fa-minus m-1"></i></a>
                                     <input class="mb-1 ranger" type="range" value="100" step="25" min="50"
                                         max="200">
                                     <a href="javascript:;" title="Zoom In" class="zoom-in" id="zoom-in"> <i
@@ -140,9 +140,7 @@
                                 <img id="previewImg1" src="{{ $deck->image }}" alt="Upload Image">
                                 @foreach ($deck->checks as $dot)
                                     <div class="dot ui-draggable ui-draggable-handle" data-checkId="{{ $dot->id }}"
-                                        data-check="{{ $dot }}"
-                                        style="top: {{ $dot->position_top - ($deck->isApp == 1 ? 20 : 0) }}px; left: {{ $dot->position_left - ($deck->isApp == 1 ? 20 : 0) }}px;"
-                                        id="dot_{{ $loop->iteration }}">
+                                        data-check="{{ $dot }}" style="top: {{ $dot->position_top - ($deck->isApp == 1 ? 20 : 0) }}px; left: {{ $dot->position_left - ($deck->isApp == 1 ? 20 : 0) }}px;" id="dot_{{ $loop->iteration }}">
                                         {{ $loop->iteration }}
                                     </div>
                                 @endforeach
@@ -153,8 +151,30 @@
             </div>
         </div>
 
-        <div class="modal fade" data-backdrop="static" id="checkDataAddModal" tabindex="-1" role="dialog"
-            aria-labelledby="checkDataAddModalLabel" aria-hidden="true">
+        <div class="col-12" style="display: none;">
+            <div class="col-12 col-md-12 col-lg-6 cloneTableTypeDiv" id="cloneTableTypeDiv">
+                <label for="table_type" id="tableTypeLable"></label>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <select class="form-control" id="table_type" name="table_type">
+                                <option value="Contained">Contained</option>
+                                <option value="Not Contained">Not Contained</option>
+                                <option value="PCHM">PCHM</option>
+                                <option value="Unknown" selected>Unknown</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-6 imagehazmat">
+                        <div class="form-group">
+                            <input type="file" class="form-control" accept="image/*">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" data-backdrop="static" id="checkDataAddModal" tabindex="-1" role="dialog" aria-labelledby="checkDataAddModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document" style="width: 50% !important; max-width: none !important;">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -163,7 +183,7 @@
                             <span aria-hidden="true">×</span>
                         </a>
                     </div>
-                    <form method="post" action="{{ route('addImageHotspots') }}" id="checkDataAddForm">
+                    <form method="post" action="{{ route('addImageHotspots') }}" id="checkDataAddForm" enctype="multipart/form-data">
                         <div class="modal-body">
                             @csrf
                             <input type="hidden" id="id" name="id">
@@ -173,8 +193,7 @@
                                 <div class="col-12 col-md-6" id="chkName">
                                     <div class="form-group">
                                         <label for="name">Name</label>
-                                        <input type="text" id="name" name="name" class="form-control"
-                                            readonly>
+                                        <input type="text" id="name" name="name" class="form-control" readonly>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -189,44 +208,14 @@
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="description">Description</label>
-                                        <input type="text" id="description" name="description" class="form-control">
+                                        <label for="location">Location</label>
+                                        <input type="text" id="location" name="location" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="compartment">Compartment</label>
-                                        <input type="text" id="compartment" name="compartment" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="material">Material</label>
-                                        <input type="text" id="material" name="material" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="color">Color</label>
-                                        <input type="text" id="color" name="color" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="suspected_hazmat">Suspected Hazmat</label>
-                                        {{-- <input type="text"
-                                                class="form-control"
-                                                id="suspected_hazmat"
-                                                name="suspected_hazmat"> --}}
-                                        <select class="form-control select2" id="suspected_hazmat"
-                                            name="suspected_hazmat" multiple="multiple">
-                                            <option value>Select Hazmat</option>
-                                            @if (isset($hazmats) && $hazmats->count() > 0)
-                                                @foreach ($hazmats as $hazmat)
-                                                    <option value="{{ $hazmat->id }}">{{ $hazmat->name }}</option>
-                                                @endforeach
-                                            @endif
-                                        </select>
+                                        <label for="sub_location">Sub Location</label>
+                                        <input type="text" id="sub_location" name="sub_location" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -243,19 +232,29 @@
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="position">Position</label>
-                                        <input type="text" id="position" name="position" class="form-control">
+                                        <label for="suspected_hazmat">Suspected Hazmat</label>
+                                        <select class="form-control select2 selectpicker" id="suspected_hazmat"
+                                            name="suspected_hazmat" multiple="multiple">
+                                            <option value="">Select Hazmat</option>
+                                            @if (isset($hazmats) && $hazmats->count() > 0)
+                                                @foreach ($hazmats as $hazmat)
+                                                    <option value="{{ $hazmat->id }}">{{ $hazmat->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
-                                        <label for="sub_position">Sub
-                                            Position</label>
-                                        <input type="text" id="sub_position" name="sub_position"
-                                            class="form-control">
+
+                                <div class="col-12 col-md-12 mb-3">
+                                    <div style="border: 2px solid black;" class="p-2">
+                                        <h5 class="text-center">Document Analysis Results</h5>
+                                        <div class="row" id="showTableTypeDiv">
+
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-6">
+
+                                <div class="col-12">
                                     <div class="form-group">
                                         <label for="remarks">Remarks</label>
                                         <textarea name="remarks" id="remarks" class="form-control" rows="1"></textarea>
@@ -330,6 +329,7 @@
             }
             if (!checkId) {
                 $("#chkName").hide();
+                // dock name code
             }
             // Show the modal box
             $("#checkDataAddModal").modal('show');
@@ -397,27 +397,30 @@
             });
         }
 
+        function updateZoom(zoomValue) {
+            let newWidth = previewImgInWidth * (zoomValue / 100);
+            $("#previewImg1").width(newWidth);
+            setDotPosition();
+            updateZoomValue(zoomValue);
+        }
+
         $(document).ready(function() {
             let checkId;
+            $(".imagehazmat").hide();
+
             $("#checkList").css('height', $("#previewImg1").height());
-            $(".select2").select2({
-                placeholder: "Select a hazmat",
-                tags: true,
-                tokenSeparators: [',', ' '],
-            });
+
+            // $(".select2").select2({
+            //     placeholder: "Select a hazmat",
+            //     tags: true,
+            //     tokenSeparators: [',', ' '],
+            // });
 
             $('.target').draggable({
                 stop: function(event, ui) {
                     isStopped = true;
                 }
             });
-
-            function updateZoom(zoomValue) {
-                let newWidth = previewImgInWidth * (zoomValue / 100);
-                $("#previewImg1").width(newWidth);
-                setDotPosition();
-                updateZoomValue(zoomValue);
-            }
 
             // //Update zoom value when range input changes
             $('.ranger').on('input', function() {
@@ -478,7 +481,7 @@
                         'px;" id="dot_' + (dot_count + 1) + '">' + (dot_count + 1) + '</div>';
 
                     $(dot).hide().appendTo($(this).parent()).fadeIn(350, function() {
-                        // openAddModalBox(this); // Call the function with the newly created dot
+                        openAddModalBox(this); // Call the function with the newly created dot
                         makeDotsDraggable();
                     });
                     currectWithPercent = widthPercent;
@@ -501,15 +504,11 @@
                 var checkId = $(".dot.selected").attr('data-checkId');
                 $("#id").val(checkId);
 
-
                 // If checkId is not available, create a new attribute "data-checkId" for the selected dot
                 if (!checkId) {
                     checkId = 0; // Set a temporary value for the new checkId
                     $(".dot.selected").attr('data-checkId', checkId);
                 }
-
-                // Update the "data-check" attribute of the selected dot
-
 
                 // Serialize form data
                 let checkFormData = $("#checkDataAddForm").serializeArray();
@@ -548,15 +547,11 @@
                             id: response.id,
                             name: response.name,
                             type: $("#type").val(),
-                            description: $("#description").val(),
-                            compartment: $("#compartment").val(),
-                            material: $("#material").val(),
-                            color: $("#color").val(),
                             suspected_hazmat: $("#suspected_hazmat").val(),
                             equipment: $("#equipment").val(),
-                            equipment: $("#component").val(),
-                            equipment: $("#position").val(),
-                            equipment: $("#sub_position").val(),
+                            component: $("#component").val(),
+                            location: $("#location").val(),
+                            sub_location: $("#sub_location").val(),
                             equipment: $("#remarks").val()
                         };
 
@@ -589,18 +584,56 @@
                     }
                 });
 
-                // Reset form fields, including hidden inputs, to their default values
-
-
                 // Hide the modal box
                 $("#checkDataAddModal").modal('hide');
             });
 
-
             $(document).on("click", "#checkDataAddCloseBtn", function() {
-                // Reset form fields to their default values
                 $("#checkDataAddForm")[0].reset();
                 $("#id").val("");
+            });
+
+            $('#suspected_hazmat').change(function() {
+                // Clear the existing content
+                $('#showTableTypeDiv').empty();
+
+                // Iterate over selected options
+                $(this).find('option:selected').each(function() {
+                    // Clone the table type template
+                    let clonedElement = $('#cloneTableTypeDiv').clone();
+
+                    clonedElement.removeAttr("id")
+                    // Set label text to the selected option's text
+                    clonedElement.find('label').text($(this).text());
+
+                    clonedElement.find('select').attr('id', `table_type_${$(this).val()}`).attr(
+                        'name', `table_type_${$(this).val()}`);
+
+                    clonedElement.find('input[type="file"]').prop({
+                        id: `image_${$(this).val()}`,
+                        name: `image_${$(this).val()}`
+                    });
+
+                    // Append cloned element to showTableTypeDiv
+                    $('#showTableTypeDiv').append(clonedElement);
+                });
+            });
+
+            $("#showTableTypeDiv").on("change", ".cloneTableTypeDiv select", function() {
+                let selectedValue = $(this).val();
+                let cloneTableTypeDiv = $(this).closest(".cloneTableTypeDiv");
+
+                // Find elements with either class col-12 or col-6 within cloneTableTypeDiv
+                let targetElements = cloneTableTypeDiv.find(".col-12, .col-6");
+
+                // Determine the class based on the selected value
+                let newClass = selectedValue === "Unknown" ? "col-12" : "col-6";
+
+                // Remove the existing class and add the new class for all targetElements
+                targetElements.removeClass("col-12 col-6").addClass(newClass);
+
+                // Toggle visibility of .imagehazmat based on the selected value
+                cloneTableTypeDiv.find(".imagehazmat").toggle(selectedValue !== "Unknown");
             });
         });
     </script>
