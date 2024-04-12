@@ -603,7 +603,8 @@ class ApiController extends Controller
     {
         try {
             $checkImgs = CheckImage::where('check_id', $check_id)->get();
-            $chkPair = ChecksQrCodePair::where('check_id', $check_id)->get();
+            $chkPairData = Checks::find($check_id);
+            $chkPair =  $chkPairData['pairWitthTag'];
             $mainPath = url("public/images/checks/{$check_id}") . "/";
 
             return response()->json(['isStatus' => true, 'message' => 'Check images retrieved successfully.', 'mainPath' => $mainPath, 'checkImagesList' => $checkImgs,'chkPair' => $chkPair]);
@@ -658,7 +659,8 @@ class ApiController extends Controller
             if (!$check) {
                 return response()->json(['isStatus' => false, 'message' => 'Check not found.']);
             }
-            ChecksQrCodePair::create(['pairWitthTag'=>$pairWitthTag,'check_id' => $checkId]);
+            $check->pairWitthTag = $pairWitthTag;
+            $check->save();
             return response()->json(['isStatus' => true, 'message' => 'Successfully creted qr code pair.']);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);

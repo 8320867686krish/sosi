@@ -19,13 +19,13 @@ class SyncProjectController extends Controller
 
         if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
             $project = Projects::with(['client:id,manager_name,manager_logo', 'decks.checks' => function ($query) {
-                $query->with(['check_image', 'checkQrCodePair']);
+                $query->with(['check_image']);
             }]);
         } else {
         
             $project = $user->projects()
                 ->with(['client:id,manager_name,manager_logo', 'decks.checks' => function ($query) {
-                    $query->with(['check_image', 'checkQrCodePair']);
+                    $query->with(['check_image']);
                 }])
                 ->where('isExpire', 0);
         }
