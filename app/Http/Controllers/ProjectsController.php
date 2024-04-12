@@ -281,6 +281,7 @@ class ProjectsController extends Controller
     public function saveImage(Request $request)
     {
         try {
+
             $request->validate([
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif',
                 'project_id' => 'required|exists:projects,id',
@@ -290,9 +291,17 @@ class ProjectsController extends Controller
             $projectName = Str::slug($project->ship_name);
             $projectId = $request->input('project_id');
             $file = $request->file('image');
+
             if (!$file->isValid()) {
                 throw new \Exception('Uploaded image is not valid.');
             }
+
+            $oldMainImgPath = public_path("images/pdf/{$projectId}/{$project->deck_image}");
+
+            if (file_exists($oldMainImgPath)) {
+                unlink($oldMainImgPath);
+            }
+
             $mainFileName = "{$projectName}_" . time() . ".png";
             $file->move(public_path('images/pdf/' . $projectId . "/"), $mainFileName);
             $areas = $request->input('areas');

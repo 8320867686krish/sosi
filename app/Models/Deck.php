@@ -28,7 +28,6 @@ class Deck extends Model
     //     return asset('path/to/default/image.jpg');
     // }
 
-
     public function checks()
     {
         return $this->hasMany(Checks::class, 'deck_id', 'id');
