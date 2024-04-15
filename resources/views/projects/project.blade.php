@@ -5,7 +5,6 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/buttons.bootstrap4.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/select.bootstrap4.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/fixedHeader.bootstrap4.css') }}">
-<link rel="stylesheet" href="{{asset('assets/vendor/charts/morris-bundle/morris.css')}}">
 
 @endsection
 
@@ -95,11 +94,7 @@
 <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script src="{{ asset('assets/vendor/datatables/js/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('assets/vendor/datatables/js/data-table.js') }}"></script>
-<script src="{{ asset('assets/vendor/charts/morris-bundle/raphael.min.js')}}"></script>
-<script src="{{ asset('assets/vendor/charts/morris-bundle/morris.js')}}"></script>
 <!-- chart js -->
-<script src="{{asset('assets/vendor/charts/charts-bundle/Chart.bundle.js')}}"></script>
-<script src="{{ asset('assets/vendor/dashboard-influencer.js')}}"></script>
 
 <script>
     $(document).ready(matchHeight);
