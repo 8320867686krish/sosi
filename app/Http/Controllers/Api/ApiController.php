@@ -531,9 +531,13 @@ class ApiController extends Controller
         }
     }
 
-    public function getCheckList($deckId)
+    public function getCheckList(Request $request)
     {
         try {
+
+            
+            $deckId = $request->input('deckId');
+            $filterValue = $request->input('filterValue');
             $deck = Deck::find($deckId);
 
             if (!$deck) {
@@ -542,8 +546,12 @@ class ApiController extends Controller
 
             $checks = Checks::with(['check_image' => function ($query) {
                 $query->latest()->take(1); // Order by insertion timestamp and take only the latest image
-            }])->where('deck_id', $deckId)
-                ->get();
+            }])->where('deck_id', $deckId);
+
+            if($filterValue == 'unCompleted'){
+                $checks = $checks->where('isCompleted',0);
+            }
+            $checks = $checks->get();
             return response()->json(['isStatus' => true, 'message' => 'Project checks list retrieved successfully.', 'projectChecks' => $checks]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
@@ -565,7 +573,7 @@ class ApiController extends Controller
                 $checks->only(['compartment', 'position', 'sub_position', 'position_left', 'position_top', 'project_id', 'deck_id']),
                 ['deck_image' => $deckImage]
             );
-            $checkDetails = $checks->only(['component', 'equipment', 'name', 'type', 'suspected_hazmat', 'remarks', 'color', 'material', 'project_id', 'deck_id', 'description', 'pairWitthTag']);
+            $checkDetails = $checks->only(['component', 'equipment', 'name', 'type', 'suspected_hazmat', 'remarks', 'project_id', 'deck_id', 'pairWitthTag']);
 
             return response()->json(['isStatus' => true, 'message' => 'check details retrieved successfully.', 'checkDetails' => $checkDetails, 'locationDetails' => $locationDetails]);
         } catch (Throwable $th) {
