@@ -96,7 +96,6 @@
                 <div class="row">
                     <div class="col-12">
                         <a href="{{ route('projects.view', ['project_id' => $deck->project_id]) }}">
-                            {{-- class="btn btn-secondary" --}}
                             <i class="fas fa-arrow-left"></i> <b>Back</b>
                         </a>
                     </div>
@@ -104,17 +103,10 @@
                 <div class="row">
                     <div class="col-12 col-md-12 col-lg-3">
                         <div class="card" id="checkList">
-                            <h5 class="card-header">Checks list</h5>
+                            <h5 class="card-header">Checks List</h5>
                             <div class="card-body p-0">
                                 <ul class="country-sales list-group list-group-flush" id="checkListUl">
-                                    @foreach ($deck->checks as $dot)
-                                        <li class="country-sales-content list-group-item">
-                                            <span class="mr-2">
-                                                <i class="flag-icon flag-icon-us" title="us" id="us"></i>
-                                            </span>
-                                            <span class>{{ $loop->iteration }}.{{ $dot->name }}</span>
-                                        </li>
-                                    @endforeach
+                                    @include('check.checkList')
                                 </ul>
                             </div>
                         </div>
@@ -138,12 +130,9 @@
                         <div class="outfit">
                             <div class="target">
                                 <img id="previewImg1" src="{{ $deck->image }}" alt="Upload Image">
-                                @foreach ($deck->checks as $dot)
-                                    <div class="dot ui-draggable ui-draggable-handle" data-checkId="{{ $dot->id }}"
-                                        data-check="{{ $dot }}" style="top: {{ $dot->position_top - ($deck->isApp == 1 ? 20 : 0) }}px; left: {{ $dot->position_left - ($deck->isApp == 1 ? 20 : 0) }}px;" id="dot_{{ $loop->iteration }}">
-                                        {{ $loop->iteration }}
-                                    </div>
-                                @endforeach
+                                <div id="showDeckCheck">
+                                    @include('check.dot')
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -174,7 +163,8 @@
             </div>
         </div>
 
-        <div class="modal fade" data-backdrop="static" id="checkDataAddModal" tabindex="-1" role="dialog" aria-labelledby="checkDataAddModalLabel" aria-hidden="true">
+        <div class="modal fade" data-backdrop="static" id="checkDataAddModal" tabindex="-1" role="dialog"
+            aria-labelledby="checkDataAddModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document" style="width: 50% !important; max-width: none !important;">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -183,17 +173,20 @@
                             <span aria-hidden="true">×</span>
                         </a>
                     </div>
-                    <form method="post" action="{{ route('addImageHotspots') }}" id="checkDataAddForm" enctype="multipart/form-data">
+                    <form method="post" action="{{ route('addImageHotspots') }}" id="checkDataAddForm"
+                        enctype="multipart/form-data">
                         <div class="modal-body">
                             @csrf
                             <input type="hidden" id="id" name="id">
-                            <input type="hidden" name="project_id" value="{{ $deck->project_id ?? '' }}">
-                            <input type="hidden" name="deck_id" value="{{ $deck->id ?? '' }}">
+                            <input type="hidden" id="project_id" name="project_id"
+                                value="{{ $deck->project_id ?? '' }}">
+                            <input type="hidden" id="deck_id" name="deck_id" value="{{ $deck->id ?? '' }}">
                             <div class="row">
                                 <div class="col-12 col-md-6" id="chkName">
                                     <div class="form-group">
                                         <label for="name">Name</label>
-                                        <input type="text" id="name" name="name" class="form-control" readonly>
+                                        <input type="text" id="name" name="name" class="form-control"
+                                            readonly>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -215,7 +208,8 @@
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
                                         <label for="sub_location">Sub Location</label>
-                                        <input type="text" id="sub_location" name="sub_location" class="form-control">
+                                        <input type="text" id="sub_location" name="sub_location"
+                                            class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -361,7 +355,7 @@
                         </div>`;
 
                         $("#showSuccessMsg").html(messages);
-                        $('.showSuccessMsg').fadeIn().delay(20000).fadeOut();
+                        $('#showSuccessMsg').fadeIn().delay(20000).fadeOut();
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
@@ -422,7 +416,7 @@
                 }
             });
 
-            // //Update zoom value when range input changes
+            //Update zoom value when range input changes
             $('.ranger').on('input', function() {
                 currectWithPercent = widthPercent;
                 widthPercent = parseInt($(this).val());
@@ -484,6 +478,7 @@
                         openAddModalBox(this); // Call the function with the newly created dot
                         makeDotsDraggable();
                     });
+
                     currectWithPercent = widthPercent;
                     setDotPosition();
                 }
@@ -497,6 +492,13 @@
 
             $(document).on("click", ".dot", function() {
                 openAddModalBox(this);
+            });
+
+            $(document).on("click", "#editCheckbtn", function(event) {
+                event.stopPropagation(); // Prevents the click event from bubbling up to the parent .dot element
+                let checkDataId = $(this).attr('data-dotId');
+                let dotElement = $(`#${checkDataId}`)[0];
+                openAddModalBox(dotElement);
             });
 
             // Add event listener for Save button click
@@ -541,25 +543,27 @@
                     url: $("#checkDataAddForm").attr('action'),
                     data: checkFormData,
                     success: function(response) {
-
                         $(".dot.selected").attr('data-checkId', response.id);
                         var checkData = {
                             id: response.id,
                             name: response.name,
+                            project_id: $("#project_id").val(),
+                            deck_id: $("#deck_id").val(),
                             type: $("#type").val(),
                             suspected_hazmat: $("#suspected_hazmat").val(),
                             equipment: $("#equipment").val(),
                             component: $("#component").val(),
                             location: $("#location").val(),
                             sub_location: $("#sub_location").val(),
-                            equipment: $("#remarks").val()
+                            remarks: $("#remarks").val()
                         };
 
-                        var checkDataJson = JSON.stringify(checkData);
+                        let checkDataJson = JSON.stringify(checkData);
                         $(".dot.selected").attr('data-check', checkDataJson);
-                        $('#checkListUl').append(
-                            '<li class="country-sales-content list-group-item"><span class="mr-2"><i class="flag-icon flag-icon-us" title="us" id="us"></i>' +
-                            response.name + '</span> </li>');
+
+                        $('#checkListUl').html();
+                        $('#checkListUl').html(response.htmllist);
+
                         let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
                             ${response.message}
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -569,7 +573,7 @@
 
                         $("#chkName").show();
                         $("#showSuccessMsg").html(messages);
-                        $('.showSuccessMsg').fadeIn().delay(20000).fadeOut();
+                        $('#showSuccessMsg').fadeIn().delay(20000).fadeOut();
                         $submitButton.html(originalText);
                         $submitButton.prop('disabled', false);
                         $("#checkDataAddForm")[0].reset();
@@ -634,6 +638,43 @@
 
                 // Toggle visibility of .imagehazmat based on the selected value
                 cloneTableTypeDiv.find(".imagehazmat").toggle(selectedValue !== "Unknown");
+            });
+
+
+            $(document).on("click", ".deleteCheckbtn", function(e) {
+                e.preventDefault();
+
+                let href = $(this).attr("href");
+                let checkId = $(this).data('id');
+                let $liToDelete = $(this).closest('li'); // Get the closest <li> element
+                // let $checkDiv = $(`div[data-checkid="${checkId}"]`);
+
+                $.ajax({
+                    type: 'GET',
+                    url: href,
+                    success: function(response) {
+                        if (response.status) {
+                            let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
+                                ${response.message}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>`;
+
+                            $("#showSuccessMsg").html(messages).fadeIn().delay(20000).fadeOut();
+                            $liToDelete.remove(); // Remove the <li> element
+                            $(".dot").remove();
+                            $('#showDeckCheck').html();
+                            $('#checkListUl').html();
+                            $('#showDeckCheck').html(response.htmldot);
+                            $('#checkListUl').html(response.htmllist);
+                            makeDotsDraggable();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error deleting item:', error);
+                    }
+                });
             });
         });
     </script>

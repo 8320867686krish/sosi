@@ -3,7 +3,7 @@
         <div class="title"><span>VSCP</span>
             <div style="float:right">
                 <button class="btn btn-primary" onclick="triggerFileInput('pdfFile')">Add</button>
-                <input type="file" id="pdfFile" accept=".pdf" style="display: none;">
+                <input type="file" id="pdfFile" name="pdfFile" accept=".pdf" style="display: none;">
             </div>
         </div>
     </div>

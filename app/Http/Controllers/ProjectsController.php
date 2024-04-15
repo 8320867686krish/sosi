@@ -14,6 +14,7 @@ use App\Models\ProjectTeam;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Throwable;
 use Illuminate\Support\Str;
@@ -194,11 +195,23 @@ class ProjectsController extends Controller
         try {
             $inputData = $request->input();
             $id = $request->input('id');
-            $projectDetail = Projects::with(['client' => function ($query) {
-                $query->select('id', 'manager_initials'); // Replace with the fields you want to select
-            }])->find($inputData['project_id']);
+            // $dots = json_decode($request->input('dots'));
+
+            // $insertData = array_map(function ($item) use ($inputData) {
+            //     $itemArray = (array) $item;
+            //     $itemArray['project_id'] = $inputData['project_id'];
+            //     $itemArray['deck_id'] = $inputData['deck_id'];
+            //     return $itemArray;
+            // }, $dots);
+
+            // Checks::where('deck_id', $inputData['deck_id'])->delete();
+
+            // Checks::insert($insertData);
+
             if (!@$id) {
-               
+               $projectDetail = Projects::with(['client' => function ($query) {
+                $query->select('id', 'manager_initials'); // Replace with the fields you want to select
+                }])->find($inputData['project_id']);
                 $lastCheck = Checks::latest()->first();
                 if (!$lastCheck) {
                     $projectCount = "10001";
@@ -211,13 +224,21 @@ class ProjectsController extends Controller
             } 
 
             $data = Checks::updateOrCreate(['id' => $id], $inputData);
+
             $updatedData = $data->getAttributes();
             $name = $updatedData['name'];
             $projectDetail->projectPercentage = "50";
             $projectDetail->save();
+            
+           if (!empty($inputData['deck_id'])) {
+                $checks = Checks::where('deck_id', $inputData['deck_id'])->get();
+
+                $htmllist = view('check.checkList', compact('checks'))->render();
+            }
+            
             $message = empty($id) ? "Image check added successfully" : "Image check updated successfully";
 
-            return response()->json(['isStatus' => true, 'message' => $message, "id" => $data->id, 'name' => $name]);
+            return response()->json(['isStatus' => true, 'message' => $message, "id" => $data->id, 'name' => $name, 'htmllist' => $htmllist ?? " "]);
         } catch (\Throwable $th) {
             return response()->json(['isStatus' => false, 'error' => $th->getMessage()]);
         }
@@ -249,10 +270,30 @@ class ProjectsController extends Controller
 
             $mainFileName = "{$projectName}_" . time() . ".png";
             $file->move(public_path('images/pdf/' . $projectId . "/"), $mainFileName);
+
+            $updateProjectData = ['deck_image' => $mainFileName, 'projectPercentage' => '15'];
+
+            if ($request->hasFile('ga_plan') && $request->file('ga_plan')->isValid()) {
+                $pdfName = time() . "_gaplan" . '.' . $request->ga_plan->extension();
+
+                // Move the GA plan file to desired location
+                $request->ga_plan->move(public_path('images/pdf/' . $projectId . "/"), $pdfName);
+
+                // Delete old GA plan file if it exists
+                $oldGaPlanPath = public_path("images/pdf/{$projectId}/{$project->ga_plan}");
+                if (File::exists($oldGaPlanPath) && !is_dir($oldGaPlanPath)) {
+                    unlink($oldGaPlanPath);
+                }
+
+                // Update project data with new GA plan file name
+                $updateProjectData['ga_plan'] = $pdfName;
+            }
+
+            // Update the project record in the database
+            Projects::where('id', $projectId)->update($updateProjectData);
+
+
             $areas = $request->input('areas');
-
-            Projects::where('id', $request->input('project_id'))->update(['deck_image' => $mainFileName,'projectPercentage' => '15']);
-
             $areasArray = json_decode($areas, true);
 
             $image = imagecreatefrompng(public_path('images/pdf/' . $projectId . '/' . $mainFileName));
@@ -343,6 +384,37 @@ class ProjectsController extends Controller
             $html = view('projects.list_vsp_ajax', compact('decks'))->render();
 
             return response()->json(["status" => true, "message" => "Deck deleted successfully", 'html' => $html]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function deleteCheck($id)
+    {
+        try {
+
+            $check = Checks::find($id);
+            $deckId = $check->deck_id;
+
+            // Check if the deck exists
+            if (!$check) {
+                return response()->json(["status" => true, 'message' => 'Check not found']);
+            }
+
+            // Delete the check
+            $check->delete();
+
+            $checks = Checks::where('deck_id', $deckId)->get();
+
+            $htmldot = view('check.dot', compact('checks'))->render();
+            $htmllist = view('check.checkList', compact('checks'))->render();
+
+            return response()->json([
+                "status" => true,
+                "message" => "Check deleted successfully",
+                'htmldot' => $htmldot,
+                'htmllist' => $htmllist
+            ]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
