@@ -39,9 +39,13 @@
                                     <p class="mb-1 line-clamp">Manager: <span class="text-dark font-medium ml-2">{{ ucwords($project->client->manager_name ?? '') }}</span>
                                     </p>
                                     <p class="line-clamp">Project No.:<span class="text-dark font-medium ml-2">{{ $project->project_no }}</span></p>
-                                    <div class="progress mt-3 mb-3  progress-sm">
-                                    <div class="progress-bar bg-secondary" role="progressbar" style="width: {{$project->projectPercentage}}%;" aria-valuenow="{{$project->projectPercentage}}" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
+                                  
+                                    <div class="progress mt-2 mb-3">
+  <div class="progress-bar" role="progressbar" aria-valuenow="{{$project->projectPercentage}}"
+  aria-valuemin="0" aria-valuemax="100" style="width:{{$project->projectPercentage}}%">
+    {{$project->projectPercentage}}
+  </div>
+</div>
                                     @can('projects.edit')
                                         <a href="{{ route('projects.edit', ['id' => $project->id]) }}" rel="noopener noreferrer" title="Edit">
                                             <i class="fas fa-edit text-primary" style="font-size: 1rem"></i>
