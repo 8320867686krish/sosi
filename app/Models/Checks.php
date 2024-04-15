@@ -10,7 +10,9 @@ class Checks extends Model
     use HasFactory;
 
     protected $table = "checks";
-
+    protected $casts = [
+        'isCompleted' => 'boolean',
+      ];
     protected $fillable = ["project_id", "deck_id", "type", "name", "equipment", "component", "location", "sub_location", "remarks", "position_left", "position_top","pairWitthTag","isApp",'initialsChekId','isCompleted'];
 
     protected $hidden = ['created_at','updated_at'];
