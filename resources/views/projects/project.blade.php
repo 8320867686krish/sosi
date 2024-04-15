@@ -1,36 +1,31 @@
 @extends('layouts.app')
 
 @section('css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/dataTables.bootstrap4.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/buttons.bootstrap4.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/select.bootstrap4.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/fixedHeader.bootstrap4.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/dataTables.bootstrap4.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/buttons.bootstrap4.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/select.bootstrap4.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/fixedHeader.bootstrap4.css') }}">
+
 @endsection
 
 @section('content')
-    <div class="container-fluid dashboard-content">
-        <!-- ============================================================== -->
-        <!-- pageheader -->
-        <!-- ============================================================== -->
-        <div class="row">
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                <div class="page-header">
-                    <h2 class="pageheader-title">Project Management</h2>
-                </div>
+<div class="container-fluid dashboard-content">
+    <!-- ============================================================== -->
+    <!-- pageheader -->
+    <!-- ============================================================== -->
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="page-header">
+                <h2 class="pageheader-title">Project Management</h2>
             </div>
         </div>
-        <!-- ============================================================== -->
-        <!-- end pageheader -->
-        <!-- ============================================================== -->
-        <div class="row">
-            <div class="col-12">
-                @include('layouts.message')
-            </div>
-            <div class="col-12 mb-4">
-                @can('projects.add')
-                    <a href="{{ route('projects.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New Project</a>
-                @endcan
-            </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end pageheader -->
+    <!-- ============================================================== -->
+    <div class="row">
+        <div class="col-12">
+            @include('layouts.message')
         </div>
         <div class="row equal-height">
             @if (isset($projects) && $projects->count() > 0)
@@ -68,24 +63,29 @@
                             </div>
                         </a>
                     </div>
-                @endforeach
-            @else
-                <div class="col-12">
-                    <div class="alert alert-danger fade show text-center" role="alert">
-                        Data not found.
-                    </div>
                 </div>
-            @endif
+            </div>
         </div>
+        @endforeach
+        @else
+        <div class="col-12">
+            <div class="alert alert-danger fade show text-center" role="alert">
+                Data not found.
+            </div>
+        </div>
+        @endif
     </div>
+</div>
 @endsection
 
 @section('js')
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script src="{{ asset('assets/vendor/datatables/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/datatables/js/data-table.js') }}"></script>
-    <script>
-        $(document).ready(matchHeight);
-        $(window).resize(matchHeight);
-    </script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('assets/vendor/datatables/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/datatables/js/data-table.js') }}"></script>
+<!-- chart js -->
+
+<script>
+    $(document).ready(matchHeight);
+    $(window).resize(matchHeight);
+</script>
 @endsection

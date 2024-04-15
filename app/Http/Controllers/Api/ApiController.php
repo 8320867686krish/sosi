@@ -531,9 +531,13 @@ class ApiController extends Controller
         }
     }
 
-    public function getCheckList($deckId)
+    public function getCheckList(Request $request)
     {
         try {
+
+            
+            $deckId = $request->input('deckId');
+            $filterValue = $request->input('filterValue');
             $deck = Deck::find($deckId);
 
             if (!$deck) {
@@ -542,17 +546,12 @@ class ApiController extends Controller
 
             $checks = Checks::with(['check_image' => function ($query) {
                 $query->latest()->take(1); // Order by insertion timestamp and take only the latest image
-            }])->where('deck_id', $deckId)
-                ->get()
-                ->map(function ($check) {
-                    $image = $check->check_image->isNotEmpty() ? url("public/images/checks/{$check->id}/" . $check->check_image->first()->image) : url("public/assets/images/logo.png");
-                    $check->image = $image;
-                    unset($check->check_image);
-                    return $check;
-                });
+            }])->where('deck_id', $deckId);
 
-            // ->select('id', 'project_id', 'deck_id', 'name', 'compartment')
-
+            if($filterValue == 'unCompleted'){
+                $checks = $checks->where('isCompleted',0);
+            }
+            $checks = $checks->get();
             return response()->json(['isStatus' => true, 'message' => 'Project checks list retrieved successfully.', 'projectChecks' => $checks]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
@@ -574,7 +573,7 @@ class ApiController extends Controller
                 $checks->only(['compartment', 'position', 'sub_position', 'position_left', 'position_top', 'project_id', 'deck_id']),
                 ['deck_image' => $deckImage]
             );
-            $checkDetails = $checks->only(['component', 'equipment', 'name', 'type', 'suspected_hazmat', 'remarks', 'color', 'material', 'project_id', 'deck_id', 'description', 'pairWitthTag']);
+            $checkDetails = $checks->only(['component', 'equipment', 'name', 'type', 'suspected_hazmat', 'remarks', 'project_id', 'deck_id', 'pairWitthTag']);
 
             return response()->json(['isStatus' => true, 'message' => 'check details retrieved successfully.', 'checkDetails' => $checkDetails, 'locationDetails' => $locationDetails]);
         } catch (Throwable $th) {
@@ -603,7 +602,8 @@ class ApiController extends Controller
     {
         try {
             $checkImgs = CheckImage::where('check_id', $check_id)->get();
-            $chkPair = ChecksQrCodePair::where('check_id', $check_id)->get();
+            $chkPairData = Checks::find($check_id);
+            $chkPair =  $chkPairData['pairWitthTag'];
             $mainPath = url("public/images/checks/{$check_id}") . "/";
 
             return response()->json(['isStatus' => true, 'message' => 'Check images retrieved successfully.', 'mainPath' => $mainPath, 'checkImagesList' => $checkImgs,'chkPair' => $chkPair]);
@@ -637,6 +637,8 @@ class ApiController extends Controller
                 $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('images/checks/' . $request->input('check_id')), $imageName);
                 $inputData['image'] = $imageName;
+                $check->isCompleted = 1;
+                $check->save();
             }
 
             CheckImage::create($inputData);
@@ -658,7 +660,8 @@ class ApiController extends Controller
             if (!$check) {
                 return response()->json(['isStatus' => false, 'message' => 'Check not found.']);
             }
-            ChecksQrCodePair::create(['pairWitthTag'=>$pairWitthTag,'check_id' => $checkId]);
+            $check->pairWitthTag = $pairWitthTag;
+            $check->save();
             return response()->json(['isStatus' => true, 'message' => 'Successfully creted qr code pair.']);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);

@@ -57,7 +57,7 @@ Route::controller(ApiController::class)->group(function () {
         Route::post('check/add', 'addCheck');
         Route::post('qrCodePair','qrCodePair');
 
-        Route::get('checks/{deckId}','getCheckList');
+        Route::post('checks/list','getCheckList');
         Route::get('check/details/{checkId}','getCheckDetail');
         Route::delete('check/{id}','deleteCheck');
 
