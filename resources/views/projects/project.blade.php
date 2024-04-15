@@ -1,10 +1,6 @@
 @extends('layouts.app')
 
 @section('css')
-<link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/dataTables.bootstrap4.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/buttons.bootstrap4.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/select.bootstrap4.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/fixedHeader.bootstrap4.css') }}">
 
 @endsection
 
@@ -28,21 +24,24 @@
             @include('layouts.message')
         </div>
         <div class="row equal-height">
-            @if (isset($projects) && $projects->count() > 0)
+        @if (isset($projects) && $projects->count() > 0)
                 @foreach ($projects as $project)
                     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                         <a href="{{ route('projects.view', ['project_id' => $project->id]) }}">
                             <div class="card campaign-card text-center pt-0 pb-0">
-                            <div class="card-body">
-                                <div class="campaign-img">
-                                    <img src="{{ asset("images/ship/{$project->image}") }}" onerror="this.onerror=null;this.src='{{ asset('assets/images/dribbble.png') }}';" class="user-avatar-xl rounded-circle">
-                                </div>
-                                <div class="campaign-info">
+                                <div class="card-body">
+                                    <div class="campaign-img">
+                                        <img src="{{ asset("images/ship/{$project->image}") }}" onerror="this.onerror=null;this.src='{{ asset('assets/images/dribbble.png') }}';" class="user-avatar-xl rounded-circle">
+                                    </div>
+                                    <div class="campaign-info">
                                     <h3 class="mb-1">{{ ucfirst($project->ship_name) }}</h3>
                                     <p class="mb-1 line-clamp">IMO Number:<span class="text-dark font-medium ml-2">{{ $project->imo_number }}</span></p>
                                     <p class="mb-1 line-clamp">Manager: <span class="text-dark font-medium ml-2">{{ ucwords($project->client->manager_name ?? '') }}</span>
                                     </p>
                                     <p class="line-clamp">Project No.:<span class="text-dark font-medium ml-2">{{ $project->project_no }}</span></p>
+                                    <div class="progress mt-3 mb-3  progress-sm">
+                                    <div class="progress-bar bg-secondary" role="progressbar" style="width: {{$project->projectPercentage}}%;" aria-valuenow="{{$project->projectPercentage}}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
                                     @can('projects.edit')
                                         <a href="{{ route('projects.edit', ['id' => $project->id]) }}" rel="noopener noreferrer" title="Edit">
                                             <i class="fas fa-edit text-primary" style="font-size: 1rem"></i>
@@ -59,21 +58,19 @@
                                         </a>
                                     @endcan
                                 </div>
-                            </div>
+                                </div>
                             </div>
                         </a>
                     </div>
-                </div>
-            </div>
-        </div>
-        @endforeach
-        @else
+                @endforeach
+                @else
         <div class="col-12">
             <div class="alert alert-danger fade show text-center" role="alert">
                 Data not found.
             </div>
         </div>
         @endif
+        </div>
     </div>
 </div>
 @endsection
