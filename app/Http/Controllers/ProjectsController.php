@@ -194,11 +194,11 @@ class ProjectsController extends Controller
         try {
             $inputData = $request->input();
             $id = $request->input('id');
-
+            $projectDetail = Projects::with(['client' => function ($query) {
+                $query->select('id', 'manager_initials'); // Replace with the fields you want to select
+            }])->find($inputData['project_id']);
             if (!@$id) {
-                $projectDetail = Projects::with(['client' => function ($query) {
-                    $query->select('id', 'manager_initials'); // Replace with the fields you want to select
-                }])->find($inputData['project_id']);
+               
                 $lastCheck = Checks::latest()->first();
                 if (!$lastCheck) {
                     $projectCount = "10001";
@@ -213,6 +213,7 @@ class ProjectsController extends Controller
             $data = Checks::updateOrCreate(['id' => $id], $inputData);
             $updatedData = $data->getAttributes();
             $name = $updatedData['name'];
+            $projectDetail->projectPercentage = "50";
             $message = empty($id) ? "Image check added successfully" : "Image check updated successfully";
 
             return response()->json(['isStatus' => true, 'message' => $message, "id" => $data->id, 'name' => $name]);
@@ -249,7 +250,7 @@ class ProjectsController extends Controller
             $file->move(public_path('images/pdf/' . $projectId . "/"), $mainFileName);
             $areas = $request->input('areas');
 
-            Projects::where('id', $request->input('project_id'))->update(['deck_image' => $mainFileName]);
+            Projects::where('id', $request->input('project_id'))->update(['deck_image' => $mainFileName,'projectPercentage' => '15']);
 
             $areasArray = json_decode($areas, true);
 
