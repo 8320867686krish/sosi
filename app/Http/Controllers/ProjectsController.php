@@ -145,7 +145,7 @@ class ProjectsController extends Controller
                 }
             }
         }
-
+        $inputData['projectPercentage'] = "10";
         unset($inputData['_token']);
         Projects::where(['id' => $inputData['id']])->update($inputData);
         return response()->json(['isStatus' => true, 'message' => 'successfully save details !!']);
