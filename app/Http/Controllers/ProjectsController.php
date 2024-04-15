@@ -214,6 +214,7 @@ class ProjectsController extends Controller
             $updatedData = $data->getAttributes();
             $name = $updatedData['name'];
             $projectDetail->projectPercentage = "50";
+            $projectDetail->save();
             $message = empty($id) ? "Image check added successfully" : "Image check updated successfully";
 
             return response()->json(['isStatus' => true, 'message' => $message, "id" => $data->id, 'name' => $name]);

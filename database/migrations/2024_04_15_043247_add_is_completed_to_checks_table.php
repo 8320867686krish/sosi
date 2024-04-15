@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::table('checks', function (Blueprint $table) {
             //
-            $table->boolean('isCompleted')->defeault(0);
+            $table->boolean('isCompleted')->default(false);
+
         });
     }
 
