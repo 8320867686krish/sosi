@@ -82,6 +82,9 @@
                 </div>
                 <div class="aside-nav collapse">
                     <ul class="nav">
+                        <li>
+                            <a href="{{ route('projects') }}"><span class="icon"><i class="fas fa-arrow-left"></i></span>Back</a>
+                        </li>
                         <li class="active">
                             <a href="#ship_particulars">
                                 <span class="icon"><i class="fas fa-ship"></i></span>Ship Particulars
@@ -331,7 +334,8 @@
                     <div class="row mt-3">
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
-                                <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i class="fas fa-arrow-left"></i> <b>Back</b></a>
+                                <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i
+                                        class="fas fa-arrow-left"></i> <b>Back</b></a>
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-6">
@@ -422,7 +426,8 @@
                             <input type="hidden" name="project_id" value="{{ $project->id ?? '' }}">
                             <div class="form-group">
                                 <label for="project_no">User</label>
-                                <select class="selectpicker show-tick form-control form-control-lg @error('user_id') is-invalid @enderror"
+                                <select
+                                    class="selectpicker show-tick form-control form-control-lg @error('user_id') is-invalid @enderror"
                                     name="user_id[]" id="user_id" multiple data-live-search="true"
                                     data-actions-box="true" {{ $readonly }}>
                                     @if ($users->count() > 0)
@@ -592,7 +597,6 @@
             $(`#${inputId}`).val('');
             document.getElementById(inputId).click();
             $(".dashboard-spinner").show();
-
         }
 
         async function convertToImage() {
@@ -680,7 +684,7 @@
                 $('.main-content').hide();
 
                 let targetId = $(this).attr('href');
-                console.log(targetId);
+
                 $(targetId).show();
 
                 return false;
@@ -909,6 +913,7 @@
 
                 let areasJSON = JSON.stringify(textareas);
                 let images = document.querySelectorAll('.pdf-image');
+                const pdfFile = document.getElementById('pdfFile').files[0];
 
                 let imageFiles = [];
                 images.forEach(function(image, index) {
@@ -920,6 +925,7 @@
                             formData.append('image', blob, 'page_' + (index + 1) + '.png');
                             formData.append('_token', '{{ csrf_token() }}');
                             formData.append('project_id', projectId);
+                            formData.append('ga_plan', pdfFile);
                             formData.append('areas', areasJSON);
 
                             $.ajax({

@@ -36,7 +36,8 @@
             @if (isset($projects) && $projects->count() > 0)
                 @foreach ($projects as $project)
                     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                        <div class="card campaign-card text-center pt-0 pb-0">
+                        <a href="{{ route('projects.view', ['project_id' => $project->id]) }}">
+                            <div class="card campaign-card text-center pt-0 pb-0">
                             <div class="card-body">
                                 <div class="campaign-img">
                                     <img src="{{ asset("images/ship/{$project->image}") }}" onerror="this.onerror=null;this.src='{{ asset('assets/images/dribbble.png') }}';" class="user-avatar-xl rounded-circle">
@@ -64,7 +65,8 @@
                                     @endcan
                                 </div>
                             </div>
-                        </div>
+                            </div>
+                        </a>
                     </div>
                 @endforeach
             @else
