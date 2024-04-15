@@ -543,16 +543,7 @@ class ApiController extends Controller
             $checks = Checks::with(['check_image' => function ($query) {
                 $query->latest()->take(1); // Order by insertion timestamp and take only the latest image
             }])->where('deck_id', $deckId)
-                ->get()
-                ->map(function ($check) {
-                    $image = $check->check_image->isNotEmpty() ? url("public/images/checks/{$check->id}/" . $check->check_image->first()->image) : url("public/assets/images/logo.png");
-                    $check->image = $image;
-                    unset($check->check_image);
-                    return $check;
-                });
-
-            // ->select('id', 'project_id', 'deck_id', 'name', 'compartment')
-
+                ->get();
             return response()->json(['isStatus' => true, 'message' => 'Project checks list retrieved successfully.', 'projectChecks' => $checks]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
@@ -638,6 +629,8 @@ class ApiController extends Controller
                 $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('images/checks/' . $request->input('check_id')), $imageName);
                 $inputData['image'] = $imageName;
+                $check->isCompleted = 1;
+                $check->save();
             }
 
             CheckImage::create($inputData);
