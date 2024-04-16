@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectDetailRequest;
 use App\Http\Requests\ProjectRequest;
+use App\Models\CheckHasHazmat;
 use App\Models\Checks;
 use App\Models\ChecksLog;
 use App\Models\Client;
@@ -195,22 +196,13 @@ class ProjectsController extends Controller
         try {
             $inputData = $request->input();
             $id = $request->input('id');
-            // $dots = json_decode($request->input('dots'));
-
-            // $insertData = array_map(function ($item) use ($inputData) {
-            //     $itemArray = (array) $item;
-            //     $itemArray['project_id'] = $inputData['project_id'];
-            //     $itemArray['deck_id'] = $inputData['deck_id'];
-            //     return $itemArray;
-            // }, $dots);
-
-            // Checks::where('deck_id', $inputData['deck_id'])->delete();
-
-            // Checks::insert($insertData);
+            $suspectedHazmat = $request->input('suspected_hazmat');
+            $tableTypes = $request->input('table_type');
+            $images = $request->file('image');
 
             if (!@$id) {
-               $projectDetail = Projects::with(['client' => function ($query) {
-                $query->select('id', 'manager_initials'); // Replace with the fields you want to select
+                $projectDetail = Projects::with(['client' => function ($query) {
+                    $query->select('id', 'manager_initials'); // Replace with the fields you want to select
                 }])->find($inputData['project_id']);
                 $lastCheck = Checks::latest()->first();
                 if (!$lastCheck) {
@@ -221,21 +213,58 @@ class ProjectsController extends Controller
                 $name = "sos" . $projectDetail['client']['manager_initials'] . $projectCount;
                 $inputData['name'] = $name;
                 $inputData['initialsChekId'] =  $projectCount;
-            } 
+            }
 
             $data = Checks::updateOrCreate(['id' => $id], $inputData);
+
+
+            // add check based hazmat
+            if (!empty($suspectedHazmat)) {
+
+                // $oldHazmatFolderPath = public_path("images/checks/{$data->id}/hazmat");
+                // if (File::exists($oldHazmatFolderPath)) {
+                //     File::deleteDirectory($oldHazmatFolderPath);
+                // }
+
+                // CheckHasHazmat::where("check_id", $data->id)->delete();
+
+                foreach ($suspectedHazmat as $value) {
+
+                    $hazmatData = [
+                        "check_id" => $data->id,
+                        "hazmat_id" => $value,
+                        "type" => $tableTypes[$value]
+                    ];
+
+                    // Check if there's an image for the current suspected hazmat
+                    if (isset($images[$value])) {
+                        // && $tableTypes[$value] !== 'Unknown'
+                        $image = $images[$value];
+
+                        $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
+
+                        // Move the uploaded image to the desired location
+                        $image->move(public_path("images/checks/{$data->id}/hazmat"), $imageName);
+
+                        // Assign the image name to the corresponding hazmat data
+                        $hazmatData['image'] = $imageName;
+                    }
+
+                    CheckHasHazmat::create($hazmatData);
+                }
+            }
 
             $updatedData = $data->getAttributes();
             $name = $updatedData['name'];
             $projectDetail->projectPercentage = "50";
             $projectDetail->save();
-            
-           if (!empty($inputData['deck_id'])) {
+
+            if (!empty($inputData['deck_id'])) {
                 $checks = Checks::where('deck_id', $inputData['deck_id'])->get();
 
                 $htmllist = view('check.checkList', compact('checks'))->render();
             }
-            
+
             $message = empty($id) ? "Image check added successfully" : "Image check updated successfully";
 
             return response()->json(['isStatus' => true, 'message' => $message, "id" => $data->id, 'name' => $name, 'htmllist' => $htmllist ?? " "]);

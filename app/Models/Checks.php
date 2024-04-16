@@ -20,27 +20,23 @@ class Checks extends Model
     public function check_image(){
         return $this->hasMany(CheckImage::class, 'check_id', 'id');
     }
-   
+
     public function deck(){
         return $this->belongsTo(Deck::class);
     }
 
-    public function getSuspectedHazmatAttribute($value){
-        if (!@$value) {
-            return []; // Return an empty array if the value is null
-        }
+    // public function getSuspectedHazmatAttribute($value){
+    //     if (!@$value) {
+    //         return []; // Return an empty array if the value is null
+    //     }
 
-        // Replace single quotes with double quotes to ensure valid JSON
-        $jsonString = str_replace("'", '"', $value);
+    //     // Replace single quotes with double quotes to ensure valid JSON
+    //     $jsonString = str_replace("'", '"', $value);
 
-        // Decode the JSON string into a PHP array
-        $decodedArray = json_decode($jsonString, true);
+    //     // Decode the JSON string into a PHP array
+    //     $decodedArray = json_decode($jsonString, true);
 
-        // Check if the decoded value is an array
-        return $decodedArray;
-    }
-    
-
-
-
+    //     // Check if the decoded value is an array
+    //     return $decodedArray;
+    // }
 }

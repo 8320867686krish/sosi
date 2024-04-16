@@ -3,7 +3,7 @@
 @section('css')
     <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/bootstrap-select/css/bootstrap-select.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/select2/css/select2.css') }}">
+    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/select2/css/select2.css') }}"> --}}
 
     <style>
         #checkList {
@@ -181,6 +181,8 @@
                             <input type="hidden" id="project_id" name="project_id"
                                 value="{{ $deck->project_id ?? '' }}">
                             <input type="hidden" id="deck_id" name="deck_id" value="{{ $deck->id ?? '' }}">
+                            <input type="hidden" id="position_left" name="position_left">
+                            <input type="hidden" id="position_top" name="position_top">
                             <div class="row">
                                 <div class="col-12 col-md-6" id="chkName">
                                     <div class="form-group">
@@ -227,8 +229,8 @@
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
                                         <label for="suspected_hazmat">Suspected Hazmat</label>
-                                        <select class="form-control select2 selectpicker" id="suspected_hazmat"
-                                            name="suspected_hazmat" multiple="multiple">
+                                        <select class="form-control selectpicker" id="suspected_hazmat"
+                                            name="suspected_hazmat[]" multiple>
                                             <option value="">Select Hazmat</option>
                                             @if (isset($hazmats) && $hazmats->count() > 0)
                                                 @foreach ($hazmats as $hazmat)
@@ -269,7 +271,7 @@
 @section('js')
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
-    <script src="{{ asset('assets/vendor/select2/js/select2.min.js') }}"></script>
+    {{-- <script src="{{ asset('assets/vendor/select2/js/select2.min.js') }}"></script> --}}
 
     <script>
         var isStopped = false;
@@ -495,7 +497,8 @@
             });
 
             $(document).on("click", "#editCheckbtn", function(event) {
-                event.stopPropagation(); // Prevents the click event from bubbling up to the parent .dot element
+                event
+                    .stopPropagation(); // Prevents the click event from bubbling up to the parent .dot element
                 let checkDataId = $(this).attr('data-dotId');
                 let dotElement = $(`#${checkDataId}`)[0];
                 openAddModalBox(dotElement);
@@ -506,6 +509,13 @@
                 var checkId = $(".dot.selected").attr('data-checkId');
                 $("#id").val(checkId);
 
+                // Get the position of the selected dot
+                let position_left = parseFloat($(".dot.selected").css('left')) * (100 / widthPercent);
+                let position_top = parseFloat($(".dot.selected").css('top')) * (100 / widthPercent);
+
+                $("#position_left").val(position_left);
+                $("#position_top").val(position_top);
+
                 // If checkId is not available, create a new attribute "data-checkId" for the selected dot
                 if (!checkId) {
                     checkId = 0; // Set a temporary value for the new checkId
@@ -513,25 +523,9 @@
                 }
 
                 // Serialize form data
-                let checkFormData = $("#checkDataAddForm").serializeArray();
-
-                // Get the position of the selected dot
-                let position_left = parseFloat($(".dot.selected").css('left')) * (100 / widthPercent);
-                let position_top = parseFloat($(".dot.selected").css('top')) * (100 / widthPercent);
-
-                // Append position data to formData
-                checkFormData.push({
-                    name: 'position_left',
-                    value: position_left
-                });
-
-                checkFormData.push({
-                    name: 'position_top',
-                    value: position_top
-                });
-
-                // Convert formData to query string
-                let queryString = $.param(checkFormData);
+                let checkFormData = new FormData($("#checkDataAddForm")[0]);
+                // console.log(checkformdata);
+                // $("#checkdataaddform").serializearray();
 
                 let $submitButton = $(this);
                 let originalText = $submitButton.html();
@@ -542,6 +536,8 @@
                     type: 'POST',
                     url: $("#checkDataAddForm").attr('action'),
                     data: checkFormData,
+                    contentType: false,
+                    processData: false,
                     success: function(response) {
                         $(".dot.selected").attr('data-checkId', response.id);
                         var checkData = {
@@ -597,31 +593,86 @@
                 $("#id").val("");
             });
 
-            $('#suspected_hazmat').change(function() {
-                // Clear the existing content
-                $('#showTableTypeDiv').empty();
+            // $('#suspected_hazmat').change(function() {
+            //     // Clear the existing content
+            //     $('#showTableTypeDiv').empty();
 
-                // Iterate over selected options
-                $(this).find('option:selected').each(function() {
-                    // Clone the table type template
+            //     // Iterate over selected options
+            //     $(this).find('option:selected').each(function() {
+            //         // Clone the table type template
+            //         let clonedElement = $('#cloneTableTypeDiv').clone();
+
+            //         clonedElement.removeAttr("id")
+            //         // Set label text to the selected option's text
+            //         clonedElement.find('label').text($(this).text());
+
+            //         clonedElement.find('select').attr('id', `table_type_${$(this).val()}`).attr(
+            //             'name', `table_type_${$(this).val()}`);
+
+            //         clonedElement.find('input[type="file"]').prop({
+            //             id: `image_${$(this).val()}`,
+            //             name: `image_${$(this).val()}`
+            //         });
+
+            //         // Append cloned element to showTableTypeDiv
+            //         $('#showTableTypeDiv').append(clonedElement);
+            //     });
+            // });
+
+            $('#suspected_hazmat').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+
+                let selectedValue = $(this).find('option').eq(clickedIndex).val();
+
+                if (!isSelected) {
+                    $(`#cloneTableTypeDiv${selectedValue}`).remove();
+                } else {
                     let clonedElement = $('#cloneTableTypeDiv').clone();
+                    clonedElement.removeAttr("id");
+                    clonedElement.attr("id", "cloneTableTypeDiv" + selectedValue);
 
-                    clonedElement.removeAttr("id")
-                    // Set label text to the selected option's text
-                    clonedElement.find('label').text($(this).text());
-
-                    clonedElement.find('select').attr('id', `table_type_${$(this).val()}`).attr(
-                        'name', `table_type_${$(this).val()}`);
+                    clonedElement.find('label').text($(this).find('option').eq(clickedIndex).text());
+                    clonedElement.find('select').attr('id', `table_type_${selectedValue}`).attr('name',`table_type[${selectedValue}]`);
 
                     clonedElement.find('input[type="file"]').prop({
-                        id: `image_${$(this).val()}`,
-                        name: `image_${$(this).val()}`
+                        id: `image_${selectedValue}`,
+                        name: `image[${selectedValue}]`
                     });
 
                     // Append cloned element to showTableTypeDiv
                     $('#showTableTypeDiv').append(clonedElement);
-                });
+                }
             });
+
+            // $('#suspected_hazmat').change(function(event) {
+            //     $(this).find('option').each(function() {
+            //         if ($(this).is(':selected') && $(this).val() !== '') {
+            //             // Clone the table type template
+            //             let clonedElement = $('#cloneTableTypeDiv').clone();
+            //             clonedElement.removeAttr("id");
+            //             clonedElement.attr("id", "cloneTableTypeDiv" + $(this).val());
+            //             var dynamicId = "cloneTableTypeDiv" + $(this).val();
+            //             //if already selected dont append
+            //             if (!$('#' + dynamicId).length) {
+            //                 clonedElement.find('label').text($(this).text());
+            //                 clonedElement.find('select').attr('id',
+            //                         `table_type_${$(this).val()}`)
+            //                     .attr('name', `table_type[${$(this).val()}]`);
+
+            //                 clonedElement.find('input[type="file"]').prop({
+            //                     id: `image_${$(this).val()}`,
+            //                     name: `image[${$(this).val()}]`
+            //                 });
+
+            //                 // Show input fields for selected options with non-empty values
+            //                 $(`#showTableTypeDiv #image_${$(this).val()}`).show();
+            //                 $(`#showTableTypeDiv #table_type_${$(this).val()}`).show();
+
+            //                 // Append cloned element to showTableTypeDiv
+            //                 $('#showTableTypeDiv').append(clonedElement);
+            //             }
+            //         }
+            //     });
+            // });
 
             $("#showTableTypeDiv").on("change", ".cloneTableTypeDiv select", function() {
                 let selectedValue = $(this).val();
@@ -661,7 +712,8 @@
                                     </button>
                                 </div>`;
 
-                            $("#showSuccessMsg").html(messages).fadeIn().delay(20000).fadeOut();
+                            $("#showSuccessMsg").html(messages).fadeIn().delay(20000)
+                                .fadeOut();
                             $liToDelete.remove(); // Remove the <li> element
                             $(".dot").remove();
                             $('#showDeckCheck').html();
