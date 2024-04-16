@@ -294,7 +294,7 @@ class ProjectsController extends Controller
             $oldMainImgPath = public_path("images/pdf/{$projectId}/{$project->deck_image}");
 
             if (file_exists($oldMainImgPath)) {
-                unlink($oldMainImgPath);
+               // unlink($oldMainImgPath);
             }
 
             $mainFileName = "{$projectName}_" . time() . ".png";
