@@ -310,7 +310,7 @@ class ProjectsController extends Controller
 
                 // Delete old GA plan file if it exists
                 $oldGaPlanPath = public_path("images/pdf/{$projectId}/{$project->ga_plan}");
-                if (File::exists($oldGaPlanPath) && !is_dir($oldGaPlanPath)) {
+                if (File::exists($oldGaPlanPath)) {
                     unlink($oldGaPlanPath);
                 }
 
