@@ -17,9 +17,7 @@ class Projects extends Model
         'updated_at',
         'pivot'
     ];
-    protected $casts = [
-        'projectPercentage' => 'string',
-      ];
+ 
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_id', 'id');
