@@ -21,14 +21,19 @@ class SyncProjectController extends Controller
             return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
 
         } else {
-        
-            $project = Projects::with(['client:id,manager_name,manager_logo', 'decks.checks' => function ($query) {
+            $projectChunks = Projects::with(['client:id,manager_name,manager_logo', 'decks.checks' => function ($query) {
                 $query->with(['check_image']);
-            }])->find($projectId);
+            }])->where('id', $projectId)->chunk(100); // Adjust chunk size as needed
+        
+            $projectList = collect();
+        
+            foreach ($projectChunks as $chunk) {
+                $projectList = $projectList->merge($chunk);
+            }
            
           
             
-            return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project]);
+            return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $projectList]);
         }
       
     }
