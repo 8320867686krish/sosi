@@ -698,4 +698,21 @@ class ApiController extends Controller
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
     }
+    public function updatePairWithTag($id)
+    {
+        try {
+            $check = Checks::find($id);
+
+            if (!$check) {
+                return response()->json(['isStatus' => false, 'message' => 'Check not found.']);
+            }
+
+            $check->pairWitthTag = NULL;
+            $check->save();
+            return response()->json(['isStatus' => true, 'message' => 'PairWithTag deleted successfully.']);
+        } catch (Throwable $th) {
+            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
+        }
+    }
+   
 }

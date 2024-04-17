@@ -60,6 +60,7 @@ Route::controller(ApiController::class)->group(function () {
         Route::post('checks/list','getCheckList');
         Route::get('check/details/{checkId}','getCheckDetail');
         Route::delete('check/{id}','deleteCheck');
+        Route::delete('pairWithTag/{id}','updatePairWithTag');
 
         // Check image api
         Route::post('check/image', 'addCheckImg');
