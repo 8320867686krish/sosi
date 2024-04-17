@@ -11,28 +11,25 @@ use Illuminate\Http\Request;
 class SyncProjectController extends Controller
 {
     //
-    public function syncProject()
+    public function syncProject($projectId)
     {
         $user = Auth::user();
 
         $currentUserRoleLevel = $user->roles->first()->level;
 
         if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
-            $project = Projects::with(['client:id,manager_name,manager_logo', 'decks.checks' => function ($query) {
-                $query->with(['check_image']);
-            }]);
+            return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
+
         } else {
         
-            $project = $user->projects()
-                ->with(['client:id,manager_name,manager_logo', 'decks.checks' => function ($query) {
-                    $query->with(['check_image']);
-                }])
-                ->where('isExpire', 0);
+            $project = Projects::with(['client:id,manager_name,manager_logo', 'decks.checks' => function ($query) {
+                $query->with(['check_image']);
+            }])->find($projectId)->getAttributes();
+           
+          
+            
+            return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project]);
         }
-        $project = $project->get();
-        if ($project->count() > 0) {
-            $modifiedProjects = $project;
-        }
-        return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $modifiedProjects]);
+      
     }
 }
