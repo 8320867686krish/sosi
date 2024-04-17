@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 use Throwable;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -53,7 +54,17 @@ class ProjectsController extends Controller
     public function projectView($project_id)
     {
         $clients = Client::orderBy('id', 'desc')->get(['id', 'manager_name', 'manager_initials']);
-        $users = User::where('isVerified', 1)->get();
+
+        $role_id = Auth::user()->roles->first()->level;
+
+        if ($role_id != 1) {
+            $users = User::whereHas('roles', function ($query) use ($role_id) {
+                $query->where('level', '>', $role_id)->orderBy('level', 'asc');
+            })->where('isVerified', 1)->get();
+        } else {
+            $users = User::where('isVerified', 1)->get();
+        }
+
         $project = Projects::with([
             'project_teams',
             'client:id,manager_name,owner_name'
@@ -185,7 +196,8 @@ class ProjectsController extends Controller
 
     public function deckBasedCheckView($id)
     {
-        $deck = Deck::with('checks')->find($id);
+        $deck = Deck::with('checks.hazmats')->find($id);
+
         $hazmats = Hazmat::get(['id', 'name', 'table_type']);
         // $deck['imagePath'] = asset("images/pdf/{$deck->project_id}/{$deck->image}");
         return view('check.check', ['deck' => $deck, 'hazmats' => $hazmats]);
@@ -194,6 +206,15 @@ class ProjectsController extends Controller
     public function addImageHotspots(Request $request)
     {
         try {
+
+            $validator = Validator::make($request->all(), [
+                'type' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                throw new ValidationException($validator);
+            }
+
             $inputData = $request->input();
             $id = $request->input('id');
             $suspectedHazmat = $request->input('suspected_hazmat');
@@ -268,6 +289,8 @@ class ProjectsController extends Controller
             $message = empty($id) ? "Image check added successfully" : "Image check updated successfully";
 
             return response()->json(['isStatus' => true, 'message' => $message, "id" => $data->id, 'name' => $name, 'htmllist' => $htmllist ?? " "]);
+        } catch (ValidationException $e) {
+            return response()->json(['isStatus' => false, 'message' => $e->validator->errors()->first()]);
         } catch (\Throwable $th) {
             return response()->json(['isStatus' => false, 'error' => $th->getMessage()]);
         }
@@ -292,9 +315,10 @@ class ProjectsController extends Controller
             }
 
             $oldMainImgPath = public_path("images/pdf/{$projectId}/{$project->deck_image}");
-
-            if (file_exists($oldMainImgPath)) {
-               // unlink($oldMainImgPath);
+            if (@$project->deck_image) {
+                if (file_exists($oldMainImgPath)) {
+                    unlink($oldMainImgPath);
+                }
             }
 
             $mainFileName = "{$projectName}_" . time() . ".png";
@@ -310,9 +334,12 @@ class ProjectsController extends Controller
 
                 // Delete old GA plan file if it exists
                 $oldGaPlanPath = public_path("images/pdf/{$projectId}/{$project->ga_plan}");
-                if (File::exists($oldGaPlanPath)) {
-                   // unlink($oldGaPlanPath);
+                if (@$project->ga_plan) {
+                    if (file_exists($oldGaPlanPath)) {
+                        unlink($oldGaPlanPath);
+                    }
                 }
+
 
                 // Update project data with new GA plan file name
                 $updateProjectData['ga_plan'] = $pdfName;
@@ -398,7 +425,11 @@ class ProjectsController extends Controller
             }
 
             // Construct the image path
-            $imagePath = public_path("images/pdf/{$projectId}/{$deck->image}");
+           //
+
+           $mainurl = asset('');
+           $explode = explode($mainurl,$deck->image);
+           $imagePath = public_path($explode[1]);
 
             // Check if the image file exists before attempting to delete
             if (file_exists($imagePath)) {
@@ -421,14 +452,23 @@ class ProjectsController extends Controller
     public function deleteCheck($id)
     {
         try {
-
             $check = Checks::find($id);
+
+            if (!$check) {
+                return response()->json(["status" => false, 'message' => 'Check not found'], 404);
+            }
+
             $deckId = $check->deck_id;
 
-            // Check if the deck exists
-            if (!$check) {
-                return response()->json(["status" => true, 'message' => 'Check not found']);
+            $hazmats = CheckHasHazmat::where('check_id', $id)->get();
+
+            $hazImagePath = public_path("images/checks/{$id}/hazmat");
+            if (File::isDirectory($hazImagePath)) {
+                File::deleteDirectory($hazImagePath);
             }
+
+            // Delete the hazmats
+            $hazmats->each->delete();
 
             // Delete the check
             $check->delete();
