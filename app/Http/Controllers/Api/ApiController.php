@@ -638,7 +638,7 @@ class ApiController extends Controller
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images/pdf/checks/' . $request->input('check_id')), $imageName);
+                $image->move(public_path('images/checks/' . $request->input('check_id')), $imageName);
                 $inputData['image'] = $imageName;
                 $check->isCompleted = 1;
                 $check->save();
