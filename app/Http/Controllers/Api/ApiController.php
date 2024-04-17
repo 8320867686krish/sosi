@@ -608,7 +608,8 @@ class ApiController extends Controller
             $chkPairData = Checks::find($check_id);
             $chkPair =  $chkPairData['pairWitthTag'];
             $mainPath = url("public/images/checks/{$check_id}") . "/";
-            return response()->json(['isStatus' => true, 'message' => 'Check images retrieved successfully.', 'mainPath' => $mainPath, 'checkImagesList' => $checkImgs,'chkPair' => [$chkPair]]);
+            $chkPair1['chkPair']  =$chkPair;
+            return response()->json(['isStatus' => true, 'message' => 'Check images retrieved successfully.', 'mainPath' => $mainPath, 'checkImagesList' => $checkImgs,'chkPair' => $chkPair1]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
