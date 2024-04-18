@@ -23,7 +23,7 @@ class SyncProjectController extends Controller
             return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
 
         } else {
-        
+                $downLoadFile = asset('images/pdf/'.$projectId);
                 $project = Projects::with(['client:id,manager_name,manager_logo', 'decks.checks' => function ($query) {
                     $query->with(['check_image']);
                 }])->find($projectId);
@@ -50,7 +50,7 @@ class SyncProjectController extends Controller
                 }
           
             
-            return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project,'zipPath' => $zipFilePath]);
+            return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project,'zipPath' =>$downLoadFile]);
         }
       
     }
