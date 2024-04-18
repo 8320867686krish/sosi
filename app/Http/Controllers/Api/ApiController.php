@@ -295,9 +295,7 @@ class ApiController extends Controller
     public function getProjectList()
     {
         try {
-            $user = Auth::user()->load(['projects' => function ($query) {
-                $query->select('id','client_id','ship_name','imo_number','project_no','image');
-            }]);
+            $user = Auth::user();
 
             $currentUserRoleLevel = $user->roles->first()->level;
 
