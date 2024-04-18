@@ -295,14 +295,16 @@ class ApiController extends Controller
     public function getProjectList()
     {
         try {
-            $user = Auth::user();
+            $user = Auth::user()->load(['projects' => function ($query) {
+                $query->select('id','client_id','ship_name','imo_number','project_no','image');
+            }]);
 
             $currentUserRoleLevel = $user->roles->first()->level;
 
             if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
                 $project = Projects::select('id','client_id','ship_name','imo_number','project_no','image')->with('client:id,manager_name,manager_logo');
             } else {
-                $project = $user->projects()->select('id','client_id','ship_name','imo_number','project_no','image')->with('client:id,manager_name')->where('isExpire', 0);
+                $project = $user->projects()->with('client:id,manager_name')->where('isExpire', 0);
             }
 
             $project = $project->get();
