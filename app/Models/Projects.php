@@ -17,7 +17,9 @@ class Projects extends Model
         'updated_at',
         'pivot'
     ];
- 
+    public function getImageAttribute($value){
+        return asset('images/pdf/'.$this->id."/".$value);
+    }
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_id', 'id');

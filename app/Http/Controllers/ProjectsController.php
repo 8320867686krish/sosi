@@ -74,7 +74,7 @@ class ProjectsController extends Controller
             $project->decks = $project->decks()->orderBy('id', 'desc')->get();
         }
 
-        $project['imagePath'] = $project->image != null ? asset("images/ship/{$project->image}") : asset('assets/images/giphy.gif');
+        $project['imagePath'] = $project->image != null ? asset("images/pdf/{$project->id}/{$project->image}") : asset('assets/images/giphy.gif');
 
         $project['user_id'] = $project->project_teams->pluck('user_id')->toArray();
         $project->assign_date = $project->project_teams->pluck('assign_date')->unique()->values()->toArray();
@@ -142,15 +142,16 @@ class ProjectsController extends Controller
             $image = $request->file('image');
             $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
 
-            $image->move(public_path('images/ship'), $imageName);
+            $image->move(public_path('images/pdf/'.$inputData['id']."/"), $imageName);
 
             $inputData['image'] = $imageName;
 
             if (!empty($inputData['id'])) {
+              
                 $exitsImg = Projects::select('id', 'image')->findOrFail($inputData['id']);
-
+                $imageFilename = basename($exitsImg->getOriginal('image'));
                 if (!empty($exitsImg->image)) {
-                    $path = public_path('images/ship/' . $exitsImg->image);
+                    $path = public_path('images/pdf/'.$inputData['id'].'/' .$imageFilename);
 
                     if (file_exists($path) && is_file($path)) {
                         unlink($path);
@@ -265,7 +266,7 @@ class ProjectsController extends Controller
                         $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
 
                         // Move the uploaded image to the desired location
-                        $image->move(public_path("images/checks/{$data->id}/hazmat"), $imageName);
+                        $image->move(public_path("images/{$data->id}/hazmat"), $imageName);
 
                         // Assign the image name to the corresponding hazmat data
                         $hazmatData['image'] = $imageName;
