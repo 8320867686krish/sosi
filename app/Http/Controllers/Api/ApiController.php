@@ -503,7 +503,7 @@ class ApiController extends Controller
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images/checks/' .  $checkId), $imageName);
+                $image->move(public_path('images/pdf/' .  $projectId), $imageName);
                 $checkData['image'] = $imageName;
                 $checkData['check_id'] = $checkId;
                 CheckImage::create($checkData);
@@ -614,7 +614,7 @@ class ApiController extends Controller
                 $data = [];
 
             }
-            $mainPath = url("public/images/checks/{$check_id}") . "/";
+            $mainPath = url("public/images/pdf/{$chkPairData['project_id']}") . "/";
             return response()->json(['isStatus' => true, 'message' => 'Check images retrieved successfully.', 'mainPath' => $mainPath, 'checkImagesList' => $checkImgs,'chkPair' => $data]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
@@ -640,12 +640,12 @@ class ApiController extends Controller
             }
 
             $inputData = $request->only(['check_id']);
-
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images/checks/' . $request->input('check_id')), $imageName);
+                $image->move(public_path('images/pdf/' . $check['project_id']), $imageName);
                 $inputData['image'] = $imageName;
+                $inputData['project_id'] = $check['project_id'];
                 $check->isCompleted = 1;
                 $check->save();
             }
