@@ -18,7 +18,10 @@ class Projects extends Model
         'pivot'
     ];
     public function getImageAttribute($value){
-        return asset('images/pdf/'.$this->id."/".$value);
+        if ($value) {
+            return asset('images/pdf/' . $this->id . '/' . $value);
+        }
+        return "";
     }
     public function client()
     {
