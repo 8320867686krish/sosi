@@ -23,7 +23,7 @@ class SyncProjectController extends Controller
             return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
 
         } else {
-                $downLoadFile = asset('images/pdf/'.$projectId);
+                $downLoadFile = asset('images/pdf/'.$projectId."zip");
                 $project = Projects::with(['client:id,manager_name,manager_logo', 'decks.checks' => function ($query) {
                     $query->with(['check_image']);
                 }])->find($projectId);
