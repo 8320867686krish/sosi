@@ -135,7 +135,6 @@ class UserController extends Controller
             return response()->json(['isStatus' => true, 'message' => $message]);
         } catch (\Throwable $th) {
             // return back()->withError($th->getMessage())->withInput();
-            dd($th->getMessage());
             return response()->json(['isStatus' => false, 'message' => $th->getMessage()]);
         }
     }
