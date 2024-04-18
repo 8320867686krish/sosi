@@ -21,7 +21,7 @@ class Projects extends Model
         if ($value) {
             return asset('images/pdf/' . $this->id . '/' . $value);
         }
-        return "";
+        return asset('images/logo.png');
     }
     public function client()
     {
