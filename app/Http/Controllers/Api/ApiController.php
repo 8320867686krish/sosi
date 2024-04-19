@@ -718,12 +718,12 @@ class ApiController extends Controller
         }
     }
     public function tableStruture(){
-        $data['projects'] = DB::select('describe projects');
-        $data['clients'] = DB::select('describe clients');
-        $data['decks'] = DB::select('describe decks');
-        $data['checks'] = DB::select('describe checks');
-        $data['check_has_images'] = DB::select('describe check_has_images');
-        return response()->json(['isStatus' => true, 'message' => 'table strture.','data'=>$data]);
+        $projects = DB::select('describe projects');
+        $clients = DB::select('describe clients');
+        $decks = DB::select('describe decks');
+        $checks = DB::select('describe checks');
+        $check_has_images = DB::select('describe check_has_images');
+        return response()->json(['isStatus' => true, 'message' => 'table strture.','projects'=>$projects,'clients' => $clients,'decks' => $decks,'checks' => $checks,'check_has_images' => $check_has_images]);
     }
    
 }
