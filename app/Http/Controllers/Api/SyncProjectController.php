@@ -9,6 +9,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use ZipArchive;
 use Illuminate\Support\Facades\File;
+use App\Models\Deck;
+use App\Models\Checks;
+use App\Models\CheckImage;
+
 
 class SyncProjectController extends Controller
 {
@@ -24,9 +28,13 @@ class SyncProjectController extends Controller
 
         } else {
                 $downLoadFile = asset('images/pdf/'.$projectId.".zip");
-                $project = Projects::with(['client:id,manager_name,manager_logo,owner_name,owner_address', 'decks.checks' => function ($query) {
-                    $query->with(['check_image']);
-                }])->find($projectId);
+                // $project = Projects::with(['client:id,manager_name,manager_logo,owner_name,owner_address', 'decks.checks' => function ($query) {
+                //     $query->with(['check_image']);
+                // }])->find($projectId);
+                $project = Projects::find($projectId)->getAttribute();
+                $decks = Deck::where('project_id',$projectId)->get();
+                $checks = Checks::where('project_id',$projectId)->get();
+                $checkImages = CheckImage::where('project_id',$projectId)->get();
                 $sourceDir = public_path('images/pdf/'.$projectId);
                 $zipFilePath = public_path('images/pdf/'.$projectId.'.zip');
                 $zip = new ZipArchive;
@@ -50,7 +58,7 @@ class SyncProjectController extends Controller
                 }
           
             
-            return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project,'zipPath' =>$downLoadFile]);
+            return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project,'decks'=>$decks,'checkImages'=>$checkImages,'zipPath'=>$downLoadFile,'checks'=>$checks]);
         }
       
     }
