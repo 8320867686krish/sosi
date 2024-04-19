@@ -26,4 +26,9 @@ class CheckHasHazmat extends Model
             'name' => $imageName
         ];
     }
+
+    public function hazmat()
+    {
+        return $this->belongsTo(Hazmat::class, 'hazmat_id', 'id');
+    }
 }

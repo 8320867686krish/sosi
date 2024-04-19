@@ -85,6 +85,8 @@ Route::middleware('auth')->group(function () {
             Route::get('project/deleteDeckImg/{id}', 'deleteDeckImg')->name('deleteDeckImg');
             Route::get('projects/deck/{id}', 'deckBasedCheckView')->name('deck.detail');
 
+            Route::get('check/{id}/hazmat', 'checkBasedHazmat')->name('check.hazmat');
+
             Route::get('projects/check/{id}', 'deleteCheck')->name('check.delete');
         });
     });
