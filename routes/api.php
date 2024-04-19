@@ -33,6 +33,7 @@ Route::controller(ApiController::class)->group(function () {
     Route::post('forgot_password', 'forgotPassword');
     Route::post('reset_password', 'resetPassword');
    
+    Route::get('table/structure','tableStruture');
 
 
     // Routes that require Sanctum authentication
@@ -68,6 +69,5 @@ Route::controller(ApiController::class)->group(function () {
         Route::post('check/image', 'addCheckImg');
         Route::get('check/image/{check_id}', 'getCheckImgList');
         Route::delete('check/image/{id}', 'deleteCheckImg');
-        Route::get('table/structure','tableStruture');
     });
 });
