@@ -46,6 +46,9 @@ class SyncProjectController extends Controller
                     $checkImages = CheckImage::where('project_id',$projectId)
                     ->where('updated_at', '>=', $syncDate)
                     ->get();
+                    $checkImagesArray = CheckImage::where('project_id',$projectId)
+                    ->where('updated_at', '>=', $syncDate)
+                    ->pluck('image')->toArray();
                 } else {
                     $decks = Deck::where('project_id', $projectId)->get();
                     $checks = Checks::where('project_id', $projectId)->get();
@@ -55,23 +58,28 @@ class SyncProjectController extends Controller
                 $sourceDir = public_path('images/pdf/'.$projectId);
                 $zipFilePath = public_path('images/pdf/'.$projectId.'.zip');
                 $zip = new ZipArchive;
-                if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
-                    $files = File::files($sourceDir);
-                
-                    foreach ($files as $key => $value) {
-                        $relativeNameInZipFile = basename($value);
-                        $zip->addFile($value, $relativeNameInZipFile);
-                    }
-                
-                    $zip->close();
-                
-                    // Check if the file exists before downloading
-                    if (!file_exists($zipFilePath)) {
+                if ($syncDate != 0) {
+                    if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+                        $files = File::files($sourceDir);
+                    
+                        foreach ($files as $key => $value) {
+                            $relativeNameInZipFile = basename($value);
+                            $zip->addFile($value, $relativeNameInZipFile);
+                        }
+                    
+                        $zip->close();
+                    
+                        // Check if the file exists before downloading
+                        if (!file_exists($zipFilePath)) {
+                            return response()->json(['isStatus'=>false,'error' => 'Failed to create zip file.']);
+                        }
+                    } else {
+                        // Handle error if the zip archive cannot be opened or created
                         return response()->json(['isStatus'=>false,'error' => 'Failed to create zip file.']);
                     }
-                } else {
-                    // Handle error if the zip archive cannot be opened or created
-                    return response()->json(['isStatus'=>false,'error' => 'Failed to create zip file.']);
+                }
+                else{
+                    print_r($checkImagesArray);
                 }
                 return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project,'decks'=>$decks,'checks'=>$checks,'checkImages'=>$checkImages,'zipPath'=>$downLoadFile]);
         }
