@@ -200,32 +200,44 @@ class ProjectsController extends Controller
         $deck = Deck::with('checks.hazmats')->find($id);
 
         $hazmats = Hazmat::get(['id', 'name', 'table_type']);
-        // $deck['imagePath'] = asset("images/pdf/{$deck->project_id}/{$deck->image}");
+
         return view('check.check', ['deck' => $deck, 'hazmats' => $hazmats]);
     }
+
+    public function checkBasedHazmat($id)
+    {
+        $check = Checks::with(['hazmats' => function ($query) {
+            $query->with('hazmat:id,name'); // Eager load hazmat with only id, name, and image columns
+        }])->find($id);
+
+        $hazmatIds = $check->hazmats->pluck('hazmat_id')->toArray();
+
+        $hazmats = $check->hazmats;
+
+        $htmllist = view('check.checkAddModal', compact('hazmats'))->render();
+
+        return response()->json(['html' => $htmllist, 'hazmatIds' => $hazmatIds, "check" => $check]);
+    }
+
 
     public function addImageHotspots(Request $request)
     {
         try {
-
-            $validator = Validator::make($request->all(), [
+            $validatedData = $request->validate([
                 'type' => 'required',
             ]);
-
-            if ($validator->fails()) {
-                throw new ValidationException($validator);
-            }
 
             $inputData = $request->input();
             $id = $request->input('id');
             $suspectedHazmat = $request->input('suspected_hazmat');
+            $suspectedHazmatId = $request->input('hasid');
             $tableTypes = $request->input('table_type');
             $images = $request->file('image');
+            $projectDetail = Projects::with(['client' => function ($query) {
+                $query->select('id', 'manager_initials'); // Replace with the fields you want to select
+            }])->find($inputData['project_id']);
 
             if (!@$id) {
-                $projectDetail = Projects::with(['client' => function ($query) {
-                    $query->select('id', 'manager_initials'); // Replace with the fields you want to select
-                }])->find($inputData['project_id']);
                 $lastCheck = Checks::latest()->first();
                 if (!$lastCheck) {
                     $projectCount = "10001";
@@ -239,19 +251,10 @@ class ProjectsController extends Controller
 
             $data = Checks::updateOrCreate(['id' => $id], $inputData);
 
-
             // add check based hazmat
             if (!empty($suspectedHazmat)) {
 
-                // $oldHazmatFolderPath = public_path("images/checks/{$data->id}/hazmat");
-                // if (File::exists($oldHazmatFolderPath)) {
-                //     File::deleteDirectory($oldHazmatFolderPath);
-                // }
-
-                // CheckHasHazmat::where("check_id", $data->id)->delete();
-
                 foreach ($suspectedHazmat as $value) {
-
                     $hazmatData = [
                         "check_id" => $data->id,
                         "hazmat_id" => $value,
@@ -272,9 +275,28 @@ class ProjectsController extends Controller
                         $hazmatData['image'] = $imageName;
                     }
 
-                    CheckHasHazmat::create($hazmatData);
+                    if($tableTypes[$value] == 'Unknown'){
+                        $hazmatData['image'] = NULL;
+                    }
+
+                    if(!empty($suspectedHazmatId[$value])){
+                        CheckHasHazmat::updateOrCreate(['id'=>$suspectedHazmatId[$value]], $hazmatData);
+                    } else {
+
+                        CheckHasHazmat::create($hazmatData);
+                    }
                 }
             }
+
+            if(!empty($request->input('deselectId'))){
+                $deselectIds = explode(',', $request->input('deselectId'));
+                foreach($deselectIds as $deselectId){
+                    if(!empty($deselectId)){
+                        CheckHasHazmat::where("check_id", $data->id)->where('hazmat_id', $deselectId)->delete();
+                    }
+                }
+            }
+
 
             $updatedData = $data->getAttributes();
             $name = $updatedData['name'];
@@ -291,7 +313,7 @@ class ProjectsController extends Controller
 
             return response()->json(['isStatus' => true, 'message' => $message, "id" => $data->id, 'name' => $name, 'htmllist' => $htmllist ?? " "]);
         } catch (ValidationException $e) {
-            return response()->json(['isStatus' => false, 'message' => $e->validator->errors()->first()]);
+            return response()->json(['isStatus' => false, 'message' => $e->validator->errors()]);
         } catch (\Throwable $th) {
             return response()->json(['isStatus' => false, 'error' => $th->getMessage()]);
         }
@@ -426,12 +448,7 @@ class ProjectsController extends Controller
             }
 
             // Construct the image path
-           //
-
-           $mainurl = asset('');
-           $explode = explode($mainurl,$deck->image);
-           $imagePath = public_path($explode[1]);
-
+            $imagePath = basename($deck->getOriginal('image'));
             // Check if the image file exists before attempting to delete
             if (file_exists($imagePath)) {
                 unlink($imagePath);

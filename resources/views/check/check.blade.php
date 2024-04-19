@@ -91,7 +91,6 @@
         @include('layouts.message')
         <div id="showSuccessMsg"></div>
         <div class="card">
-            {{-- <div class="zoom-tool-bar"></div> --}}
             <div class="card-body">
                 <div class="row">
                     <div class="col-12">
@@ -162,8 +161,116 @@
                 </div>
             </div>
         </div>
+        {{-- <div id="modalContainer">
+        </div> --}}
 
-        @include('check.checkAddModal')
+        <div class="modal fade" data-backdrop="static" id="checkDataAddModal" tabindex="-1" role="dialog"
+            aria-labelledby="checkDataAddModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document" style="width: 50% !important; max-width: none !important;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Title</h5>
+                        <a href="#" class="close" data-dismiss="modal" aria-label="Close" id="checkDataAddCloseBtn">
+                            <span aria-hidden="true">×</span>
+                        </a>
+                    </div>
+
+                    <form method="post" action="{{ route('addImageHotspots') }}" id="checkDataAddForm"
+                        enctype="multipart/form-data">
+                        <div class="modal-body">
+                            @csrf
+                            <input type="hidden" id="id" name="id">
+                            <input type="hidden" id="project_id" name="project_id"
+                                value="{{ $deck->project_id ?? '' }}">
+                            <input type="hidden" id="deck_id" name="deck_id" value="{{ $deck->id ?? '' }}">
+                            <input type="hidden" id="position_left" name="position_left">
+                            <input type="hidden" id="position_top" name="position_top">
+                            <div class="row">
+                                <div class="col-12 col-md-6" id="chkName">
+                                    <div class="form-group">
+                                        <label for="name">Name</label>
+                                        <input type="text" id="name" name="name" class="form-control"
+                                            readonly>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="type">Type</label>
+                                        <select name="type" id="type" class="form-control">
+                                            <option value>Select Type</option>
+                                            <option value="sample">Sample</option>
+                                            <option value="visual">Visual</option>
+                                        </select>
+                                        <div class="invalid-feedback error" id="typeError"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="location">Location</label>
+                                        <input type="text" id="location" name="location" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="sub_location">Sub Location</label>
+                                        <input type="text" id="sub_location" name="sub_location"
+                                            class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="equipment">Equipment</label>
+                                        <input type="text" id="equipment" name="equipment" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="component">Component</label>
+                                        <input type="text" id="component" name="component" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="suspected_hazmat">Suspected Hazmat</label>
+                                        <select class="form-control selectpicker" id="suspected_hazmat"
+                                            name="suspected_hazmat[]" multiple>
+                                            <option value="">Select Hazmat</option>
+                                            @if (isset($hazmats) && $hazmats->count() > 0)
+                                                @foreach ($hazmats as $hazmat)
+                                                    <option value="{{ $hazmat->id }}">
+                                                        {{ $hazmat->name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-12 mb-3">
+                                    <div style="border: 2px solid black;" class="p-2">
+                                        <h5 class="text-center">Document Analysis Results</h5>
+                                        <div class="row" id="showTableTypeDiv">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="remarks">Remarks</label>
+                                        <textarea name="remarks" id="remarks" class="form-control" rows="1"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="checkDataAddSubmitBtn">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 @stop
 
@@ -200,18 +307,39 @@
             });
         }
 
+        function detailOfHazmats(checkId) {
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('check') }}" + "/" + checkId + "/hazmat",
+                success: function(response) {
+                    $('#suspected_hazmat').selectpicker('val', response.hazmatIds);
+
+                    $('#showTableTypeDiv').html(response.html);
+
+                    $.each(response.check.hazmats, function(index, hazmatData) {
+                        if (hazmatData.type === 'Unknown') {
+                            $(`#imagehazmat${hazmatData.hazmat_id}`).hide();
+                        }
+                    });
+
+                    $("#checkDataAddModal").modal('show');
+                },
+            });
+        }
+
         function openAddModalBox(dot) {
             let $dot = $(dot);
-
             // Remove the "selected" class from all dots
             $(".dot").removeClass("selected");
-
             // Add the "selected" class to the clicked dot
             $dot.addClass("selected");
 
             // Retrieve data attributes from the clicked dot
             let checkId = $dot.attr('data-checkId');
             let data = $dot.attr('data-check');
+            if (checkId) {
+                detailOfHazmats(checkId);
+            }
 
             // Populate form fields if data is available
             if (data) {
@@ -234,6 +362,7 @@
             let $dots = $(dot);
 
             let check_id = $dots.attr('data-checkId');
+            let jsonObject = JSON.parse($dots.attr('data-check'));
 
             let position_left = parseFloat($dots.css('left')) * (100 / widthPercent);
             let position_top = parseFloat($dots.css('top')) * (100 / widthPercent);
@@ -243,6 +372,8 @@
                     method: 'POST',
                     data: {
                         id: check_id,
+                        type: jsonObject.type,
+                        project_id: jsonObject.project_id,
                         position_left: position_left,
                         position_top: position_top,
                         _token: '{{ csrf_token() }}'
@@ -299,17 +430,24 @@
             updateZoomValue(zoomValue);
         }
 
+        function handleTableTypeChange(selectedValue, cloneTableTypeDiv) {
+            if (!selectedValue || !cloneTableTypeDiv) {
+                console.error("Missing parameters for handleTableTypeChange function");
+                return;
+            }
+            const targetElements = cloneTableTypeDiv.find(".col-12, .col-6");
+
+            const newClass = (selectedValue === "Unknown") ? "col-12" : "col-6";
+
+            targetElements.removeClass("col-12 col-6").addClass(newClass);
+            cloneTableTypeDiv.find(".imagehazmat").toggle(selectedValue !== "Unknown");
+        }
+
         $(document).ready(function() {
             let checkId;
             $(".imagehazmat").hide();
 
             $("#checkList").css('height', $("#previewImg1").height());
-
-            // $(".select2").select2({
-            //     placeholder: "Select a hazmat",
-            //     tags: true,
-            //     tokenSeparators: [',', ' '],
-            // });
 
             $('.target').draggable({
                 stop: function(event, ui) {
@@ -372,8 +510,7 @@
                     var left_in_px = Math.round((left_perc / 100) * container_width);
 
                     var dot = '<div class="dot" style="top: ' + top_in_px + 'px; left: ' +
-                        left_in_px +
-                        'px;" id="dot_' + (dot_count + 1) + '">' + (dot_count + 1) + '</div>';
+                        left_in_px + 'px;" id="dot_' + (dot_count + 1) + '">' + (dot_count + 1) + '</div>';
 
                     $(dot).hide().appendTo($(this).parent()).fadeIn(350, function() {
                         openAddModalBox(this); // Call the function with the newly created dot
@@ -396,7 +533,8 @@
             });
 
             $(document).on("click", "#editCheckbtn", function(event) {
-                event.stopPropagation(); // Prevents the click event from bubbling up to the parent .dot element
+                event
+                    .stopPropagation(); // Prevents the click event from bubbling up to the parent .dot element
                 let checkDataId = $(this).attr('data-dotId');
                 let dotElement = $(`#${checkDataId}`)[0];
                 openAddModalBox(dotElement);
@@ -424,6 +562,7 @@
                 let checkFormData = new FormData($("#checkDataAddForm")[0]);
                 // console.log(checkformdata);
                 // $("#checkdataaddform").serializearray();
+                checkFormData.append('deselectId', selectedHazmatsIds);
 
                 let $submitButton = $(this);
                 let originalText = $submitButton.html();
@@ -437,72 +576,77 @@
                     contentType: false,
                     processData: false,
                     success: function(response) {
-                        $(".dot.selected").attr('data-checkId', response.id);
-                        var checkData = {
-                            id: response.id,
-                            name: response.name,
-                            project_id: $("#project_id").val(),
-                            deck_id: $("#deck_id").val(),
-                            type: $("#type").val(),
-                            suspected_hazmat: $("#suspected_hazmat").val(),
-                            equipment: $("#equipment").val(),
-                            component: $("#component").val(),
-                            location: $("#location").val(),
-                            sub_location: $("#sub_location").val(),
-                            remarks: $("#remarks").val()
-                        };
-
-                        let checkDataJson = JSON.stringify(checkData);
-                        $(".dot.selected").attr('data-check', checkDataJson);
-
-                        $('#checkListUl').html();
-                        $('#checkListUl').html(response.htmllist);
-
-                        let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
+                        if (response.isStatus) {
+                            // Your code here if isStatus is true
+                            $(".dot.selected").attr('data-checkId', response.id);
+                            var checkData = {
+                                id: response.id,
+                                name: response.name,
+                                project_id: $("#project_id").val(),
+                                deck_id: $("#deck_id").val(),
+                                type: $("#type").val(),
+                                suspected_hazmat: $("#suspected_hazmat").val(),
+                                equipment: $("#equipment").val(),
+                                component: $("#component").val(),
+                                location: $("#location").val(),
+                                sub_location: $("#sub_location").val(),
+                                remarks: $("#remarks").val()
+                            };
+                            let checkDataJson = JSON.stringify(checkData);
+                            $(".dot.selected").attr('data-check', checkDataJson);
+                            $('#checkListUl').html(response.htmllist);
+                            let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
                             ${response.message}
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>`;
+                            $("#chkName").show();
+                            $("#showSuccessMsg").html(messages);
+                            $('#showSuccessMsg').fadeIn().delay(20000).fadeOut();
+                            $("#checkDataAddForm")[0].reset();
+                            $("#id").val("");
+                            $submitButton.html(originalText);
+                            $submitButton.prop('disabled', false);
+                            $("#checkDataAddModal").modal('hide');
+                        } else {
+                            $.each(response.message, function(field, messages) {
+                                $('#' + field + 'Error').text(messages[0]).show();
+                                $('[name="' + field + '"]').addClass('is-invalid');
+                            });
 
-                        $("#chkName").show();
-                        $("#showSuccessMsg").html(messages);
-                        $('#showSuccessMsg').fadeIn().delay(20000).fadeOut();
-                        $submitButton.html(originalText);
-                        $submitButton.prop('disabled', false);
-                        $("#checkDataAddForm")[0].reset();
-                        $("#id").val("");
+                            $submitButton.html(originalText);
+                            $submitButton.prop('disabled', false);
+                        }
                     },
                     error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
+                        console.log(xhr.responseJSON);
                         $submitButton.html(originalText);
                         $submitButton.prop('disabled', false);
-                        $("#checkDataAddForm")[0].reset();
-                        $("#id").val("");
                     }
                 });
-
-                // Hide the modal box
-                $("#checkDataAddModal").modal('hide');
             });
 
             $(document).on("click", "#checkDataAddCloseBtn", function() {
                 $("#checkDataAddForm")[0].reset();
                 $("#id").val("");
             });
-
+            let selectedHazmatsIds = [];
             $('#suspected_hazmat').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
                 let selectedValue = $(this).find('option').eq(clickedIndex).val();
 
                 if (!isSelected) {
+                    selectedHazmatsIds.push(selectedValue);
                     $(`#cloneTableTypeDiv${selectedValue}`).remove();
+                    console.log(selectedHazmatsIds);
                 } else {
                     let clonedElement = $('#cloneTableTypeDiv').clone();
                     clonedElement.removeAttr("id");
                     clonedElement.attr("id", "cloneTableTypeDiv" + selectedValue);
 
                     clonedElement.find('label').text($(this).find('option').eq(clickedIndex).text());
-                    clonedElement.find('select').attr('id', `table_type_${selectedValue}`).attr('name',`table_type[${selectedValue}]`);
+                    clonedElement.find('select').attr('id', `table_type_${selectedValue}`).attr('name',
+                        `table_type[${selectedValue}]`);
 
                     clonedElement.find('input[type="file"]').prop({
                         id: `image_${selectedValue}`,
@@ -515,22 +659,10 @@
             });
 
             $("#showTableTypeDiv").on("change", ".cloneTableTypeDiv select", function() {
-                let selectedValue = $(this).val();
-                let cloneTableTypeDiv = $(this).closest(".cloneTableTypeDiv");
-
-                // Find elements with either class col-12 or col-6 within cloneTableTypeDiv
-                let targetElements = cloneTableTypeDiv.find(".col-12, .col-6");
-
-                // Determine the class based on the selected value
-                let newClass = selectedValue === "Unknown" ? "col-12" : "col-6";
-
-                // Remove the existing class and add the new class for all targetElements
-                targetElements.removeClass("col-12 col-6").addClass(newClass);
-
-                // Toggle visibility of .imagehazmat based on the selected value
-                cloneTableTypeDiv.find(".imagehazmat").toggle(selectedValue !== "Unknown");
+                const selectedValue = $(this).val();
+                const cloneTableTypeDiv = $(this).closest(".cloneTableTypeDiv");
+                handleTableTypeChange(selectedValue, cloneTableTypeDiv);
             });
-
 
             $(document).on("click", ".deleteCheckbtn", function(e) {
                 e.preventDefault();
@@ -540,33 +672,35 @@
                 let $liToDelete = $(this).closest('li'); // Get the closest <li> element
                 // let $checkDiv = $(`div[data-checkid="${checkId}"]`);
 
-                $.ajax({
-                    type: 'GET',
-                    url: href,
-                    success: function(response) {
-                        if (response.status) {
-                            let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
+                if (confirm("Are you sure you want to delete this check?")) {
+                    $.ajax({
+                        type: 'GET',
+                        url: href,
+                        success: function(response) {
+                            if (response.status) {
+                                let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
                                 ${response.message}
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>`;
 
-                            $("#showSuccessMsg").html(messages).fadeIn().delay(20000)
-                                .fadeOut();
-                            $liToDelete.remove(); // Remove the <li> element
-                            $(".dot").remove();
-                            $('#showDeckCheck').html();
-                            $('#checkListUl').html();
-                            $('#showDeckCheck').html(response.htmldot);
-                            $('#checkListUl').html(response.htmllist);
-                            makeDotsDraggable();
+                                $("#showSuccessMsg").html(messages).fadeIn().delay(20000)
+                                    .fadeOut();
+                                $liToDelete.remove(); // Remove the <li> element
+                                $(".dot").remove();
+                                $('#showDeckCheck').html();
+                                $('#checkListUl').html();
+                                $('#showDeckCheck').html(response.htmldot);
+                                $('#checkListUl').html(response.htmllist);
+                                makeDotsDraggable();
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error deleting item:', error);
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error deleting item:', error);
-                    }
-                });
+                    });
+                }
             });
         });
     </script>
