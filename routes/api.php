@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 //   ->middleware('auth:sanctum');
 Route::controller(SyncProjectController::class)->group(function () {
     Route::middleware(['auth:sanctum'])->group(function () {
-        Route::get('sync/project/{projectId}', 'syncProject');
+        Route::post('sync/project', 'syncProject');
 
     });
 });

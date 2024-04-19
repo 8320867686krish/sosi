@@ -17,8 +17,10 @@ use App\Models\CheckImage;
 class SyncProjectController extends Controller
 {
     //
-    public function syncProject($projectId)
+    public function syncProject(Request $request)
     {
+        $projectId = $request->input('projectId');
+        $syncDate = $request->input('syncDate');
         $user = Auth::user();
 
         $currentUserRoleLevel = $user->roles->first()->level;
@@ -31,10 +33,24 @@ class SyncProjectController extends Controller
                 // $project = Projects::with(['client:id,manager_name,manager_logo,owner_name,owner_address', 'decks.checks' => function ($query) {
                 //     $query->with(['check_image']);
                 // }])->find($projectId);
-                $project = Projects::find($projectId);
-                $decks = Deck::where('project_id',$projectId)->get();
-                $checks = Checks::where('project_id',$projectId)->get();
-                $checkImages = CheckImage::where('project_id',$projectId)->get();
+                if ($syncDate != 0) {
+                    $decks = Deck::where('project_id', $projectId)
+                                 ->where('updated_at', '>=', $syncDate)
+                                 ->get();
+                
+                    $checks = Checks::where('project_id', $projectId)
+                                    ->where('updated_at', '>=', $syncDate)
+                                    ->get();
+
+                    $checkImages = CheckImage::where('project_id',$projectId)
+                    ->where('updated_at', '>=', $syncDate)
+                    ->get();
+                } else {
+                    $decks = Deck::where('project_id', $projectId)->get();
+                    $checks = Checks::where('project_id', $projectId)->get();
+                    $checkImages = CheckImage::where('project_id',$projectId)->get();
+
+                }
                 $sourceDir = public_path('images/pdf/'.$projectId);
                 $zipFilePath = public_path('images/pdf/'.$projectId.'.zip');
                 $zip = new ZipArchive;
