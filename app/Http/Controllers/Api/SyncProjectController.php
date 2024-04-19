@@ -58,7 +58,7 @@ class SyncProjectController extends Controller
                 $sourceDir = public_path('images/pdf/'.$projectId);
                 $zipFilePath = public_path('images/pdf/'.$projectId.'.zip');
                 $zip = new ZipArchive;
-                if ($syncDate != 0) {
+                if ($syncDate == 0) {
                     if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
                         $files = File::files($sourceDir);
                     
