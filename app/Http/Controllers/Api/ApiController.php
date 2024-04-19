@@ -25,6 +25,7 @@ use App\Models\Checks;
 use App\Models\ChecksQrCodePair;
 
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
 {
@@ -300,9 +301,10 @@ class ApiController extends Controller
             $currentUserRoleLevel = $user->roles->first()->level;
 
             if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
-                $project = Projects::select('id','client_id','ship_name','imo_number','project_no','image')->with('client:id,manager_name,manager_logo');
+                $project = Projects::select('id','client_id','ship_name','imo_number','project_no','image')->with('client:id,manager_name');
             } else {
-                $project = $user->projects()->with('client:id,manager_name')->where('isExpire', 0);
+                $project = $user->projects()->select('projects.id', 'client_id', 'ship_name', 'imo_number', 'project_no', 'image')
+                ->with('client:id,manager_name')->where('isExpire', 0);
             }
 
             $project = $project->get();
@@ -314,6 +316,7 @@ class ApiController extends Controller
 
             return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $modifiedProjects]);
         } catch (Throwable $th) {
+            echo $th->getMessage();
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.', 'projectList' => []]);
         }
     }
@@ -713,6 +716,14 @@ class ApiController extends Controller
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
+    }
+    public function tableStruture(){
+        $data['projects'] = DB::select('describe projects');
+        $data['clients'] = DB::select('describe clients');
+        $data['decks'] = DB::select('describe decks');
+        $data['checks'] = DB::select('describe checks');
+        $data['check_has_images'] = DB::select('describe check_has_images');
+        return response()->json(['isStatus' => true, 'message' => 'table strture.','data'=>$data]);
     }
    
 }

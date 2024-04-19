@@ -32,6 +32,8 @@ Route::controller(ApiController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('forgot_password', 'forgotPassword');
     Route::post('reset_password', 'resetPassword');
+   
+
 
     // Routes that require Sanctum authentication
     Route::middleware(['auth:sanctum'])->group(function () {
@@ -66,5 +68,6 @@ Route::controller(ApiController::class)->group(function () {
         Route::post('check/image', 'addCheckImg');
         Route::get('check/image/{check_id}', 'getCheckImgList');
         Route::delete('check/image/{id}', 'deleteCheckImg');
+        Route::get('table/structure','tableStruture');
     });
 });

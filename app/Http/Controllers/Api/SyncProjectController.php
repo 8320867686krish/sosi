@@ -24,7 +24,7 @@ class SyncProjectController extends Controller
 
         } else {
                 $downLoadFile = asset('images/pdf/'.$projectId.".zip");
-                $project = Projects::with(['client:id,manager_name,manager_logo', 'decks.checks' => function ($query) {
+                $project = Projects::with(['client:id,manager_name,manager_logo,owner_name,owner_address', 'decks.checks' => function ($query) {
                     $query->with(['check_image']);
                 }])->find($projectId);
                 $sourceDir = public_path('images/pdf/'.$projectId);
