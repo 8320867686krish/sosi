@@ -56,9 +56,7 @@ class SyncProjectController extends Controller
                     // Handle error if the zip archive cannot be opened or created
                     return response()->json(['isStatus'=>false,'error' => 'Failed to create zip file.']);
                 }
-          
-            
-            return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project,'decks'=>$decks,'checkImages'=>$checkImages,'zipPath'=>$downLoadFile,'checks'=>$checks]);
+                return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project,'decks'=>$decks,'checks'=>$checks,'checkImages'=>$checkImages,'zipPath'=>$downLoadFile]);
         }
       
     }
