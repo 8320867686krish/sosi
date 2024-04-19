@@ -688,7 +688,7 @@ class ApiController extends Controller
                 return response()->json(['isStatus' => false, 'message' => 'Check image not found.']);
             }
 
-            $path = public_path("images/checks/{$checkImg->check_id}/{$checkImg->image}");
+            $path = public_path("images/pdf/{$checkImg->project_id}/{$checkImg->image}");
 
             if (file_exists($path)) {
                 unlink($path);
@@ -725,5 +725,5 @@ class ApiController extends Controller
         $check_has_images = DB::select('describe check_has_images');
         return response()->json(['isStatus' => true, 'message' => 'table strture.','projects'=>$projects,'clients' => $clients,'decks' => $decks,'checks' => $checks,'check_has_images' => $check_has_images]);
     }
-   
+
 }
