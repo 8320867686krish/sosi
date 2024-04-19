@@ -31,7 +31,7 @@ class SyncProjectController extends Controller
                 // $project = Projects::with(['client:id,manager_name,manager_logo,owner_name,owner_address', 'decks.checks' => function ($query) {
                 //     $query->with(['check_image']);
                 // }])->find($projectId);
-                $project = Projects::find($projectId)->getAttribute();
+                $project = Projects::find($projectId);
                 $decks = Deck::where('project_id',$projectId)->get();
                 $checks = Checks::where('project_id',$projectId)->get();
                 $checkImages = CheckImage::where('project_id',$projectId)->get();
