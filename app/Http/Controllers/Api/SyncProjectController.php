@@ -85,4 +85,13 @@ class SyncProjectController extends Controller
         }
       
     }
+
+    public function removeZip($projectId){
+        $downLoadFile = public_path('images/pdf/'.$projectId.".zip");
+        if (file_exists($downLoadFile)) {
+            unlink($downLoadFile);
+        }
+        return response()->json(['isStatus' => true, 'message' => 'pdf deleted successfully.']);
+
+    }
 }
