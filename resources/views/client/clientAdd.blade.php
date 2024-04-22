@@ -201,7 +201,7 @@
                                 </div>
 
                                 @if (isset($client))
-                                    <div class="col-12 mb-2"><img src="{{ $client->managerLogoPath }}" alt=""
+                                    <div class="col-12 mb-2"><img src="{{ $client->manager_logo }}" alt=""
                                             width="15%"></div>
                                 @endif
                                 <div class="col-12">
@@ -351,7 +351,7 @@
                                 </div>
                                 @if (isset($client))
                                     <div class="col-6"></div>
-                                    <div class="col-6"><img src="{{ $client->ownerLogoPath }}" alt=""
+                                    <div class="col-6"><img src="{{ $client->owner_logo }}" alt=""
                                             width="15%"></div>
                                 @endif
                             </div>

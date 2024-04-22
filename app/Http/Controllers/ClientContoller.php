@@ -98,6 +98,7 @@ class ClientContoller extends Controller
     {
         try {
             $client = Client::find($id);
+          
             return view('client.clientAdd', ['head_title' => 'Edit', 'button' => 'Update', 'client' => $client]);
         } catch (\Throwable $th) {
             return back()->withError($th->getMessage())->withInput();
