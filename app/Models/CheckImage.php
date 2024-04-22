@@ -11,7 +11,7 @@ class CheckImage extends Model
 
     protected $table = "check_has_images";
 
-    protected $fillable = ['check_id', 'image'];
+    protected $fillable = ['check_id', 'image','project_id'];
 
     protected $hidden = ['created_at', 'updated_at'];
     public function getImageAttribute($value){
