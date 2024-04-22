@@ -56,23 +56,20 @@
                             @endcan
                             <div class="card-body">
                                 <div class="campaign-img">
-                                    <img src="{{ $client->manager_logo }}" alt="user"
-                                        class="user-avatar-xl rounded-circle">
+                                    <img src="{{ $client->manager_logo }}" onerror="this.onerror=null;this.src='{{ asset('assets/images/logo.png') }}';" alt="user" class="user-avatar-xl rounded-circle">
                                 </div>
                                 <div class="campaign-info">
                                     <h3 class="mb-1 line-clamp">{{ ucfirst($client->manager_name) ?? '' }}</h3>
                                     {{-- <p class="mb-3">Total Project:<span class="text-dark font-medium ml-2">{{ $client->projects_count ?? 0 }}</span>
                                     </p> --}}
                                     @if (!empty($client->manager_contact_person_name))
-                                        <p class="mb-1 line-clamp">Contact Person: <span
-                                                class="text-dark font-medium ml-2">{{ $client->manager_contact_person_name ?? '' }}</span>
+                                        <p class="mb-1 line-clamp">Contact Person: <span class="text-dark font-medium ml-2">{{ $client->manager_contact_person_name ?? '' }}</span>
                                         </p>
                                     @else
                                         <p class="mb-1 line-clamp">Contact Person: <span
                                                 class="text-dark font-medium ml-2">-</span></p>
                                     @endif
-                                    <p class="line-clamp">Ship owner.:<span
-                                            class="text-dark font-medium ml-2">{{ ucwords($client->owner_name) ?? '' }}</span>
+                                    <p class="line-clamp">Ship owner.:<span class="text-dark font-medium ml-2">{{ ucwords($client->owner_name) ?? '' }}</span>
                                     </p>
                                     @can('clients.edit')
                                         <a href="{{ route('clients.edit', ['id' => $client->id]) }}" rel="noopener noreferrer"

@@ -23,7 +23,7 @@
                     <div class="form-group">
                         <input type="file" class="form-control" accept="image/*" id="image_{{$hazmat->hazmat_id}}" name="image[{{$hazmat->hazmat_id}}]">
                     </div>
-                    <img src="{{ $hazmat->image['path'] }}" alt="" srcset="" width="150px">
+                    <img src="{{ $hazmat->image }}" alt="" width="150px">
                 </div>
             </div>
         </div>
