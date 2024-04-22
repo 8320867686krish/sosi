@@ -80,7 +80,7 @@ class SyncProjectController extends Controller
                     }
                 }
                
-                return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project,'decks'=>$decks,'checks'=>$checks,'checkImages'=>$checkImages,'zipPath'=>$downLoadFile,'syncDate' => $myTime]);
+                return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project,'decks'=>$decks,'checks'=>$checks,'checkImages'=>$checkImages,'zipPath'=>$downLoadFile]);
         }
       
     }
