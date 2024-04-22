@@ -201,9 +201,11 @@
                                 </div>
 
                                 @if (isset($client))
-                                    <div class="col-12 mb-2"><img src="{{ $client->manager_logo }}" alt=""
-                                            width="15%"></div>
+                                    <div class="col-12 mb-2">
+                                        <img src="{{ $client->manager_logo }}" alt="" width="15%">
+                                    </div>
                                 @endif
+
                                 <div class="col-12">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" name="isSameAsManager"
@@ -276,7 +278,11 @@
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
                                         <label for="IMO_ship_owner_details">IMO Ship owner details</label>
-                                        <input type="text" class="form-control" id="IMO_ship_owner_details" name="IMO_ship_owner_details" value="{{ old('IMO_ship_owner_details', $client->IMO_ship_owner_details ?? '') }}" placeholder="IMO Ship owner details..." autocomplete="off" onchange="removeInvalidClass(this)">
+                                        <input type="text" class="form-control" id="IMO_ship_owner_details"
+                                            name="IMO_ship_owner_details"
+                                            value="{{ old('IMO_ship_owner_details', $client->IMO_ship_owner_details ?? '') }}"
+                                            placeholder="IMO Ship owner details..." autocomplete="off"
+                                            onchange="removeInvalidClass(this)">
                                     </div>
                                 </div>
                             </div>
@@ -351,8 +357,7 @@
                                 </div>
                                 @if (isset($client))
                                     <div class="col-6"></div>
-                                    <div class="col-6"><img src="{{ $client->owner_logo }}" alt=""
-                                            width="15%"></div>
+                                    <div class="col-6"><img src="{{ $client->owner_logo }}" alt="" width="15%"></div>
                                 @endif
                             </div>
                             <div class="row mt-3">
@@ -379,7 +384,6 @@
 
 @section('js')
     <script>
-
         function removeInvalidClass(input) {
 
             const isValid = input.value.trim() !== '';
