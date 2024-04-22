@@ -313,7 +313,7 @@
                 url: "{{ url('check') }}" + "/" + checkId + "/hazmat",
                 success: function(response) {
                     $('#suspected_hazmat').selectpicker('val', response.hazmatIds);
-
+                    console.log(response.html);
                     $('#showTableTypeDiv').html(response.html);
 
                     $.each(response.check.hazmats, function(index, hazmatData) {
