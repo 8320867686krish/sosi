@@ -24,8 +24,8 @@ class SyncProjectController extends Controller
         $user = Auth::user();
 
         $currentUserRoleLevel = $user->roles->first()->level;
-        $Parsedate = Carbon::parse($syncDate,'UTC');
-        $date = Carbon::createFromFormat('Y-m-d H:i:s', $Parsedate);
+        $Parsedate = Carbon::now();
+        $myTime = $Parsedate->toDateTimeString();
         if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
             return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
 
@@ -37,19 +37,20 @@ class SyncProjectController extends Controller
                 // }])->find($projectId);
                 if ($syncDate != 0) {
                     $decks = Deck::where('project_id', $projectId)
-                                 ->where('updated_at', '>=', $syncDate)
+                                 ->where('updated_at', '>=', $myTime)
                                  ->get();
                 
                     $checks = Checks::where('project_id', $projectId)
-                                    ->where('updated_at', '>=', $syncDate)
+                                    ->where('updated_at', '>=', $myTime)
                                     ->get();
 
                     $checkImages = CheckImage::where('project_id',$projectId)
-                    ->where('updated_at', '>=', $syncDate)
+                    ->where('updated_at', '>=', $myTime)
                     ->get();
+
                     $checkImagesArray = CheckImage::where('project_id',$projectId)
-                    ->where('updated_at', '>=', $syncDate)
-                    ->pluck('image')->toArray();
+                    ->where('updated_at', '>=', $myTime)
+                    ->pluck('image')->get()->toArray();
                 } else {
                     $decks = Deck::where('project_id', $projectId)->get();
                     $checks = Checks::where('project_id', $projectId)->get();
@@ -82,7 +83,7 @@ class SyncProjectController extends Controller
                 else{
                     print_r($checkImagesArray);
                 }
-                return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project,'decks'=>$decks,'checks'=>$checks,'checkImages'=>$checkImages,'zipPath'=>$downLoadFile,'syncDate' => $date->toAtomString()]);
+                return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project,'decks'=>$decks,'checks'=>$checks,'checkImages'=>$checkImages,'zipPath'=>$downLoadFile,'syncDate' => $myTime]);
         }
       
     }
