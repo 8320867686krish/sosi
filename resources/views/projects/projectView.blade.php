@@ -130,7 +130,7 @@
                     <input type="hidden" name="id" value="{{ $project->id ?? '' }}">
                     <div class="row mb-5">
                         <div class="col-offset-2 col-sm-12 col-md-6 col-lg-3">
-                            <img id="previewImg" src="{{ $project->imagePath }}" height="200px" alt="Upload Image">
+                            <img id="previewImg" src="{{ $project->imagePath }}" width="300px" style="max-height: 300px;" alt="Upload Image">
                         </div>
                         <div class="col-sm-12 col-md-6 col-lg-2 pt-10">
                             <div class="form-group">
