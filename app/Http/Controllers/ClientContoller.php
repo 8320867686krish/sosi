@@ -70,11 +70,13 @@ class ClientContoller extends Controller
         $client = Client::findOrFail($id);
 
         if ($client->manager_logo) {
-            $this->deleteLogo($client->manager_logo);
+            $managerLogo = basename($client->getOriginal('manager_logo'));
+            $this->deleteLogo($managerLogo);
         }
 
         if ($client->owner_logo && $client->owner_logo !== $client->manager_logo) {
-            $this->deleteLogo($client->owner_logo);
+            $ownerLogo = basename($client->getOriginal('owner_logo'));
+            $this->deleteLogo($ownerLogo);
         }
     }
 
@@ -87,6 +89,7 @@ class ClientContoller extends Controller
 
     private function deleteLogo($imageName)
     {
+
         $path = public_path('images/client/' . $imageName);
 
         if (file_exists($path)) {
@@ -98,8 +101,6 @@ class ClientContoller extends Controller
     {
         try {
             $client = Client::find($id);
-            $client->managerLogoPath = asset("/images/client/{$client->manager_logo}");
-            $client->ownerLogoPath = asset("/images/client/{$client->owner_logo}");
             return view('client.clientAdd', ['head_title' => 'Edit', 'button' => 'Update', 'client' => $client]);
         } catch (\Throwable $th) {
             return back()->withError($th->getMessage())->withInput();
@@ -123,8 +124,9 @@ class ClientContoller extends Controller
             // return redirect('clients')->with('message', 'Client deleted successfully');
             return response()->json(['isStatus' => true, 'message' => 'Client deleted successfully']);
         } catch (\Throwable $th) {
-            return response()->json(['isStatus' => false, 'message' => 'Client not deleted successfully']);
+            dd($th->getMessage());
             // return back()->withError($th->getMessage());
+            return response()->json(['isStatus' => false, 'message' => 'Client not deleted successfully']);
         }
     }
 }

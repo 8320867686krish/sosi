@@ -157,7 +157,7 @@
                                 <label for="imo_number">Ship IMO Number</label>
                                 <input type="text" class="form-control  @error('imo_number') is-invalid @enderror"
                                     id="imo_number" name="imo_number" placeholder="IMO Number..."
-                                    value="{{ old('imo_number', $project->imo_number ?? '') }}">
+                                    value="{{ old('imo_number', $project->imo_number ?? '') }}" {{ $readonly }}>
                                 @error('imo_number')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -169,7 +169,7 @@
                                 <label for="call_sign">Call Sign</label>
                                 <input type="text" class="form-control  @error('call_sign') is-invalid @enderror"
                                     id="call_sign" name="call_sign" placeholder="Call Sign..."
-                                    value="{{ old('call_sign', $project->call_sign ?? '') }}">
+                                    value="{{ old('call_sign', $project->call_sign ?? '') }}" {{ $readonly }}>
                                 @error('call_sign')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -196,7 +196,7 @@
                                 <input type="hidden" name="client_id" id="client_id"
                                     value="{{ old('client_id', $project->client->id ?? '') }}">
                                 <input type="text" class="form-control " name="owner_name" id="owner_name"
-                                    value="{{ old('owner_name', $project->client->owner_name ?? '') }}">
+                                    value="{{ old('owner_name', $project->client->owner_name ?? '') }}" {{ $readonly }}>
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-4">
