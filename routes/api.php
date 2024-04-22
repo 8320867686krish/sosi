@@ -21,7 +21,8 @@ use Illuminate\Support\Facades\Route;
 //   ->middleware('auth:sanctum');
 Route::controller(SyncProjectController::class)->group(function () {
     Route::middleware(['auth:sanctum'])->group(function () {
-        Route::get('sync/project/{projectId}', 'syncProject');
+        Route::post('sync/project', 'syncProject');
+        Route::delete('remove/zip/{projectId}', 'removeZip');
 
     });
 });
@@ -33,6 +34,7 @@ Route::controller(ApiController::class)->group(function () {
     Route::post('forgot_password', 'forgotPassword');
     Route::post('reset_password', 'resetPassword');
    
+    Route::get('table/structure','tableStruture');
 
 
     // Routes that require Sanctum authentication
@@ -68,6 +70,5 @@ Route::controller(ApiController::class)->group(function () {
         Route::post('check/image', 'addCheckImg');
         Route::get('check/image/{check_id}', 'getCheckImgList');
         Route::delete('check/image/{id}', 'deleteCheckImg');
-        Route::get('table/structure','tableStruture');
     });
 });

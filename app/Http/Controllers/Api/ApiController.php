@@ -723,7 +723,28 @@ class ApiController extends Controller
         $decks = DB::select('describe decks');
         $checks = DB::select('describe checks');
         $check_has_images = DB::select('describe check_has_images');
+        $projects = $this->modifyTypeValues($projects);
+        $clients = $this->modifyTypeValues($clients);
+        $decks = $this->modifyTypeValues($decks);
+        $checks = $this->modifyTypeValues($checks);
+        $check_has_images = $this->modifyTypeValues($check_has_images);
         return response()->json(['isStatus' => true, 'message' => 'table strture.','projects'=>$projects,'clients' => $clients,'decks' => $decks,'checks' => $checks,'check_has_images' => $check_has_images]);
+    }
+
+    public function modifyTypeValues($tableDescription) {
+        foreach ($tableDescription as &$column) {
+            $type =  $column->Type;
+            if (strpos($type, 'int') !== false) {
+                $column->Type = 'INTEGER'; 
+            }
+            if (strpos($type, 'varchar') !== false) {
+                $column->Type = 'TEXT'; 
+            }
+            if (strpos($type, 'date') !== false || strpos($type,'timestamp') !== false) {
+                $column->Type = 'NUMERIC'; 
+            }
+        }
+        return $tableDescription;
     }
 
 }
