@@ -84,6 +84,7 @@ Route::middleware('auth')->group(function () {
             Route::post('project/updateDeckTitle','updateDeckTitle');
             Route::get('project/deleteDeckImg/{id}', 'deleteDeckImg')->name('deleteDeckImg');
             Route::get('projects/deck/{id}', 'deckBasedCheckView')->name('deck.detail');
+            Route::post('/set-session', 'setBackSession')->name('set.session');
 
             Route::get('check/{id}/hazmat', 'checkBasedHazmat')->name('check.hazmat');
 

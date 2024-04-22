@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 use Illuminate\Support\Str;
@@ -53,8 +54,13 @@ class ProjectsController extends Controller
 
     public function projectView($project_id)
     {
+    
         $clients = Client::orderBy('id', 'desc')->get(['id', 'manager_name', 'manager_initials']);
-
+        $isBack = 0;
+        if(session('back') == 1){
+          $isBack = 1;
+        }
+        Session::forget('back');
         $role_id = Auth::user()->roles->first()->level;
 
         if ($role_id != 1) {
@@ -86,7 +92,7 @@ class ProjectsController extends Controller
         } else {
             $readonly = "";
         }
-        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id]);
+        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id,'isBack' =>  $isBack]);
     }
 
     public function projectInfo($project_id)
@@ -203,7 +209,10 @@ class ProjectsController extends Controller
 
         return view('check.check', ['deck' => $deck, 'hazmats' => $hazmats]);
     }
-
+    public function setBackSession(){
+        session(['back' => 1]);
+        return 1;
+    }
     public function checkBasedHazmat($id)
     {
         $check = Checks::with(['hazmats' => function ($query) {

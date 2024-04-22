@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\File;
 use App\Models\Deck;
 use App\Models\Checks;
 use App\Models\CheckImage;
-
+use Carbon\Carbon;
 
 class SyncProjectController extends Controller
 {
@@ -24,7 +24,8 @@ class SyncProjectController extends Controller
         $user = Auth::user();
 
         $currentUserRoleLevel = $user->roles->first()->level;
-
+        $Parsedate = Carbon::parse($syncDate,'UTC');
+        $date = Carbon::createFromFormat('Y-m-d H:i:s', $Parsedate);
         if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
             return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
 
@@ -81,7 +82,7 @@ class SyncProjectController extends Controller
                 else{
                     print_r($checkImagesArray);
                 }
-                return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project,'decks'=>$decks,'checks'=>$checks,'checkImages'=>$checkImages,'zipPath'=>$downLoadFile]);
+                return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project,'decks'=>$decks,'checks'=>$checks,'checkImages'=>$checkImages,'zipPath'=>$downLoadFile,'syncDate' => $date->toAtomString()]);
         }
       
     }

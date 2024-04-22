@@ -94,9 +94,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-12">
-                        <a href="{{ route('projects.view', ['project_id' => $deck->project_id]) }}">
-                            <i class="fas fa-arrow-left"></i> <b>Back</b>
-                        </a>
+                    <a href="{{ route('projects.view', ['project_id' => $deck->project_id]) }}" onclick="setSession(event, {{ $deck->project_id }})"><i class="fas fa-arrow-left"></i> <b>Back</b></a>
                     </div>
                 </div>
                 <div class="row">
@@ -703,5 +701,24 @@
                 }
             });
         });
+        function setSession(event, projectId) {
+        event.preventDefault();
+        // AJAX request to set session
+        $.ajax({
+            url: "{{ route('set.session') }}",
+            method: 'POST',
+            data: {
+                project_id: projectId,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                // Redirect to the desired location
+                window.location.href = "{{ route('projects.view', ['project_id' => $deck->project_id]) }}";
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    }
     </script>
 @endsection

@@ -85,15 +85,16 @@
                         <li>
                             <a href="{{ route('projects') }}"><span class="icon"><i class="fas fa-arrow-left"></i></span>Back</a>
                         </li>
-                        <li class="active">
-                            <a href="#ship_particulars">
-                                <span class="icon"><i class="fas fa-ship"></i></span>Ship Particulars
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#create_vscp"><span class="icon"><i class="fas fa-fw fa-briefcase"></i></span>Create
-                                VSCP</a>
-                        </li>
+                        <li class="{{ $isBack == 0 ? 'active' : '' }}">
+    <a href="#ship_particulars">
+        <span class="icon"><i class="fas fa-ship"></i></span>Ship Particulars
+    </a>
+</li>
+<li class="{{ $isBack == 1 ? 'active' : '' }}">
+    <a href="#create_vscp">
+        <span class="icon"><i class="fas fa-fw fa-briefcase"></i></span>Create VSCP
+    </a>
+</li>
                         <li>
                             <a href="#image_hotspots"><span class="icon"><i
                                         class="fas fa-fw fa-briefcase"></i></span>Image Hotspots</a>
@@ -110,8 +111,8 @@
                 </div>
             </div>
         </aside>
+        <div class="main-content container-fluid p-0" id="ship_particulars" {{ $isBack == 0 ? 'style=display:block' : 'style=display:none' }}>
 
-        <div class="main-content container-fluid p-0" id="ship_particulars">
             <div class="email-head">
                 <div class="email-head-subject">
                     <div class="title">
@@ -350,8 +351,7 @@
                 </form>
             </div>
         </div>
-
-        <div class="main-content container-fluid p-0" id="create_vscp">
+        <div class="main-content container-fluid p-0" id="create_vscp" {{ $isBack == 1 ? 'style=display:block' : 'style=display:none' }}>
             @include('projects.addVscp')
         </div>
 
@@ -675,9 +675,18 @@
                 convertToImage();
             });
 
-            $('.main-content').hide();
-            $('#ship_particulars').show();
+           // $('.main-content').hide();
+           
+         var back = "{{$isBack}}";
+            if(back == 1){
 
+                $('#ship_particulars').hide();
+                $('#create_vscp').show();
+            }else{
+
+                $('#ship_particulars').show();
+                $('#create_vscp').hide();
+            }
             $('.aside-nav .nav li a').click(function() {
                 $('.aside-nav .nav li').removeClass('active');
                 $(this).parent('li').addClass('active');
