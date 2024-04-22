@@ -124,6 +124,13 @@ class ProjectsController extends Controller
     {
         try {
             $project = Projects::findOrFail($id);
+
+            $projectImagePath = public_path("images/pdf/{$project->id}");
+
+            if (File::isDirectory($projectImagePath)) {
+                File::deleteDirectory($projectImagePath);
+            }
+
             $project->delete();
 
             return redirect('projects')->with('message', 'Project deleted successfully');
@@ -141,7 +148,7 @@ class ProjectsController extends Controller
             $image = $request->file('image');
             $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
 
-            $image->move(public_path('images/pdf/'.$inputData['id']."/"), $imageName);
+            $image->move(public_path('images/pdf/' . $inputData['id'] . "/"), $imageName);
 
             $inputData['image'] = $imageName;
 
@@ -150,7 +157,7 @@ class ProjectsController extends Controller
                 $exitsImg = Projects::select('id', 'image')->findOrFail($inputData['id']);
                 $imageFilename = basename($exitsImg->getOriginal('image'));
                 if (!empty($exitsImg->image)) {
-                    $path = public_path('images/pdf/'.$inputData['id'].'/' .$imageFilename);
+                    $path = public_path('images/pdf/' . $inputData['id'] . '/' . $imageFilename);
 
                     if (file_exists($path) && is_file($path)) {
                         unlink($path);
@@ -254,6 +261,7 @@ class ProjectsController extends Controller
 
                 foreach ($suspectedHazmat as $value) {
                     $hazmatData = [
+                        "project_id" => $inputData['project_id'],
                         "check_id" => $data->id,
                         "hazmat_id" => $value,
                         "type" => $tableTypes[$value]
@@ -264,7 +272,7 @@ class ProjectsController extends Controller
                         // && $tableTypes[$value] !== 'Unknown'
                         $image = $images[$value];
 
-                        $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
+                        $imageName = "hazmat_{$data->id}_" . time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
 
                         // Move the uploaded image to the desired location
                         $image->move(public_path("images/pdf/{$inputData['project_id']}"), $imageName);
@@ -273,12 +281,12 @@ class ProjectsController extends Controller
                         $hazmatData['image'] = $imageName;
                     }
 
-                    if($tableTypes[$value] == 'Unknown'){
+                    if ($tableTypes[$value] == 'Unknown') {
                         $hazmatData['image'] = NULL;
                     }
 
-                    if(!empty($suspectedHazmatId[$value])){
-                        CheckHasHazmat::updateOrCreate(['id'=>$suspectedHazmatId[$value]], $hazmatData);
+                    if (!empty($suspectedHazmatId[$value])) {
+                        CheckHasHazmat::updateOrCreate(['id' => $suspectedHazmatId[$value]], $hazmatData);
                     } else {
 
                         CheckHasHazmat::create($hazmatData);
@@ -286,10 +294,10 @@ class ProjectsController extends Controller
                 }
             }
 
-            if(!empty($request->input('deselectId'))){
+            if (!empty($request->input('deselectId'))) {
                 $deselectIds = explode(',', $request->input('deselectId'));
-                foreach($deselectIds as $deselectId){
-                    if(!empty($deselectId)){
+                foreach ($deselectIds as $deselectId) {
+                    if (!empty($deselectId)) {
                         CheckHasHazmat::where("check_id", $data->id)->where('hazmat_id', $deselectId)->delete();
                     }
                 }
@@ -477,13 +485,16 @@ class ProjectsController extends Controller
 
             $hazmats = CheckHasHazmat::where('check_id', $id)->get();
 
-            $hazImagePath = public_path("images/pdf/{$id}/");
-            if (File::isDirectory($hazImagePath)) {
-                File::deleteDirectory($hazImagePath);
-            }
+            $hazImagePath = public_path("images/pdf/{$check->project_id}/");
+            $prefixToRemove = "hazmat_{$check->id}_"; // Specify the prefix to remove
 
-            // Delete the hazmats
-            $hazmats->each->delete();
+            $pattern = "{$hazImagePath}{$prefixToRemove}*";
+
+            // Get matching files
+            $files = glob($pattern);
+
+            // Delete the matching files
+            File::delete($files);
 
             // Delete the check
             $check->delete();
