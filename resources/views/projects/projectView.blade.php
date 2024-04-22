@@ -355,57 +355,7 @@
             @include('projects.addVscp')
         </div>
 
-        <div class="main-content container-fluid p-0" id="image_hotspots">
-            <div class="email-head">
-                <div class="email-head-subject">
-                    <div class="title"><span>Image Hotspots</span>
-                    </div>
-                    <div class="email-body">
-                        <form id="imageForm" action="{{ route('addImageHotspots') }}" method="post"
-                            enctype="multipart/form-data">
-                            @csrf
-                            <div class="form-group">
-                                <input type="hidden" name="id" id="imageId">
-                                <input type="hidden" name="project_id" value="{{ $project->id ?? '' }}">
-                                <input type="file" id="img_hotspot" name="img_hotspot"
-                                    onchange="previewFile(this, '#previewImg1');" accept="image/*">
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="outfit">
-                                        <img id="previewImg1" src="{{ asset('assets/images/welcame_mail_img.jpg') }}"
-                                            class="mt-1" alt="Upload Image">
-                                        {{-- @foreach ($check as $dot)
-                                    <div class="dot ui-draggable ui-draggable-handle"
-                                        style="top: {{ $dot->top }}%; left: {{ $dot->left }}%;">
-                                        {{ $loop->iteration }}</div>
-                                @endforeach --}}
-                                    </div>
-                                </div>
-                                <div class="col-6" id="hotsportNameType"></div>
-                            </div>
-                            <div class="output">Dot Positions goes here.</div>
-                            <button type="submit">Save</button>
-                        </form>
-                        <div id="hotsportNameTypeDiv">
-                            <div class="form-group">
-                                <label for="name">Name</label>
-                                <input type="text" name="name" id="name" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="type">Type</label>
-                                <input type="text" name="type" id="type" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <button type="button" class="btn btn-primary float-right btn-rounded formSubmitBtn"
-                                    id="addNameTypeBtn">Add</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+   
         <div class="main-content container-fluid p-0" id="assign_project">
             <div class="email-head">
                 <div class="email-head-subject">
@@ -681,7 +631,12 @@
             if(back == 1){
 
                 $('#ship_particulars').hide();
+                $('#image_hotspots').hide();
+                $('#assign_project').hide();
+                $('#onboard_survey').hide();
                 $('#create_vscp').show();
+                
+
             }else{
 
                 $('#ship_particulars').show();
