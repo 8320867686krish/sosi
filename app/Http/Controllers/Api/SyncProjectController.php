@@ -50,7 +50,7 @@ class SyncProjectController extends Controller
 
                     $checkImagesArray = CheckImage::where('project_id',$projectId)
                     ->where('updated_at', '>=', $myTime)
-                    ->pluck('image')->get()->toArray();
+                    ->select('image')->get()->toArray();
                 } else {
                     $decks = Deck::where('project_id', $projectId)->get();
                     $checks = Checks::where('project_id', $projectId)->get();
