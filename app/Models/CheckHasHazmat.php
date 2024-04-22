@@ -9,15 +9,13 @@ class CheckHasHazmat extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["check_id", "hazmat_id", "image", "type"];
+    protected $fillable = ["check_id", "hazmat_id", "image", "type","project_id"];
 
-    // public function getImageAttribute($value) {
-    //     return asset("images/checks/{$this->check_id}/hazmat/{$value}");
-    // }
+
 
     public function getImageAttribute($value)
     {
-        $basePath = "images/checks/{$this->check_id}/hazmat/";
+        $basePath = "images/pdf/{$this->project_id}/";
         $imagePath = asset($basePath . $value);
         $imageName = basename($value); // Extracts the image name from the path
 
