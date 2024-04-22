@@ -47,10 +47,7 @@ class SyncProjectController extends Controller
                     ->where('updated_at', '>=', $myTime)
                     ->get();
 
-                    $checkImagesArray = CheckImage::where('project_id',$projectId)
-                    ->where('updated_at', '>=', $myTime)
-                    ->pluck('image')
-                    ->get()->toArray();
+            
 
                     $zipFilePath = public_path('images/pdf/'.$projectId.'.zip');
                     $zip = new ZipArchive();
