@@ -24,8 +24,7 @@ class SyncProjectController extends Controller
         $user = Auth::user();
 
         $currentUserRoleLevel = $user->roles->first()->level;
-        $Parsedate = Carbon::now();
-        $myTime = $Parsedate->toDateTimeString();
+        $myTime = $syncDate;
         if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
             return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
 

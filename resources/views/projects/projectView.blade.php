@@ -640,6 +640,9 @@
             }else{
 
                 $('#ship_particulars').show();
+                $('#image_hotspots').hide();
+                $('#assign_project').hide();
+                $('#onboard_survey').hide();
                 $('#create_vscp').hide();
             }
             $('.aside-nav .nav li a').click(function() {
