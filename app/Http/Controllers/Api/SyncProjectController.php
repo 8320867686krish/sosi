@@ -53,9 +53,8 @@ class SyncProjectController extends Controller
                     $zip = new ZipArchive();
                     $zip->open($zipFilePath, ZipArchive::CREATE);
                     foreach ($checkImages as $image) {
-                        echo $image['image'];
                         // Fetch image data from storage or public directory
-                        $imageData = public_path('images/pdf/'.$projectId.'/'.$image['image']); // Assuming images are stored using Laravel Storage
+                        $imageData = $image['image']; // Assuming images are stored using Laravel Storage
                         // Add image data to zip file with the same name
                         $zip->addFromString(basename($image), $imageData);
                     }
