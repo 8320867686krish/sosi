@@ -57,14 +57,12 @@ class SyncProjectController extends Controller
                     // Fetch image data from storage or public directory
                     $imageFilename = basename($image->getOriginal('image'));
 
-                    $filePath = asset('images/pdf/' . $projectId . '/' .$imageFilename); // Corrected file path
-                    echo  $filePath ;
-                    // Make sure the file exists before adding it to the zip
-                    if (file_exists($filePath)) {
-                        // Read image data
-                        $imageData = file_get_contents($filePath);
+                    $path = public_path('images/pdf/' . $projectId . '/' . $imageFilename);
+
+                    if (file_exists($path) && is_file($path)) {
+                        $imageData = file_get_contents($path);
                         // Add image data to zip file with the same name
-                        $zip->addFromString($imageFilename, $imageData);
+                        $zip->addFromString(basename($image->image), $imageData);
                     }
                 }
 
