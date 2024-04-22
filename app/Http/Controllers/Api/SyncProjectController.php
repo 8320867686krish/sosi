@@ -49,7 +49,23 @@ class SyncProjectController extends Controller
 
                     $checkImagesArray = CheckImage::where('project_id',$projectId)
                     ->where('updated_at', '>=', $myTime)
-                    ->select('image')->get()->toArray();
+                    ->pluck('image')
+                    ->get()->toArray();
+
+                    $zipFilePath = public_path('images/pdf/'.$projectId.'.zip');
+                    $zip = new ZipArchive();
+                    $zip->open($zipFilePath, ZipArchive::CREATE);
+                    foreach ($checkImages as $image) {
+                        echo $image;
+                        // Fetch image data from storage or public directory
+                        $imageData = public_path('images/pdf/'.$projectId.'/'.$image); // Assuming images are stored using Laravel Storage
+                        // Add image data to zip file with the same name
+                        $zip->addFromString(basename($image), $imageData);
+                    }
+                    
+                    // Close the zip file
+                    $zip->close();
+
                 } else {
                     $decks = Deck::where('project_id', $projectId)->get();
                     $checks = Checks::where('project_id', $projectId)->get();
