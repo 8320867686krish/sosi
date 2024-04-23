@@ -740,9 +740,6 @@ class ApiController extends Controller
                 if (strpos($type, 'int') !== false) {
                     $column->Type = 'INTEGER'; 
                 }
-                if(strpos($type,'tinyint') !== false){
-                    $column->Type = 'BOOLEAN'; 
-                }
                 if (strpos($type, 'varchar') !== false) {
                     $column->Type = 'TEXT'; 
                 }
