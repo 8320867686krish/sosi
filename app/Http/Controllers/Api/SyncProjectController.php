@@ -25,6 +25,8 @@ class SyncProjectController extends Controller
 
         $currentUserRoleLevel = $user->roles->first()->level;
         $myTime  = Carbon::parse($syncDate);
+        $myTime = $myTime->setTimezone('UTC');
+
         // Convert $startDate to start of day
 
         if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
