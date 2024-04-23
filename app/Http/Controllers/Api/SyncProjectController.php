@@ -44,7 +44,7 @@ class SyncProjectController extends Controller
             $project = Projects::find($projectId);
             if ($syncDate != 0) {
                 $decks = Deck::where('project_id', $projectId)
-                    ->  ('updated_at', '>=', $dateTimeUTC )
+                    ->where('updated_at', '>=', $dateTimeUTC )
                     ->get();
                  
                 $checks = Checks::where('project_id', $projectId)
