@@ -53,7 +53,6 @@ class ProjectsController extends Controller
 
     public function projectView($project_id)
     {
-    
         $clients = Client::orderBy('id', 'desc')->get(['id', 'manager_name', 'manager_initials']);
         $isBack = 0;
         if(session('back') == 1){
@@ -77,6 +76,7 @@ class ProjectsController extends Controller
 
         if ($project) {
             $project->decks = $project->decks()->orderBy('id', 'desc')->get();
+            $project->checks = $project->checks()->orderBy('id', 'desc')->get();
         }
 
         $project['imagePath'] = $project->image != null ? $project->image : asset('assets/images/giphy.gif');
@@ -91,7 +91,10 @@ class ProjectsController extends Controller
         } else {
             $readonly = "";
         }
-        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id,'isBack' =>  $isBack]);
+
+        $hazmats = Hazmat::get(['id', 'name']);
+
+        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id,'isBack' =>  $isBack, "hazmats"=>$hazmats]);
     }
 
     public function projectInfo($project_id)
@@ -215,10 +218,12 @@ class ProjectsController extends Controller
 
         return view('check.check', ['deck' => $deck, 'hazmats' => $hazmats]);
     }
+
     public function setBackSession(){
         session(['back' => 1]);
         return 1;
     }
+
     public function checkBasedHazmat($id)
     {
         $check = Checks::with(['hazmats' => function ($query) {
