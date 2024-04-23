@@ -728,8 +728,7 @@ class ApiController extends Controller
         $clients = $this->modifyTypeValues($clients);
         $decks = $this->modifyTypeValues($decks);
         $checks = $this->modifyTypeValues($checks);
-        print_r($checks);
-      unset($checks[15]);
+      unset($checks[17]);
       $checks = array_values($checks);
 
         $check_has_images = $this->modifyTypeValues($check_has_images);
