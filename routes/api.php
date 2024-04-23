@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(SyncProjectController::class)->group(function () {
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('sync/project', 'syncProject');
+        Route::post('create/zip', 'createZip');
         Route::delete('remove/zip/{projectId}', 'removeZip');
 
     });

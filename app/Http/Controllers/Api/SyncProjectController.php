@@ -38,7 +38,7 @@ class SyncProjectController extends Controller
                 $checks = Checks::where('project_id', $projectId)
                     ->whereDate('updated_at', '>=', $myTime)
                     ->get()
-                    ->makeHidden(['isApp', 'isCompleted']);
+                    ->makeHidden(['isApp']);
 
                 
                 $checkImages = CheckImage::where('project_id', $projectId)
@@ -46,10 +46,24 @@ class SyncProjectController extends Controller
                     ->get();
             } else {
                 $decks = Deck::where('project_id', $projectId)->get();
-                $checks = Checks::where('project_id', $projectId)->get()->makeHidden(['isApp', 'isCompleted']);
+                $checks = Checks::where('project_id', $projectId)->get()->makeHidden(['isApp']);
                 $checkImages = CheckImage::where('project_id', $projectId)->get();
             }
             return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project, 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages]);
+        }
+    }
+
+    public function createZip(Request $request){
+        $projectId = $request->input('projectId');
+        $syncDate = $request->input('syncDate');
+        $user = Auth::user();
+
+        $currentUserRoleLevel = $user->roles->first()->level;
+        $myTime = Carbon::parse($syncDate)->startOfDay(); // Convert $startDate to start of day
+
+        if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
+            return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
+        } else {
         }
     }
 

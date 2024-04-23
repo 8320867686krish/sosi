@@ -732,7 +732,7 @@ class ApiController extends Controller
     }
 
     public function modifyTypeValues($tableDescription) {
-        $hiddenColumns = ['isApp', 'isCompleted']; // Add names of columns to hide
+        $hiddenColumns = ['isApp']; // Add names of columns to hide
 
         foreach ($tableDescription as $key => &$column) {
 
