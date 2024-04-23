@@ -722,15 +722,11 @@ class ApiController extends Controller
         $clients = DB::select('describe clients');
         $decks = DB::select('describe decks');
         $checks = DB::select('describe checks');
-        
         $check_has_images = DB::select('describe check_has_images');
         $projects = $this->modifyTypeValues($projects);
         $clients = $this->modifyTypeValues($clients);
         $decks = $this->modifyTypeValues($decks);
         $checks = $this->modifyTypeValues($checks);
-      unset($checks[17]);
-      $checks = array_values($checks);
-
         $check_has_images = $this->modifyTypeValues($check_has_images);
         return response()->json(['isStatus' => true, 'message' => 'table strture.','projects'=>$projects,'clients' => $clients,'decks' => $decks,'checks' => $checks,'check_has_images' => $check_has_images]);
     }

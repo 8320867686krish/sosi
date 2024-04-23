@@ -37,16 +37,14 @@ class SyncProjectController extends Controller
            
                 $checks = Checks::where('project_id', $projectId)
                     ->whereDate('updated_at', '>=', $myTime)
-                    ->get()
-                    ->makeHidden(['isApp']);
+                    ->get();
 
-                
                 $checkImages = CheckImage::where('project_id', $projectId)
                     ->whereDate('updated_at', '>=', $myTime)
                     ->get();
             } else {
                 $decks = Deck::where('project_id', $projectId)->get();
-                $checks = Checks::where('project_id', $projectId)->get()->makeHidden(['isApp']);
+                $checks = Checks::where('project_id', $projectId)->get();
                 $checkImages = CheckImage::where('project_id', $projectId)->get();
             }
             return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project, 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages]);
