@@ -31,35 +31,22 @@ class SyncProjectController extends Controller
         } else {
             $project = Projects::find($projectId);
             if ($syncDate != 0) {
-                // $decks = Deck::where('project_id', $projectId)
-                //     ->whereDate('updated_at', '>=', $myTime)
-                //     ->get();
                 $decks = Deck::where('project_id', $projectId)
-                ->whereDate('updated_at', '>=', $myTime)
-                ->get();
-
-                $lastUpdatedCheck = Checks::where('project_id', $projectId)
-                ->orderBy('updated_at', 'desc')
-                ->first();
-            
-            // Get the updated_at timestamp of the last updated record
-            if ($lastUpdatedCheck) {
-                $lastUpdateDate = $lastUpdatedCheck->updated_at->startOfDay(); // Get the start of the day for the last update date
-            } else {
-                // If there are no records for the project, use the input date as the last update date
-                $lastUpdateDate = $myTime;
-            }
-              
-                    $checks = Checks::where('project_id', $projectId)
-                    ->whereDate('updated_at', '>=', $lastUpdateDate)
-                    ->whereDate('updated_at', '<=', $myTime) // Filter by input date
+                    ->whereDate('updated_at', '>=', $myTime)
                     ->get();
+           
+                $checks = Checks::where('project_id', $projectId)
+                    ->whereDate('updated_at', '>=', $myTime)
+                    ->get()
+                    ->makeHidden(['isApp', 'isCompleted']);
+
+                
                 $checkImages = CheckImage::where('project_id', $projectId)
                     ->whereDate('updated_at', '>=', $myTime)
                     ->get();
             } else {
                 $decks = Deck::where('project_id', $projectId)->get();
-                $checks = Checks::where('project_id', $projectId)->get();
+                $checks = Checks::where('project_id', $projectId)->get()->makeHidden(['isApp', 'isCompleted']);
                 $checkImages = CheckImage::where('project_id', $projectId)->get();
             }
             return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project, 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages]);
