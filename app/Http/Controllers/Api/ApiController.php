@@ -732,20 +732,29 @@ class ApiController extends Controller
     }
 
     public function modifyTypeValues($tableDescription) {
-        foreach ($tableDescription as &$column) {
-            $type =  $column->Type;
-            if (strpos($type, 'int') !== false) {
-                $column->Type = 'INTEGER'; 
+        $hiddenColumns = ['isApp', 'isCompleted']; // Add names of columns to hide
+
+        foreach ($tableDescription as $key => &$column) {
+
+            if (in_array($column->Field, $hiddenColumns)) {
+                unset($tableDescription[$key]); // Remove the column from the description
+            }else{
+                $type =  $column->Type;
+           
+                if (strpos($type, 'int') !== false) {
+                    $column->Type = 'INTEGER'; 
+                }
+                if(strpos($type,'tinyint') !== false){
+                    $column->Type = 'BOOLEAN'; 
+                }
+                if (strpos($type, 'varchar') !== false) {
+                    $column->Type = 'TEXT'; 
+                }
+                if (strpos($type, 'date') !== false || strpos($type,'timestamp') !== false) {
+                    $column->Type = 'NUMERIC'; 
+                }
             }
-            if(strpos($type,'tinyint') !== false){
-                $column->Type = 'BOOLEAN'; 
-            }
-            if (strpos($type, 'varchar') !== false) {
-                $column->Type = 'TEXT'; 
-            }
-            if (strpos($type, 'date') !== false || strpos($type,'timestamp') !== false) {
-                $column->Type = 'NUMERIC'; 
-            }
+            
         }
         return $tableDescription;
     }

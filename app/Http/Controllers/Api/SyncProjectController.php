@@ -30,16 +30,17 @@ class SyncProjectController extends Controller
         } else {
             $project = Projects::find($projectId);
             if ($syncDate != 0) {
-                $decks = Deck::where('project_id', $projectId)
-                    ->where('updated_at', '>=', $myTime)
-                    ->get();
+                // $decks = Deck::where('project_id', $projectId)
+                //     ->whereDate('updated_at', '>=', $myTime)
+                //     ->get();
+                    $decks = Deck::latest('updated_at')->get();
 
                 $checks = Checks::where('project_id', $projectId)
-                    ->where('updated_at', '>=', $myTime)
+                    ->whereDate('updated_at', '>=', $myTime)
                     ->get();
 
                 $checkImages = CheckImage::where('project_id', $projectId)
-                    ->where('updated_at', '>=', $myTime)
+                    ->whereDate('updated_at', '>=', $myTime)
                     ->get();
             } else {
                 $decks = Deck::where('project_id', $projectId)->get();
