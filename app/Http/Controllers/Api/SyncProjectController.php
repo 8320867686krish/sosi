@@ -24,8 +24,18 @@ class SyncProjectController extends Controller
         $user = Auth::user();
 
         $currentUserRoleLevel = $user->roles->first()->level;
-        $myTime  = Carbon::parse($syncDate);
-        $myTime = $myTime->setTimezone('UTC');
+        $dateTime =  $syncDate;
+        $tz_from = 'Asia/Kolkata';
+        
+        // Create a Carbon instance from the datetime string and set the timezone
+        $carbonDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $dateTime, new \DateTimeZone($tz_from));
+        
+        // Convert the datetime to UTC timezone
+        $carbonDateTime->setTimezone('UTC');
+        
+        // Get the datetime in UTC
+        $dateTimeUTC = $carbonDateTime->toDateTimeString();
+        
 
         // Convert $startDate to start of day
 
@@ -35,15 +45,15 @@ class SyncProjectController extends Controller
             $project = Projects::find($projectId);
             if ($syncDate != 0) {
                 $decks = Deck::where('project_id', $projectId)
-                    ->whereDate('updated_at', '>=', $myTime)
+                    ->whereDate('updated_at', '>=', $dateTimeUTC )
                     ->get();
            
                 $checks = Checks::where('project_id', $projectId)
-                    ->whereDate('updated_at', '>=', $myTime)
+                    ->whereDate('updated_at', '>=',$dateTimeUTC )
                     ->get();
 
                 $checkImages = CheckImage::where('project_id', $projectId)
-                    ->whereDate('updated_at', '>=', $myTime)
+                    ->whereDate('updated_at', '>=',$dateTimeUTC )
                     ->get();
             } else {
                 $decks = Deck::where('project_id', $projectId)->get();
