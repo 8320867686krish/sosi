@@ -728,9 +728,10 @@ class ApiController extends Controller
         $clients = $this->modifyTypeValues($clients);
         $decks = $this->modifyTypeValues($decks);
         $checks = $this->modifyTypeValues($checks);
+        print_r($checks);
       unset($checks[15]);
       $checks = array_values($checks);
-        
+
         $check_has_images = $this->modifyTypeValues($check_has_images);
         return response()->json(['isStatus' => true, 'message' => 'table strture.','projects'=>$projects,'clients' => $clients,'decks' => $decks,'checks' => $checks,'check_has_images' => $check_has_images]);
     }
