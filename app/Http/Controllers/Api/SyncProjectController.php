@@ -24,11 +24,10 @@ class SyncProjectController extends Controller
         $user = Auth::user();
 
         $currentUserRoleLevel = $user->roles->first()->level;
-        $dateTime =  $syncDate;
         $tz_from = 'Asia/Kolkata';
-        
+
         // Create a Carbon instance from the datetime string and set the timezone
-        $carbonDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $dateTime, new \DateTimeZone($tz_from));
+        $carbonDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $syncDate, new \DateTimeZone($tz_from));
         
         // Convert the datetime to UTC timezone
         $carbonDateTime->setTimezone('UTC');
@@ -47,7 +46,10 @@ class SyncProjectController extends Controller
                 $decks = Deck::where('project_id', $projectId)
                     ->whereDate('updated_at', '>=', $dateTimeUTC )
                     ->get();
-           
+                    $decks1 = Deck::where('project_id', $projectId)
+                    ->whereDate('updated_at', '>=', $dateTimeUTC )
+                    ->toSql();
+                    echo   $decks1;
                 $checks = Checks::where('project_id', $projectId)
                     ->whereDate('updated_at', '>=',$dateTimeUTC )
                     ->get();
