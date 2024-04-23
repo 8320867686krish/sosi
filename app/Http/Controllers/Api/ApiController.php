@@ -722,23 +722,21 @@ class ApiController extends Controller
         $clients = DB::select('describe clients');
         $decks = DB::select('describe decks');
         $checks = DB::select('describe checks');
-     
         
         $check_has_images = DB::select('describe check_has_images');
         $projects = $this->modifyTypeValues($projects);
         $clients = $this->modifyTypeValues($clients);
         $decks = $this->modifyTypeValues($decks);
         $checks = $this->modifyTypeValues($checks);
-        $filteredChecks = array_filter($checks, function($field) {
-            return $field->Field !== 'isApp';
-        });
+      unset($checks[15]);
+      $checks = array_values($checks);
         
         $check_has_images = $this->modifyTypeValues($check_has_images);
-        return response()->json(['isStatus' => true, 'message' => 'table strture.','projects'=>$projects,'clients' => $clients,'decks' => $decks,'checks' => $filteredChecks,'check_has_images' => $check_has_images]);
+        return response()->json(['isStatus' => true, 'message' => 'table strture.','projects'=>$projects,'clients' => $clients,'decks' => $decks,'checks' => $checks,'check_has_images' => $check_has_images]);
     }
 
     public function modifyTypeValues($tableDescription) {
-
+        
         foreach ($tableDescription as $key => &$column) {
 
                 $type =  $column->Type;
