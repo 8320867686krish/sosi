@@ -24,7 +24,8 @@ class SyncProjectController extends Controller
         $user = Auth::user();
 
         $currentUserRoleLevel = $user->roles->first()->level;
-        $myTime = Carbon::parse($syncDate)->startOfDay(); // Convert $startDate to start of day
+        $myTime  = Carbon::parse($syncDate);
+        // Convert $startDate to start of day
 
         if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
             return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
@@ -47,7 +48,7 @@ class SyncProjectController extends Controller
                 $checks = Checks::where('project_id', $projectId)->get();
                 $checkImages = CheckImage::where('project_id', $projectId)->get();
             }
-            return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project, 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages]);
+            return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project, 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages,'myTime'=>$myTime]);
         }
     }
 
