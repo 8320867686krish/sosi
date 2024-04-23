@@ -24,7 +24,8 @@ class SyncProjectController extends Controller
         $user = Auth::user();
 
         $currentUserRoleLevel = $user->roles->first()->level;
-        $myTime = $syncDate;
+        $myTime = Carbon::parse($syncDate)->startOfDay(); // Convert $startDate to start of day
+
         if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
             return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
         } else {
@@ -33,12 +34,26 @@ class SyncProjectController extends Controller
                 // $decks = Deck::where('project_id', $projectId)
                 //     ->whereDate('updated_at', '>=', $myTime)
                 //     ->get();
-                    $decks = Deck::latest('updated_at')->get();
+                $decks = Deck::where('project_id', $projectId)
+                ->whereDate('updated_at', '>=', $myTime)
+                ->get();
 
-                $checks = Checks::where('project_id', $projectId)
-                    ->whereDate('updated_at', '>=', $myTime)
+                $lastUpdatedCheck = Checks::where('project_id', $projectId)
+                ->orderBy('updated_at', 'desc')
+                ->first();
+            
+            // Get the updated_at timestamp of the last updated record
+            if ($lastUpdatedCheck) {
+                $lastUpdateDate = $lastUpdatedCheck->updated_at->startOfDay(); // Get the start of the day for the last update date
+            } else {
+                // If there are no records for the project, use the input date as the last update date
+                $lastUpdateDate = $myTime;
+            }
+              
+                    $checks = Checks::where('project_id', $projectId)
+                    ->whereDate('updated_at', '>=', $lastUpdateDate)
+                    ->whereDate('updated_at', '<=', $myTime) // Filter by input date
                     ->get();
-
                 $checkImages = CheckImage::where('project_id', $projectId)
                     ->whereDate('updated_at', '>=', $myTime)
                     ->get();
