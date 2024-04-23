@@ -24,16 +24,7 @@ class SyncProjectController extends Controller
         $user = Auth::user();
 
         $currentUserRoleLevel = $user->roles->first()->level;
-        $tz_from = 'Asia/Kolkata';
-
-        // Create a Carbon instance from the datetime string and set the timezone
-        $carbonDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $syncDate, new \DateTimeZone($tz_from));
-        
-        // Convert the datetime to UTC timezone
-        $carbonDateTime->setTimezone('UTC');
-        
-        // Get the datetime in UTC
-        $dateTimeUTC = $carbonDateTime->toDateTimeString();
+       
         
 
         // Convert $startDate to start of day
@@ -43,6 +34,16 @@ class SyncProjectController extends Controller
         } else {
             $project = Projects::find($projectId);
             if ($syncDate != 0) {
+                $tz_from = 'Asia/Kolkata';
+
+                // Create a Carbon instance from the datetime string and set the timezone
+                $carbonDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $syncDate, new \DateTimeZone($tz_from));
+                
+                // Convert the datetime to UTC timezone
+                $carbonDateTime->setTimezone('UTC');
+                
+                // Get the datetime in UTC
+                $dateTimeUTC = $carbonDateTime->toDateTimeString();
                 $decks = Deck::where('project_id', $projectId)
                     ->where('updated_at', '>=', $dateTimeUTC )
                     ->get();
@@ -59,7 +60,7 @@ class SyncProjectController extends Controller
                 $checks = Checks::where('project_id', $projectId)->get();
                 $checkImages = CheckImage::where('project_id', $projectId)->get();
             }
-            return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project, 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages,'myTime'=>$dateTimeUTC]);
+            return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project, 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages]);
         }
     }
 
