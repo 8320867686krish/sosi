@@ -75,6 +75,44 @@ class SyncProjectController extends Controller
         if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
             return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
         } else {
+            //now check syncdate or not
+            $downLoadFile = asset('images/pdf/' . $projectId . ".zip");
+            $sourceDir = public_path('images/pdf/'.$projectId);
+            $zipFilePath = public_path('images/pdf/'.$projectId.'.zip');
+            $zip = new ZipArchive;
+            if ($syncDate != 0){
+                if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+                    $files = File::files($sourceDir);
+                    foreach ($files as $key => $value) {
+                        $relativeNameInZipFile = basename($value);
+                        $zip->addFile($value, $relativeNameInZipFile);
+                    }
+                    $zip->close();
+                }
+                return response()->json(['isStatus'=>true,'message' => 'Successfully zip download','zipPath' => $downLoadFile]);
+            }else{
+                $tz_from = 'Asia/Kolkata';
+                $carbonDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $syncDate, new \DateTimeZone($tz_from));
+                $carbonDateTime->setTimezone('UTC');
+                $dateTimeUTC = $carbonDateTime->toDateTimeString();
+                $checkImages = CheckImage::where('project_id', $projectId)
+                ->where('updated_at', '>=',$dateTimeUTC )
+                ->get();
+                $zip->open($zipFilePath, ZipArchive::CREATE);
+
+                foreach ($checkImages as $image) {
+                    $imageFilename = basename($image->getOriginal('image'));
+                    $path = public_path('images/pdf/' . $projectId . '/' . $imageFilename);
+                    if (file_exists($path) && is_file($path)) {
+                        $imageData = file_get_contents($path);
+                        // Add image data to zip file with the same name
+                        $zip->addFromString(basename($image->image), $imageData);
+                    }
+                }
+                $zip->close();
+                return response()->json(['isStatus'=>true,'message' => 'Successfully zip download','zipPath' => $downLoadFile]);
+
+            }
         }
     }
 
