@@ -301,17 +301,23 @@ class ApiController extends Controller
             $currentUserRoleLevel = $user->roles->first()->level;
 
             if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
-                $project = Projects::select('id','client_id','ship_name','imo_number','project_no','image')->with('client:id,manager_name');
+                $projects = Projects::select('projects.id', 'projects.client_id', 'projects.ship_name', 'projects.imo_number', 'projects.project_no', 'projects.image', 'clients.manager_name')
+                    ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
+                    ->get();
             } else {
-                $project = $user->projects()->select('projects.id', 'client_id', 'ship_name', 'imo_number', 'project_no', 'image')
-                ->with('client:id,manager_name')->where('isExpire', 0);
+                $projects = Projects::select('projects.id', 'client_id', 'ship_name', 'imo_number', 'project_no', 'image','clients.manager_name')
+                ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
+
+                ->leftJoin('project_teams', 'projects.id', '=', 'project_teams.project_id')
+                ->where('project_teams.isExpire', 0)
+                ->where('project_teams.user_id', $user->id)
+                ->get();
             }
 
-            $project = $project->get();
             $modifiedProjects = [];
 
-            if ($project->count() > 0) {
-                $modifiedProjects = $project;
+            if ($projects->count() > 0) {
+                $modifiedProjects = $projects;
             }
 
             return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $modifiedProjects]);
@@ -551,11 +557,11 @@ class ApiController extends Controller
                 $query->latest()->take(1); // Order by insertion timestamp and take only the latest image
             }])->where('deck_id', $deckId);
 
-            if($filterValue == 'unCompleted'){
-                $checks = $checks->where('isCompleted',0);
+            if ($filterValue == 'unCompleted') {
+                $checks = $checks->where('isCompleted', 0);
             }
-            if($filterValue == 'completed'){
-                $checks = $checks->where('isCompleted',1);
+            if ($filterValue == 'completed') {
+                $checks = $checks->where('isCompleted', 1);
             }
             $checks = $checks->get();
             return response()->json(['isStatus' => true, 'message' => 'Project checks list retrieved successfully.', 'projectChecks' => $checks]);
@@ -610,15 +616,13 @@ class ApiController extends Controller
             $checkImgs = CheckImage::where('check_id', $check_id)->get();
             $chkPairData = Checks::find($check_id);
             $chkPair =  $chkPairData['pairWitthTag'];
-            if(@$chkPair){
+            if (@$chkPair) {
                 $data[]['pairWitthTag'] =  $chkPair;
-
-            }else{
+            } else {
                 $data = [];
-
             }
             $mainPath = url("public/images/pdf/{$chkPairData['project_id']}") . "/";
-            return response()->json(['isStatus' => true, 'message' => 'Check images retrieved successfully.', 'mainPath' => $mainPath, 'checkImagesList' => $checkImgs,'chkPair' => $data]);
+            return response()->json(['isStatus' => true, 'message' => 'Check images retrieved successfully.', 'mainPath' => $mainPath, 'checkImagesList' => $checkImgs, 'chkPair' => $data]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
@@ -662,7 +666,8 @@ class ApiController extends Controller
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
     }
-    public function qrCodePair(Request $request){
+    public function qrCodePair(Request $request)
+    {
         $checkId = $request->input('checkId');
         $pairWitthTag = $request->input('pairWitthTag');
 
@@ -717,7 +722,8 @@ class ApiController extends Controller
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
     }
-    public function tableStruture(){
+    public function tableStruture()
+    {
         $projects = DB::select('describe projects');
         $clients = DB::select('describe clients');
         $decks = DB::select('describe decks');
@@ -728,23 +734,29 @@ class ApiController extends Controller
         $decks = $this->modifyTypeValues($decks);
         $checks = $this->modifyTypeValues($checks);
         $check_has_images = $this->modifyTypeValues($check_has_images);
-        return response()->json(['isStatus' => true, 'message' => 'table strture.','projects'=>$projects,'clients' => $clients,'decks' => $decks,'checks' => $checks,'check_has_images' => $check_has_images]);
+        return response()->json(['isStatus' => true, 'message' => 'table strture.', 'projects' => $projects, 'clients' => $clients, 'decks' => $decks, 'checks' => $checks, 'check_has_images' => $check_has_images]);
     }
 
-    public function modifyTypeValues($tableDescription) {
-        foreach ($tableDescription as &$column) {
+    public function modifyTypeValues($tableDescription)
+    {
+
+        foreach ($tableDescription as $key => &$column) {
+
             $type =  $column->Type;
+
             if (strpos($type, 'int') !== false) {
                 $column->Type = 'INTEGER';
             }
             if (strpos($type, 'varchar') !== false) {
                 $column->Type = 'TEXT';
             }
-            if (strpos($type, 'date') !== false || strpos($type,'timestamp') !== false) {
+
+            if (strpos($type, 'date') !== false || strpos($type, 'timestamp') !== false) {
                 $column->Type = 'NUMERIC';
             }
         }
+
+
         return $tableDescription;
     }
-
 }
