@@ -309,7 +309,7 @@ class ApiController extends Controller
                 ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
 
                 ->leftJoin('project_teams', 'projects.id', '=', 'project_teams.project_id')
-                ->where('projects.isExpire', 0)
+                ->where('project_teams.isExpire', 0)
                 ->where('project_teams.user_id', $user->id)
                 ->get();
             }
