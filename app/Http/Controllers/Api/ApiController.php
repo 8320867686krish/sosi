@@ -735,13 +735,13 @@ class ApiController extends Controller
         foreach ($tableDescription as &$column) {
             $type =  $column->Type;
             if (strpos($type, 'int') !== false) {
-                $column->Type = 'INTEGER'; 
+                $column->Type = 'INTEGER';
             }
             if (strpos($type, 'varchar') !== false) {
-                $column->Type = 'TEXT'; 
+                $column->Type = 'TEXT';
             }
             if (strpos($type, 'date') !== false || strpos($type,'timestamp') !== false) {
-                $column->Type = 'NUMERIC'; 
+                $column->Type = 'NUMERIC';
             }
         }
         return $tableDescription;

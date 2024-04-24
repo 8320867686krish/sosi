@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProjectDetailRequest;
 use App\Http\Requests\ProjectRequest;
 use App\Models\CheckHasHazmat;
+use App\Models\CheckImage;
 use App\Models\Checks;
 use App\Models\ChecksLog;
 use App\Models\Client;
@@ -55,8 +56,8 @@ class ProjectsController extends Controller
     {
         $clients = Client::orderBy('id', 'desc')->get(['id', 'manager_name', 'manager_initials']);
         $isBack = 0;
-        if(session('back') == 1){
-          $isBack = 1;
+        if (session('back') == 1) {
+            $isBack = 1;
         }
         Session::forget('back');
         $role_id = Auth::user()->roles->first()->level;
@@ -94,7 +95,7 @@ class ProjectsController extends Controller
 
         $hazmats = Hazmat::get(['id', 'name']);
 
-        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id,'isBack' =>  $isBack, "hazmats"=>$hazmats]);
+        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id, 'isBack' =>  $isBack, "hazmats" => $hazmats]);
     }
 
     public function projectInfo($project_id)
@@ -219,7 +220,8 @@ class ProjectsController extends Controller
         return view('check.check', ['deck' => $deck, 'hazmats' => $hazmats]);
     }
 
-    public function setBackSession(){
+    public function setBackSession()
+    {
         session(['back' => 1]);
         return 1;
     }
@@ -237,6 +239,16 @@ class ProjectsController extends Controller
         $htmllist = view('check.checkAddModal', compact('hazmats'))->render();
 
         return response()->json(['html' => $htmllist, 'hazmatIds' => $hazmatIds, "check" => $check]);
+    }
+
+    public function checkBasedImage($id)
+    {
+        try {
+            $checkImgs = CheckImage::where('check_id', $id)->get(['id', 'image','project_id']);
+            return response()->json(['isStatus' => true, 'message' => 'Check images retrieved successfully.', 'checkImagesList' => $checkImgs]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
     }
 
     public function addImageHotspots(Request $request)

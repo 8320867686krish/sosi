@@ -2,12 +2,12 @@
 
 @section('css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/cropper/dist/cropper.min.css') }}">
-    <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/bootstrap-select/css/bootstrap-select.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/dataTables.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/buttons.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/select.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/fixedHeader.bootstrap4.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/fancybox/fancybox.min.css') }}">
 
     <style>
         #pdf-container {
@@ -369,6 +369,7 @@
         </div>
 
         <div class="main-content container-fluid p-0" id="check_list">
+            <div id="showCheckImgMsg"></div>
             <div class="email-head">
                 <div class="email-head-subject">
                     <div class="title"><span>Check List</span>
@@ -377,23 +378,22 @@
             </div>
             <div class="email-body">
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered first">
+                    <table class="table table-striped table-bordered first" id="checkListTable">
                         <thead>
                             <tr>
-                                {{-- `project_id`, `deck_id`, `suspected_hazmat`, `ment`, `component`, `location`, `sub_location`, `remarks`, `position_left`, `position_top`, `initialsChekId`, `created_at`, `updated_at`, `isApp`, `isCompleted` --}}
-                                <th>Check</th>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Location</th>
-                                <th>Equip. & Comp.</th>
-                                <th>VSCP</th>
-                                <th width="10%">Action</th>
+                                <th class="all">Check</th>
+                                <th class="all">Name</th>
+                                <th class="all">Type</th>
+                                <th class="all">Location</th>
+                                <th class="all">Equip. & Comp.</th>
+                                <th class="all">VSCP</th>
+                                <th class="all" width="10%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if (isset($project->checks) && $project->checks->count() > 0)
                                 @foreach ($project->checks as $check)
-                                    <tr>
+                                    <tr id="checkListTr_{{ $check->id }}">
                                         <td>{{ $check->initialsChekId }}</td>
                                         <td>{{ $check->name }}</td>
                                         <td>{{ $check->type }}</td>
@@ -401,9 +401,12 @@
                                         <td>{{ $check->equipment }} <br> {{ $check->component }} </td>
                                         <td></td>
                                         <td class="text-center">
-                                            <a href="javascript:;" id="editCheckbtn"
+                                            <a href="javascript:;" class="editCheckbtn"
                                                 data-dotId="dot_{{ $loop->iteration }}" data-id="{{ $check->id }}"><i
                                                     class="fas fa-edit text-primary" style="font-size: 1rem"></i></a>
+                                            <a href="javascript:;" class="modalCheckbtn ml-2"
+                                                data-id="{{ $check->id }}"><i class="fas fa-images text-primary"
+                                                    style="font-size: 1rem"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -580,7 +583,7 @@
 
                     <form method="post" action="{{ route('addImageHotspots') }}" id="checkDataAddForm"
                         enctype="multipart/form-data">
-                        <div class="modal-body">
+                        <div class="modal-body" style="overflow-x: auto; overflow-y: auto; height: calc(81vh - 1rem);">
                             @csrf
                             <input type="hidden" id="id" name="id">
                             <input type="hidden" id="project_id" name="project_id"
@@ -592,8 +595,8 @@
                                 <div class="col-12 col-md-6" id="chkName">
                                     <div class="form-group">
                                         <label for="name">Name</label>
-                                        <input type="text" id="name" name="name" class="form-control"
-                                            readonly>
+                                        <input type="text" id="name" name="name" value=""
+                                            class="form-control" readonly>
                                     </div>
                                 </div>
 
@@ -638,6 +641,7 @@
                                         <label for="suspected_hazmat">Suspected Hazmat</label>
                                         <select class="form-control selectpicker" id="suspected_hazmat"
                                             name="suspected_hazmat[]" multiple="multiple">
+                                            <option value="">Select Hazmat</option>
                                             @if (isset($hazmats) && $hazmats->count() > 0)
                                                 @foreach ($hazmats as $hazmat)
                                                     <option value="{{ $hazmat->id }}">
@@ -709,6 +713,7 @@
     <script src="{{ asset('assets/vendor/datatables/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/datatables/js/data-table.js') }}"></script>
     <script src="{{ asset('assets/libs/js/bootstrap4-toggle.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/fancybox/fancybox.min.js') }}"></script>
 
     <script>
         function previewFile(input) {
@@ -821,22 +826,21 @@
         }
 
         function detailOfHazmats(checkId) {
-
             $.ajax({
                 type: 'GET',
                 url: "{{ url('check') }}" + "/" + checkId + "/hazmat",
                 success: function(response) {
-                    // $('#suspected_hazmat').selectpicker();
-                    $('#suspected_hazmat').selectpicker('val', response.hazmatIds);
 
                     $('#showTableTypeDiv').html(response.html);
 
                     let jsonObject = response.check;
                     for (var key in jsonObject) {
                         if (jsonObject.hasOwnProperty(key)) {
-                            $("#" + key).val(jsonObject[key]);
+                            $(`#checkDataAddForm #${key}`).val(jsonObject[key]);
                         }
                     }
+
+                    $('#checkDataAddForm #suspected_hazmat').selectpicker('val', response.hazmatIds);
 
                     $.each(response.check.hazmats, function(index, hazmatData) {
                         if (hazmatData.type === 'Unknown') {
@@ -1210,12 +1214,52 @@
                 });
             });
 
-            $(document).on("click", "#editCheckbtn", function(event) {
-                event.stopPropagation(); // Prevents the click event from bubbling up to the parent .dot element
+            $(document).on("click", ".editCheckbtn", function() {
                 let checkDataId = $(this).attr('data-dotId');
                 let checkId = $(this).attr('data-id');
                 let dotElement = $(`#${checkDataId}`)[0];
                 detailOfHazmats(checkId);
+            });
+
+            $(document).on("click", ".modalCheckbtn", function() {
+                let checkId = $(this).attr('data-id');
+                $("#showCheckImgMsg").text('');
+                $.ajax({
+                    type: 'GET',
+                    url: "{{ url('check') }}" + "/" + checkId + "/image",
+                    success: function(response) {
+                        if (response.isStatus && response.checkImagesList.length != 0) {
+                            let imagesArray = [];
+                            $.each(response.checkImagesList, function(index, imageData) {
+                                var imageObject = {
+                                    src: imageData.image,
+                                    opts: {
+                                        caption: imageData.caption,
+                                        thumb: imageData.image
+                                    }
+                                };
+                                imagesArray.push(imageObject);
+                            });
+
+                            $.fancybox.open(imagesArray, {
+                                loop: true,
+                                thumbs: {
+                                    autoStart: true
+                                }
+                            });
+                        } else {
+                            let messages = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                This check image not available.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>`;
+
+                            $("#showCheckImgMsg").html(messages);
+                            $('#showCheckImgMsg').fadeIn().delay(20000).fadeOut();
+                        }
+                    },
+                });
             });
 
             $("#showTableTypeDiv").on("change", ".cloneTableTypeDiv select", function() {
@@ -1224,10 +1268,12 @@
                 handleTableTypeChange(selectedValue, cloneTableTypeDiv);
             });
 
+            let selectedHazmatsIds = [];
             $('#suspected_hazmat').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
                 let selectedValue = $(this).find('option').eq(clickedIndex).val();
 
                 if (!isSelected) {
+                    selectedHazmatsIds.push(selectedValue);
                     $(`#cloneTableTypeDiv${selectedValue}`).remove();
                 } else {
                     let clonedElement = $('#cloneTableTypeDiv').clone();
@@ -1252,13 +1298,8 @@
 
             // Add event listener for Save button click
             $(document).on("click", "#checkDataAddSubmitBtn", function() {
-
-                // Serialize form data
                 let checkFormData = new FormData($("#checkDataAddForm")[0]);
-                // console.log(checkformdata);
-                // $("#checkdataaddform").serializearray();
-                // checkFormData.append('deselectId', selectedHazmatsIds);
-
+                checkFormData.append('deselectId', selectedHazmatsIds);
                 let $submitButton = $(this);
                 let originalText = $submitButton.html();
                 $submitButton.text('Wait...');
@@ -1271,34 +1312,17 @@
                     contentType: false,
                     processData: false,
                     success: function(response) {
+                        // checkListTr_
                         if (response.isStatus) {
-                            // Your code here if isStatus is true
-                            $(".dot.selected").attr('data-checkId', response.id);
-                            var checkData = {
-                                id: response.id,
-                                name: response.name,
-                                project_id: $("#project_id").val(),
-                                deck_id: $("#deck_id").val(),
-                                type: $("#type").val(),
-                                suspected_hazmat: $("#suspected_hazmat").val(),
-                                equipment: $("#equipment").val(),
-                                component: $("#component").val(),
-                                location: $("#location").val(),
-                                sub_location: $("#sub_location").val(),
-                                remarks: $("#remarks").val()
-                            };
-                            let checkDataJson = JSON.stringify(checkData);
-                            $(".dot.selected").attr('data-check', checkDataJson);
-                            $('#checkListUl').html(response.htmllist);
                             let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
                             ${response.message}
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>`;
-                            $("#chkName").show();
-                            $("#showSuccessMsg").html(messages);
-                            $('#showSuccessMsg').fadeIn().delay(20000).fadeOut();
+
+                            $("#showCheckImgMsg").html(messages);
+                            $('#showCheckImgMsg').fadeIn().delay(20000).fadeOut();
                             $("#checkDataAddForm")[0].reset();
                             $("#id").val("");
                             $submitButton.html(originalText);
@@ -1315,7 +1339,6 @@
                         }
                     },
                     error: function(xhr, status, error) {
-                        console.log(xhr.responseJSON);
                         $submitButton.html(originalText);
                         $submitButton.prop('disabled', false);
                     }
