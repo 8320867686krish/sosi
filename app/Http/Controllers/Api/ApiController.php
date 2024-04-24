@@ -301,8 +301,10 @@ class ApiController extends Controller
             $currentUserRoleLevel = $user->roles->first()->level;
 
             if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
-                $project = Projects::select('id','client_id','ship_name','imo_number','project_no','image')->with('client:id,manager_name');
-            } else {
+                $project = Projects::select('id', 'client_id', 'ship_name', 'imo_number', 'project_no', 'image','clients.manager_name')
+                ->with(['client:id,manager_name'])
+                ->get();
+                        } else {
                 $project = $user->projects()->select('projects.id', 'client_id', 'ship_name', 'imo_number', 'project_no', 'image')
                 ->with('client:id,manager_name')->where('isExpire', 0);
             }
