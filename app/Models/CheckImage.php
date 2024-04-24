@@ -14,6 +14,7 @@ class CheckImage extends Model
     protected $fillable = ['check_id', 'image','project_id'];
 
     protected $hidden = ['created_at', 'updated_at'];
+
     public function getImageAttribute($value){
         return asset("images/pdf/{$this->project_id}/{$value}");
     }

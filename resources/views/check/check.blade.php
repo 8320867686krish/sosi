@@ -194,7 +194,7 @@
 
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="type">Type</label>
+                                        <label for="type">Type <span class="text-danger">*</span></label>
                                         <select name="type" id="type" class="form-control">
                                             <option value>Select Type</option>
                                             <option value="sample">Sample</option>
@@ -292,10 +292,8 @@
                     var new_left_perc = parseInt($(this).css("left")) + "px";
                     var new_top_perc = parseInt($(this).css("top")) + "px";
 
-                    var new_left_in_px = Math.round((parseInt($(this).css(
-                        "left"))));
-                    var new_top_in_px = Math.round((parseInt($(this).css(
-                        "top"))));
+                    var new_left_in_px = Math.round((parseInt($(this).css("left"))));
+                    var new_top_in_px = Math.round((parseInt($(this).css("top"))));
 
                     $(this).css("left", new_left_perc);
                     $(this).css("top", new_top_perc);
@@ -311,7 +309,6 @@
                 url: "{{ url('check') }}" + "/" + checkId + "/hazmat",
                 success: function(response) {
                     $('#suspected_hazmat').selectpicker('val', response.hazmatIds);
-                    console.log(response.html);
                     $('#showTableTypeDiv').html(response.html);
 
                     $.each(response.check.hazmats, function(index, hazmatData) {
@@ -531,8 +528,7 @@
             });
 
             $(document).on("click", "#editCheckbtn", function(event) {
-                event
-                    .stopPropagation(); // Prevents the click event from bubbling up to the parent .dot element
+                event.stopPropagation(); // Prevents the click event from bubbling up to the parent .dot element
                 let checkDataId = $(this).attr('data-dotId');
                 let dotElement = $(`#${checkDataId}`)[0];
                 openAddModalBox(dotElement);
@@ -627,8 +623,11 @@
 
             $(document).on("click", "#checkDataAddCloseBtn", function() {
                 $("#checkDataAddForm")[0].reset();
-                $("#id").val("");
+                // $('#checkDataAddForm input[type="hidden"]').val('');
+                // $('#checkDataAddForm select').prop('selectedIndex', 0);
+                // $('#checkDataAddForm input[type="file"]').attr('src', '');
             });
+
             let selectedHazmatsIds = [];
             $('#suspected_hazmat').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
                 let selectedValue = $(this).find('option').eq(clickedIndex).val();
@@ -636,7 +635,6 @@
                 if (!isSelected) {
                     selectedHazmatsIds.push(selectedValue);
                     $(`#cloneTableTypeDiv${selectedValue}`).remove();
-                    console.log(selectedHazmatsIds);
                 } else {
                     let clonedElement = $('#cloneTableTypeDiv').clone();
                     clonedElement.removeAttr("id");
@@ -701,6 +699,7 @@
                 }
             });
         });
+
         function setSession(event, projectId) {
         event.preventDefault();
         // AJAX request to set session

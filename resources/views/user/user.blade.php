@@ -45,8 +45,7 @@
                             </div>
                             <div class="col-6">
                                 @can('users.add')
-                                    <a href="{{ route('users.add') }}"
-                                        class="btn btn-primary float-right btn-rounded addNewBtn">Add New User</a>
+                                    <a href="{{ route('users.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New User</a>
                                 @endcan
                             </div>
                         </div>
@@ -127,8 +126,6 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>`;
-
-                $('.showSucessMsg').html(successMessage);
 
                 $('.showSucessMsg').html(successMessage);
                 // Display the .showSuccessMsg element

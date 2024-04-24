@@ -750,6 +750,7 @@ class ApiController extends Controller
             if (strpos($type, 'varchar') !== false) {
                 $column->Type = 'TEXT';
             }
+
             if (strpos($type, 'date') !== false || strpos($type, 'timestamp') !== false) {
                 $column->Type = 'NUMERIC';
             }
