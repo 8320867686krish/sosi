@@ -21,20 +21,17 @@ class SyncProjectController extends Controller
     {
         $projectId = $request->input('projectId');
         $syncDate = $request->input('syncDate');
+        $timeZone = $request->input('timeZone');
         $user = Auth::user();
-
         $currentUserRoleLevel = $user->roles->first()->level;
-       
-        
-
-        // Convert $startDate to start of day
-
+       // Convert $startDate to start of day
         if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
             return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
         } else {
             $project = Projects::find($projectId);
             if ($syncDate != 0) {
-                $tz_from = 'Asia/Kolkata';
+                $tz_from = $timeZone;
+
 
                 // Create a Carbon instance from the datetime string and set the timezone
                 $carbonDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $syncDate, new \DateTimeZone($tz_from));
@@ -67,6 +64,7 @@ class SyncProjectController extends Controller
     public function createZip(Request $request){
         $projectId = $request->input('projectId');
         $syncDate = $request->input('syncDate');
+        $timeZone = $request->input('timeZone');
         $user = Auth::user();
 
         $currentUserRoleLevel = $user->roles->first()->level;
@@ -91,28 +89,39 @@ class SyncProjectController extends Controller
                 }
                 return response()->json(['isStatus'=>true,'message' => 'Successfully zip download','zipPath' => $downLoadFile]);
             }else{
-                $tz_from = 'Asia/Kolkata';
+                $tz_from = $timeZone;
                 $carbonDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $syncDate, new \DateTimeZone($tz_from));
                 $carbonDateTime->setTimezone('UTC');
                 $dateTimeUTC = $carbonDateTime->toDateTimeString();
                 $checkImages = CheckImage::where('project_id', $projectId)
                 ->where('updated_at', '>=',$dateTimeUTC )
                 ->pluck('image')->toArray();
-                print_r( $checkImages);
-                exit();
-                $zip->open($zipFilePath, ZipArchive::CREATE);
 
-                foreach ($checkImages as $image) {
-                    $imageFilename = basename($image->getOriginal('image'));
-                    $path = public_path('images/pdf/' . $projectId . '/' . $imageFilename);
-                    if (file_exists($path) && is_file($path)) {
-                        $imageData = file_get_contents($path);
-                        // Add image data to zip file with the same name
-                        $zip->addFromString(basename($image->image), $imageData);
+                $decks = Deck::where('project_id', $projectId)
+                ->where('updated_at', '>=',$dateTimeUTC )
+                ->pluck('image')->toArray();
+               
+                $allImages = array_merge($checkImages, $decks);
+                if(@$allImages){
+                    $zip->open($zipFilePath, ZipArchive::CREATE);
+
+                    foreach ($allImages as $image) {
+                        $imageFilename = basename($image);
+                        $path = public_path('images/pdf/' . $projectId . '/' . $imageFilename);
+                        if (file_exists($path) && is_file($path)) {
+                            $imageData = file_get_contents($path);
+                            // Add image data to zip file with the same name
+                            $zip->addFromString(basename($image), $imageData);
+                        }
                     }
+                    $zip->close();
+                    return response()->json(['isStatus'=>true,'message' => 'Successfully zip download','zipPath' => $downLoadFile]);
+
+                }else{
+                    return response()->json(['isStatus'=>false,'message' => 'No file','zipPath' => '']);
+
                 }
-                $zip->close();
-                return response()->json(['isStatus'=>true,'message' => 'Successfully zip download','zipPath' => $downLoadFile]);
+             
 
             }
         }
