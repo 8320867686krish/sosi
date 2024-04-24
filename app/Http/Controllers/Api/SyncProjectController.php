@@ -97,7 +97,7 @@ class SyncProjectController extends Controller
                 $dateTimeUTC = $carbonDateTime->toDateTimeString();
                 $checkImages = CheckImage::where('project_id', $projectId)
                 ->where('updated_at', '>=',$dateTimeUTC )
-                ->put('image')->toArray();
+                ->pluck('image')->toArray();
                 print_r( $checkImages);
                 exit();
                 $zip->open($zipFilePath, ZipArchive::CREATE);
