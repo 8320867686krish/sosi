@@ -29,12 +29,12 @@ class SyncProjectController extends Controller
         if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
             return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
         } else {
-            $project = Projects::find($projectId);
-            $client = Client::find($project['client_id']);
+            $client_id = Projects::pluck('client_id')->find($projectId);
+            $client = Client::find( $client_id);
             $decks = Deck::where('project_id', $projectId)->get();
             $checks = Checks::where('project_id', $projectId)->get();
             $checkImages = CheckImage::where('project_id', $projectId)->get();
-            return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project, 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages,'clients'=>$client]);
+            return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.','decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages,'clients'=>$client]);
         }
     }
 
@@ -116,9 +116,12 @@ class SyncProjectController extends Controller
     public function syncAdd(Request $request){
        $post = $request->input();
        if(@$post['checks']){
-           foreach($post['checks'] as $value){
+        $checkIds = array_column($post['checks'],'id');
+        $dbChecks = Checks::where('project_id',$post['project_id'])->where('deck_id',$post['deck_id'])->pluck('id')->toArray();
+        $arrdiff = array_diff($dbChecks,$checkIds);
+        foreach($post['checks'] as $value){
             print_r($value);
-           }
+        }
        }
     }
 }

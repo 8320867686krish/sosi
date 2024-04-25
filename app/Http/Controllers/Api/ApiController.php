@@ -301,11 +301,11 @@ class ApiController extends Controller
             $currentUserRoleLevel = $user->roles->first()->level;
 
             if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
-                $projects = Projects::select('projects.id', 'projects.client_id', 'projects.ship_name', 'projects.imo_number', 'projects.project_no', 'projects.image', 'clients.manager_name')
+                $projects = Projects::select('*', 'clients.manager_name')
                     ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
                     ->get();
             } else {
-                $projects = Projects::select('projects.id', 'client_id', 'ship_name', 'imo_number', 'project_no', 'image','clients.manager_name')
+                $projects = Projects::select('*','clients.manager_name')
                 ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
 
                 ->leftJoin('project_teams', 'projects.id', '=', 'project_teams.project_id')
