@@ -30,7 +30,7 @@ class SyncProjectController extends Controller
             return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
         } else {
             $client_id = Projects::select('client_id')->find($projectId);
-            $client = Client::find( $client_id);
+            $client = Client::find( $client_id)->toArray();
             $decks = Deck::where('project_id', $projectId)->get();
             $checks = Checks::where('project_id', $projectId)->get();
             $checkImages = CheckImage::where('project_id', $projectId)->get();
