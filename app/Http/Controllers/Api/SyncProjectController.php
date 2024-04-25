@@ -29,7 +29,7 @@ class SyncProjectController extends Controller
         if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
             return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
         } else {
-            $client_id = Projects::pluck('client_id')->find($projectId);
+            $client_id = Projects::select('client_id')->find($projectId);
             $client = Client::find( $client_id);
             $decks = Deck::where('project_id', $projectId)->get();
             $checks = Checks::where('project_id', $projectId)->get();

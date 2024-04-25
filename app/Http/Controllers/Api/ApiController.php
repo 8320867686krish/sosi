@@ -305,7 +305,7 @@ class ApiController extends Controller
                     ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
                     ->get();
             } else {
-                $projects = Projects::select('*','clients.manager_name')
+                $projects = Projects::select('projects.*','clients.manager_name')
                 ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
 
                 ->leftJoin('project_teams', 'projects.id', '=', 'project_teams.project_id')
