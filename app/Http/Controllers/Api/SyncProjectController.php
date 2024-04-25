@@ -31,6 +31,8 @@ class SyncProjectController extends Controller
         } else {
             $client_id = Projects::select('client_id')->find($projectId);
             $client = Client::find( $client_id)->toArray();
+            $client = array_values($client);
+
             $decks = Deck::where('project_id', $projectId)->get();
             $checks = Checks::where('project_id', $projectId)->get();
             $checkImages = CheckImage::where('project_id', $projectId)->get();
