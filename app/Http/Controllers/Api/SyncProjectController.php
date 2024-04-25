@@ -13,6 +13,9 @@ use App\Models\Deck;
 use App\Models\Checks;
 use App\Models\CheckImage;
 use Carbon\Carbon;
+use App\Models\Client;
+
+use PDO;
 
 class SyncProjectController extends Controller
 {
@@ -20,8 +23,6 @@ class SyncProjectController extends Controller
     public function syncProject(Request $request)
     {
         $projectId = $request->input('projectId');
-        $syncDate = $request->input('syncDate');
-        $timeZone = $request->input('timeZone');
         $user = Auth::user();
         $currentUserRoleLevel = $user->roles->first()->level;
        // Convert $startDate to start of day
@@ -29,35 +30,11 @@ class SyncProjectController extends Controller
             return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
         } else {
             $project = Projects::find($projectId);
-            if ($syncDate != 0) {
-                $tz_from = $timeZone;
-
-
-                // Create a Carbon instance from the datetime string and set the timezone
-                $carbonDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $syncDate, new \DateTimeZone($tz_from));
-                
-                // Convert the datetime to UTC timezone
-                $carbonDateTime->setTimezone('UTC');
-                
-                // Get the datetime in UTC
-                $dateTimeUTC = $carbonDateTime->toDateTimeString();
-                $decks = Deck::where('project_id', $projectId)
-                    ->where('updated_at', '>=', $dateTimeUTC )
-                    ->get();
-                 
-                $checks = Checks::where('project_id', $projectId)
-                    ->where('updated_at', '>=',$dateTimeUTC )
-                    ->get();
-
-                $checkImages = CheckImage::where('project_id', $projectId)
-                    ->where('updated_at', '>=',$dateTimeUTC )
-                    ->get();
-            } else {
-                $decks = Deck::where('project_id', $projectId)->get();
-                $checks = Checks::where('project_id', $projectId)->get();
-                $checkImages = CheckImage::where('project_id', $projectId)->get();
-            }
-            return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project, 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages]);
+            $client = Client::find($project['client_id']);
+            $decks = Deck::where('project_id', $projectId)->get();
+            $checks = Checks::where('project_id', $projectId)->get();
+            $checkImages = CheckImage::where('project_id', $projectId)->get();
+            return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'projectList' => $project, 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages,'clients'=>$client]);
         }
     }
 
@@ -134,5 +111,14 @@ class SyncProjectController extends Controller
             unlink($downLoadFile);
         }
         return response()->json(['isStatus' => true, 'message' => 'pdf deleted successfully.']);
+    }
+
+    public function syncAdd(Request $request){
+       $post = $request->input();
+       if(@$post['checks']){
+           foreach($post['checks'] as $value){
+            print_r($value);
+           }
+       }
     }
 }

@@ -19,7 +19,10 @@ use Illuminate\Support\Facades\Route;
 // Route::post('login',[UserAuthController::class,'login']);
 // Route::post('logout',[UserAuthController::class,'logout'])
 //   ->middleware('auth:sanctum');
+
 Route::controller(SyncProjectController::class)->group(function () {
+    Route::post('syncAdd', 'syncAdd');
+
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('sync/project', 'syncProject');
         Route::post('create/zip', 'createZip');
@@ -33,7 +36,7 @@ Route::controller(ApiController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('forgot_password', 'forgotPassword');
     Route::post('reset_password', 'resetPassword');
-   
+
     Route::get('table/structure','tableStruture');
 
 
