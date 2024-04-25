@@ -17,7 +17,8 @@ class Projects extends Model
         'updated_at',
         'pivot'
     ];
-    public function getImageAttribute($value){
+    public function getImageAttribute($value)
+    {
         if ($value) {
             return asset('images/pdf/' . $this->id . '/' . $value);
         }
@@ -44,6 +45,6 @@ class Projects extends Model
     }
     public function checks()
     {
-        return $this->hasMany(Checks::class,'project_id','id');
+        return $this->hasMany(Checks::class, 'project_id', 'id');
     }
 }

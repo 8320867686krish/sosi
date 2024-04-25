@@ -81,10 +81,8 @@
         <aside class="page-aside">
             <div class="aside-content">
                 <div class="aside-header">
-                    <button class="navbar-toggle" data-target=".aside-nav" data-toggle="collapse" type="button"><span
-                            class="icon"><i class="fas fa-caret-down"></i></span></button><span class="title">Project
-                        Information</span>
-                    <p class="description">Service description</p>
+                    <button class="navbar-toggle" data-target=".aside-nav" data-toggle="collapse" type="button"><span class="icon"><i class="fas fa-caret-down"></i></span></button><span class="title">Project Information</span>
+                    <p class="description">{{ $project->ship_name ?? '' }}</p>
                 </div>
                 <div class="aside-nav collapse">
                     <ul class="nav">
@@ -107,8 +105,7 @@
                                 List</a>
                         </li>
                         <li>
-                            <a href="#assign_project"><span class="icon"><i
-                                        class="fas fa-fw fa-briefcase"></i></span>Assign Project</a>
+                            <a href="#assign_project"><span class="icon"><i class="fas fa-fw fa-briefcase"></i></span>Assign Project</a>
                         </li>
                         <li>
                             <a href="#onboard_survey"><span class="icon"><i
@@ -381,13 +378,15 @@
                     <table class="table table-striped table-bordered first" id="checkListTable">
                         <thead>
                             <tr>
-                                <th class="all">Check</th>
-                                <th class="all">Name</th>
-                                <th class="all">Type</th>
-                                <th class="all">Location</th>
-                                <th class="all">Equip. & Comp.</th>
-                                <th class="all">VSCP</th>
-                                <th class="all" width="10%">Action</th>
+                                <th>Check</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Location</th>
+                                <th>Equip. & Comp.</th>
+                                <th>Document analyisis result</th>
+                                <th>Hazmat</th>
+                                <th>VSCP</th>
+                                <th width="10%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -642,11 +641,15 @@
                                         <select class="form-control selectpicker" id="suspected_hazmat"
                                             name="suspected_hazmat[]" multiple="multiple">
                                             <option value="">Select Hazmat</option>
-                                            @if (isset($hazmats) && $hazmats->count() > 0)
-                                                @foreach ($hazmats as $hazmat)
-                                                    <option value="{{ $hazmat->id }}">
-                                                        {{ $hazmat->name }}
-                                                    </option>
+                                            @if (isset($hazmats))
+                                                @foreach ($hazmats as $key => $value)
+                                                    <optgroup label="{{ strtoupper($key) }}">
+                                                        @foreach ($value as $hazmat)
+                                                            <option value="{{ $hazmat->id }}">
+                                                                {{ $hazmat->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </optgroup>
                                                 @endforeach
                                             @endif
                                         </select>

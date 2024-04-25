@@ -60,6 +60,7 @@ class ProjectsController extends Controller
             $isBack = 1;
         }
         Session::forget('back');
+
         $role_id = Auth::user()->roles->first()->level;
 
         if ($role_id != 1) {
@@ -67,7 +68,9 @@ class ProjectsController extends Controller
                 $query->where('level', '>', $role_id)->orderBy('level', 'asc');
             })->where('isVerified', 1)->get();
         } else {
-            $users = User::where('isVerified', 1)->get();
+            $users = User::whereHas('roles', function ($query) {
+                $query->where('level', '!=', 1)->orderBy('level', 'asc');
+            })->where('isVerified', 1)->get();
         }
 
         $project = Projects::with([
@@ -77,7 +80,7 @@ class ProjectsController extends Controller
 
         if ($project) {
             $project->decks = $project->decks()->orderBy('id', 'desc')->get();
-            $project->checks = $project->checks()->orderBy('id', 'desc')->get();
+            $project->checks = $project->checks()->with('check_has_hazmats')->orderBy('id', 'desc')->get();
         }
 
         $project['imagePath'] = $project->image != null ? $project->image : asset('assets/images/giphy.gif');
@@ -93,7 +96,15 @@ class ProjectsController extends Controller
             $readonly = "";
         }
 
-        $hazmats = Hazmat::get(['id', 'name']);
+        $table_type = Hazmat::select('table_type')->distinct()->pluck('table_type');
+
+        $hazmats = [];
+
+        foreach($table_type as $type) {
+            $hazmats[$type] = Hazmat::where('table_type', $type)->get(['id', 'name', 'table_type']);
+        }
+
+        dd($project);
 
         return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id, 'isBack' =>  $isBack, "hazmats" => $hazmats]);
     }
@@ -215,7 +226,13 @@ class ProjectsController extends Controller
     {
         $deck = Deck::with('checks.hazmats')->find($id);
 
-        $hazmats = Hazmat::get(['id', 'name', 'table_type']);
+        $table_type = Hazmat::select('table_type')->distinct()->pluck('table_type');
+
+        $hazmats = [];
+
+        foreach($table_type as $type){
+            $hazmats[$type] = Hazmat::where('table_type', $type)->get(['id', 'name', 'table_type']);
+        }
 
         return view('check.check', ['deck' => $deck, 'hazmats' => $hazmats]);
     }
@@ -278,6 +295,8 @@ class ProjectsController extends Controller
                 $name = "sos" . $projectDetail['client']['manager_initials'] . $projectCount;
                 $inputData['name'] = $name;
                 $inputData['initialsChekId'] =  $projectCount;
+            } else {
+                unset($inputData['name']);
             }
 
             $data = Checks::updateOrCreate(['id' => $id], $inputData);

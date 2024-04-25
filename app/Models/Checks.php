@@ -10,7 +10,7 @@ class Checks extends Model
     use HasFactory;
 
     protected $table = "checks";
-   
+
     protected $fillable = ["project_id", "deck_id", "type", "name", "equipment", "component", "location", "sub_location", "remarks", "position_left", "position_top", "pairWitthTag", "isApp", 'initialsChekId', 'isCompleted'];
 
     protected $hidden = ['created_at', 'updated_at'];
@@ -23,6 +23,16 @@ class Checks extends Model
     public function hazmats()
     {
         return $this->hasMany(CheckHasHazmat::class, 'check_id', 'id');
+    }
+
+    // public function check_has_hazmats()
+    // {
+    //     return $this->belongsToMany(CheckHasHazmat::class, Hazmat::class, 'check_id', 'hazmat_id');
+    // }
+
+    public function check_has_hazmats()
+    {
+        return $this->hasManyThrough(Hazmat::class, CheckHasHazmat::class);
     }
 
     public function deck()
