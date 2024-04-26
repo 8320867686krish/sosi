@@ -16,6 +16,6 @@ class CheckImage extends Model
     protected $hidden = ['created_at', 'updated_at'];
 
     public function getImageAttribute($value){
-        return asset("images/pdf/{$this->project_id}/{$value}");
+        return asset(env('IMAGE_COMMON_PATH', "images/projects/") . $this->project_id . "/" . $value);
     }
 }

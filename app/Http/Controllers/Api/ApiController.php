@@ -512,7 +512,7 @@ class ApiController extends Controller
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images/pdf/' .  $projectId), $imageName);
+                $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") .  $projectId), $imageName);
                 $checkData['image'] = $imageName;
                 $checkData['check_id'] = $checkId;
                 CheckImage::create($checkData);
@@ -650,7 +650,7 @@ class ApiController extends Controller
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images/pdf/' . $check['project_id']), $imageName);
+                $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $check['project_id']), $imageName);
                 $inputData['image'] = $imageName;
                 $inputData['project_id'] = $check['project_id'];
                 $check->isCompleted = 1;
@@ -693,7 +693,7 @@ class ApiController extends Controller
                 return response()->json(['isStatus' => false, 'message' => 'Check image not found.']);
             }
 
-            $path = public_path("images/pdf/{$checkImg->project_id}/{$checkImg->image}");
+            $path = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $checkImg->project_id . "/" . $checkImg->image);
 
             if (file_exists($path)) {
                 unlink($path);
