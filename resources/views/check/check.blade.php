@@ -94,7 +94,9 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-12">
-                    <a href="{{ route('projects.view', ['project_id' => $deck->project_id]) }}" onclick="setSession(event, {{ $deck->project_id }})"><i class="fas fa-arrow-left"></i> <b>Back</b></a>
+                        <a href="{{ route('projects.view', ['project_id' => $deck->project_id]) }}"
+                            onclick="setSession(event, {{ $deck->project_id }})"><i class="fas fa-arrow-left"></i>
+                            <b>Back</b></a>
                     </div>
                 </div>
                 <div class="row">
@@ -234,11 +236,15 @@
                                         <select class="form-control selectpicker" id="suspected_hazmat"
                                             name="suspected_hazmat[]" multiple>
                                             <option value="">Select Hazmat</option>
-                                            @if (isset($hazmats) && $hazmats->count() > 0)
-                                                @foreach ($hazmats as $hazmat)
-                                                    <option value="{{ $hazmat->id }}">
-                                                        {{ $hazmat->name }}
-                                                    </option>
+                                            @if (isset($hazmats))
+                                                @foreach ($hazmats as $key => $value)
+                                                    <optgroup label="{{ strtoupper($key) }}">
+                                                        @foreach ($value as $hazmat)
+                                                            <option value="{{ $hazmat->id }}">
+                                                                {{ $hazmat->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </optgroup>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -332,6 +338,13 @@
             // Retrieve data attributes from the clicked dot
             let checkId = $dot.attr('data-checkId');
             let data = $dot.attr('data-check');
+
+            if (checkId) {
+                $("#chkName").show();
+            } else {
+                $("#chkName").hide();
+            }
+
             if (checkId) {
                 detailOfHazmats(checkId);
             }
@@ -346,9 +359,6 @@
                 }
             }
 
-            if (!checkId) {
-                $("#chkName").hide();
-            }
             // Show the modal box
             $("#checkDataAddModal").modal('show');
         }
@@ -361,6 +371,7 @@
 
             let position_left = parseFloat($dots.css('left')) * (100 / widthPercent);
             let position_top = parseFloat($dots.css('top')) * (100 / widthPercent);
+
             if (check_id && check_id != "0") {
                 $.ajax({
                     url: "{{ route('addImageHotspots') }}",
@@ -528,7 +539,8 @@
             });
 
             $(document).on("click", "#editCheckbtn", function(event) {
-                event.stopPropagation(); // Prevents the click event from bubbling up to the parent .dot element
+                event
+                    .stopPropagation(); // Prevents the click event from bubbling up to the parent .dot element
                 let checkDataId = $(this).attr('data-dotId');
                 let dotElement = $(`#${checkDataId}`)[0];
                 openAddModalBox(dotElement);
@@ -555,7 +567,6 @@
                 // Serialize form data
                 let checkFormData = new FormData($("#checkDataAddForm")[0]);
                 // console.log(checkformdata);
-                // $("#checkdataaddform").serializearray();
                 checkFormData.append('deselectId', selectedHazmatsIds);
 
                 let $submitButton = $(this);
@@ -595,13 +606,17 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>`;
-                            $("#chkName").show();
+
                             $("#showSuccessMsg").html(messages);
                             $('#showSuccessMsg').fadeIn().delay(20000).fadeOut();
-                            $("#checkDataAddForm")[0].reset();
+                            $("#checkDataAddForm").trigger('reset');
                             $("#id").val("");
+                            $('#suspected_hazmat option').prop("selected", false).trigger('change');
+                            $("#showTableTypeDiv").empty();
                             $submitButton.html(originalText);
                             $submitButton.prop('disabled', false);
+                            $("#type").removeClass('is-invalid');
+                            $("#typeError").text('');
                             $("#checkDataAddModal").modal('hide');
                         } else {
                             $.each(response.message, function(field, messages) {
@@ -614,7 +629,6 @@
                         }
                     },
                     error: function(xhr, status, error) {
-                        console.log(xhr.responseJSON);
                         $submitButton.html(originalText);
                         $submitButton.prop('disabled', false);
                     }
@@ -622,10 +636,12 @@
             });
 
             $(document).on("click", "#checkDataAddCloseBtn", function() {
-                $("#checkDataAddForm")[0].reset();
-                // $('#checkDataAddForm input[type="hidden"]').val('');
-                // $('#checkDataAddForm select').prop('selectedIndex', 0);
-                // $('#checkDataAddForm input[type="file"]').attr('src', '');
+                $("#checkDataAddForm").trigger('reset');
+                $("#id").val("");
+                $('#suspected_hazmat option').prop("selected", false).trigger('change');
+                $("#showTableTypeDiv").empty();
+                $("#type").removeClass('is-invalid');
+                $("#typeError").text('');
             });
 
             let selectedHazmatsIds = [];
@@ -701,23 +717,23 @@
         });
 
         function setSession(event, projectId) {
-        event.preventDefault();
-        // AJAX request to set session
-        $.ajax({
-            url: "{{ route('set.session') }}",
-            method: 'POST',
-            data: {
-                project_id: projectId,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                // Redirect to the desired location
-                window.location.href = "{{ route('projects.view', ['project_id' => $deck->project_id]) }}";
-            },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-            }
-        });
-    }
+            event.preventDefault();
+            // AJAX request to set session
+            $.ajax({
+                url: "{{ route('set.session') }}",
+                method: 'POST',
+                data: {
+                    project_id: projectId,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    // Redirect to the desired location
+                    window.location.href = "{{ route('projects.view', ['project_id' => $deck->project_id]) }}";
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
     </script>
 @endsection

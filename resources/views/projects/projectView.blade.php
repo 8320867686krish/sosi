@@ -84,7 +84,7 @@
                     <button class="navbar-toggle" data-target=".aside-nav" data-toggle="collapse" type="button"><span
                             class="icon"><i class="fas fa-caret-down"></i></span></button><span class="title">Project
                         Information</span>
-                    <p class="description">Service description</p>
+                    <p class="description">{{ $project->ship_name ?? '' }}</p>
                 </div>
                 <div class="aside-nav collapse">
                     <ul class="nav">
@@ -381,13 +381,15 @@
                     <table class="table table-striped table-bordered first" id="checkListTable">
                         <thead>
                             <tr>
-                                <th class="all">Check</th>
-                                <th class="all">Name</th>
-                                <th class="all">Type</th>
-                                <th class="all">Location</th>
-                                <th class="all">Equip. & Comp.</th>
-                                <th class="all">VSCP</th>
-                                <th class="all" width="10%">Action</th>
+                                <th>Check</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Location</th>
+                                <th>Equip. & Comp.</th>
+                                <th>Document analyisis result</th>
+                                <th>Hazmat</th>
+                                <th>VSCP</th>
+                                <th width="10%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -399,6 +401,25 @@
                                         <td>{{ $check->type }}</td>
                                         <td>{{ $check->location }}</td>
                                         <td>{{ $check->equipment }} <br> {{ $check->component }} </td>
+                                        <td>
+                                            @if (isset($check->check_hazmats))
+                                                @foreach ($check->check_hazmats as $hazmat)
+                                                    <div class="m-2"><a class="btn btn-rounded btn-dark text-white"
+                                                            style="padding: .375rem .75rem; cursor: default;">{{ $hazmat->short_name }}</a>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if (isset($check->check_hazmats))
+                                                @foreach ($check->check_hazmats as $hazmat)
+                                                    <div class="m-2"><a href="javascript:;"
+                                                            class="btn btn-rounded btn-dark text-white"
+                                                            style="padding: .375rem .75rem; cursor: default;">{{ $hazmat->short_name }}</a>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </td>
                                         <td></td>
                                         <td class="text-center">
                                             <a href="javascript:;" class="editCheckbtn"
@@ -642,11 +663,15 @@
                                         <select class="form-control selectpicker" id="suspected_hazmat"
                                             name="suspected_hazmat[]" multiple="multiple">
                                             <option value="">Select Hazmat</option>
-                                            @if (isset($hazmats) && $hazmats->count() > 0)
-                                                @foreach ($hazmats as $hazmat)
-                                                    <option value="{{ $hazmat->id }}">
-                                                        {{ $hazmat->name }}
-                                                    </option>
+                                            @if (isset($hazmats))
+                                                @foreach ($hazmats as $key => $value)
+                                                    <optgroup label="{{ strtoupper($key) }}">
+                                                        @foreach ($value as $hazmat)
+                                                            <option value="{{ $hazmat->id }}">
+                                                                {{ $hazmat->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </optgroup>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -1101,6 +1126,14 @@
             // });
 
             $('#getDeckCropImg').click(function() {
+
+                let $submitButton = $(this);
+                let originalText = $submitButton.html();
+                $submitButton.text('Wait...');
+                $submitButton.prop('disabled', true);
+                $(".pdfModalCloseBtn").prop('disabled', true);
+
+
                 let textareas = [];
                 let areas = $('.pdf-image').areaSelect('get');
                 let projectId = {{ $project->id }} || '';
@@ -1147,9 +1180,13 @@
                                     $(".modal-backdrop").remove();
                                     $('.deckView').html();
                                     $('.deckView').html(response.html);
+                                    $submitButton.html(originalText);
+                                    $submitButton.prop('disabled', false);
                                     $('#pdfModal').modal('hide');
                                 },
                                 error: function(xhr, status, error) {
+                                    $submitButton.html(originalText);
+                                    $submitButton.prop('disabled', false);
                                     console.error('Failed to save image:', error);
                                 }
                             });

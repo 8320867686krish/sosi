@@ -7,7 +7,6 @@ use App\Http\Requests\ProjectRequest;
 use App\Models\CheckHasHazmat;
 use App\Models\CheckImage;
 use App\Models\Checks;
-use App\Models\ChecksLog;
 use App\Models\Client;
 use App\Models\Deck;
 use App\Models\Hazmat;
@@ -19,7 +18,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
 use Throwable;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -60,6 +58,7 @@ class ProjectsController extends Controller
             $isBack = 1;
         }
         Session::forget('back');
+
         $role_id = Auth::user()->roles->first()->level;
 
         if ($role_id != 1) {
@@ -67,7 +66,9 @@ class ProjectsController extends Controller
                 $query->where('level', '>', $role_id)->orderBy('level', 'asc');
             })->where('isVerified', 1)->get();
         } else {
-            $users = User::where('isVerified', 1)->get();
+            $users = User::whereHas('roles', function ($query) {
+                $query->where('level', '!=', 1)->orderBy('level', 'asc');
+            })->where('isVerified', 1)->get();
         }
 
         $project = Projects::with([
@@ -77,7 +78,7 @@ class ProjectsController extends Controller
 
         if ($project) {
             $project->decks = $project->decks()->orderBy('id', 'desc')->get();
-            $project->checks = $project->checks()->orderBy('id', 'desc')->get();
+            $project->checks = $project->checks()->with('check_hazmats:id,short_name')->orderBy('id', 'desc')->get();
         }
 
         $project['imagePath'] = $project->image != null ? $project->image : asset('assets/images/giphy.gif');
@@ -93,7 +94,13 @@ class ProjectsController extends Controller
             $readonly = "";
         }
 
-        $hazmats = Hazmat::get(['id', 'name']);
+        $table_type = Hazmat::select('table_type')->distinct()->pluck('table_type');
+
+        $hazmats = [];
+
+        foreach ($table_type as $type) {
+            $hazmats[$type] = Hazmat::where('table_type', $type)->get(['id', 'name', 'table_type']);
+        }
 
         return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id, 'isBack' =>  $isBack, "hazmats" => $hazmats]);
     }
@@ -135,9 +142,9 @@ class ProjectsController extends Controller
         try {
             $project = Projects::findOrFail($id);
 
-            $projectImagePath = public_path("images/pdf/{$project->id}");
+            $projectImagePath = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $project->id);
 
-            if (File::isDirectory($projectImagePath)) {
+            if(File::isDirectory($projectImagePath)) {
                 File::deleteDirectory($projectImagePath);
             }
 
@@ -158,7 +165,7 @@ class ProjectsController extends Controller
             $image = $request->file('image');
             $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
 
-            $image->move(public_path('images/pdf/' . $inputData['id'] . "/"), $imageName);
+            $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $inputData['id'] . "/"), $imageName);
 
             $inputData['image'] = $imageName;
 
@@ -167,7 +174,7 @@ class ProjectsController extends Controller
                 $exitsImg = Projects::select('id', 'image')->findOrFail($inputData['id']);
                 $imageFilename = basename($exitsImg->getOriginal('image'));
                 if (!empty($exitsImg->image)) {
-                    $path = public_path('images/pdf/' . $inputData['id'] . '/' . $imageFilename);
+                    $path = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $inputData['id'] . '/' . $imageFilename);
 
                     if (file_exists($path) && is_file($path)) {
                         unlink($path);
@@ -175,6 +182,7 @@ class ProjectsController extends Controller
                 }
             }
         }
+
         $inputData['projectPercentage'] = "10";
         unset($inputData['_token']);
         Projects::where(['id' => $inputData['id']])->update($inputData);
@@ -215,7 +223,13 @@ class ProjectsController extends Controller
     {
         $deck = Deck::with('checks.hazmats')->find($id);
 
-        $hazmats = Hazmat::get(['id', 'name', 'table_type']);
+        $table_type = Hazmat::select('table_type')->distinct()->pluck('table_type');
+
+        $hazmats = [];
+
+        foreach ($table_type as $type) {
+            $hazmats[$type] = Hazmat::where('table_type', $type)->get(['id', 'name', 'table_type']);
+        }
 
         return view('check.check', ['deck' => $deck, 'hazmats' => $hazmats]);
     }
@@ -244,7 +258,7 @@ class ProjectsController extends Controller
     public function checkBasedImage($id)
     {
         try {
-            $checkImgs = CheckImage::where('check_id', $id)->get(['id', 'image','project_id']);
+            $checkImgs = CheckImage::where('check_id', $id)->get(['id', 'image', 'project_id']);
             return response()->json(['isStatus' => true, 'message' => 'Check images retrieved successfully.', 'checkImagesList' => $checkImgs]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
@@ -278,6 +292,8 @@ class ProjectsController extends Controller
                 $name = "sos" . $projectDetail['client']['manager_initials'] . $projectCount;
                 $inputData['name'] = $name;
                 $inputData['initialsChekId'] =  $projectCount;
+            } else {
+                unset($inputData['name']);
             }
 
             $data = Checks::updateOrCreate(['id' => $id], $inputData);
@@ -301,7 +317,7 @@ class ProjectsController extends Controller
                         $imageName = "hazmat_{$data->id}_" . time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
 
                         // Move the uploaded image to the desired location
-                        $image->move(public_path("images/pdf/{$inputData['project_id']}"), $imageName);
+                        $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $inputData['project_id']), $imageName);
 
                         // Assign the image name to the corresponding hazmat data
                         $hazmatData['image'] = $imageName;
@@ -314,7 +330,6 @@ class ProjectsController extends Controller
                     if (!empty($suspectedHazmatId[$value])) {
                         CheckHasHazmat::updateOrCreate(['id' => $suspectedHazmatId[$value]], $hazmatData);
                     } else {
-
                         CheckHasHazmat::create($hazmatData);
                     }
                 }
@@ -368,7 +383,7 @@ class ProjectsController extends Controller
                 throw new \Exception('Uploaded image is not valid.');
             }
 
-            $oldMainImgPath = public_path("images/pdf/{$projectId}/{$project->deck_image}");
+            $oldMainImgPath = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId . "/" . $project->deck_image);
             if (@$project->deck_image) {
                 if (file_exists($oldMainImgPath)) {
                     unlink($oldMainImgPath);
@@ -376,7 +391,7 @@ class ProjectsController extends Controller
             }
 
             $mainFileName = "{$projectName}_" . time() . ".png";
-            $file->move(public_path('images/pdf/' . $projectId . "/"), $mainFileName);
+            $file->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId . "/"), $mainFileName);
 
             $updateProjectData = ['deck_image' => $mainFileName, 'projectPercentage' => '15'];
 
@@ -384,10 +399,10 @@ class ProjectsController extends Controller
                 $pdfName = time() . "_gaplan" . '.' . $request->ga_plan->extension();
 
                 // Move the GA plan file to desired location
-                $request->ga_plan->move(public_path('images/pdf/' . $projectId . "/"), $pdfName);
+                $request->ga_plan->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId . "/"), $pdfName);
 
                 // Delete old GA plan file if it exists
-                $oldGaPlanPath = public_path("images/pdf/{$projectId}/{$project->ga_plan}");
+                $oldGaPlanPath = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId . "/" . $project->ga_plan);
                 if (@$project->ga_plan) {
                     if (file_exists($oldGaPlanPath)) {
                         unlink($oldGaPlanPath);
@@ -405,7 +420,7 @@ class ProjectsController extends Controller
             $areas = $request->input('areas');
             $areasArray = json_decode($areas, true);
 
-            $image = imagecreatefrompng(public_path('images/pdf/' . $projectId . '/' . $mainFileName));
+            $image = imagecreatefrompng(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId . '/' . $mainFileName));
             foreach ($areasArray as $area) {
                 $x = $area['x'];
                 $y = $area['y'];
@@ -419,7 +434,7 @@ class ProjectsController extends Controller
                 $croppedImage = imagecrop($image, ['x' => $x, 'y' => $y, 'width' => $width, 'height' => $height]);
 
                 if ($croppedImage) {
-                    imagepng($croppedImage, public_path("images/pdf/{$projectId}/{$croppedImageName}"));
+                    imagepng($croppedImage, public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId ."/" . $croppedImageName));
 
                     Deck::create([
                         'project_id' => $request->input('project_id'),
@@ -478,7 +493,7 @@ class ProjectsController extends Controller
             }
 
             // Construct the image path
-            $imagePath = $hazImagePath = public_path("images/pdf/{$projectId}/") . basename($deck->getOriginal('image'));
+            $imagePath = $hazImagePath = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId . "/") . basename($deck->getOriginal('image'));
             // Check if the image file exists before attempting to delete
 
             if (file_exists($imagePath)) {
@@ -511,7 +526,7 @@ class ProjectsController extends Controller
 
             $hazmats = CheckHasHazmat::where('check_id', $id)->get();
 
-            $hazImagePath = public_path("images/pdf/{$check->project_id}/");
+            $hazImagePath = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $check->project_id ."/");
             $prefixToRemove = "hazmat_{$check->id}_"; // Specify the prefix to remove
 
             $pattern = "{$hazImagePath}{$prefixToRemove}*";

@@ -307,10 +307,10 @@ class ApiController extends Controller
             } else {
                 $projects = Projects::select('projects.*','clients.manager_name')
                 ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
-
                 ->leftJoin('project_teams', 'projects.id', '=', 'project_teams.project_id')
                 ->where('project_teams.isExpire', 0)
                 ->where('project_teams.user_id', $user->id)
+                ->whereDate('project_teams.assign_date', '<=', date('Y-m-d'))
                 ->get();
             }
 

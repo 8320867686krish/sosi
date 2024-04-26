@@ -17,11 +17,9 @@ class Projects extends Model
         'updated_at',
         'pivot'
     ];
-    public function getImageAttribute($value){
-        if ($value) {
-            return asset('images/pdf/' . $this->id . '/' . $value);
-        }
-        return asset('assets/images/logo.png');
+    public function getImageAttribute($value)
+    {
+        return asset(env('IMAGE_COMMON_PATH', "images/projects/") . $this->id . '/' . $value);
     }
     public function client()
     {
@@ -44,6 +42,6 @@ class Projects extends Model
     }
     public function checks()
     {
-        return $this->hasMany(Checks::class,'project_id','id');
+        return $this->hasMany(Checks::class, 'project_id', 'id');
     }
 }

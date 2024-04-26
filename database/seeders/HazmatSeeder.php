@@ -14,22 +14,22 @@ class HazmatSeeder extends Seeder
     public function run(): void
     {
         $hazmats = [
-            ['name' => 'Asbestos', 'table_type' => 'Unknown', 'color' => 'Blue'],
-            ['name' => 'Polychlorinated Biphenyls (PCB)', 'table_type' => 'PCHM', 'color' => 'Green'],
-            ['name' => 'Ozone depleting substances (ODS)', 'table_type' => 'Not Contained', 'color' => 'Brown'],
-            ['name' => 'Organotin Compounds', 'table_type' => 'Contained', 'color' => 'Red'],
-            ['name' => 'Cybutryne', 'table_type' => 'Unknown', 'color' => 'Black'],
-            ['name' => 'Perfluorooctane Sulfonic Acid (PFOS)', 'table_type' => 'PCHM', 'color' => 'Orange'],
-            ['name' => 'Cadmium (and compounds)', 'table_type' => 'Not Contained', 'color' => 'Blue'],
-            ['name' => 'Hexavalent Chromium (and compounds)', 'table_type' => 'Contained', 'color' => 'Green'],
-            ['name' => 'Lead (and compounds)', 'table_type' => 'Unknown', 'color' => 'Brown'],
-            ['name' => 'Mercury (and compounds)', 'table_type' => 'PCHM', 'color' => 'Red'],
-            ['name' => 'Polybrominated Biphenyls (PBB)', 'table_type' => 'Not Contained', 'color' => 'Black'],
-            ['name' => 'Polybrominated Diphenyl Ethers (PBDE)', 'table_type' => 'Contained', 'color' => 'Orange'],
-            ['name' => 'Polychloronaphthalenes (Cl≥3)', 'table_type' => 'Unknown', 'color' => 'Blue'],
-            ['name' => 'Radioactive Substances', 'table_type' => 'PCHM', 'color' => 'Green'],
-            ['name' => 'Certain Shortchain Chlorinated Paraffins', 'table_type' => 'Not Contained', 'color' => 'Brown'],
-            ['name' => 'Hexabromocyclododecane (HBCDD)', 'table_type' => 'Contained', 'color' => 'Red']
+            ['name' => 'Asbestos', 'short_name'=> 'Asb', 'table_type' => 'table a', 'color' => 'Blue'],
+            ['name' => 'Polychlorinated Biphenyls (PCB)', 'short_name'=> 'PCB', 'table_type' => 'table a', 'color' => 'Green'],
+            ['name' => 'Ozone depleting substances (ODS)', 'short_name'=> 'ODS', 'table_type' => 'table a', 'color' => 'Brown'],
+            ['name' => 'Organotin Compounds', 'short_name'=> 'OC', 'table_type' => 'table a', 'color' => 'Red'],
+            ['name' => 'Cybutryne', 'short_name'=> 'CY', 'table_type' => 'table a', 'color' => 'Black'],
+            ['name' => 'Perfluorooctane Sulfonic Acid (PFOS)', 'short_name'=> 'PFOS', 'table_type' => 'table a (eu)', 'color' => 'Orange'],
+            ['name' => 'Cadmium (and compounds)', 'short_name'=> 'CD', 'table_type' => 'table b', 'color' => 'Blue'],
+            ['name' => 'Hexavalent Chromium (and compounds)', 'short_name'=> 'CR', 'table_type' => 'table b', 'color' => 'Green'],
+            ['name' => 'Lead (and compounds)', 'short_name'=> 'LD', 'table_type' => 'table b', 'color' => 'Brown'],
+            ['name' => 'Mercury (and compounds)', 'short_name'=> 'HG', 'table_type' => 'table b', 'color' => 'Red'],
+            ['name' => 'Polybrominated Biphenyls (PBB)', 'short_name'=> 'PBB', 'table_type' => 'table b', 'color' => 'Black'],
+            ['name' => 'Polybrominated Diphenyl Ethers (PBDE)', 'short_name'=> 'PBDE', 'table_type' => 'table b', 'color' => 'Orange'],
+            ['name' => 'Polychloronaphthalenes (Cl≥3)', 'short_name'=> 'Cl≥3', 'table_type' => 'table b', 'color' => 'Blue'],
+            ['name' => 'Radioactive Substances', 'short_name'=> 'RS', 'table_type' => 'table b', 'color' => 'Green'],
+            ['name' => 'Certain Shortchain Chlorinated Paraffins', 'short_name'=> 'CSCP', 'table_type' => 'table b', 'color' => 'Brown'],
+            ['name' => 'Hexabromocyclododecane (HBCDD)', 'short_name'=> 'HBCDD', 'table_type' => 'table b (eu)', 'color' => 'Red']
         ];
 
         foreach ($hazmats as $hazmat) {
