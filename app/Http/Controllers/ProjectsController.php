@@ -351,13 +351,14 @@ class ProjectsController extends Controller
 
             if (!empty($inputData['deck_id'])) {
                 $checks = Checks::where('deck_id', $inputData['deck_id'])->get();
-
+                $check = Checks::with('check_hazmats')->where('id', $data->id)->first();
+                $trtd = view('check.checkTrTd', compact('check'))->render();
                 $htmllist = view('check.checkList', compact('checks'))->render();
             }
 
             $message = empty($id) ? "Image check added successfully" : "Image check updated successfully";
 
-            return response()->json(['isStatus' => true, 'message' => $message, "id" => $data->id, 'name' => $name, 'htmllist' => $htmllist ?? " "]);
+            return response()->json(['isStatus' => true, 'message' => $message, "id" => $data->id, 'name' => $name, 'htmllist' => $htmllist ?? " ", "trtd"=> $trtd ?? " "]);
         } catch (ValidationException $e) {
             return response()->json(['isStatus' => false, 'message' => $e->validator->errors()]);
         } catch (\Throwable $th) {

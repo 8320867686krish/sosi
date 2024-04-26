@@ -1349,7 +1349,6 @@
                     contentType: false,
                     processData: false,
                     success: function(response) {
-                        // checkListTr_
                         if (response.isStatus) {
                             let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
                             ${response.message}
@@ -1357,7 +1356,7 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>`;
-
+                            $(`#checkListTr_${response.id}`).replaceWith(response.trtd);
                             $("#showCheckImgMsg").html(messages);
                             $('#showCheckImgMsg').fadeIn().delay(20000).fadeOut();
                             $("#checkDataAddForm")[0].reset();
