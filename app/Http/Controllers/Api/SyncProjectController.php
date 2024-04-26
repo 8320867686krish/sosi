@@ -52,9 +52,9 @@ class SyncProjectController extends Controller
             return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
         } else {
             //now check syncdate or not
-            $downLoadFile = asset('images/pdf/' . $projectId . ".zip");
-            $sourceDir = public_path('images/pdf/' . $projectId);
-            $zipFilePath = public_path('images/pdf/' . $projectId . '.zip');
+            $downLoadFile = asset('images/projects/' . $projectId . ".zip");
+            $sourceDir = public_path('images/projects/' . $projectId);
+            $zipFilePath = public_path('images/projects/' . $projectId . '.zip');
             $zip = new ZipArchive;
             if ($syncDate == 0) {
                 if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
@@ -85,7 +85,7 @@ class SyncProjectController extends Controller
 
                     foreach ($allImages as $image) {
                         $imageFilename = basename($image);
-                        $path = public_path('images/pdf/' . $projectId . '/' . $imageFilename);
+                        $path = public_path('images/projects/' . $projectId . '/' . $imageFilename);
                         if (file_exists($path) && is_file($path)) {
                             $imageData = file_get_contents($path);
                             // Add image data to zip file with the same name
@@ -103,7 +103,7 @@ class SyncProjectController extends Controller
 
     public function removeZip($projectId)
     {
-        $downLoadFile = public_path('images/pdf/' . $projectId . ".zip");
+        $downLoadFile = public_path('images/projects/' . $projectId . ".zip");
         if (file_exists($downLoadFile)) {
             unlink($downLoadFile);
         }
