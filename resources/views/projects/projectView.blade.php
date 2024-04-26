@@ -81,7 +81,9 @@
         <aside class="page-aside">
             <div class="aside-content">
                 <div class="aside-header">
-                    <button class="navbar-toggle" data-target=".aside-nav" data-toggle="collapse" type="button"><span class="icon"><i class="fas fa-caret-down"></i></span></button><span class="title">Project Information</span>
+                    <button class="navbar-toggle" data-target=".aside-nav" data-toggle="collapse" type="button"><span
+                            class="icon"><i class="fas fa-caret-down"></i></span></button><span class="title">Project
+                        Information</span>
                     <p class="description">{{ $project->ship_name ?? '' }}</p>
                 </div>
                 <div class="aside-nav collapse">
@@ -105,7 +107,8 @@
                                 List</a>
                         </li>
                         <li>
-                            <a href="#assign_project"><span class="icon"><i class="fas fa-fw fa-briefcase"></i></span>Assign Project</a>
+                            <a href="#assign_project"><span class="icon"><i
+                                        class="fas fa-fw fa-briefcase"></i></span>Assign Project</a>
                         </li>
                         <li>
                             <a href="#onboard_survey"><span class="icon"><i
@@ -398,6 +401,25 @@
                                         <td>{{ $check->type }}</td>
                                         <td>{{ $check->location }}</td>
                                         <td>{{ $check->equipment }} <br> {{ $check->component }} </td>
+                                        <td>
+                                            @if (isset($check->check_hazmats))
+                                                @foreach ($check->check_hazmats as $hazmat)
+                                                    <div class="m-2"><a class="btn btn-rounded btn-dark text-white"
+                                                            style="padding: .375rem .75rem; cursor: default;">{{ $hazmat->short_name }}</a>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if (isset($check->check_hazmats))
+                                                @foreach ($check->check_hazmats as $hazmat)
+                                                    <div class="m-2"><a href="javascript:;"
+                                                            class="btn btn-rounded btn-dark text-white"
+                                                            style="padding: .375rem .75rem; cursor: default;">{{ $hazmat->short_name }}</a>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </td>
                                         <td></td>
                                         <td class="text-center">
                                             <a href="javascript:;" class="editCheckbtn"
@@ -1104,6 +1126,14 @@
             // });
 
             $('#getDeckCropImg').click(function() {
+
+                let $submitButton = $(this);
+                let originalText = $submitButton.html();
+                $submitButton.text('Wait...');
+                $submitButton.prop('disabled', true);
+                $(".pdfModalCloseBtn").prop('disabled', true);
+
+
                 let textareas = [];
                 let areas = $('.pdf-image').areaSelect('get');
                 let projectId = {{ $project->id }} || '';
@@ -1150,9 +1180,13 @@
                                     $(".modal-backdrop").remove();
                                     $('.deckView').html();
                                     $('.deckView').html(response.html);
+                                    $submitButton.html(originalText);
+                                    $submitButton.prop('disabled', false);
                                     $('#pdfModal').modal('hide');
                                 },
                                 error: function(xhr, status, error) {
+                                    $submitButton.html(originalText);
+                                    $submitButton.prop('disabled', false);
                                     console.error('Failed to save image:', error);
                                 }
                             });

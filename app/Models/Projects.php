@@ -19,10 +19,7 @@ class Projects extends Model
     ];
     public function getImageAttribute($value)
     {
-        if ($value) {
-            return asset('images/pdf/' . $this->id . '/' . $value);
-        }
-        return asset('assets/images/logo.png');
+        return asset(env('IMAGE_COMMON_PATH', "images/projects/") . $this->id . '/' . $value);
     }
     public function client()
     {

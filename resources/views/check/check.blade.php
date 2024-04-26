@@ -615,6 +615,8 @@
                             $("#showTableTypeDiv").empty();
                             $submitButton.html(originalText);
                             $submitButton.prop('disabled', false);
+                            $("#type").removeClass('is-invalid');
+                            $("#typeError").text('');
                             $("#checkDataAddModal").modal('hide');
                         } else {
                             $.each(response.message, function(field, messages) {
@@ -638,6 +640,8 @@
                 $("#id").val("");
                 $('#suspected_hazmat option').prop("selected", false).trigger('change');
                 $("#showTableTypeDiv").empty();
+                $("#type").removeClass('is-invalid');
+                $("#typeError").text('');
             });
 
             let selectedHazmatsIds = [];

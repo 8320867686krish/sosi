@@ -18,7 +18,7 @@ class Deck extends Model
         return $this->hasMany(Checks::class, 'deck_id', 'id');
     }
 
-    public function getImageAttribute($value){
-        return asset("images/pdf/{$this->project_id}/{$value}");
+    public function getImageAttribute($value) {
+        return asset(env('IMAGE_COMMON_PATH', "images/projects/") . $this->project_id . "/" . $value);
     }
 }

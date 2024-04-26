@@ -25,33 +25,13 @@ class Checks extends Model
         return $this->hasMany(CheckHasHazmat::class, 'check_id', 'id');
     }
 
-    // public function check_has_hazmats()
-    // {
-    //     return $this->belongsToMany(CheckHasHazmat::class, Hazmat::class, 'check_id', 'hazmat_id');
-    // }
-
-    public function check_has_hazmats()
+    public function check_hazmats()
     {
-        return $this->hasManyThrough(Hazmat::class, CheckHasHazmat::class);
+        return $this->belongsToMany(Hazmat::class, CheckHasHazmat::class, 'check_id');
     }
 
     public function deck()
     {
         return $this->belongsTo(Deck::class);
     }
-
-    // public function getSuspectedHazmatAttribute($value){
-    //     if (!@$value) {
-    //         return []; // Return an empty array if the value is null
-    //     }
-
-    //     // Replace single quotes with double quotes to ensure valid JSON
-    //     $jsonString = str_replace("'", '"', $value);
-
-    //     // Decode the JSON string into a PHP array
-    //     $decodedArray = json_decode($jsonString, true);
-
-    //     // Check if the decoded value is an array
-    //     return $decodedArray;
-    // }
 }

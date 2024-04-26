@@ -73,7 +73,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Edit Deck Title</h5>
-                <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                <a href="#" class="close pdfModalCloseBtn" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </a>
             </div>
@@ -85,7 +85,7 @@
                 <div id="img-container" class="text-center"></div>
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn btn-secondary" data-dismiss="modal">Close</a>
+                <a href="#" class="btn btn-secondary pdfModalCloseBtn" data-dismiss="modal">Close</a>
                 <button class="btn btn-primary" id="getDeckCropImg" data-id="{{ $project->id }}">Save</button>
             </div>
         </div>

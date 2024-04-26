@@ -12,7 +12,7 @@ class CheckHasHazmat extends Model
     protected $fillable = ["check_id", "hazmat_id", "image", "type","project_id"];
 
     public function getImageAttribute($value){
-        return asset("images/pdf/{$this->project_id}/{$value}");
+        return asset(env('IMAGE_COMMON_PATH', "images/projects/") . $this->project_id . "/" . $value);
     }
 
     public function hazmat()
