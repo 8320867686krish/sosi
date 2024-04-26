@@ -103,6 +103,9 @@
                     dataType: 'json',
                     contentType: false,
                     processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     success: function(response) {
                         // Handle success response
                         if (response.isOtp == 0) {
@@ -113,6 +116,7 @@
                         }
                     },
                     error: function(err) {
+                    console.log(err);
                         $.each(err.responseJSON.errors, function(i, error) {
                             console.log(error);
                             $(".error-message").text(error);
