@@ -621,8 +621,7 @@ class ApiController extends Controller
             } else {
                 $data = [];
             }
-            $mainPath = url("public/images/pdf/{$chkPairData['project_id']}") . "/";
-            return response()->json(['isStatus' => true, 'message' => 'Check images retrieved successfully.', 'mainPath' => $mainPath, 'checkImagesList' => $checkImgs, 'chkPair' => $data]);
+            return response()->json(['isStatus' => true, 'message' => 'Check images retrieved successfully.', 'checkImagesList' => $checkImgs, 'chkPair' => $data]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
