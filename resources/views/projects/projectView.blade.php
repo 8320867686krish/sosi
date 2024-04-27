@@ -140,7 +140,7 @@
                     <input type="hidden" name="id" value="{{ $project->id ?? '' }}">
                     <div class="row mb-5">
                         <div class="col-offset-2 col-sm-12 col-md-6 col-lg-3">
-                            <img id="previewImg" src="{{ $project->imagePath }}" width="300px" style="max-height: 300px;"
+                            <img id="previewImg" src="{{ $project->imagePath }}"  onerror="this.onerror=null;this.src='{{ asset('assets/images/dribbble.png') }}';" width="300px" style="max-height: 300px;"
                                 alt="Upload Image">
                         </div>
                         <div class="col-sm-12 col-md-6 col-lg-2 pt-10">
