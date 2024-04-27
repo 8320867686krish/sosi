@@ -36,7 +36,11 @@ class NewPasswordController extends Controller
         $request->validate([
             'token' => ['required'],
             'email' => ['required', 'email'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'min:8'],
+            'password_confirmation' => ['required','same:password']
+        ],[
+            'password.min' => 'The password must be at least 8 characters long.',
+            'password_confirmation.same' => 'The password confirmation must match the password.'
         ]);
         // Here we will attempt to reset the user's password. If it is successful we
         // will update the password on an actual user model and persist it to the

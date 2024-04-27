@@ -51,20 +51,15 @@
                         <x-input-label for="email" :value="__('Email')" />
                         <x-text-input id="email" class="form-control form-control-lg" type="email" name="email"
                             :value="old('email')" autofocus autocomplete="username" placeholder="Email" />
-                        @if ($errors->has('email'))
-                            <div class="error text-danger mt-1">{{ $errors->first('email') }}</div>
-                        @endif
+                        <div class="emailMsg error text-danger mt-1"></div>
+
                     </div>
                     <div class="form-group">
                         <x-input-label for="password" :value="__('Password')" />
                         <input class="form-control form-control-lg" id="password" name="password" type="password"
                             placeholder="Password">
-                        @if ($errors->has('password'))
-                            <div class="error text-danger mt-3">{{ $errors->first('password') }}</div>
-                        @endif
-                        @if ($errors->has('autherror'))
-                            <div class="error text-danger mt-3">{{ $errors->first('autherror') }}</div>
-                        @endif
+                        <div class="passwordMsg error text-danger mt-1"></div>
+                        <div class="autherrorMsg error text-danger mt-3"></div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-lg btn-block signIn">Sign in</button>
                 </form>
@@ -88,7 +83,7 @@
 
             $('#loginForm').submit(function(e) {
                 e.preventDefault();
-
+                $('.text-danger').text("");
                 var $submitButton = $(this).find('button[type="submit"]');
                 var originalText = $submitButton.html();
                 $submitButton.text('Wait...');
@@ -116,10 +111,10 @@
                         }
                     },
                     error: function(err) {
-                    console.log(err);
                         $.each(err.responseJSON.errors, function(i, error) {
-                            console.log(error);
-                            $(".error-message").text(error);
+                            console.log(i);
+                         //   $(".error-message").text(error);
+                         $('.'+i+'Msg').text(error);
                         })
 
                         $submitButton.html(originalText);
