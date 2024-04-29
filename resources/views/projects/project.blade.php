@@ -21,8 +21,7 @@
             </div>
             <div class="col-12 mb-4">
                 @can('projects.add')
-                    <a href="{{ route('projects.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New
-                        Project</a>
+                    <a href="{{ route('projects.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New Project</a>
                 @endcan
             </div>
         </div>

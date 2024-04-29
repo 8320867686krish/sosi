@@ -9,16 +9,6 @@
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
                     <h2 class="pageheader-title">Role Management</h2>
-                    {{-- <div class="page-breadcrumb">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('roles') }}" class="breadcrumb-link">Role</a>
-                                </li>
-                                <li class="breadcrumb-item active"><a href="#"
-                                        class="breadcrumb-link">{{ $head_title ?? '' }}</a></li>
-                            </ol>
-                        </nav>
-                    </div> --}}
                 </div>
             </div>
         </div>
@@ -37,21 +27,20 @@
                             <div class="row">
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="name">Name</label>
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="Role"
-                                            value="{{ $role->name ?? '' }}">
+                                        <label for="name">Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" placeholder="Role" value="{{ old('name', $role->name ?? '') }}">
                                         @error('name')
-                                            <div class="text-danger">{{ $errors->first('name') }}</div>
+                                            <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="level">Level</label>
-                                        <input type="text" class="form-control @error('level') is-invalid @enderror"
+                                        <label for="level">Level <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control @error('level') is-invalid @enderror"
                                             id="level" value="{{ old('level', $role->level ?? '') }}" name="level"
                                             placeholder="Role Level..." autocomplete="off" onchange="removeInvalidClass(this)">
-                                        @error('name')
+                                        @error('level')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>

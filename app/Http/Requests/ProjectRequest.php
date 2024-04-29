@@ -23,7 +23,10 @@ class ProjectRequest extends FormRequest
     {
         return [
             'client_id' => 'required',
-            'ship_name' => 'required',
+            'ship_name' => [
+                'required',
+                'unique:projects,ship_name,'. $this->id
+            ],
             'imo_number' => [
                 'required',
                 'unique:projects,imo_number,' . $this->id

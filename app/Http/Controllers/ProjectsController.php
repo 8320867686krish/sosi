@@ -122,6 +122,7 @@ class ProjectsController extends Controller
 
             return redirect('projects')->with('message', $message);
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             return back()->withError($th->getMessage())->withInput();
         }
     }
