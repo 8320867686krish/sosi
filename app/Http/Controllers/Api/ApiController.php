@@ -573,7 +573,7 @@ class ApiController extends Controller
     public function getCheckDetail($checkId)
     {
         try {
-            $checks = Checks::with('deck.image,deck.id')->find($checkId);
+            $checks = Checks::with('deck')->find($checkId);
 
             if (!$checks) {
                 return response()->json(['isStatus' => false, 'message' => 'Check not found.']);
