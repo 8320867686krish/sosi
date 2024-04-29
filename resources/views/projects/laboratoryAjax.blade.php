@@ -21,10 +21,10 @@
                  </div>
                  <div class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12">
                      <div class="float-xl-right float-none mt-xl-0 mt-4">
-                         <a href="#" rel="noopener noreferrer" title="Edit">
+                         <a href="javascript:;" rel="noopener noreferrer" data-name="{{$value}}" title="Edit" id="editLab">
                              <i class="fas fa-edit text-primary" style="font-size: 1rem"></i>
                          </a>
-                         <a href="#" class="ml-2" onclick="removeLab('{{$value["id"]}}')" title="Delete">
+                         <a href="#" class="ml-2" id="removeLab"  onclick="removeLab('{{$value["id"]}}')" title="Delete">
                              <i class="fas fa-trash-alt text-danger" style="font-size: 1rem"></i>
                          </a>
 
@@ -57,5 +57,15 @@ function removeLab(id) {
              }
          });
      }
+     $(document).on('click', '#editLab', function() {
+        var data = $(this).data('name'); // Retrieve data-name attribute value
+        $("#laboratoryForm #name").val(data.name);
+        $("#laboretryid").val(data.id);
+        $("#details").val(data.details);
+        console.log(data);
+        $("#laboratoryModal").modal('show');
+   });
+     
+     
  </script>
  @endpush

@@ -578,16 +578,10 @@ class ApiController extends Controller
             if (!$checks) {
                 return response()->json(['isStatus' => false, 'message' => 'Check not found.']);
             }
+            $checkDetails = $checks ;
+            $checkDetails['deckImage'] = $checks['deck']['image'];
 
-            $deckImage = $checks['deck']['image'];
-
-            $locationDetails = array_merge(
-                $checks->only(['compartment', 'position', 'sub_position', 'position_left', 'position_top', 'project_id', 'deck_id']),
-                ['deck_image' => $deckImage]
-            );
-            $checkDetails = $checks->only(['component', 'equipment', 'name', 'type', 'suspected_hazmat', 'remarks', 'project_id', 'deck_id', 'pairWitthTag']);
-
-            return response()->json(['isStatus' => true, 'message' => 'check details retrieved successfully.', 'checkDetails' => $checkDetails, 'locationDetails' => $locationDetails]);
+            return response()->json(['isStatus' => true, 'message' => 'check details retrieved successfully.', 'checkDetails' => $checkDetails]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
