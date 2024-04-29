@@ -72,7 +72,7 @@
     </div>
 @endsection
 
-@section('js')
+@push('js')
     <script>
         function removeInvalidClass(input) {
             // Check if the input value is empty or whitespace only
@@ -82,4 +82,4 @@
             input.classList.toggle('is-invalid', !isValid);
         }
     </script>
-@endsection
+@endpush

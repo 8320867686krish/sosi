@@ -10,6 +10,7 @@ use App\Models\Checks;
 use App\Models\Client;
 use App\Models\Deck;
 use App\Models\Hazmat;
+use App\Models\Laboratory;
 use App\Models\Projects;
 use App\Models\ProjectTeam;
 use App\Models\User;
@@ -80,7 +81,7 @@ class ProjectsController extends Controller
             $project->decks = $project->decks()->orderBy('id', 'desc')->get();
             $project->checks = $project->checks()->with('check_hazmats:id,short_name')->orderBy('id', 'desc')->get();
         }
-
+        $laboratory = Laboratory::where('project_id',$project_id)->get(); 
         $project['imagePath'] = $project->image != null ? $project->image : asset('assets/images/giphy.gif');
 
         $project['user_id'] = $project->project_teams->pluck('user_id')->toArray();
@@ -102,7 +103,7 @@ class ProjectsController extends Controller
             $hazmats[$type] = Hazmat::where('table_type', $type)->get(['id', 'name', 'table_type']);
         }
 
-        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id, 'isBack' =>  $isBack, "hazmats" => $hazmats]);
+        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id, 'isBack' =>  $isBack, "hazmats" => $hazmats,'laboratory'=>$laboratory]);
     }
 
     public function projectInfo($project_id)
@@ -556,5 +557,32 @@ class ProjectsController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
+    }
+    public function laboratorySave(Request $request){
+        $post = $request->input();
+        $post['user_id'] = Auth::user()->id;
+        Laboratory::updateOrCreate(['id'=>$post['id']],$post);
+        $laboratory = Laboratory::where('project_id',$post['project_id'])->get();
+        $html = view('projects.laboratoryAjax', compact('laboratory'))->render();
+        return response()->json([
+            'status' => true,
+            'html' => $html,
+            'message' => 'Save successfully.',
+        ]);
+
+    }
+    public function laboratoryRemove($id){
+       $lab =  Laboratory::find($id);
+       $proid = $lab['project_id'];
+       $lab->delete();
+       $laboratory = Laboratory::where('project_id',$proid)->get();
+       $html = view('projects.laboratoryAjax', compact('laboratory'))->render();
+       return response()->json([
+           'status' => true,
+           'html' => $html,
+           'message' => 'Save successfully.',
+       ]);
+
+
     }
 }

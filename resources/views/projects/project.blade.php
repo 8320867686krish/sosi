@@ -90,9 +90,9 @@
     </div>
 @endsection
 
-@section('js')
-    <script>
-        $(document).ready(matchHeight);
-        $(window).resize(matchHeight);
-    </script>
-@endsection
+@push('js')
+<script>
+    $(document).ready(matchHeight);
+    $(window).resize(matchHeight);
+</script>
+@endpush

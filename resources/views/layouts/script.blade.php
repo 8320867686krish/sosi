@@ -19,5 +19,6 @@
         $('.equal-height .card').css('height', maxHeight);
     }
 </script>
-@yield('js')
+@stack('js')
+
 @show

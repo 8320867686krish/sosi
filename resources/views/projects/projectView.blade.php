@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/select.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/fixedHeader.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/fancybox/fancybox.min.css') }}">
-
+<link rel="stylesheet" type="text/css" href="{{asset('//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css')}}">
     <style>
         #pdf-container {
             position: relative;
@@ -112,7 +112,7 @@
                         </li>
                         <li>
                             <a href="#laboratory_list"><span class="icon"><i
-                                        class="fas fa-fw fa-briefcase"></i></span>Laboratory-List</a>
+                                        class="fas fa-fw fa-briefcase"></i></span>Laboratory</a>
                         </li>
                         <li>
                             <a href="#onboard_survey"><span class="icon"><i
@@ -516,6 +516,9 @@
                 </div>
             </div>
         </div>
+        <div class="main-content container-fluid p-0" id="laboratory_list">
+            @include('projects.laboratory')
+        </div>
 
         <div class="main-content container-fluid p-0" id="onboard_survey">
             <div class="email-head">
@@ -730,7 +733,7 @@
     </div>
 @endsection
 
-@section('js')
+@push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="{{ asset('assets/vendor/jquery.areaSelect.js') }}"></script>
@@ -901,12 +904,14 @@
                 $('#assign_project').hide();
                 $('#onboard_survey').hide();
                 $('#create_vscp').show();
+                $('#laboratory_list').hide();
             } else {
                 $('#ship_particulars').show();
                 $('#check_list').hide();
                 $('#assign_project').hide();
                 $('#onboard_survey').hide();
                 $('#create_vscp').hide();
+                $('#laboratory_list').hide();
             }
 
             $('.aside-nav .nav li a').click(function() {
@@ -1384,4 +1389,4 @@
             });
         });
     </script>
-@endsection
+@endpush
