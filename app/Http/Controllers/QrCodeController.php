@@ -43,15 +43,12 @@ class QrCodeController extends Controller
                     th, td {
                         padding: 10px; /* Add padding to all sides of the cell */
                         text-align: center;
-                        border: 1px solid #ddd;
-                        width: 16.66%;
+                        #border: 1px solid #ddd;
+                        #border-left: none;
                     }
-                    th {
-                        background-color: #f2f2f2;
-                    }
-                    .qr-code img {
-                        max-width: 100px;
-                        height: auto;
+
+                    .parent td:last-child {
+                        border-right: none;
                     }
                 </style>
             </head>
@@ -62,40 +59,57 @@ class QrCodeController extends Controller
         $html .= '<tbody>';
 
         $totalChecks = $checks->count();
+        $colspan = 3;
         $counter = 0;
+        $imagePath = asset('assets/images/logo.png');
+        $imageData = file_get_contents($imagePath);
+        $base64Image = base64_encode($imageData);
 
         foreach ($checks as $key => $check) {
-            if ($counter % 6 == 0) {
+            // Open a new row if it's the start of a new row
+            if ($counter % $colspan == 0) {
                 $html .= "<tr>";
             }
 
+            // Generate QR code
             $qrCode = QrCode::size(75)->generate($check->initialsChekId);
             $qrCodeDataUri = 'data:image/png;base64,' . base64_encode($qrCode);
-            $html .= '<td class="qr-code">';
+
+            // Add the QR code and related information to table cells
+            $html .= '<td width="13.33%"><img src=data:image/png;base64,"' . $base64Image . '" alt="QR Code for Check" style="margin-bottom: 8px;" width="115px;"></td>';
+            $html .= '<td class="qr-code" width="20%" style="border-right: 2px solid #ddd;">';
             $html .= '<img src="' . $qrCodeDataUri . '" alt="QR Code for Check" style="margin-bottom: 8px;">';
-            $html .= '<span>' . $check->initialsChekId . '</span>';
+            $html .= '<div>' . $check->initialsChekId . '</div>';
             $html .= '</td>';
 
-            if (($counter + 1) % 6 == 0 || $key == $totalChecks - 1) {
-                // Calculate colspan for the last row
-                $remainingColumns = ($counter % 6) == 5 ? 1 : 6 - ($counter % 6);
-                if ($remainingColumns != 1) {
-                    $html .= '<td colspan="' . $remainingColumns . '"></td>';
+            // Close the row if it's the end of a row or the last check
+            if (($counter + 1) % $colspan == 0 || $key == $totalChecks - 1) {
+                // Calculate remaining columns for colspan
+                $remainingColumns = $colspan - (($totalChecks - $counter - 1) % $colspan) - 1;
+                // print_r($remainingColumns);
+                // Add empty cells to fill the remaining columns
+                if ($remainingColumns > 0) {
+                    $html .= '<td colspan="' . $remainingColumns * 2 . '"></td>';
+                    // $html .= '<td width: 33.33% colspan="' . $remainingColumns . '"></td>';
                 }
+
+                // Close the row
                 $html .= '</tr>';
             }
 
             $counter++;
         }
 
+
         $html .= '</tbody>';
 
         $html .= '</table>';
 
         $html .= '</body></html>';
-
+        // dd($html);
         // Load HTML content into Dompdf
         $dompdf->loadHtml($html);
+
         // Set paper size and orientation
         $dompdf->setPaper('A4', 'portrait');
 
@@ -103,10 +117,10 @@ class QrCodeController extends Controller
         $dompdf->render();
 
         // Output PDF
-        // return $dompdf->stream('qr_codes.pdf', ['Attachment' => false]);
-        $pdfContent = $dompdf->output();
-        return response($pdfContent, 200)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'attachment; filename="qr_codes_' . $deckId . '.pdf"');
+        return $dompdf->stream('qr_codes.pdf', ['Attachment' => false]);
+        // $pdfContent = $dompdf->output();
+        // return response($pdfContent, 200)
+        //     ->header('Content-Type', 'application/pdf')
+        //     ->header('Content-Disposition', 'attachment; filename="qr_codes_' . $deckId . '.pdf"');
     }
 }
