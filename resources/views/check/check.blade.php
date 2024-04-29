@@ -278,7 +278,7 @@
     </div>
 @stop
 
-@section('js')
+@push('js')
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="{{ asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>
     {{-- <script src="{{ asset('assets/vendor/select2/js/select2.min.js') }}"></script> --}}
@@ -736,4 +736,4 @@
             });
         }
     </script>
-@endsection
+@endpush

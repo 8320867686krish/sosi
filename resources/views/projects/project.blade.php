@@ -80,9 +80,9 @@
 </div>
 @endsection
 
-@section('js')
+@push('js')
 <script>
     $(document).ready(matchHeight);
     $(window).resize(matchHeight);
 </script>
-@endsection
+@endpush

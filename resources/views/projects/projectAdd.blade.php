@@ -151,7 +151,7 @@
     </div>
 @endsection
 
-@section('js')
+@push('js')
     <script>
         function removeInvalidClass(input) {
 
@@ -180,4 +180,4 @@
             })
         });
     </script>
-@endsection
+@endpush

@@ -90,6 +90,9 @@ Route::middleware('auth')->group(function () {
             Route::get('check/{id}/image', 'checkBasedImage')->name('check.image');
 
             Route::get('projects/check/{id}', 'deleteCheck')->name('check.delete');
+            Route::post('laboratory/save','laboratorySave')->name('laboratorySave');
+            Route::delete('laboratory/remove/{laboratoryRemove}','laboratoryRemove');
+
         });
     });
 
