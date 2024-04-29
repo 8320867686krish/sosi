@@ -22,7 +22,8 @@ class RoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:roles,name,'.$this->id
+            'name' => 'required|unique:roles,name,'. $this->id,
+            'level' => 'required|unique:roles,level,'. $this->id
         ];
     }
 
@@ -31,6 +32,8 @@ class RoleRequest extends FormRequest
         return [
             'name.required' => 'Please enter name',
             'name.unique' => 'Already exist this role',
+            'level.required' => 'Please enter level',
+            'level.unique' => 'The level is associated with another role. Please change level.',
         ];
     }
 }

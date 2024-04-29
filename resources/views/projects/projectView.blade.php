@@ -125,7 +125,6 @@
 
         <div class="main-content container-fluid p-0" id="ship_particulars"
             {{ $isBack == 0 ? 'style=display:block' : 'style=display:none' }}>
-
             <div class="email-head">
                 <div class="email-head-subject">
                     <div class="title">
@@ -134,7 +133,7 @@
                 </div>
             </div>
             <div class="email-body">
-                <div class="alert alert-success sucessMsg" role="alert" style="display: none" ;>
+                <div class="alert alert-success sucessMsg" role="alert" style="display: none;">
                     Save Successfully!!<a href="#" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </a>
@@ -144,8 +143,7 @@
                     <input type="hidden" name="id" value="{{ $project->id ?? '' }}">
                     <div class="row mb-5">
                         <div class="col-offset-2 col-sm-12 col-md-6 col-lg-3">
-                            <img id="previewImg" src="{{ $project->imagePath }}"  onerror="this.onerror=null;this.src='{{ asset('assets/images/dribbble.png') }}';" width="300px" style="max-height: 300px;"
-                                alt="Upload Image">
+                            <img id="previewImg" src="{{ $project->imagePath }}" onerror="this.onerror=null;this.src='{{ asset('assets/images/logo.png') }}';" style="max-width: 300px" alt="Upload Image">
                         </div>
                         <div class="col-sm-12 col-md-6 col-lg-2 pt-10">
                             <div class="form-group">

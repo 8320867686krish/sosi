@@ -40,7 +40,7 @@
                             <div class="row">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="name">First Name</label>
+                                        <label for="name">First Name <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('name') is-invalid @enderror"
                                             id="name" value="{{ old('name', $user->name ?? '') }}" name="name"
                                             placeholder="First Name..." autocomplete="off"
@@ -66,7 +66,7 @@
                             <div class="row">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="email">Email</label>
+                                        <label for="email">Email <span class="text-danger">*</span></label>
                                         <input type="email" class="form-control @error('email') is-invalid @enderror"
                                             id="email" name="email" value="{{ old('email', $user->email ?? '') }}"
                                             placeholder="User Email..." autocomplete="off"
@@ -78,7 +78,7 @@
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="roles">Role</label>
+                                        <label for="roles">Role <span class="text-danger">*</span></label>
                                         @if (isset($user) && !empty($user->role))
                                             <input type="hidden" name="roles" id="roles" value="{{ $user->role }}">
                                         @endif
@@ -102,7 +102,7 @@
                             <div class="row">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="phone">Phone</label>
+                                        <label for="phone">Phone <span class="text-danger">*</span></label>
                                         <input type="number" class="form-control @error('phone') is-invalid @enderror"
                                             id="phone" name="phone" value="{{ old('phone', $user->phone ?? '') }}"
                                             placeholder="User Phone..." autocomplete="off"

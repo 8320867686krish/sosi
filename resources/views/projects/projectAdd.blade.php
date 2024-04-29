@@ -38,8 +38,8 @@
                             <div class="row">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="client_id">Client</label>
-                                        <select name="client_id" id="client_id" class="form-control">
+                                        <label for="client_id">Client <span class="text-danger">*</span></label>
+                                        <select name="client_id" id="client_id" class="form-control @error('client_id') is-invalid @enderror" onchange="removeInvalidClass(this)">
                                             <option value="">Select Client</option>
                                             @if (isset($clients) && $clients->count() > 0)
                                                 @foreach ($clients as $client)
@@ -58,8 +58,8 @@
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="ship_name">Ship Name</label>
-                                        <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                        <label for="ship_name">Ship Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control @error('ship_name') is-invalid @enderror"
                                             id="ship_name" value="{{ old('ship_name', $project->ship_name ?? '') }}"
                                             name="ship_name" placeholder="Ship Name..." autocomplete="off"
                                             onchange="removeInvalidClass(this)">
@@ -111,10 +111,10 @@
                             <div class="row">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="imo_number">IMO Number</label>
-                                        <input type="text" class="form-control @error('imo_number') is-invalid @enderror"
+                                        <label for="imo_number">IMO Number <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control @error('imo_number') is-invalid @enderror"
                                             id="imo_number" name="imo_number" placeholder="IMO Number..."
-                                            value="{{ old('imo_number', $project->imo_number ?? '') }}">
+                                            value="{{ old('imo_number', $project->imo_number ?? '') }}" onchange="removeInvalidClass(this)">
                                         @error('imo_number')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
