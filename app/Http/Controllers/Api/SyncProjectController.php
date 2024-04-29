@@ -56,9 +56,6 @@ class SyncProjectController extends Controller
             $sourceDir = public_path('images/projects/' . $projectId);
             $zipFilePath = public_path('images/projects/' . $projectId . '.zip');
             $zip = new ZipArchive;
-            $downLoadFile = asset('images/projects/4.zip');
-
-            return response()->json(['isStatus' => true, 'message' => 'Successfully zip download', 'zipPath' => $downLoadFile]);
             if ($syncDate == 0) {
                 if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
                     $files = File::files($sourceDir);

@@ -37,40 +37,48 @@
     <!-- ============================================================== -->
 
     @if(isset($isExpired) && $isExpired === 1)
-        <form class="splash-container" method="POST" action="{{ route('password.store') }}" style="max-width: 500px !important">
-            @csrf
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="mb-1 text-center">Reset Password</h3>
+    <form class="splash-container" method="POST" action="{{ route('password.store') }}" style="max-width: 500px !important">
+        @csrf
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-1 text-center">Reset Password</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <x-input-label for="email" :value="__('Email')" />
+                    <x-text-input id="email" class="form-control form-control-lg" type="email" name="email" :value="old('email', $request->email)" readonly />
+                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <x-input-label for="email" :value="__('Email')" />
-                        <x-text-input id="email" class="form-control form-control-lg" type="email" name="email" :value="old('email', $request->email)" required />
-                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                <div class="form-group">
+                    <x-input-label for="password" :value="__('Password')" />
+                    <input class="form-control form-control-lg" id="pass1" type="password" required="" placeholder="Password" name="password">
+                    @if ($errors->has('password'))
+                    <div class="passwordMsg error text-danger mt-1">
+                        <span>{{ $errors->first('password') }}</span>
                     </div>
-                    <div class="form-group">
-                        <x-input-label for="password" :value="__('Password')" />
-                        <input class="form-control form-control-lg" id="pass1" type="password" required="" placeholder="Password" name="password">
-                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    @endif
+                </div>
+                <div class="form-group">
+                    <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+                    <input type="password" class="form-control form-control-lg" name="password_confirmation" required="" placeholder="Confirm Password">
+                    @if ($errors->has('password_confirmation'))
+                    <div class="passworConfirmdMsg error text-danger mt-1">
+                        <span>{{ $errors->first('password_confirmation') }}</span>
                     </div>
-                    <div class="form-group">
-                        <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-                        <input type="password" class="form-control form-control-lg" name="password_confirmation" required="" placeholder="Confirm Password">
-                        <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-                        <input type="hidden" name="token" value="{{Request::segment(2) ?? null}}">
-                    </div>
-                    <div class="form-group pt-2">
-                        <button class="btn btn-block btn-primary" type="submit">Reset password</button>
-                    </div>
+                    @endif
+                    <input type="hidden" name="token" value="{{Request::segment(2) ?? null}}">
+                </div>
+                <div class="form-group pt-2">
+                    <button class="btn btn-block btn-primary" type="submit">Reset password</button>
                 </div>
             </div>
-        </form>
-    @else
-        <div class="splash-container taxt-danger border shadow">
-            <h3>This password reset token is invalid.</h3>
-            <a href="{{ route('password.request') }}"><button class="btn btn-block btn-primary" type="button">Back</button></a>
         </div>
+    </form>
+    @else
+    <div class="splash-container taxt-danger border shadow">
+        <h3>This password reset token is invalid.</h3>
+        <a href="{{ route('password.request') }}"><button class="btn btn-block btn-primary" type="button">Back</button></a>
+    </div>
     @endif
 </body>
 

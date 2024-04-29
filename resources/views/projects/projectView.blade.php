@@ -111,6 +111,10 @@
                                         class="fas fa-fw fa-briefcase"></i></span>Assign Project</a>
                         </li>
                         <li>
+                            <a href="#laboratory_list"><span class="icon"><i
+                                        class="fas fa-fw fa-briefcase"></i></span>Laboratory-List</a>
+                        </li>
+                        <li>
                             <a href="#onboard_survey"><span class="icon"><i
                                         class="fas fa-fw fa-envelope"></i></span>Onboard Survey</a>
                         </li>
