@@ -18,6 +18,19 @@
         });
         $('.equal-height .card').css('height', maxHeight);
     }
+
+    function removeInvalidClass(input) {
+
+        const isValid = input.value.trim() !== '';
+
+        input.classList.toggle('is-invalid', !isValid);
+
+        const errorMessageElement = input.parentElement.querySelector('.invalid-feedback');
+
+        if (errorMessageElement) {
+            errorMessageElement.style.display = isValid ? 'none' : 'block';
+        }
+    }
 </script>
 @stack('js')
 

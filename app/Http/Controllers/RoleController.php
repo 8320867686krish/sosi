@@ -47,7 +47,8 @@ class RoleController extends BaseController
 
             $message = empty($id) ? "Roles with permission added successfully" : "Roles with permission updated successfully";
 
-            return redirect('roles')->with('message', $message);
+            // return redirect('roles')->with('message', $message);
+            return response()->json(['isStatus' => true, 'message' => $message]);
         } catch (\Throwable $e) {
             return back()->withError($e->getMessage())->withInput();
         }
