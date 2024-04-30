@@ -338,6 +338,11 @@ class ApiController extends Controller
             }
             $project['survey_date'] = (@$project['survey_date']) ? @$project['survey_date'] : "";
             if ($project) {
+                $project['manager_name'] = $project['client']['manager_name'];
+                $project['manager_address'] = $project['client']['manager_address'];
+                $project['owner_name'] = $project['client']['owner_name'];
+                $project['owner_address'] = $project['client']['owner_address'];
+                unset($project['client']);
                 return response()->json(['isStatus' => true, 'message' => 'Project detail retrieved successfully.', 'shipParticular' => $project]);
             }
         } catch (Throwable $th) {
