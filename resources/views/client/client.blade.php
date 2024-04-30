@@ -66,8 +66,7 @@
                                         <p class="mb-1 line-clamp">Contact Person: <span class="text-dark font-medium ml-2">{{ $client->manager_contact_person_name ?? '' }}</span>
                                         </p>
                                     @else
-                                        <p class="mb-1 line-clamp">Contact Person: <span
-                                                class="text-dark font-medium ml-2">-</span></p>
+                                        <p class="mb-1 line-clamp">Contact Person: <span class="text-dark font-medium ml-2">-</span></p>
                                     @endif
                                     <p class="line-clamp">Ship owner.:<span class="text-dark font-medium ml-2">{{ ucwords($client->owner_name) ?? '' }}</span>
                                     </p>

@@ -121,18 +121,18 @@
                                         <div class="invalid-feedback error" id="locationError"></div>
                                     </div>
                                 </div>
+                                <input type="hidden" name="isVerified" id="isVerified" value="{{ $user->isVerified ?? 1 }}">
                             </div>
                             <div class="row mt-3">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <a href="{{ route('users') }}" class="btn pl-0" type="button"><i
-                                                class="fas fa-arrow-left"></i> <b>Back</b></a>
+                                        <a href="{{ route('users') }}" id="userBackBtn" type="button"><i class="fas fa-arrow-left"></i> <b>Back</b></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
                                         <button class="btn btn-primary float-right formSubmitBtn" id="formSubmitBtn"
-                                            type="submit">{!! $button ?? '<i class="fas fa-plus"></i>  Add' !!}</button>
+                                            type="submit">{{ $button }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -163,8 +163,8 @@
             $('#userForm').submit(function(event) {
                 event.preventDefault(); // Prevent default form submission
 
-                var $submitButton = $(this).find('button[type="submit"]');
-                var originalText = $submitButton.html();
+                let $submitButton = $(this).find('button[type="submit"]');
+                let originalText = $submitButton.html();
                 $submitButton.text('Wait...');
                 $submitButton.prop('disabled', true);
 

@@ -87,7 +87,6 @@ class UserController extends Controller
         try {
             $id = $request->input('id');
             $inputData = $request->input();
-            $inputData['isVerified'] = $request->has('isVerified') ? 1 : 0;
 
             if (empty($id)) {
                 $first_three_chars = substr($request->input('name'), 0, min(3, strlen($request->input('name'))));
@@ -153,10 +152,9 @@ class UserController extends Controller
     public function edit(string $id)
     {
         try {
-
             $currentUserRoleLevel = Auth::user()->roles->first()->level;
 
-            if($currentUserRoleLevel != 1){
+            if ($currentUserRoleLevel != 1) {
                 $roles = Role::where('level', '>', $currentUserRoleLevel)->get();
             } else {
                 $roles = Role::get();

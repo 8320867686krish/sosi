@@ -81,7 +81,8 @@ class ProjectsController extends Controller
             $project->decks = $project->decks()->orderBy('id', 'desc')->get();
             $project->checks = $project->checks()->with('check_hazmats:id,short_name')->orderBy('id', 'desc')->get();
         }
-        $laboratory = Laboratory::where('project_id',$project_id)->get(); 
+
+        $laboratory = Laboratory::where('project_id', $project_id)->get();
         $project['imagePath'] = $project->image != null ? $project->image : asset('assets/images/giphy.gif');
 
         $project['user_id'] = $project->project_teams->pluck('user_id')->toArray();
@@ -103,7 +104,7 @@ class ProjectsController extends Controller
             $hazmats[$type] = Hazmat::where('table_type', $type)->get(['id', 'name', 'table_type']);
         }
 
-        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id, 'isBack' =>  $isBack, "hazmats" => $hazmats,'laboratory'=>$laboratory]);
+        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id, 'isBack' =>  $isBack, "hazmats" => $hazmats, 'laboratory' => $laboratory]);
     }
 
     public function projectInfo($project_id)
@@ -123,7 +124,6 @@ class ProjectsController extends Controller
 
             return redirect('projects')->with('message', $message);
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             return back()->withError($th->getMessage())->withInput();
         }
     }
@@ -146,7 +146,7 @@ class ProjectsController extends Controller
 
             $projectImagePath = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $project->id);
 
-            if(File::isDirectory($projectImagePath)) {
+            if (File::isDirectory($projectImagePath)) {
                 File::deleteDirectory($projectImagePath);
             }
 
@@ -360,7 +360,7 @@ class ProjectsController extends Controller
 
             $message = empty($id) ? "Image check added successfully" : "Image check updated successfully";
 
-            return response()->json(['isStatus' => true, 'message' => $message, "id" => $data->id, 'name' => $name, 'htmllist' => $htmllist ?? " ", "trtd"=> $trtd ?? " "]);
+            return response()->json(['isStatus' => true, 'message' => $message, "id" => $data->id, 'name' => $name, 'htmllist' => $htmllist ?? " ", "trtd" => $trtd ?? " "]);
         } catch (ValidationException $e) {
             return response()->json(['isStatus' => false, 'message' => $e->validator->errors()]);
         } catch (\Throwable $th) {
@@ -437,7 +437,7 @@ class ProjectsController extends Controller
                 $croppedImage = imagecrop($image, ['x' => $x, 'y' => $y, 'width' => $width, 'height' => $height]);
 
                 if ($croppedImage) {
-                    imagepng($croppedImage, public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId ."/" . $croppedImageName));
+                    imagepng($croppedImage, public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId . "/" . $croppedImageName));
 
                     Deck::create([
                         'project_id' => $request->input('project_id'),
@@ -529,7 +529,7 @@ class ProjectsController extends Controller
 
             $hazmats = CheckHasHazmat::where('check_id', $id)->get();
 
-            $hazImagePath = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $check->project_id ."/");
+            $hazImagePath = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $check->project_id . "/");
             $prefixToRemove = "hazmat_{$check->id}_"; // Specify the prefix to remove
 
             $pattern = "{$hazImagePath}{$prefixToRemove}*";
@@ -558,31 +558,39 @@ class ProjectsController extends Controller
             return response()->json(['error' => $th->getMessage()], 500);
         }
     }
-    public function laboratorySave(Request $request){
+
+    public function laboratorySave(Request $request)
+    {
         $post = $request->input();
         $post['user_id'] = Auth::user()->id;
-        Laboratory::updateOrCreate(['id'=>$post['id']],$post);
-        $laboratory = Laboratory::where('project_id',$post['project_id'])->get();
+        Laboratory::updateOrCreate(['id' => $post['id']], $post);
+        $laboratory = Laboratory::where('project_id', $post['project_id'])->get();
         $html = view('projects.laboratoryAjax', compact('laboratory'))->render();
         return response()->json([
             'status' => true,
             'html' => $html,
             'message' => 'Save successfully.',
         ]);
-
     }
-    public function laboratoryRemove($id){
-       $lab =  Laboratory::find($id);
-       $proid = $lab['project_id'];
-       $lab->delete();
-       $laboratory = Laboratory::where('project_id',$proid)->get();
-       $html = view('projects.laboratoryAjax', compact('laboratory'))->render();
-       return response()->json([
-           'status' => true,
-           'html' => $html,
-           'message' => 'Save successfully.',
-       ]);
 
+    public function laboratoryRemove($id)
+    {
+        $lab =  Laboratory::find($id);
+        $proid = $lab['project_id'];
+        $lab->delete();
+        $laboratory = Laboratory::where('project_id', $proid)->get();
+        $html = view('projects.laboratoryAjax', compact('laboratory'))->render();
+        return response()->json([
+            'status' => true,
+            'html' => $html,
+            'message' => 'Save successfully.',
+        ]);
+    }
 
+    public function getProjectBasedCheck(Request $request, $project_id)
+    {
+        $checks = Checks::where('project_id', $project_id)->paginate($request->input('length'));
+
+        return response()->json($checks);
     }
 }

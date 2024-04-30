@@ -8,7 +8,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/select.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/fixedHeader.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/fancybox/fancybox.min.css') }}">
-<link rel="stylesheet" type="text/css" href="{{asset('//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css')}}">
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css') }}">
     <style>
         #pdf-container {
             position: relative;
@@ -143,7 +144,9 @@
                     <input type="hidden" name="id" value="{{ $project->id ?? '' }}">
                     <div class="row mb-5">
                         <div class="col-offset-2 col-sm-12 col-md-6 col-lg-3">
-                            <img id="previewImg" src="{{ $project->imagePath }}" onerror="this.onerror=null;this.src='{{ asset('assets/images/logo.png') }}';" style="max-width: 300px" alt="Upload Image">
+                            <img id="previewImg" src="{{ $project->imagePath }}"
+                                onerror="this.onerror=null;this.src='{{ asset('assets/images/logo.png') }}';"
+                                style="max-width: 300px" alt="Upload Image">
                         </div>
                         <div class="col-sm-12 col-md-6 col-lg-2 pt-10">
                             <div class="form-group">
@@ -380,7 +383,7 @@
             </div>
             <div class="email-body">
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered first" id="checkListTable">
+                    <table class="table table-striped table-bordered first" id="checkListTable" width="100%">
                         <thead>
                             <tr>
                                 <th>Check</th>
@@ -516,6 +519,7 @@
                 </div>
             </div>
         </div>
+
         <div class="main-content container-fluid p-0" id="laboratory_list">
             @include('projects.laboratory')
         </div>
@@ -847,9 +851,7 @@
                 type: 'GET',
                 url: "{{ url('check') }}" + "/" + checkId + "/hazmat",
                 success: function(response) {
-
                     $('#showTableTypeDiv').html(response.html);
-
                     let jsonObject = response.check;
                     for (var key in jsonObject) {
                         if (jsonObject.hasOwnProperty(key)) {
@@ -872,6 +874,9 @@
 
 
         $(document).ready(function() {
+            const url = window.location.href;
+            const segments = url.split('/');
+            const projectId = segments[segments.length - 1];
 
             $('#pdfModal').on('hidden.bs.modal', function() {
                 $("#img-container").empty();

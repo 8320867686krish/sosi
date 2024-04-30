@@ -17,12 +17,10 @@
         <!-- ============================================================== -->
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                @include('layouts.message')
                 <div class="card">
                     <h5 class="card-header">{{ $head_title ?? '' }} Role</h5>
                     <div class="card-body">
-                        <form method="post" action="{{ route('roles.store') }}" class="needs-validation" novalidate
-                            id="rolesForm">
+                        <form method="post" action="{{ route('roles.store') }}" class="needs-validation" novalidate id="rolesForm">
                             @csrf
                             <input type="hidden" name="id" value="{{ $role->id ?? null }}">
                             <div class="row">
@@ -95,7 +93,8 @@
                             <div class="row mt-3">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <a href="{{ route('roles') }}" class="btn pl-0" type="button"><i class="fas fa-arrow-left"></i> <b>Back</b></a>
+                                        <a href="{{ route('roles') }}" class="btn pl-0" type="button"><i
+                                                class="fas fa-arrow-left"></i> <b>Back</b></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
@@ -134,15 +133,14 @@
                 method: 'POST',
                 data: formData,
                 success: function(response) {
-                    if (response.isStatus) {
-
+                    if (response.message) {
+                        localStorage.setItem('message', response.message);
                     }
-                    // Handle success response
+                    window.location.href = "{{ route('roles') }}";
                 },
                 error: function(xhr, status, error) {
                     // If there are errors, display them
                     let errors = xhr.responseJSON.errors;
-
                     if (errors) {
                         // Loop through errors and display them
                         $.each(errors, function(field, messages) {
