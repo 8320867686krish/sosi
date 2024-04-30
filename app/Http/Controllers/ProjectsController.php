@@ -287,7 +287,7 @@ class ProjectsController extends Controller
             if (!@$id) {
                 $lastCheck = Checks::latest()->first();
                 if (!$lastCheck) {
-                    $projectCount = "10001";
+                    $projectCount = "001";
                 } else {
                     $projectCount = $lastCheck['initialsChekId'] + (1);
                 }
