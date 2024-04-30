@@ -41,13 +41,13 @@ class RoleController extends BaseController
                 $merge_permission = array_merge($permissions_main, $permissions_sub);
 
                 $role->syncPermissions($merge_permission);
-            }else{
+            } else {
                 $role->syncPermissions([]);
             }
 
-            $message = empty($id) ? "Roles with permission added successfully" : "Roles with permission updated successfully";
+            $message = empty($request->input('id')) ? "Roles with permission added successfully" : "Roles with permission updated successfully";
 
-            return redirect('roles')->with('message', $message);
+            return response()->json(['isStatus' => true, 'message' => $message]);
         } catch (\Throwable $e) {
             return back()->withError($e->getMessage())->withInput();
         }
@@ -68,7 +68,6 @@ class RoleController extends BaseController
         }
     }
 
-
     /**
      * Remove the specified resource from storage.
      */
@@ -77,14 +76,14 @@ class RoleController extends BaseController
         try {
             $roles = Role::withCount('users')->findOrFail($id);
 
-            if (!$roles->users_count) {
+            if(!$roles->users_count) {
                 $roles->delete();
-                return redirect('roles')->with('message', 'Role deleted successfully');
+                return response()->json(["isStatus" => true, "message" => "Role deleted successfully"]);
             } else {
-                return redirect('roles')->with("error", "This role is assigned to the user. Please change this user's role first");
+                return response()->json(["isStatus" => false, "message" => "This role is assigned to the user. Please change this user's role first"]);
             }
         } catch (\Throwable $e) {
-            return back()->withError($e->getMessage())->withInput();
+            return response()->json(["isStatus" => false, "message" => $e->getMessage()]);
         }
     }
 }

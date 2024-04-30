@@ -86,6 +86,7 @@ Route::middleware('auth')->group(function () {
             Route::get('projects/deck/{id}', 'deckBasedCheckView')->name('deck.detail');
             Route::post('/set-session', 'setBackSession')->name('set.session');
 
+            Route::get('project/{project_id}/check', 'getProjectBasedCheck')->name('project.check');
             Route::get('check/{id}/hazmat', 'checkBasedHazmat')->name('check.hazmat');
             Route::get('check/{id}/image', 'checkBasedImage')->name('check.image');
 

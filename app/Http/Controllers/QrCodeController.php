@@ -15,7 +15,7 @@ class QrCodeController extends Controller
         // Fetch checks from the database
         $checks = Checks::select('id', 'name', \DB::raw('COALESCE(initialsChekId, "00000") as initialsChekId'))->where('deck_id', $deckId)->orderByDesc('id')->get();
 
-        if ($checks->count() == 0) {
+        if ($checks->count() <= 0) {
             return redirect()->back()->with('message', 'This deck check not found.');
         }
 
@@ -72,14 +72,17 @@ class QrCodeController extends Controller
             }
 
             // Generate QR code
-            $qrCode = QrCode::size(75)->generate($check->initialsChekId);
+            $qrCode = QrCode::size(75)->generate($check->name);
             $qrCodeDataUri = 'data:image/png;base64,' . base64_encode($qrCode);
 
             // Add the QR code and related information to table cells
-            $html .= '<td width="13.33%"><img src=data:image/png;base64,"' . $base64Image . '" alt="QR Code for Check" style="margin-bottom: 8px;" width="115px;"></td>';
+            $html .= '<td width="13.33%">';
+            $html .= '<img src=data:image/png;base64,"' . $base64Image . '" alt="QR Code for Check" width="115px;">';
+            $html .= '<div style="font-size: 13px;">www.sosindi.com</div>';
+            $html .= '</td>';
             $html .= '<td class="qr-code" width="20%" style="border-right: 2px solid #ddd;">';
             $html .= '<img src="' . $qrCodeDataUri . '" alt="QR Code for Check" style="margin-bottom: 8px;">';
-            $html .= '<div>' . $check->initialsChekId . '</div>';
+            $html .= '<div style="font-size: 13px;">' . $check->name . '</div>';
             $html .= '</td>';
 
             // Close the row if it's the end of a row or the last check
@@ -100,13 +103,12 @@ class QrCodeController extends Controller
             $counter++;
         }
 
-
         $html .= '</tbody>';
 
         $html .= '</table>';
 
         $html .= '</body></html>';
-        // dd($html);
+
         // Load HTML content into Dompdf
         $dompdf->loadHtml($html);
 
@@ -117,10 +119,10 @@ class QrCodeController extends Controller
         $dompdf->render();
 
         // Output PDF
-        return $dompdf->stream('qr_codes.pdf', ['Attachment' => false]);
-        // $pdfContent = $dompdf->output();
-        // return response($pdfContent, 200)
-        //     ->header('Content-Type', 'application/pdf')
-        //     ->header('Content-Disposition', 'attachment; filename="qr_codes_' . $deckId . '.pdf"');
+        // return $dompdf->stream('qr_codes.pdf', ['Attachment' => false]);
+        $pdfContent = $dompdf->output();
+        return response($pdfContent, 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="qr_codes_' . $deckId . '.pdf"');
     }
 }

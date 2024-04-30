@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\AtLeastOnePermissionRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RoleRequest extends FormRequest
@@ -22,18 +23,20 @@ class RoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:roles,name,'. $this->id,
-            'level' => 'required|unique:roles,level,'. $this->id
+            'name' => 'required|unique:roles,name,' . $this->id,
+            'level' => 'required|unique:roles,level,' . $this->id,
+            'permissions' => 'required|array|min:1',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'Please enter name',
-            'name.unique' => 'Already exist this role',
-            'level.required' => 'Please enter level',
-            'level.unique' => 'The level is associated with another role. Please change level.',
+            'name.required' => 'Please enter a name.',
+            'name.unique' => 'This role already exists.',
+            'level.required' => 'Please enter a level.',
+            'level.unique' => 'The level is associated with another role. Please choose a different level.',
+            'permissions.required' => 'At least one permission is required for each role.',
         ];
     }
 }
