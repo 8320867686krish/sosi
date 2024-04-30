@@ -482,18 +482,15 @@ class ApiController extends Controller
             $deckId = $request->input('deck_id');
             $inputData = $request->input();
             $inputData['isApp'] = 1;
-            $projectDetail = Projects::with(['client' => function ($query) {
-                $query->select('id', 'manager_initials'); // Replace with the fields you want to select
-            }])->withCount('checks')->find($inputData['project_id']);
-            $lastCheck = Checks::where('project_id', $inputData['project_id'])
-                ->latest()
-                ->first();
+            $projectDetail = Projects::find($inputData['project_id']);
+            $lastCheck = Checks::latest()->first();
+;
             if (!$lastCheck) {
                 $projectCount = "001";
             } else {
-                $projectCount = $lastCheck['initialsChekId'] + (1);
+                $    = $lastCheck['initialsChekId'] + (1);
             }
-            $name = "sos" . $projectDetail['client']['manager_initials'] . $projectCount;
+            $name = $projectDetail['ship_initiate']."#".$projectCount;
             $inputData['name'] = $name;
             $inputData['initialsChekId'] =  $projectCount;
             // Eager load project and deck to reduce database queries

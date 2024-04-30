@@ -291,7 +291,7 @@ class ProjectsController extends Controller
                 } else {
                     $projectCount = $lastCheck['initialsChekId'] + (1);
                 }
-                $name = "sos" . $projectDetail['client']['manager_initials'] . $projectCount;
+                $name = $projectDetail['ship_initiate']."#".$projectCount;
                 $inputData['name'] = $name;
                 $inputData['initialsChekId'] =  $projectCount;
             } else {
