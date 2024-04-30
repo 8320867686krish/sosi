@@ -128,6 +128,17 @@
                                             value="{{ old('project_no', $project->project_no ?? '') }}" readonly>
                                     </div>
                                 </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="project_no">Ship Initiate</label>
+                                        <input type="text" class="form-control @error('ship_initiate') is-invalid @enderror"
+                                            id="ship_initiate" name="ship_initiate" placeholder="Ship Initiate..."
+                                            value="{{ old('ship_initiate', $project->ship_initiate ?? '') }}"  onchange="removeInvalidClass(this)">
+                                            @error('ship_initiate')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-sm-12 col-md-6">

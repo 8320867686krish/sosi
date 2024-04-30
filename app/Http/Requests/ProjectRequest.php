@@ -31,6 +31,10 @@ class ProjectRequest extends FormRequest
                 'required',
                 'unique:projects,imo_number,' . $this->id
             ],
+            'ship_initiate' => [
+                'required',
+                'unique:projects,ship_initiate,'. $this->id
+            ],
         ];
     }
 }
