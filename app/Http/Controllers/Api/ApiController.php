@@ -725,6 +725,14 @@ class ApiController extends Controller
     {
         $projects = DB::select('describe projects');
         $clients = DB::select('describe clients');
+        foreach ($clients as $clientField) {
+        
+
+            if($clientField->Field == 'manager_name' || $clientField->Field == 'manager_address' || $clientField->Field == 'owner_name' || $clientField->Field == 'owner_address' )
+              $projects[] = $clientField;
+         
+        }
+        
         $decks = DB::select('describe decks');
         $checks = DB::select('describe checks');
         $check_has_images = DB::select('describe check_has_images');
@@ -733,7 +741,7 @@ class ApiController extends Controller
         $decks = $this->modifyTypeValues($decks);
         $checks = $this->modifyTypeValues($checks);
         $check_has_images = $this->modifyTypeValues($check_has_images);
-        return response()->json(['isStatus' => true, 'message' => 'table strture.', 'projects' => $projects, 'clients' => $clients, 'decks' => $decks, 'checks' => $checks, 'check_has_images' => $check_has_images]);
+        return response()->json(['isStatus' => true, 'message' => 'table strture.', 'projects' => $projects,'decks' => $decks, 'checks' => $checks, 'check_has_images' => $check_has_images]);
     }
 
     public function modifyTypeValues($tableDescription)
