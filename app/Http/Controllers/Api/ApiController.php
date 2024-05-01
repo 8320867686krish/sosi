@@ -488,7 +488,8 @@ class ApiController extends Controller
             if (!$lastCheck) {
                 $projectCount = "001";
             } else {
-                $    = $lastCheck['initialsChekId'] + (1);
+                $projectCount = $lastCheck['initialsChekId'] + (1);
+
             }
             $name = $projectDetail['ship_initiate']."#".$projectCount;
             $inputData['name'] = $name;
