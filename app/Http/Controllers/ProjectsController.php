@@ -250,7 +250,10 @@ class ProjectsController extends Controller
 
         $hazmatIds = $check->hazmats->pluck('hazmat_id')->toArray();
 
-        $hazmats = $check->hazmats;
+        $hazmats = $check->hazmats->map(function ($hazmat) {
+            $hazmat->image = basename($hazmat->getOriginal('image'));
+            return $hazmat;
+        });
 
         $htmllist = view('check.checkAddModal', compact('hazmats'))->render();
 
