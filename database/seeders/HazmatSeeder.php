@@ -33,7 +33,7 @@ class HazmatSeeder extends Seeder
         ];
 
         foreach ($hazmats as $hazmat) {
-            Hazmat::firstOrCreate($hazmat);
+            Hazmat::updateOrCreate(["name" => $hazmat['name']],$hazmat);
         }
     }
 }

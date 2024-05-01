@@ -393,7 +393,6 @@
                                 <th>Equip. & Comp.</th>
                                 <th>Document analyisis result</th>
                                 <th>Hazmat</th>
-                                <th>VSCP</th>
                                 <th width="10%">Action</th>
                             </tr>
                         </thead>
@@ -425,7 +424,6 @@
                                                 @endforeach
                                             @endif
                                         </td>
-                                        <td></td>
                                         <td class="text-center">
                                             <a href="javascript:;" class="editCheckbtn"
                                                 data-dotId="dot_{{ $loop->iteration }}" data-id="{{ $check->id }}"><i
@@ -613,7 +611,7 @@
 
                     <form method="post" action="{{ route('addImageHotspots') }}" id="checkDataAddForm"
                         enctype="multipart/form-data">
-                        <div class="modal-body" style="overflow-x: auto; overflow-y: auto; height: calc(81vh - 1rem);">
+                        <div class="modal-body" style="overflow-x: auto; overflow-y: auto; max-height: calc(81vh - 1rem);">
                             @csrf
                             <input type="hidden" id="id" name="id">
                             <input type="hidden" id="project_id" name="project_id"

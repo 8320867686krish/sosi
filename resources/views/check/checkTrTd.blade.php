@@ -22,7 +22,6 @@
             @endforeach
         @endif
     </td>
-    <td></td>
     <td class="text-center">
         @if ($check)
             <a href="javascript:;" class="editCheckbtn" data-dotId="dot_{{ $loop->iteration ?? '' }}"
