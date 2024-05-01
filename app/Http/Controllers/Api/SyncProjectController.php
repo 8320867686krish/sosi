@@ -25,17 +25,12 @@ class SyncProjectController extends Controller
         $projectId = $request->input('projectId');
         $user = Auth::user();
         $currentUserRoleLevel = $user->roles->first()->level;
-        // Convert $startDate to start of day
-        if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
-            return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
-        } else {
-            $client_id = Projects::select('client_id')->find($projectId);
-            $client = Client::find( $client_id)->toArray();
-            $decks = Deck::where('project_id', $projectId)->get();
-            $checks = Checks::where('project_id', $projectId)->get();
-            $checkImages = CheckImage::where('project_id', $projectId)->get();
-            return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages, 'clients' => $client]);
-        }
+        $client_id = Projects::select('client_id')->find($projectId);
+        $client = Client::find($client_id)->toArray();
+        $decks = Deck::where('project_id', $projectId)->get();
+        $checks = Checks::where('project_id', $projectId)->get();
+        $checkImages = CheckImage::where('project_id', $projectId)->get();
+        return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages, 'clients' => $client]);
     }
 
     public function createZip(Request $request)
@@ -47,60 +42,55 @@ class SyncProjectController extends Controller
 
         $currentUserRoleLevel = $user->roles->first()->level;
         $myTime = Carbon::parse($syncDate)->startOfDay(); // Convert $startDate to start of day
-
-        if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
-            return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
-        } else {
-            //now check syncdate or not
-            $downLoadFile = asset('images/projects/' . $projectId . ".zip");
-            $sourceDir = public_path('images/projects/' . $projectId);
-            $zipFilePath = public_path('images/projects/' . $projectId . '.zip');
-            $zip = new ZipArchive;
-            if ($syncDate == 0) {
-                if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
-                    $files = File::files($sourceDir);
-                    foreach ($files as $key => $value) {
-                        $relativeNameInZipFile = basename($value);
-                        $zip->addFile($value, $relativeNameInZipFile);
-                    }
-                    $zip->close();
+        //now check syncdate or not
+        $downLoadFile = asset('images/projects/' . $projectId . ".zip");
+        $sourceDir = public_path('images/projects/' . $projectId);
+        $zipFilePath = public_path('images/projects/' . $projectId . '.zip');
+        $zip = new ZipArchive;
+        if ($syncDate == 0) {
+            if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+                $files = File::files($sourceDir);
+                foreach ($files as $key => $value) {
+                    $relativeNameInZipFile = basename($value);
+                    $zip->addFile($value, $relativeNameInZipFile);
                 }
-                $downLoadFile = asset('images/projects/4.zip');
+                $zip->close();
+            }
+            $downLoadFile = asset('images/projects/4.zip');
 
+            return response()->json(['isStatus' => true, 'message' => 'Successfully zip download', 'zipPath' => $downLoadFile]);
+        } else {
+            $tz_from = $timeZone;
+            $carbonDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $syncDate, new \DateTimeZone($tz_from));
+            $carbonDateTime->setTimezone('UTC');
+            $dateTimeUTC = $carbonDateTime->toDateTimeString();
+            $checkImages = CheckImage::where('project_id', $projectId)
+                ->where('updated_at', '>=', $dateTimeUTC)
+                ->pluck('image')->toArray();
+
+            $decks = Deck::where('project_id', $projectId)
+                ->where('updated_at', '>=', $dateTimeUTC)
+                ->pluck('image')->toArray();
+
+            $allImages = array_merge($checkImages, $decks);
+            return response()->json(['isStatus' => true, 'message' => 'Successfully zip download', 'zipPath' => $downLoadFile]);
+
+            if (@$allImages) {
+                $zip->open($zipFilePath, ZipArchive::CREATE);
+
+                foreach ($allImages as $image) {
+                    $imageFilename = basename($image);
+                    $path = public_path('images/projects/' . $projectId . '/' . $imageFilename);
+                    if (file_exists($path) && is_file($path)) {
+                        $imageData = file_get_contents($path);
+                        // Add image data to zip file with the same name
+                        $zip->addFromString(basename($image), $imageData);
+                    }
+                }
+                $zip->close();
                 return response()->json(['isStatus' => true, 'message' => 'Successfully zip download', 'zipPath' => $downLoadFile]);
             } else {
-                $tz_from = $timeZone;
-                $carbonDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $syncDate, new \DateTimeZone($tz_from));
-                $carbonDateTime->setTimezone('UTC');
-                $dateTimeUTC = $carbonDateTime->toDateTimeString();
-                $checkImages = CheckImage::where('project_id', $projectId)
-                    ->where('updated_at', '>=', $dateTimeUTC)
-                    ->pluck('image')->toArray();
-
-                $decks = Deck::where('project_id', $projectId)
-                    ->where('updated_at', '>=', $dateTimeUTC)
-                    ->pluck('image')->toArray();
-
-                $allImages = array_merge($checkImages, $decks);
-                return response()->json(['isStatus' => true, 'message' => 'Successfully zip download', 'zipPath' => $downLoadFile]);
-
-                if (@$allImages) {
-                    $zip->open($zipFilePath, ZipArchive::CREATE);
-
-                    foreach ($allImages as $image) {
-                        $imageFilename = basename($image);
-                        $path = public_path('images/projects/' . $projectId . '/' . $imageFilename);
-                        if (file_exists($path) && is_file($path)) {
-                            $imageData = file_get_contents($path);
-                            // Add image data to zip file with the same name
-                            $zip->addFromString(basename($image), $imageData);
-                        }
-                    }
-                    $zip->close();
-                    return response()->json(['isStatus' => true, 'message' => 'Successfully zip download', 'zipPath' => $downLoadFile]);
-                } else {
-                    return response()->json(['isStatus' => false, 'message' => 'No file', 'zipPath' => '']);
-                }
+                return response()->json(['isStatus' => false, 'message' => 'No file', 'zipPath' => '']);
             }
         }
     }
@@ -143,9 +133,8 @@ class SyncProjectController extends Controller
                     $value['isApp'] = 1;
                     $value['project_id'] = $post['project_id'];
                     $value['deck_id'] = $post['deck_id'];
-                }   
-                Checks::updateOrCreate(['id'=>$value['id']],$value);
-
+                }
+                Checks::updateOrCreate(['id' => $value['id']], $value);
             }
         }
     }

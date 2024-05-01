@@ -21,8 +21,6 @@ return new class extends Migration
             $table->string('project_no')->nullable();
             $table->string('imo_number')->nullable()->unique();
             $table->string('call_sign')->nullable();
-            $table->string('manager_name')->nullable();
-            $table->string('owner_name')->nullable();
             $table->string('manager_details')->nullable();
             $table->string('dimensions')->nullable();
             $table->string('builder_name')->nullable();

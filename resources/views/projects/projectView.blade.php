@@ -199,8 +199,8 @@
                                 <input type="text" class="form-control  @error('manager_name') is-invalid @enderror"
                                     id="manager_name"
                                     value="{{ old('manager_name', $project->client->manager_name ?? '') }}"
-                                    name="manager_name" placeholder="Manager Name..." autocomplete="off"
-                                    onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                   placeholder="Manager Name..." autocomplete="off"
+                                    onchange="removeInvalidClass(this)" readonly>
                                 @error('manager_name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -211,9 +211,8 @@
                                 <label for="client_id">Ship Owner</label>
                                 <input type="hidden" name="client_id" id="client_id"
                                     value="{{ old('client_id', $project->client->id ?? '') }}">
-                                <input type="text" class="form-control " name="owner_name" id="owner_name"
-                                    value="{{ old('owner_name', $project->client->owner_name ?? '') }}"
-                                    {{ $readonly }}>
+                                <input type="text" class="form-control" id="owner_name"
+                                    value="{{ old('owner_name', $project->client->owner_name ?? '') }}" readonly>
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-4">

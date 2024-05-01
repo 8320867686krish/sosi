@@ -301,11 +301,13 @@ class ApiController extends Controller
             $currentUserRoleLevel = $user->roles->first()->level;
 
             if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
-                $projects = Projects::select('*', 'clients.manager_name')
+                $projects = Projects::select('*','clients.manager_name','clients.owner_name',
+                'clients.owner_address','clients.manager_address')
                     ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
                     ->get();
             } else {
-                $projects = Projects::select('projects.*','clients.manager_name')
+                $projects = Projects::select('projects.*','clients.manager_name','clients.owner_name',
+                'clients.owner_address','clients.manager_address')
                 ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
                 ->leftJoin('project_teams', 'projects.id', '=', 'project_teams.project_id')
                 ->where('project_teams.isExpire', 0)
@@ -338,6 +340,11 @@ class ApiController extends Controller
             }
             $project['survey_date'] = (@$project['survey_date']) ? @$project['survey_date'] : "";
             if ($project) {
+                $project['manager_name'] = $project['client']['manager_name'];
+                $project['manager_address'] = $project['client']['manager_address'];
+                $project['owner_name'] = $project['client']['owner_name'];
+                $project['owner_address'] = $project['client']['owner_address'];
+                unset($project['client']);
                 return response()->json(['isStatus' => true, 'message' => 'Project detail retrieved successfully.', 'shipParticular' => $project]);
             }
         } catch (Throwable $th) {
@@ -475,18 +482,23 @@ class ApiController extends Controller
             $deckId = $request->input('deck_id');
             $inputData = $request->input();
             $inputData['isApp'] = 1;
-            $projectDetail = Projects::with(['client' => function ($query) {
-                $query->select('id', 'manager_initials'); // Replace with the fields you want to select
-            }])->withCount('checks')->find($inputData['project_id']);
-            $lastCheck = Checks::where('project_id', $inputData['project_id'])
-                ->latest()
-                ->first();
+            $projectDetail = Projects::find($inputData['project_id']);
+            $lastCheck = Checks::latest()->first();
             if (!$lastCheck) {
-                $projectCount = "1001";
+                $projectCount = "0";
+            } else {
+                $projectCount = $lastCheck['initialsChekId'];
+             }
+             $name = $projectDetail['ship_initiate'].'#' . str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
+
+            $inputData['name'] = $name;
+            $inputData['initialsChekId'] = str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
+            if (!$lastCheck) {
+                $projectCount = "001";
             } else {
                 $projectCount = $lastCheck['initialsChekId'] + (1);
             }
-            $name = "sos" . $projectDetail['client']['manager_initials'] . $projectCount;
+            $name = $projectDetail['ship_initiate']."#".$projectCount;
             $inputData['name'] = $name;
             $inputData['initialsChekId'] =  $projectCount;
             // Eager load project and deck to reduce database queries
@@ -578,16 +590,11 @@ class ApiController extends Controller
             if (!$checks) {
                 return response()->json(['isStatus' => false, 'message' => 'Check not found.']);
             }
+            $checkDetails = $checks ;
+            $checkDetails['deckImage'] = $checks['deck']['image'];
+            unset($checkDetails['deck']);
 
-            $deckImage = $checks['deck']['image'];
-
-            $locationDetails = array_merge(
-                $checks->only(['compartment', 'position', 'sub_position', 'position_left', 'position_top', 'project_id', 'deck_id']),
-                ['deck_image' => $deckImage]
-            );
-            $checkDetails = $checks->only(['component', 'equipment', 'name', 'type', 'suspected_hazmat', 'remarks', 'project_id', 'deck_id', 'pairWitthTag']);
-
-            return response()->json(['isStatus' => true, 'message' => 'check details retrieved successfully.', 'checkDetails' => $checkDetails, 'locationDetails' => $locationDetails]);
+            return response()->json(['isStatus' => true, 'message' => 'check details retrieved successfully.', 'checkDetails' => $checkDetails]);
         } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
@@ -725,6 +732,14 @@ class ApiController extends Controller
     {
         $projects = DB::select('describe projects');
         $clients = DB::select('describe clients');
+        foreach ($clients as $clientField) {
+        
+
+            if($clientField->Field == 'manager_name' || $clientField->Field == 'manager_address' || $clientField->Field == 'owner_name' || $clientField->Field == 'owner_address' )
+              $projects[] = $clientField;
+         
+        }
+        
         $decks = DB::select('describe decks');
         $checks = DB::select('describe checks');
         $check_has_images = DB::select('describe check_has_images');
@@ -733,7 +748,7 @@ class ApiController extends Controller
         $decks = $this->modifyTypeValues($decks);
         $checks = $this->modifyTypeValues($checks);
         $check_has_images = $this->modifyTypeValues($check_has_images);
-        return response()->json(['isStatus' => true, 'message' => 'table strture.', 'projects' => $projects, 'clients' => $clients, 'decks' => $decks, 'checks' => $checks, 'check_has_images' => $check_has_images]);
+        return response()->json(['isStatus' => true, 'message' => 'table strture.', 'projects' => $projects,'decks' => $decks, 'checks' => $checks, 'check_has_images' => $check_has_images]);
     }
 
     public function modifyTypeValues($tableDescription)

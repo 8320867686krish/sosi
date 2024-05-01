@@ -290,13 +290,14 @@ class ProjectsController extends Controller
             if (!@$id) {
                 $lastCheck = Checks::latest()->first();
                 if (!$lastCheck) {
-                    $projectCount = "10001";
+                    $projectCount = "0";
                 } else {
-                    $projectCount = $lastCheck['initialsChekId'] + (1);
-                }
-                $name = "sos" . $projectDetail['client']['manager_initials'] . $projectCount;
+                    $projectCount = $lastCheck['initialsChekId'];
+                 }
+                 $name = $projectDetail['ship_initiate'].'#' . str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
+
                 $inputData['name'] = $name;
-                $inputData['initialsChekId'] =  $projectCount;
+                $inputData['initialsChekId'] = str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
             } else {
                 unset($inputData['name']);
             }
