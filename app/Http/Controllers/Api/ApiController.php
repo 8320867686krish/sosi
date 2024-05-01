@@ -484,12 +484,19 @@ class ApiController extends Controller
             $inputData['isApp'] = 1;
             $projectDetail = Projects::find($inputData['project_id']);
             $lastCheck = Checks::latest()->first();
-;
+            if (!$lastCheck) {
+                $projectCount = "0";
+            } else {
+                $projectCount = $lastCheck['initialsChekId'];
+             }
+             $name = $projectDetail['ship_initiate'].'#' . str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
+
+            $inputData['name'] = $name;
+            $inputData['initialsChekId'] = str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
             if (!$lastCheck) {
                 $projectCount = "001";
             } else {
                 $projectCount = $lastCheck['initialsChekId'] + (1);
-
             }
             $name = $projectDetail['ship_initiate']."#".$projectCount;
             $inputData['name'] = $name;
