@@ -26,16 +26,14 @@ class SyncProjectController extends Controller
         $user = Auth::user();
         $currentUserRoleLevel = $user->roles->first()->level;
         // Convert $startDate to start of day
-        if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
-            return response()->json(['isStatus' => false, 'message' => 'Cant access.']);
-        } else {
+       
             $client_id = Projects::select('client_id')->find($projectId);
             $client = Client::find( $client_id)->toArray();
             $decks = Deck::where('project_id', $projectId)->get();
             $checks = Checks::where('project_id', $projectId)->get();
             $checkImages = CheckImage::where('project_id', $projectId)->get();
             return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages, 'clients' => $client]);
-        }
+        
     }
 
     public function createZip(Request $request)
