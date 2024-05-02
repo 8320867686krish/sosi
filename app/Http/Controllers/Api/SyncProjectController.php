@@ -30,7 +30,7 @@ class SyncProjectController extends Controller
         $decks = Deck::where('project_id', $projectId)->get();
         $checks = Checks::where('project_id', $projectId)->get();
         $checkImages = CheckImage::where('project_id', $projectId)->get();
-        return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages, 'clients' => $client]);
+        return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages]);
     }
 
     public function createZip(Request $request)
