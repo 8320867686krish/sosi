@@ -4,6 +4,7 @@ use App\Http\Controllers\ClientContoller;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\QrCodeController;
+use App\Http\Controllers\ReportContoller;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -109,6 +110,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::get('generatorQRcode/{deckId}', [QrCodeController::class, 'show'])->name('generatorQRcode');
+
+    Route::get('excelReport', [ReportContoller::class, 'exportDataInExcel']);
 
     Route::get('/viewQRCode', function () {
         return view('pdfView');

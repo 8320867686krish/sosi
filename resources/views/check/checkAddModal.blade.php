@@ -23,9 +23,13 @@
                     <div class="form-group">
                         <input type="file" class="form-control" accept="image/*" id="image_{{$hazmat->hazmat_id}}" name="image[{{$hazmat->hazmat_id}}]">
                     </div>
+                    <div style="font-size: 13px">
+                        @if (basename($hazmat->getOriginal('image')) !== $hazmat->hazmat_id)
+                            {{ basename($hazmat->getOriginal('image'))}}
+                        @endif
+                    </div>
                     {{-- <img src="{{ $hazmat->image }}" alt="" width="150px"> --}}
                 </div>
-                <div class="col-12 imagehazmat{{$hazmat->hazmat_id}}">{{$hazmat->image}}</div>
             </div>
         </div>
     @endforeach
