@@ -53,6 +53,7 @@ class ProjectsController extends Controller
 
     public function projectView($project_id)
     {
+       
         $clients = Client::orderBy('id', 'desc')->get(['id', 'manager_name', 'manager_initials']);
         $isBack = 0;
         if (session('back') == 1) {
@@ -79,9 +80,9 @@ class ProjectsController extends Controller
 
         if ($project) {
             $project->decks = $project->decks()->orderBy('id', 'desc')->get();
-            $project->checks = $project->checks()->with('check_hazmats:id,short_name')->orderBy('id', 'desc')->get();
+            $project->checks = $project->checks()->with('check_hazmats.hazmat')->orderBy('id', 'desc')->get();
         }
-
+   
         $laboratory = Laboratory::where('project_id', $project_id)->get();
         $project['imagePath'] = $project->image != null ? $project->image : asset('assets/images/giphy.gif');
 
@@ -309,7 +310,8 @@ class ProjectsController extends Controller
                         "project_id" => $inputData['project_id'],
                         "check_id" => $data->id,
                         "hazmat_id" => $value,
-                        "type" => $tableTypes[$value]
+                        "type" => $tableTypes[$value],
+                        "check_type" => $inputData['type']
                     ];
 
                     // Check if there's an image for the current suspected hazmat
@@ -354,8 +356,9 @@ class ProjectsController extends Controller
 
             if (!empty($inputData['deck_id'])) {
                 $checks = Checks::where('deck_id', $inputData['deck_id'])->get();
-                $check = Checks::with('check_hazmats')->where('id', $data->id)->first();
-                $trtd = view('check.checkTrTd', compact('check'))->render();
+                $project = Projects::with('checks.check_hazmats.hazmat')->find($inputData['project_id']);
+                $trtd = view('projects.allcheckList', compact('project'))->render();
+              
                 $htmllist = view('check.checkList', compact('checks'))->render();
             }
 

@@ -382,7 +382,7 @@
             </div>
             <div class="email-body">
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered first" id="checkListTable" width="100%">
+                    <table class="table table-striped table-bordered first"  width="100%">
                         <thead>
                             <tr>
                                 <th>Check</th>
@@ -390,53 +390,17 @@
                                 <th>Type</th>
                                 <th>Location</th>
                                 <th>Equip. & Comp.</th>
-                                <th>Document analyisis result</th>
                                 <th>Hazmat</th>
+                                <th>Document analyisis result</th>
                                 <th width="10%">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @if (isset($project->checks) && $project->checks->count() > 0)
-                                @foreach ($project->checks as $check)
-                                    <tr id="checkListTr_{{ $check->id }}">
-                                        <td>{{ $check->initialsChekId }}</td>
-                                        <td>{{ $check->name }}</td>
-                                        <td>{{ $check->type }}</td>
-                                        <td>{{ $check->location }}</td>
-                                        <td>{{ $check->equipment }} <br> {{ $check->component }} </td>
-                                        <td>
-                                            @if (isset($check->check_hazmats))
-                                                @foreach ($check->check_hazmats as $hazmat)
-                                                    <div class="m-2"><a class="btn btn-rounded btn-dark text-white"
-                                                            style="padding: .375rem .75rem; cursor: default;">{{ $hazmat->short_name }}</a>
-                                                    </div>
-                                                @endforeach
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if (isset($check->check_hazmats))
-                                                @foreach ($check->check_hazmats as $hazmat)
-                                                    <div class="m-2"><a href="javascript:;"
-                                                            class="btn btn-rounded btn-dark text-white"
-                                                            style="padding: .375rem .75rem; cursor: default;">{{ $hazmat->short_name }}</a>
-                                                    </div>
-                                                @endforeach
-                                            @endif
-                                        </td>
-                                        <td class="text-center">
-                                            <a href="javascript:;" class="editCheckbtn"
-                                                data-dotId="dot_{{ $loop->iteration }}" data-id="{{ $check->id }}"><i
-                                                    class="fas fa-edit text-primary" style="font-size: 1rem"></i></a>
-                                            <a href="javascript:;" class="modalCheckbtn ml-2"
-                                                data-id="{{ $check->id }}"><i class="fas fa-images text-primary"
-                                                    style="font-size: 1rem"></i></a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endif
+                        <tbody id="checkListTable">
+                        @include('projects.allcheckList')
                         </tbody>
                     </table>
                 </div>
+              
             </div>
         </div>
 
@@ -1346,13 +1310,16 @@
                     processData: false,
                     success: function(response) {
                         if (response.isStatus) {
+                            console.log(response.trtd);
+                            $("#checkListTable").html(response.trtd);
+
                             let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
                             ${response.message}
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>`;
-                            $(`#checkListTr_${response.id}`).replaceWith(response.trtd);
+                        //    $(`#checkListTr_${response.id}`).replaceWith(response.trtd);
                             $("#showCheckImgMsg").html(messages);
                             $('#showCheckImgMsg').fadeIn().delay(20000).fadeOut();
                             $("#checkDataAddForm")[0].reset();
