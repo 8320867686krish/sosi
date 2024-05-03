@@ -111,11 +111,15 @@ Route::middleware('auth')->group(function () {
 
     Route::get('generatorQRcode/{deckId}', [QrCodeController::class, 'show'])->name('generatorQRcode');
 
-    Route::get('excelReport', [ReportContoller::class, 'exportDataInExcel']);
+    Route::get('excelReport/{project_id}', [ReportContoller::class, 'exportDataInExcel']);
 
     Route::get('/viewQRCode', function () {
         return view('pdfView');
     })->name('viewQRCode');
+
+    Route::get('/viewExcelReport', function () {
+        return view('exports.cover_report');
+    });
 });
 
 require __DIR__ . '/auth.php';
