@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>COVER</title>
+    <title>SUMMARY</title>
 </head>
 
 <body>
-    <table>
+    {{-- <table>
         <thead>
             <tr>
                 <td>&nbsp;</td>
@@ -18,16 +18,31 @@
                 <td>&nbsp;</td>
                 <td colspan="7" valign="middle" align="center" height="50"
                     style="font-size: 18px; background-color: #DADADA;">
-                    <b>{{ $title }}</b>
+                    <b>Hello Word</b>
                 </td>
             </tr>
             <tr>
                 <td>&nbsp;</td>
             </tr>
         </thead>
-    </table>
+    </table> --}}
 
     <table>
+        <thead>
+            <tr>
+                <th colspan="3" style="border: 2px solid #000000"><b>Hazardous Material</b></th>
+                <th colspan="3" style="border: 2px solid #000000"><b>Number of Checks</b></th>
+            </tr>
+            <tr>
+                <th style="border: 2px solid #000000"><b>Table</b></th>
+                <th style="border: 2px solid #000000"><b>Key</b></th>
+                <th style="border: 2px solid #000000"><b>Name</b></th>
+                <th style="border: 2px solid #000000"><b>Sampling</b></th>
+                <th style="border: 2px solid #000000"><b>Sampling</b></th>
+                <th style="border: 2px solid #000000"><b>Visual/Sample</b></th>
+                <th style="border: 2px solid #000000"><b>Total</b></th>
+            </tr>
+        </thead>
         <tbody>
             <tr>
                 <td>&nbsp;</td>
