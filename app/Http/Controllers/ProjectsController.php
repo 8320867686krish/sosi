@@ -14,6 +14,7 @@ use App\Models\Laboratory;
 use App\Models\Projects;
 use App\Models\ProjectTeam;
 use App\Models\User;
+use App\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -196,7 +197,7 @@ class ProjectsController extends Controller
     {
         try {
             $inputData = $request->input();
-
+           
             ProjectTeam::where('project_id', $inputData['project_id'])->delete();
 
             if (@$inputData['user_id']) {
@@ -210,7 +211,11 @@ class ProjectsController extends Controller
                     ]);
                 }
             }
+            if(@$inputData['project']){
+                $savData = $inputData['project'];
 
+                Projects::where(['id' => $inputData['id']])->update($savData);
+            }
             return response()->json(['isStatus' => true, 'message' => 'Project assign successfully!!']);
         } catch (Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);

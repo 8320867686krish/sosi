@@ -405,6 +405,7 @@
           
                 <div class="email-head-subject">
                     <div class="title"><span>OnBoard Survey Plan</span>
+                   
                     </div>
             </div>
            
@@ -747,24 +748,7 @@
             }, 15000);
 
            
-            $(".formteamButton").click(function() {
-                $.ajax({
-                    type: "POST",
-                    url: "{{ url('detail/assignProject') }}",
-                    data: $("#teamsForm").serialize(),
-                    success: function(msg) {
-                        $(".sucessteamMsg").text(msg.message);
-                        $(".sucessteamMsg").show();
-                    },
-                    error: function(err) {
-                        console.log(err);
-                    },
-                    complete: function() {
-                        $(".formSubmitBtn").hide();
-                    }
-                });
-            });
-
+          
             $(".formgenralButton").click(function() {
                 $('span').html("");
 
