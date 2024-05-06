@@ -9,5 +9,9 @@ class Hazmat extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["name", "table_type", "color"];
+    protected $fillable = ["name", "short_name", "table_type", "color"];
+
+    protected $hidden = ['created_at', 'updated_at', 'color'];
+
+    
 }

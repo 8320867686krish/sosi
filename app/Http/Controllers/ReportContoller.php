@@ -30,7 +30,14 @@ class ReportContoller extends Controller
 
         $project = Projects::with('client:id,manager_name,manager_email,manager_phone,manager_address,owner_name,owner_email,owner_phone,owner_address')->findOrFail($id);
 
-        $filename = "customers-" . date('d-m-Y') . "." . $fileExt;
-        return Excel::download(new MultiSheetExport($project, Hazmat::all()), $filename, $exportFormat);
+        $hazmats = Hazmat::get();
+
+        $userNames = $hazmats->map(function ($hazmat) {
+            
+            // return $user->name;
+        });
+
+        $filename = "projects-{$id}" . date('d-m-Y') . "." . $fileExt;
+        return Excel::download(new MultiSheetExport($project, $hazmats), $filename, $exportFormat);
     }
 }
