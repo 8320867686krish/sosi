@@ -2,18 +2,29 @@
 
 namespace App\Exports;
 
-use App\Models\CheckHasHazmat;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithTitle;
 
-class VSCPSheetExport implements FromCollection, WithTitle
+class VSCPSheetExport implements FromView, WithTitle
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
+    protected $collection;
+
+    public function __construct($collection)
     {
-        return CheckHasHazmat::all();
+        $this->collection = $collection;
+    }
+
+    /**
+     * Return the view for the Excel sheet.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function view(): View
+    {
+        return view('exports.vscp_report', [
+            'checks' => $this->collection,
+        ]);
     }
 
     public function title(): string
