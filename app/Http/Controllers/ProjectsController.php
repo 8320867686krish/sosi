@@ -280,6 +280,7 @@ class ProjectsController extends Controller
             $suspectedHazmatId = $request->input('hasid');
             $tableTypes = $request->input('table_type');
             $images = $request->file('image');
+
             $projectDetail = Projects::with(['client' => function ($query) {
                 $query->select('id', 'manager_initials'); // Replace with the fields you want to select
             }])->find($inputData['project_id']);
@@ -309,7 +310,8 @@ class ProjectsController extends Controller
                         "project_id" => $inputData['project_id'],
                         "check_id" => $data->id,
                         "hazmat_id" => $value,
-                        "type" => $tableTypes[$value]
+                        "type" => $tableTypes[$value],
+                        "check_type" => $inputData['type']
                     ];
 
                     // Check if there's an image for the current suspected hazmat

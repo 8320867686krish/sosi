@@ -13,5 +13,7 @@ class Hazmat extends Model
 
     protected $hidden = ['created_at', 'updated_at', 'color'];
 
-    
+    public function checkHasHazmats(){
+        return $this->hasMany(CheckHasHazmat::class);
+    }
 }
