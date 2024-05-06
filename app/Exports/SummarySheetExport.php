@@ -24,7 +24,7 @@ class SummarySheetExport implements FromView, WithTitle
     public function view(): View
     {
         return view('exports.summary_report', [
-            'projects' => $this->collection,
+            'hazmats' => $this->collection,
         ]);
     }
 
