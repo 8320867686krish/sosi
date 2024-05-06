@@ -286,6 +286,7 @@ class ProjectsController extends Controller
             $suspectedHazmatId = $request->input('hasid');
             $tableTypes = $request->input('table_type');
             $images = $request->file('image');
+
             $projectDetail = Projects::with(['client' => function ($query) {
                 $query->select('id', 'manager_initials'); // Replace with the fields you want to select
             }])->find($inputData['project_id']);

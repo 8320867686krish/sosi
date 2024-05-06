@@ -33,12 +33,12 @@
             @foreach($hazmats as $hazmat)
                 <tr>
                     <td></td>
-                    <td style="border: 2px solid #000000" width="12" >{{ $hazmat->table_type }}</td>
+                    <td style="border: 2px solid #000000" width="12">{{ $hazmat->table_type }}</td>
                     <td style="border: 2px solid #000000">{{ $hazmat->short_name }}</td>
                     <td style="border: 2px solid #000000" width="40">{{ $hazmat->name }}</td>
                     <td style="border: 2px solid #000000">83</td>
                     <td style="border: 2px solid #000000">72</td>
-                    <td style="border: 2px solid #000000">155</td>
+                    <td style="border: 2px solid #000000">{{ $hazmat->check_type_count }}</td>
                 </tr>
             @endforeach
         </tbody>
