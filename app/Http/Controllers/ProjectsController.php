@@ -14,6 +14,7 @@ use App\Models\Laboratory;
 use App\Models\Projects;
 use App\Models\ProjectTeam;
 use App\Models\User;
+use App\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -53,6 +54,7 @@ class ProjectsController extends Controller
 
     public function projectView($project_id)
     {
+       
         $clients = Client::orderBy('id', 'desc')->get(['id', 'manager_name', 'manager_initials']);
         $isBack = 0;
         if (session('back') == 1) {
@@ -79,9 +81,9 @@ class ProjectsController extends Controller
 
         if ($project) {
             $project->decks = $project->decks()->orderBy('id', 'desc')->get();
-            $project->checks = $project->checks()->with('check_hazmats:id,short_name')->orderBy('id', 'desc')->get();
+            $project->checks = $project->checks()->with('check_hazmats.hazmat')->orderBy('id', 'desc')->get();
         }
-
+   
         $laboratory = Laboratory::where('project_id', $project_id)->get();
         $project['imagePath'] = $project->image != null ? $project->image : asset('assets/images/giphy.gif');
 
@@ -195,7 +197,7 @@ class ProjectsController extends Controller
     {
         try {
             $inputData = $request->input();
-
+           
             ProjectTeam::where('project_id', $inputData['project_id'])->delete();
 
             if (@$inputData['user_id']) {
@@ -209,7 +211,11 @@ class ProjectsController extends Controller
                     ]);
                 }
             }
+            if(@$inputData['project']){
+                $savData = $inputData['project'];
 
+                Projects::where(['id' => $inputData['id']])->update($savData);
+            }
             return response()->json(['isStatus' => true, 'message' => 'Project assign successfully!!']);
         } catch (Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);
@@ -356,8 +362,9 @@ class ProjectsController extends Controller
 
             if (!empty($inputData['deck_id'])) {
                 $checks = Checks::where('deck_id', $inputData['deck_id'])->get();
-                $check = Checks::with('check_hazmats')->where('id', $data->id)->first();
-                $trtd = view('check.checkTrTd', compact('check'))->render();
+                $project = Projects::with('checks.check_hazmats.hazmat')->find($inputData['project_id']);
+                $trtd = view('projects.allcheckList', compact('project'))->render();
+              
                 $htmllist = view('check.checkList', compact('checks'))->render();
             }
 

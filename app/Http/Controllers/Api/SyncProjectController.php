@@ -30,7 +30,7 @@ class SyncProjectController extends Controller
         $decks = Deck::where('project_id', $projectId)->get();
         $checks = Checks::where('project_id', $projectId)->get();
         $checkImages = CheckImage::where('project_id', $projectId)->get();
-        return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages, 'clients' => $client]);
+        return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages]);
     }
 
     public function createZip(Request $request)
@@ -56,7 +56,7 @@ class SyncProjectController extends Controller
                 }
                 $zip->close();
             }
-            $downLoadFile = asset('images/projects/4.zip');
+           
 
             return response()->json(['isStatus' => true, 'message' => 'Successfully zip download', 'zipPath' => $downLoadFile]);
         } else {
@@ -73,8 +73,6 @@ class SyncProjectController extends Controller
                 ->pluck('image')->toArray();
 
             $allImages = array_merge($checkImages, $decks);
-            return response()->json(['isStatus' => true, 'message' => 'Successfully zip download', 'zipPath' => $downLoadFile]);
-
             if (@$allImages) {
                 $zip->open($zipFilePath, ZipArchive::CREATE);
 

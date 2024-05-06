@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class CheckHasHazmat extends Model
 {
     use HasFactory;
-
+  
     protected $fillable = ["project_id", "check_id", "hazmat_id", "image", "type", "check_type"];
 
     public function getImageAttribute($value){

@@ -1,6 +1,6 @@
 <div class="email-head">
     <div class="email-head-subject">
-        <div class="title"><span>Laboratory</span>
+        <div class="title"><span>Attachment</span>
             <div style="float:right">
                 <button class="btn btn-primary" id="AddLaboratory">Add</button>
             </div>

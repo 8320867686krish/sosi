@@ -115,7 +115,10 @@
                             <a href="#attachment_list"><span class="icon"><i
                                         class="fas fa-fw fa-briefcase"></i></span>Attachment</a>
                         </li>
-                      
+                        <li>
+                            <a href="#onboard_survey"><span class="icon"><i
+                                        class="fas fa-fw fa-envelope"></i></span>Onboard Survey</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -402,24 +405,161 @@
         </div>
 
         <div class="main-content container-fluid p-0" id="assign_project">
-          
+            <div class="email-head">
                 <div class="email-head-subject">
                     <div class="title"><span>OnBoard Survey Plan</span>
-                   
                     </div>
-            </div>
-           
-                <div class="row">
-                @include('projects.surveyPlan')
                 </div>
-           
+            </div>
+            <div class="email-body">
+                <div class="row">
+                    <div class="col-8 offset-2">
+                        <div class="alert alert-success sucessteamMsg" role="alert" style="display: none;">
+                            Save Successfully!!<a href="#" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </a>
+                        </div>
+                        <form method="post" action="#" class="needs-validation" novalidate id="teamsForm">
+                            @csrf
+                            <input type="hidden" name="project_id" value="{{ $project->id ?? '' }}">
+                            <div class="form-group">
+                                <label for="project_no">User</label>
+                                <select
+                                    class="selectpicker show-tick form-control form-control-lg @error('user_id') is-invalid @enderror"
+                                    name="user_id[]" id="user_id" multiple data-live-search="true"
+                                    data-actions-box="true" {{ $readonly }}>
+                                    @if ($users->count() > 0)
+                                        @foreach ($users as $user)
+                                            @if (in_array($user->id, $project->user_id))
+                                                <option value="{{ $user->id }}" selected>
+                                                    {{ $user->name }}
+                                                </option>
+                                            @else
+                                                <option value="{{ $user->id }}">
+                                                    {{ $user->name }}
+                                                </option>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="assign_date">Assign Date</label>
+                                <input type="date"
+                                    class="form-control form-control-lg  @error('assign_date') is-invalid @enderror"
+                                    id="assign_date" value="{{ old('assign_date', $project->assign_date[0] ?? '') }}"
+                                    name="assign_date" autocomplete="off" onchange="removeInvalidClass(this)"
+                                    {{ $readonly }}>
+                            </div>
+                            <div class="form-group">
+                                <label for="assign_date">End Date</label>
+                                <input type="date"
+                                    class="form-control form-control-lg @error('end_date') is-invalid @enderror"
+                                    id="end_date" value="{{ old('end_date', $project->end_date[0] ?? '') }}"
+                                    name="end_date" autocomplete="off" onchange="removeInvalidClass(this)"
+                                    {{ $readonly }}>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i
+                                                class="fas fa-arrow-left"></i> <b>Back</b></a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        @can('projects.edit')
+                                            <button class="btn btn-primary float-right formteamButton"
+                                                type="button">Save</button>
+                                        @endcan
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="main-content container-fluid p-0" id="attachment_list">
             @include('projects.attachment')
         </div>
 
-      
+        <div class="main-content container-fluid p-0" id="onboard_survey">
+            <div class="email-head">
+                <div class="email-head-subject">
+                    <div class="title"><span>Onboard Survey</span>
+                    </div>
+                </div>
+            </div>
+            <div class="email-body">
+                <div class="row">
+                    <div class="col-8 offset-2">
+                        <div class="alert alert-success sucessSurveylMsg" role="alert" style="display: none" ;>
+                            Save Successfully!!<a href="#" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </a>
+                        </div>
+                        <form method="post" action="#" class="needs-validation" novalidate id="SurveyForm">
+                            @csrf
+                            <input type="hidden" name="id" value="{{ $project->id ?? '' }}">
+                            <div class="form-group">
+                                <label for="project_no">Survey Location Name</label>
+                                <input type="text"
+                                    class="form-control  form-control-lg @error('survey_location_name') is-invalid @enderror"
+                                    id="survey_location_name"
+                                    value="{{ old('survey_location_name', $project->survey_location_name ?? '') }}"
+                                    name="survey_location_name" placeholder="Survey Location Name" autocomplete="off"
+                                    onchange="removeInvalidClass(this)" {{ $readonly }}>
+                            </div>
+                            <div class="form-group">
+                                <label for="additional_hazmats">Survey Location Address</label>
+                                <input type="text"
+                                    class="form-control form-control-lg @error('survey_location_address') is-invalid @enderror"
+                                    id="survey_location_address"
+                                    value="{{ old('survey_location_address', $project->survey_location_address ?? '') }}"
+                                    name="survey_location_address" placeholder="Survey Location Address..."
+                                    autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                            </div>
+                            <div class="form-group">
+                                <label for="client_name">Survey Type</label>
+                                <input type="text"
+                                    class="form-control form-control-lg @error('survey_type') is-invalid @enderror"
+                                    id="survey_type" name="survey_type"
+                                    value="{{ old('survey_type', $project->survey_type ?? '') }}"
+                                    placeholder="Survey Type..." autocomplete="off" onchange="removeInvalidClass(this)"
+                                    {{ $readonly }}>
+                            </div>
+                            <div class="form-group">
+                                <label for="survey_date">Survey Date</label>
+                                <input type="date"
+                                    class="form-control form-control-lg @error('survey_date') is-invalid @enderror"
+                                    id="survey_date" value="{{ old('survey_date', $project->survey_date ?? '') }}"
+                                    name="survey_date" placeholder="Survey Date.." autocomplete="off"
+                                    onchange="removeInvalidClass(this)" {{ $readonly }}>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <a href="{{ route('projects') }}" class="btn pl-0" type="button"><i
+                                                class="fas fa-arrow-left"></i> <b>Back</b></a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        @can('projects.edit')
+                                            <button class="btn btn-primary float-right SurveyFormButton"
+                                                type="button">Save</button>
+                                        @endcan
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" data-backdrop="static" id="checkDataAddModal" tabindex="-1" role="dialog"
             aria-labelledby="checkDataAddModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document" style="width: 50% !important; max-width: none !important;">
@@ -715,12 +855,14 @@
                 $('#ship_particulars').hide();
                 $('#check_list').hide();
                 $('#assign_project').hide();
+                $('#onboard_survey').hide();
                 $('#create_vscp').show();
                 $('#laboratory_list').hide();
             } else {
                 $('#ship_particulars').show();
                 $('#check_list').hide();
                 $('#assign_project').hide();
+                $('#onboard_survey').hide();
                 $('#create_vscp').hide();
                 $('#laboratory_list').hide();
             }
@@ -747,8 +889,37 @@
                 $('.alert-success').fadeOut();
             }, 15000);
 
-           
-          
+            $(".SurveyFormButton").click(function() {
+                $('span').html("");
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('detail/save') }}",
+                    data: $("#SurveyForm").serialize(),
+                    success: function(msg) {
+                        $(".sucessSurveylMsg").show();
+                    }
+                });
+            });
+
+            $(".formteamButton").click(function() {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('detail/assignProject') }}",
+                    data: $("#teamsForm").serialize(),
+                    success: function(msg) {
+                        $(".sucessteamMsg").text(msg.message);
+                        $(".sucessteamMsg").show();
+                    },
+                    error: function(err) {
+                        console.log(err);
+                    },
+                    complete: function() {
+                        $(".formSubmitBtn").hide();
+                    }
+                });
+            });
+
             $(".formgenralButton").click(function() {
                 $('span').html("");
 
