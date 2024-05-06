@@ -56,7 +56,7 @@ class SyncProjectController extends Controller
                 }
                 $zip->close();
             }
-            $downLoadFile = asset('images/projects/4.zip');
+           
 
             return response()->json(['isStatus' => true, 'message' => 'Successfully zip download', 'zipPath' => $downLoadFile]);
         } else {
