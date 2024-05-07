@@ -2,40 +2,41 @@
     <div class="email-head-subject">
         <div class="title"><span>Attachment</span>
             <div style="float:right">
-                <button class="btn btn-primary" id="AddLaboratory">Add</button>
+                <button class="btn btn-primary" id="AddAttachment">Add</button>
             </div>
         </div>
     </div>
 </div>
 <div class="row mt-4 loadView">
-   @include('projects.laboratoryAjax',compact('laboratory'))
+    @include('projects.attachmentAjax',compact('attachment'))
 </div>
 
-<div class="modal fade" data-backdrop="static" id="laboratoryModal" tabindex="-1" role="dialog" aria-labelledby="laboratoryModalLabel" aria-hidden="true">
+<div class="modal fade" data-backdrop="static" id="attachmentModel" tabindex="-1" role="dialog" aria-labelledby="attachmentModelLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Laboratory Add</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Attachment Add</h5>
                 <a href="#" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </a>
             </div>
-            <form method="post" id="laboratoryForm">
+            <form method="post" class="needs-validation" novalidate id="attachmentForm" enctype="multipart/form-data">
+                @csrf
+
                 <div class="modal-body">
-                    @csrf
                     <input type="hidden" name="id" id="laboretryid">
                     <input type="hidden" name="project_id" id="project_id" value="{{$project_id}}">
                     <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" name="name" class="form-control" required>
+                        <label for="name">Heading</label>
+                        <input type="text" id="heading" name="heading" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label for="name">Details</label>
-                        <textarea class="form-control" name="details" id="details" required></textarea>
+                        <label for="name">Documents</label>
+                        <input type="file" class="form-control" name="details" id="details" required>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="deckEditSubmitBtn">Save</button>
+                    <button type="submit" class="btn btn-primary" id="attachSubmitBtn">Save</button>
                 </div>
             </form>
         </div>
@@ -44,33 +45,33 @@
 @push('js')
 <!-- Include your JavaScript code here -->
 <script>
-    $("#AddLaboratory").click(function() {
-        $("#laboratoryModal").modal('show');
+    $("#AddAttachment").click(function() {
+        $("#attachmentModel").modal('show');
     });
-    $('#laboratoryForm').submit(function(event) {
-        let formData = $(this).serialize();
 
-        let form = $(this);
-
+    $('#attachmentForm').submit(function(e) {
+        e.preventDefault();
+        var form = $(this); // Get the form element
+        var formData = new FormData(form[0]); // Create FormData object from the form
         $.ajax({
             type: 'POST',
-            url: "{{ url('laboratory/save') }}",
+            url: "{{ url('attachment/save')}}",
             data: formData,
+            contentType: false,
+            processData: false,
             success: function(response) {
                 let deckData = response.deck;
                 if (response.status) {
                     form.trigger('reset');
+
                     $(".loadView").html(response.html)
-                    $("#laboratoryModal").modal('hide');
+                    $("#attachmentModel").modal('hide');
                 }
             },
             error: function(xhr, status, error) {
                 console.error(xhr.responseText);
             }
         });
-        return false;
     });
-   
-  
 </script>
 @endpush

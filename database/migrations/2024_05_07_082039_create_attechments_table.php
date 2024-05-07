@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('laboratories', function (Blueprint $table) {
+        Schema::create('attechments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('project_id')->nullable();
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
-            $table->string('name')->nullable();
-            $table->text('details')->nullable();
+            $table->string('heading')->nullable();
+            $table->text('documents')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('laboratories');
+        Schema::dropIfExists('attechments');
     }
 };
