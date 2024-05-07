@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AssignProjectRequest;
 use App\Http\Requests\ProjectDetailRequest;
 use App\Http\Requests\ProjectRequest;
 use App\Models\CheckHasHazmat;
@@ -10,7 +11,7 @@ use App\Models\Checks;
 use App\Models\Client;
 use App\Models\Deck;
 use App\Models\Hazmat;
-use App\Models\Laboratory;
+use App\Models\Attechments;
 use App\Models\Projects;
 use App\Models\ProjectTeam;
 use App\Models\User;
@@ -84,7 +85,7 @@ class ProjectsController extends Controller
             $project->checks = $project->checks()->with('check_hazmats.hazmat')->orderBy('id', 'desc')->get();
         }
    
-        $laboratory = Laboratory::where('project_id', $project_id)->get();
+        $attachment = Attechments::where('project_id', $project_id)->get();
         $project['imagePath'] = $project->image != null ? $project->image : asset('assets/images/giphy.gif');
 
         $project['user_id'] = $project->project_teams->pluck('user_id')->toArray();
@@ -106,7 +107,7 @@ class ProjectsController extends Controller
             $hazmats[$type] = Hazmat::where('table_type', $type)->get(['id', 'name', 'table_type']);
         }
 
-        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id, 'isBack' =>  $isBack, "hazmats" => $hazmats, 'laboratory' => $laboratory]);
+        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id, 'isBack' =>  $isBack, "hazmats" => $hazmats, 'attachment' => $attachment]);
     }
 
     public function projectInfo($project_id)
@@ -193,7 +194,7 @@ class ProjectsController extends Controller
         return response()->json(['isStatus' => true, 'message' => 'successfully save details !!']);
     }
 
-    public function assignProject(Request $request)
+    public function assignProject(AssignProjectRequest $request)
     {
         try {
             $inputData = $request->input();
@@ -569,13 +570,28 @@ class ProjectsController extends Controller
         }
     }
 
-    public function laboratorySave(Request $request)
+    public function attachmentSave(Request $request)
     {
         $post = $request->input();
-        $post['user_id'] = Auth::user()->id;
-        Laboratory::updateOrCreate(['id' => $post['id']], $post);
-        $laboratory = Laboratory::where('project_id', $post['project_id'])->get();
-        $html = view('projects.laboratoryAjax', compact('laboratory'))->render();
+        if(@$post['id']){
+            if ($request->hasFile('details')) {
+                $data = Attechments::find($post['id']);
+                $imagePath =  public_path("images/attachment" ."/". $post['project_id'] . "/".$data['documents']);
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
+        }
+        if ($request->hasFile('details')) {
+            $file = $request->file('details');
+            $imageName = time() . rand(10, 99) . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images/attachment/'.$post['project_id']), "/".$imageName);
+        }
+        unset($post['documents']);
+        $post['documents'] =  $imageName;
+        Attechments::updateOrCreate(['id' => $post['id']], $post);
+        $attachment = Attechments::where('project_id', $post['project_id'])->get();
+        $html = view('projects.attachmentAjax', compact('attachment'))->render();
         return response()->json([
             'status' => true,
             'html' => $html,
@@ -583,13 +599,19 @@ class ProjectsController extends Controller
         ]);
     }
 
-    public function laboratoryRemove($id)
+    public function attachmentRemove($id)
     {
-        $lab =  Laboratory::find($id);
-        $proid = $lab['project_id'];
-        $lab->delete();
-        $laboratory = Laboratory::where('project_id', $proid)->get();
-        $html = view('projects.laboratoryAjax', compact('laboratory'))->render();
+        $attachment =  Attechments::find($id);
+        $proid = $attachment['project_id'];
+        $imagePath =  public_path("images/attachment" ."/". $proid . "/".$attachment['documents']);
+        // Check if the image file exists before attempting to delete
+
+        if (file_exists($imagePath)) {
+            unlink($imagePath);
+        }
+        $attachment->delete();
+        $attachment = Attechments::where('project_id', $proid)->get();
+        $html = view('projects.attachmentAjax', compact('attachment'))->render();
         return response()->json([
             'status' => true,
             'html' => $html,

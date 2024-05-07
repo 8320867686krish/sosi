@@ -33,7 +33,7 @@
                                 <input type="hidden" name="project_id" value="{{ $project->id ?? '' }}">
                                 <div class="form-group col-12">
                                     <label for="project_no">User</label>
-                                    <select class="selectpicker show-tick form-control form-control-lg @error('user_id') is-invalid @enderror" name="user_id[]" id="user_id" multiple data-live-search="true" data-actions-box="true" {{ $readonly }}>
+                                    <select class="selectpicker show-tick form-control form-control-lg @error('user_id') is-invalid @enderror" name="user_id[]" id="user_id" multiple data-live-search="true" data-actions-box="true" {{ $readonly }} onchange="removeInvalidClass(this)">
                                         @if ($users->count() > 0)
                                         @foreach ($users as $user)
                                         @if (in_array($user->id, $project->user_id))
@@ -48,14 +48,20 @@
                                         @endforeach
                                         @endif
                                     </select>
+                                    <div class="invalid-feedback error" id="user_idError"></div>
+
                                 </div>
                                 <div class="form-group col-6">
                                     <label for="assign_date">Assign Date</label>
                                     <input type="date" class="form-control form-control-lg  @error('assign_date') is-invalid @enderror" id="assign_date" value="{{ old('assign_date', $project->assign_date[0] ?? '') }}" name="assign_date" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                    <div class="invalid-feedback error" id="assign_dateError"></div>
+                                    
                                 </div>
                                 <div class="form-group col-6">
                                     <label for="assign_date">End Date</label>
-                                    <input type="date" class="form-control form-control-lg @error('end_date') is-invalid @enderror" id="end_date" value="{{ old('end_date', $project->end_date[0] ?? '') }}" name="end_date" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                    <input type="date" class="form-control form-control-lg @error('end_date') is-invalid @enderror" id="end_date" value="{{ old('end_date', $project->end_date[0] ?? '') }}" name="end_date" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }} >
+                                    <div class="invalid-feedback error" id="end_dateError"></div>
+
                                 </div>
                             </div>
                         </div>
@@ -144,7 +150,13 @@
                 $(".sucessSurveylMsg").show();
             },
             error: function(err) {
-                console.log(err);
+                var errors = err.responseJSON.errors;
+                $("#collapseSeven").show();
+                $.each(errors, function(field, messages) {
+                    $('#' + field + 'Error').text(messages[0]).show();
+                    $('[name="' + field + '"]').addClass('is-invalid');
+
+                });
             },
             complete: function() {
                 $(".formSubmitBtn").hide();
