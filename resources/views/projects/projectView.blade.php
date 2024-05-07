@@ -81,7 +81,10 @@
         <aside class="page-aside" id="page-aside">
             <div class="aside-content">
                 <div class="aside-header">
-                    <button class="navbar-toggle" type="button" style="display: block !important;"><span class="icon" style="cursor: pointer; font-size: 16px !important;"><i class="fas fa-bars" id="pageNavbarToggleBtn"></i></span></button><span class="title" style="font-size: 20px;">Project Information</span>
+                    <button class="navbar-toggle" type="button"><span class="icon"
+                            style="cursor: pointer; font-size: 16px !important;"><i class="fas fa-bars"
+                                id="pageNavbarToggleBtn"></i></span></button><span class="title"
+                        style="font-size: 20px;">Project Information</span>
                     <p class="description">{{ $project->ship_name ?? '' }}</p>
                 </div>
                 <div class="aside-nav collapse">
@@ -706,16 +709,18 @@
             let isSidebarVisible = true;
 
             $(document).on("click", "#pageNavbarToggleBtn", function() {
-                if (isSidebarVisible) {
-                    sidebar.css("left", "-250px");
-                    $('#page-aside').css("left", "8px");
-                    $('.dashboard-wrapper').css("margin-left", "8px");
-                } else {
-                    sidebar.css("left", "0");
-                    $('#page-aside').css("left", "265px");
-                    $('.dashboard-wrapper').css("margin-left", "264px");
+                if ($(window).width() >= 768) {
+                    if (isSidebarVisible) {
+                        sidebar.css("left", "-250px");
+                        $('#page-aside').css("left", "8px");
+                        $('.dashboard-wrapper').css("margin-left", "8px");
+                    } else {
+                        sidebar.css("left", "0");
+                        $('#page-aside').css("left", "265px");
+                        $('.dashboard-wrapper').css("margin-left", "264px");
+                    }
+                    isSidebarVisible = !isSidebarVisible;
                 }
-                isSidebarVisible = !isSidebarVisible;
             });
 
             $('#pdfModal').on('hidden.bs.modal', function() {
