@@ -150,8 +150,17 @@
             </tr>
             <tr>
                 <td>&nbsp;</td>
-                <td colspan="3" style="border: 2px solid #000000">Laboratory</td>
-                <td colspan="4" style="border: 2px solid #000000">Lorem ipsum dolor sit amet consectetur adipisicing elit.</td>
+                <td colspan="7" align="center" style="border: 2px solid #000000"><b>Laboratory</b></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td colspan="3" style="border: 2px solid #000000">Laboratory1</td>
+                <td colspan="4" style="border: 2px solid #000000">{{$project->laboratorie1}}</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td colspan="3" style="border: 2px solid #000000">Laboratory2</td>
+                <td colspan="4" style="border: 2px solid #000000">{{$project->laboratorie2}}</td>
             </tr>
         </tbody>
     </table>
