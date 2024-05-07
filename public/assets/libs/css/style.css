@@ -5800,7 +5800,7 @@ Vertical Timeline - by CodyHouse.co
 
 .aside-header .navbar-toggle {
     background: 0 0;
-    display: none;
+    /* display: none; */
     outline: 0;
     border: 0;
     padding: 0 11px 0 0;

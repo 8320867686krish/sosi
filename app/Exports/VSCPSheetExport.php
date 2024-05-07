@@ -37,7 +37,7 @@ class VSCPSheetExport implements FromView, WithTitle, WithStyles
     public function styles(Worksheet $sheet)
     {
         // Set wrap text for all cells
-        $sheet->getStyle($sheet->calculateWorksheetDimension())->getAlignment()->setWrapText(true);
+        // $sheet->getStyle($sheet->calculateWorksheetDimension())->getAlignment()->setWrapText(true);
 
         // Loop through each column and set the width based on content
         foreach ($sheet->getColumnIterator() as $column) {

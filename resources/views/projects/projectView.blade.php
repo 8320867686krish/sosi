@@ -8,8 +8,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/select.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/fixedHeader.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/fancybox/fancybox.min.css') }}">
-    <link rel="stylesheet" type="text/css"
-        href="{{ asset('//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css') }}">
+
     <style>
         #pdf-container {
             position: relative;
@@ -78,13 +77,11 @@
     </style>
 @endsection
 @section('content')
-    <div class="container-fluid dashboard-content">
-        <aside class="page-aside">
+    <div class="container-fluid dashboard-content" id="projectViewContent">
+        <aside class="page-aside" id="page-aside">
             <div class="aside-content">
                 <div class="aside-header">
-                    <button class="navbar-toggle" data-target=".aside-nav" data-toggle="collapse" type="button"><span
-                            class="icon"><i class="fas fa-caret-down"></i></span></button><span class="title">Project
-                        Information</span>
+                    <button class="navbar-toggle" type="button" style="display: block !important;"><span class="icon" style="cursor: pointer; font-size: 16px !important;"><i class="fas fa-bars" id="pageNavbarToggleBtn"></i></span></button><span class="title" style="font-size: 20px;">Project Information</span>
                     <p class="description">{{ $project->ship_name ?? '' }}</p>
                 </div>
                 <div class="aside-nav collapse">
@@ -378,7 +375,8 @@
                             <div class="title"><span>Check List</span></div>
                         </div>
                         <div class="col-6">
-                            <a href="{{ route('excelReport', ['project_id' => $project->id]) }}" class="btn btn-primary float-right">Export</a>
+                            <a href="{{ route('excelReport', ['project_id' => $project->id]) }}"
+                                class="btn btn-primary float-right">Export</a>
                         </div>
                     </div>
                 </div>
@@ -700,11 +698,25 @@
             });
         }
 
-
         $(document).ready(function() {
             const url = window.location.href;
             const segments = url.split('/');
             const projectId = segments[segments.length - 1];
+            let sidebar = $("#mainSidebar");
+            let isSidebarVisible = true;
+
+            $(document).on("click", "#pageNavbarToggleBtn", function() {
+                if (isSidebarVisible) {
+                    sidebar.css("left", "-250px");
+                    $('#page-aside').css("left", "8px");
+                    $('.dashboard-wrapper').css("margin-left", "8px");
+                } else {
+                    sidebar.css("left", "0");
+                    $('#page-aside').css("left", "265px");
+                    $('.dashboard-wrapper').css("margin-left", "264px");
+                }
+                isSidebarVisible = !isSidebarVisible;
+            });
 
             $('#pdfModal').on('hidden.bs.modal', function() {
                 $("#img-container").empty();
