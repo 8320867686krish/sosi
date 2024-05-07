@@ -94,8 +94,11 @@ Route::middleware('auth')->group(function () {
             Route::get('projects/check/{id}', 'deleteCheck')->name('check.delete');
             Route::post('laboratory/save','laboratorySave')->name('laboratorySave');
             Route::delete('laboratory/remove/{laboratoryRemove}','laboratoryRemove');
-
         });
+
+        Route::get('excelReport/{project_id}', [ReportContoller::class, 'exportDataInExcel'])->name('excelReport');
+
+        Route::get('generatorQRcode/{deckId}', [QrCodeController::class, 'show'])->name('generatorQRcode');
     });
 
     Route::middleware('can:users')->group(function () {
@@ -108,10 +111,6 @@ Route::middleware('auth')->group(function () {
             Route::post('changeUserStatus', 'changeUserStatus')->name('change.isVerified');
         });
     });
-
-    Route::get('generatorQRcode/{deckId}', [QrCodeController::class, 'show'])->name('generatorQRcode');
-
-    Route::get('excelReport/{project_id}', [ReportContoller::class, 'exportDataInExcel']);
 
     Route::get('/viewQRCode', function () {
         return view('pdfView');

@@ -5,8 +5,10 @@ namespace App\Exports;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class VSCPSheetExport implements FromView, WithTitle
+class VSCPSheetExport implements FromView, WithTitle, WithStyles
 {
     protected $collection;
 
@@ -30,5 +32,17 @@ class VSCPSheetExport implements FromView, WithTitle
     public function title(): string
     {
         return 'VSCP';
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+        // Set wrap text for all cells
+        $sheet->getStyle($sheet->calculateWorksheetDimension())->getAlignment()->setWrapText(true);
+
+        // Loop through each column and set the width based on content
+        foreach ($sheet->getColumnIterator() as $column) {
+            $columnIndex = $column->getColumnIndex();
+            $sheet->getColumnDimension($columnIndex)->setAutoSize(true);
+        }
     }
 }
