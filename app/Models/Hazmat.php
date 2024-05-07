@@ -16,4 +16,12 @@ class Hazmat extends Model
     public function checkHasHazmats(){
         return $this->hasMany(CheckHasHazmat::class);
     }
+
+    public function checkHasHazmatsSample(){
+        return $this->hasMany(CheckHasHazmat::class)->where('check_type', 'sample');
+    }
+
+    public function checkHasHazmatsVisual(){
+        return $this->hasMany(CheckHasHazmat::class)->where('check_type', 'visual');
+    }
 }

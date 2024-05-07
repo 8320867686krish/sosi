@@ -115,7 +115,7 @@
                             <a href="#attachment_list"><span class="icon"><i
                                         class="fas fa-fw fa-briefcase"></i></span>Attachment</a>
                         </li>
-                      
+
                     </ul>
                 </div>
             </div>
@@ -196,8 +196,8 @@
                                 <input type="text" class="form-control  @error('manager_name') is-invalid @enderror"
                                     id="manager_name"
                                     value="{{ old('manager_name', $project->client->manager_name ?? '') }}"
-                                   placeholder="Manager Name..." autocomplete="off"
-                                    onchange="removeInvalidClass(this)" readonly>
+                                    placeholder="Manager Name..." autocomplete="off" onchange="removeInvalidClass(this)"
+                                    readonly>
                                 @error('manager_name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -373,13 +373,19 @@
             <div id="showCheckImgMsg"></div>
             <div class="email-head">
                 <div class="email-head-subject">
-                    <div class="title"><span>Check List</span>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="title"><span>Check List</span></div>
+                        </div>
+                        <div class="col-6">
+                            <a href="{{ route('excelReport', ['project_id' => $project->id]) }}" class="btn btn-primary float-right">Export</a>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="email-body">
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered first"  width="100%">
+                    <table class="table table-striped table-bordered first" width="100%">
                         <thead>
                             <tr>
                                 <th>Check</th>
@@ -393,33 +399,33 @@
                             </tr>
                         </thead>
                         <tbody id="checkListTable">
-                        @include('projects.allcheckList')
+                            @include('projects.allcheckList')
                         </tbody>
                     </table>
                 </div>
-              
+
             </div>
         </div>
 
         <div class="main-content container-fluid p-0" id="assign_project">
-          
-                <div class="email-head-subject">
-                    <div class="title"><span>OnBoard Survey Plan</span>
-                   
-                    </div>
-            </div>
-           
-                <div class="row">
-                @include('projects.surveyPlan')
+
+            <div class="email-head-subject">
+                <div class="title"><span>OnBoard Survey Plan</span>
+
                 </div>
-           
+            </div>
+
+            <div class="row">
+                @include('projects.surveyPlan')
+            </div>
+
         </div>
 
         <div class="main-content container-fluid p-0" id="attachment_list">
             @include('projects.attachment')
         </div>
 
-      
+
         <div class="modal fade" data-backdrop="static" id="checkDataAddModal" tabindex="-1" role="dialog"
             aria-labelledby="checkDataAddModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document" style="width: 50% !important; max-width: none !important;">
@@ -434,7 +440,8 @@
 
                     <form method="post" action="{{ route('addImageHotspots') }}" id="checkDataAddForm"
                         enctype="multipart/form-data">
-                        <div class="modal-body" style="overflow-x: auto; overflow-y: auto; max-height: calc(81vh - 1rem);">
+                        <div class="modal-body"
+                            style="overflow-x: auto; overflow-y: auto; max-height: calc(81vh - 1rem);">
                             @csrf
                             <input type="hidden" id="id" name="id">
                             <input type="hidden" id="project_id" name="project_id"
@@ -747,8 +754,8 @@
                 $('.alert-success').fadeOut();
             }, 15000);
 
-           
-          
+
+
             $(".formgenralButton").click(function() {
                 $('span').html("");
 
@@ -1148,7 +1155,7 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>`;
-                        //    $(`#checkListTr_${response.id}`).replaceWith(response.trtd);
+                            //    $(`#checkListTr_${response.id}`).replaceWith(response.trtd);
                             $("#showCheckImgMsg").html(messages);
                             $('#showCheckImgMsg').fadeIn().delay(20000).fadeOut();
                             $("#checkDataAddForm")[0].reset();

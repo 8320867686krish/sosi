@@ -5,7 +5,6 @@ namespace App\Exports;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\FromView;
-use Illuminate\Support\Collection;
 
 class CoverSheetExport implements FromView, WithTitle
 {
