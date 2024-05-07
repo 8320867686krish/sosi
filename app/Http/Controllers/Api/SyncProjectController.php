@@ -24,7 +24,7 @@ class SyncProjectController extends Controller
         $project_id = $request->input('project_id');
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $image->move(public_path("images/projects/appImages/".$project_id), $image);
+            $image->move(public_path("images/appImages/".$project_id), $image);
             return response()->json(['isStatus' => true, 'message' => 'successfully upload file .']);
 
         }else{
