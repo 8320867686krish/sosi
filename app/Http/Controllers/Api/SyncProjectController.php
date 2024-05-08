@@ -30,7 +30,7 @@ class SyncProjectController extends Controller
             $zipFile = $request->file('image');
     
             // Create a unique extraction path
-            $extractPath = $project_id.'/' . uniqid();
+            $extractPath = $project_id;
     
             // Initialize ZipArchive
             $zip = new ZipArchive;
