@@ -22,7 +22,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
         if (Schema::hasTable('permissions')) {
             $allPermissions = Permission::select('id','group_type','name','is_show')->get()->toArray();
             // Share permissions with all views
