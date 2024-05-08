@@ -30,14 +30,13 @@ class SyncProjectController extends Controller
             $zipFile = $request->file('image');
     
             // Create a unique extraction path
-            $extractPath = 'extracted/' . uniqid();
+            $extractPath = $project_id.'/' . uniqid();
     
             // Initialize ZipArchive
             $zip = new ZipArchive;
     
             // Check if the zip file can be opened
             if ($zip->open($zipFile) === true) {
-                echo "calll";
                 // Extract the zip file
                 if ($zip->extractTo('public/images/appImages/' . $extractPath)) {
                     $zip->close();
