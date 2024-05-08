@@ -130,7 +130,7 @@
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="project_no">Ship Initiate</label>
+                                        <label for="project_no">Ship Initiate <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('ship_initiate') is-invalid @enderror"
                                             id="ship_initiate" name="ship_initiate" placeholder="Ship Initiate..."
                                             value="{{ old('ship_initiate', $project->ship_initiate ?? '') }}"  onchange="removeInvalidClass(this)">

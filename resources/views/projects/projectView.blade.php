@@ -108,8 +108,7 @@
                                 List</a>
                         </li>
                         <li>
-                            <a href="#assign_project"><span class="icon"><i
-                                        class="fas fa-fw fa-briefcase"></i></span>OnBoard Survey Plan</a>
+                            <a href="#assign_project"><span class="icon"><i class="fas fa-fw fa-briefcase"></i></span>OnBoard Survey Plan</a>
                         </li>
                         <li>
                             <a href="#attachment_list"><span class="icon"><i
@@ -158,22 +157,21 @@
                     <div class="row">
                         <div class="col-sm-12 col-md-6 col-lg-4">
                             <div class="form-group">
-                                <label for="ship_name">Ship Name</label>
+                                <label for="ship_name">Ship Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control  @error('ship_name') is-invalid @enderror"
                                     id="ship_name" value="{{ old('ship_name', $project->ship_name ?? '') }}"
                                     name="ship_name" placeholder="Ship Name..." autocomplete="off"
-                                    onchange="removeInvalidClass(this)" {{ $readonly }} required>
+                                    onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                <div class="invalid-feedback error" id="ship_nameError"></div>
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-6 col-lg-4">
                             <div class="form-group">
-                                <label for="imo_number">Ship IMO Number</label>
-                                <input type="text" class="form-control  @error('imo_number') is-invalid @enderror"
-                                    id="imo_number" name="imo_number" placeholder="IMO Number..."
+                                <label for="imo_number">Ship IMO Number <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control  @error('imo_number') is-invalid @enderror"
+                                    id="imo_number" name="imo_number" onchange="removeInvalidClass(this)"
                                     value="{{ old('imo_number', $project->imo_number ?? '') }}" {{ $readonly }}>
-                                @error('imo_number')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <div class="invalid-feedback error" id="imo_numberError"></div>
                             </div>
                         </div>
 
@@ -806,7 +804,8 @@
                         $(".sucessMsg").show();
                     },
                     error: function(xhr, status, error) {
-                        var errors = xhr.responseJSON.errors;
+                        let errors = xhr.responseJSON.errors;
+
                         if (errors) {
                             $.each(errors, function(field, messages) {
                                 $('#' + field + 'Error').text(messages[0]).show();

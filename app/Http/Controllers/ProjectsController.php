@@ -54,7 +54,7 @@ class ProjectsController extends Controller
 
     public function projectView($project_id)
     {
-       
+
         $clients = Client::orderBy('id', 'desc')->get(['id', 'manager_name', 'manager_initials']);
         $isBack = 0;
         if (session('back') == 1) {
@@ -83,7 +83,7 @@ class ProjectsController extends Controller
             $project->decks = $project->decks()->orderBy('id', 'desc')->get();
             $project->checks = $project->checks()->with('check_hazmats.hazmat')->orderBy('id', 'desc')->get();
         }
-   
+
         $laboratory = Laboratory::where('project_id', $project_id)->get();
         $project['imagePath'] = $project->image != null ? $project->image : asset('assets/images/giphy.gif');
 
@@ -197,7 +197,7 @@ class ProjectsController extends Controller
     {
         try {
             $inputData = $request->input();
-           
+
             ProjectTeam::where('project_id', $inputData['project_id'])->delete();
 
             if (@$inputData['user_id']) {
@@ -364,7 +364,7 @@ class ProjectsController extends Controller
                 $checks = Checks::where('deck_id', $inputData['deck_id'])->get();
                 $project = Projects::with('checks.check_hazmats.hazmat')->find($inputData['project_id']);
                 $trtd = view('projects.allcheckList', compact('project'))->render();
-              
+
                 $htmllist = view('check.checkList', compact('checks'))->render();
             }
 
