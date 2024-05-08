@@ -92,8 +92,9 @@ Route::middleware('auth')->group(function () {
             Route::get('check/{id}/image', 'checkBasedImage')->name('check.image');
 
             Route::get('projects/check/{id}', 'deleteCheck')->name('check.delete');
-            Route::post('laboratory/save','laboratorySave')->name('laboratorySave');
-            Route::delete('laboratory/remove/{laboratoryRemove}','laboratoryRemove');
+            Route::post('attachment/save','attachmentSave')->name('attachmentSave');
+            Route::delete('attachment/remove/{laboratoryRemove}','attachmentRemove');
+
         });
 
         Route::get('excelReport/{project_id}', [ReportContoller::class, 'exportDataInExcel'])->name('excelReport');

@@ -20,6 +20,24 @@ use PDO;
 class SyncProjectController extends Controller
 {
     //
+    public function zipUpload(Request $request){
+        $project_id = $request->input('project_id');
+        if ($request->hasFile('image')) {
+            $zipFile = $request->file('image');
+            $extractPath = 'extracted/'.uniqid();
+            $zip = new ZipArchive();
+            if($zip->open($zipFile) == true){
+                echo "callll";
+                $zip->extractTo('images/appImages/'.$project_id."/".$extractPath);
+            }
+          //  $image->move(public_path("images/appImages/".$project_id), $image);
+            return response()->json(['isStatus' => true, 'message' => 'successfully upload file .']);
+
+        }else{
+            return response()->json(['isStatus' => false, 'message' => 'please upload file .']);
+
+        }
+    }
     public function syncProject(Request $request)
     {
         $projectId = $request->input('projectId');
