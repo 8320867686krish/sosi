@@ -587,9 +587,10 @@ class ProjectsController extends Controller
             $file = $request->file('details');
             $imageName = time() . rand(10, 99) . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('images/attachment/'.$post['project_id']), "/".$imageName);
+            unset($post['documents']);
+            $post['documents'] =  $imageName;
         }
-        unset($post['documents']);
-        $post['documents'] =  $imageName;
+      
         Attechments::updateOrCreate(['id' => $post['id']], $post);
         $attachment = Attechments::where('project_id', $post['project_id'])->get();
         $html = view('projects.attachmentAjax', compact('attachment'))->render();

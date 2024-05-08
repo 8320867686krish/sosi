@@ -23,14 +23,17 @@ class SyncProjectController extends Controller
     public function zipUpload(Request $request)
     {
         // Extract project_id from request parameters
-        $project_id = $request->input('project_id');
-    
+        $projectId = $request->input('project_id');
+        $project = Projects::select('client_id')->find($projectId);
+        if(!$project){
+            return response()->json(['isStatus' => false, 'message' => 'Sorry project does not eist.']);
+        }
         // Check if a file named 'image' has been uploaded
         if ($request->hasFile('image')) {
             $zipFile = $request->file('image');
     
             // Create a unique extraction path
-            $extractPath = $project_id;
+            $extractPath = $projectId;
     
             // Initialize ZipArchive
             $zip = new ZipArchive;
