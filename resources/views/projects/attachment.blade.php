@@ -24,7 +24,7 @@
                 @csrf
 
                 <div class="modal-body">
-                    <input type="hidden" name="id" id="laboretryid">
+                    <input type="hidden" name="id" id="id">
                     <input type="hidden" name="project_id" id="project_id" value="{{$project_id}}">
                     <div class="form-group">
                         <label for="name">Heading</label>
@@ -33,6 +33,7 @@
                     <div class="form-group">
                         <label for="name">Documents</label>
                         <input type="file" class="form-control" name="details" id="details" required>
+                        <label class="documentsValue" style="display: none;"></label>
                     </div>
                 </div>
                 <div class="modal-footer">

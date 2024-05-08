@@ -23,8 +23,13 @@ class SyncProjectController extends Controller
     public function zipUpload(Request $request){
         $project_id = $request->input('project_id');
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $image->move(public_path("images/appImages/".$project_id), $image);
+            $zipFile = $request->file('image');
+            $extractPath = 'extracted/'.uniqid();
+            $zip = new ZipArchive();
+            if($zip->open($zipFile) == true){
+                $zip->extractTo('images/appImages/'.$project_id."/".$extractPath);
+            }
+          //  $image->move(public_path("images/appImages/".$project_id), $image);
             return response()->json(['isStatus' => true, 'message' => 'successfully upload file .']);
 
         }else{

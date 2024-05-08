@@ -398,24 +398,7 @@ class ApiController extends Controller
     {
         try {
 
-            // $validator = Validator::make($request->all(), [
-            //     'project_id' => 'required|exists:projects,id',
-            //     'deck_id' => 'required|exists:decks,id',
-            //     'type' => 'required',
-            //     'position_left' => 'required',
-            //     'position_top' => 'required'
-            // ]);
-
-            // $validator = Validator::make($request->all(), [
-            //     'project_id' => 'required|exists:projects,id',
-            //     'deck_id' => 'required|exists:decks,id',
-            //     'apiType' => 'required|in:check,location', // Ensure apiType is required and has either 'check' or 'location' value
-            //     'type' => 'required_if:apiType,check', // Require type only if apiType is 'check'
-            //     'position_left' => 'required_if:apiType,location', // Require position_left only if apiType is 'location'
-            //     'position_top' => 'required_if:apiType,location', // Require position_top only if apiType is 'location'
-            // ]);
-
-            $validator = Validator::make($request->all(), [
+           $validator = Validator::make($request->all(), [
                 'project_id' => 'required|exists:projects,id',
                 'deck_id' => 'required|exists:decks,id',
                 'position_left' => 'required', // Require position_left only if apiType is 'location'
