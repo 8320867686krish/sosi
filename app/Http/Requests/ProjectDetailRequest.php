@@ -25,9 +25,12 @@ class ProjectDetailRequest extends FormRequest
         if ($this->has('ship_name')) {
             $rules['ship_name'] = 'required';
         }
-        if ($this->has('ship_type')) {
-            $rules['ship_type'] = 'required';
+        if ($this->has('imo_number')) {
+            $rules['imo_number'] = 'required';
         }
+        // if ($this->has('ship_type')) {
+        //     $rules['ship_type'] = 'required';
+        // }
 
         $rules['image'] = 'image|mimes:jpeg,png,jpg|max:2048';
         return $rules;
@@ -36,7 +39,8 @@ class ProjectDetailRequest extends FormRequest
     {
         return [
             'ship_name.required' => 'please enter ship name',
-            'ship_type.required' => 'please enter ship type'
+            'imo_number.required' => 'please enter ship imo number',
+            // 'ship_type.required' => 'please enter ship type'
         ];
     }
 }

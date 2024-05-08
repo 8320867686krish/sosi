@@ -29,11 +29,19 @@
 
                                         $newPermissionName = str_replace('_', ' ', $permission['name']);
 
+                                        // $endsWithS = Str::endsWith(Request::segment(1), 's');
+                                        $string = Request::segment(1);
+                                        $endsWithS = substr($string, -1) === 's';
+
+                                        if (!$endsWithS) {
+                                            $string = $string . "s";
+                                        }
+
                                         if (request()->routeIs($permission['name'])) {
                                             $isActive = true;
                                         }
 
-                                        if (Request::segment(1) == $permission['name']) {
+                                        if ($string == $permission['name']) {
                                             $isActive = true;
                                         }
 
