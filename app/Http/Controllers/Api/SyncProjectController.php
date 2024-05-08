@@ -37,8 +37,9 @@ class SyncProjectController extends Controller
     
             // Check if the zip file can be opened
             if ($zip->open($zipFile) === true) {
+                echo "calll";
                 // Extract the zip file
-                if ($zip->extractTo('images/appImages/' . $project_id . '/' . $extractPath)) {
+                if ($zip->extractTo('images/appImages/' . $extractPath)) {
                     $zip->close();
     
                     // Get the original name of the zip file
