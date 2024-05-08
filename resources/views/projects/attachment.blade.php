@@ -31,6 +31,15 @@
                         <input type="text" id="heading" name="heading" class="form-control" required>
                     </div>
                     <div class="form-group">
+                        <label for="name">Attachment Type</label>
+                        <select name="attachment_type" id="attachment_type" class="form-control">
+                            <option value="">Selet Attachment Type</option>
+                            <option value="genral">Genral</option>
+                            <option value="shipPlan">Ship Plan</option>
+
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="name">Attachment File</label>
                         <input type="file" class="form-control" name="details" id="details" required>
                         <label class="documentsValue" style="display: none;"></label>

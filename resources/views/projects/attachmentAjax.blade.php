@@ -8,6 +8,7 @@
  							<th>SR No</th>
  							<th>Attachment Name</th>
  							<th>Attachment File</th>
+							 <th>Attachment Type</th>
  							<th>Action</th>
 
  						</tr>
@@ -22,6 +23,7 @@
  									{{ $value['documents'] }}
  								</a>
  							</td>
+							 <td>{{$value['attachment_type']}}</td>
  							<td><a href="#" rel="noopener noreferrer" data-attachment="{{json_encode($value)}}" class="editAttachment" title="Edit">
  									<i class="fas fa-edit text-primary" style="font-size: 1rem"></i>
  								</a>
@@ -49,7 +51,7 @@
  		$("#heading").val(attachment.heading);
  		$(".documentsValue").show();
  		$(".documentsValue").text(attachment.documents);
-
+		$("#attachment_type").val(attachment.attachment_type);
  		$("#attachmentModel").modal('show');
 
  		console.log(attachment.id);
