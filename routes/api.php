@@ -27,6 +27,8 @@ Route::controller(SyncProjectController::class)->group(function () {
         Route::post('sync/project', 'syncProject');
         Route::post('zip/upload', 'zipUpload');
         Route::delete('remove/zip/{projectId}', 'removeZip');
+        Route::post('create/zip', 'createZip');
+
     });
 });
 
