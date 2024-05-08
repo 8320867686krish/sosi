@@ -20,33 +20,49 @@ use PDO;
 class SyncProjectController extends Controller
 {
     //
-    public function zipUpload(Request $request){
+    public function zipUpload(Request $request)
+    {
+        // Extract project_id from request parameters
         $project_id = $request->input('project_id');
+    
+        // Check if a file named 'image' has been uploaded
         if ($request->hasFile('image')) {
             $zipFile = $request->file('image');
-            $extractPath = 'extracted/'.uniqid();
+    
+            // Create a unique extraction path
+            $extractPath = 'extracted/' . uniqid();
+    
+            // Initialize ZipArchive
             $zip = new ZipArchive;
-
-            if($zip->open($zipFile) == true){
-              
-                $zip->extractTo('images/appImages/'.$project_id."/".$extractPath);
-                $zip->close();
+    
+            // Check if the zip file can be opened
+            if ($zip->open($zipFile) === true) {
+                // Extract the zip file
+                if ($zip->extractTo('images/appImages/' . $project_id . '/' . $extractPath)) {
+                    $zip->close();
+    
+                    // Get the original name of the zip file
+                    $zipFileName = $zipFile->getClientOriginalName();
+    
+                    // Extract the inner folder name
+                    $innerFolderName = pathinfo($zipFileName, PATHINFO_FILENAME);
+    
+                    // Respond with success message
+                    return response()->json(['isStatus' => true, 'message' => 'File uploaded and extracted successfully.', 'zipFileName' => $zipFileName, 'innerFolderName' => $innerFolderName]);
+                } else {
+                    // Respond with error message if extraction fails
+                    return response()->json(['isStatus' => false, 'message' => 'Failed to extract zip file.']);
+                }
+            } else {
+                // Respond with error message if zip file cannot be opened
+                return response()->json(['isStatus' => false, 'message' => 'Failed to open zip file.']);
             }
-            $zipFileName = $zipFile->getClientOriginalName();
-            $innerFolderName = pathinfo($zipFileName,PATHINFO_FILENAME);
-            dd($zipFileName);
-
-
-
-
-          //  $image->move(public_path("images/appImages/".$project_id), $image);
-            return response()->json(['isStatus' => true, 'message' => 'successfully upload file .']);
-
-        }else{
-            return response()->json(['isStatus' => false, 'message' => 'please upload file .']);
-
+        } else {
+            // Respond with error message if no file is uploaded
+            return response()->json(['isStatus' => false, 'message' => 'Please upload a file.']);
         }
     }
+    
     public function syncProject(Request $request)
     {
         $projectId = $request->input('projectId');
