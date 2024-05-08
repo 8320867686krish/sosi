@@ -25,11 +25,20 @@ class SyncProjectController extends Controller
         if ($request->hasFile('image')) {
             $zipFile = $request->file('image');
             $extractPath = 'extracted/'.uniqid();
-            $zip = new ZipArchive();
+            $zip = new ZipArchive;
+
             if($zip->open($zipFile) == true){
-                echo "callll";
+              
                 $zip->extractTo('images/appImages/'.$project_id."/".$extractPath);
+                $zip->close();
             }
+            $zipFileName = $zipFile->getClientOriginalName();
+            $innerFolderName = pathinfo($zipFileName,PATHINFO_FILENAME);
+            dd($zipFileName);
+
+
+
+
           //  $image->move(public_path("images/appImages/".$project_id), $image);
             return response()->json(['isStatus' => true, 'message' => 'successfully upload file .']);
 
