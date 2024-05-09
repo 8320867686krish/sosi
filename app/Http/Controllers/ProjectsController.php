@@ -213,93 +213,93 @@ class ProjectsController extends Controller
                     ]);
                 }
             }
-            if(@$inputData['project']){
+            if (@$inputData['project']) {
                 $savData = $inputData['project'];
                 $projectData =  Projects::find($inputData['id']);
                 $proid = $projectData['id'];
-               
-               
-           
-            
+
+
+
+
                 if ($request->has('project.leb1LaboratoryResult1')) {
-                    if(@$projectData['leb1LaboratoryResult1']){
-                        $imagePath =  public_path("images/labResult" ."/". $proid . "/".$projectData['leb1LaboratoryResult1']);
+                    if (@$projectData['leb1LaboratoryResult1']) {
+                        $imagePath =  public_path("images/labResult" . "/" . $proid . "/" . $projectData['leb1LaboratoryResult1']);
                         // Check if the image file exists before attempting to delete
-                
+
                         if (file_exists($imagePath)) {
                             unlink($imagePath);
                         }
                     }
                     $file = $request->file('project.leb1LaboratoryResult1');
                     $imageName = time() . rand(10, 99) . '.' . $file->getClientOriginalExtension();
-                    $file->move(public_path('images/labResult/'.$inputData['project_id']), "/".$imageName);
+                    $file->move(public_path('images/labResult/' . $inputData['project_id']), "/" . $imageName);
                     $savData['leb1LaboratoryResult1'] =  $imageName;
                 }
 
                 if ($request->has('project.leb1LaboratoryResult2')) {
-                    if(@$projectData['leb1LaboratoryResult2']){
-                        $imagePath =  public_path("images/labResult" ."/". $proid . "/".$projectData['leb1LaboratoryResult2']);
+                    if (@$projectData['leb1LaboratoryResult2']) {
+                        $imagePath =  public_path("images/labResult" . "/" . $proid . "/" . $projectData['leb1LaboratoryResult2']);
                         // Check if the image file exists before attempting to delete
-                
+
                         if (file_exists($imagePath)) {
                             unlink($imagePath);
                         }
                     }
                     $file = $request->file('project.leb1LaboratoryResult2');
                     $imageName = time() . rand(10, 99) . '.' . $file->getClientOriginalExtension();
-                    $file->move(public_path('images/labResult/'.$inputData['project_id']), "/".$imageName);
+                    $file->move(public_path('images/labResult/' . $inputData['project_id']), "/" . $imageName);
                     $savData['leb1LaboratoryResult2'] =  $imageName;
                 }
 
-                
-               
+
+
                 if ($request->has('project.leb2LaboratoryResult1')) {
-                    if(@$projectData['leb2LaboratoryResult1']){
-                        $imagePath =  public_path("images/labResult" ."/". $proid . "/".$projectData['leb2LaboratoryResult1']);
+                    if (@$projectData['leb2LaboratoryResult1']) {
+                        $imagePath =  public_path("images/labResult" . "/" . $proid . "/" . $projectData['leb2LaboratoryResult1']);
                         // Check if the image file exists before attempting to delete
-                
+
                         if (file_exists($imagePath)) {
                             unlink($imagePath);
                         }
                     }
                     $file = $request->file('project.leb2LaboratoryResult1');
                     $imageName = time() . rand(10, 99) . '.' . $file->getClientOriginalExtension();
-                    $file->move(public_path('images/labResult/'.$inputData['project_id']), "/".$imageName);
+                    $file->move(public_path('images/labResult/' . $inputData['project_id']), "/" . $imageName);
                     $savData['leb2LaboratoryResult1'] =  $imageName;
                 }
 
-                
+
                 if ($request->has('project.leb2LaboratoryResult2')) {
-                    
-                if(@$projectData['leb2LaboratoryResult2']){
-                    $imagePath =  public_path("images/labResult" ."/". $proid . "/".$projectData['leb2LaboratoryResult2']);
-                    // Check if the image file exists before attempting to delete
-            
-                    if (file_exists($imagePath)) {
-                        unlink($imagePath);
+
+                    if (@$projectData['leb2LaboratoryResult2']) {
+                        $imagePath =  public_path("images/labResult" . "/" . $proid . "/" . $projectData['leb2LaboratoryResult2']);
+                        // Check if the image file exists before attempting to delete
+
+                        if (file_exists($imagePath)) {
+                            unlink($imagePath);
+                        }
                     }
-                }
                     $file = $request->file('project.leb2LaboratoryResult2');
                     $imageName = time() . rand(10, 99) . '.' . $file->getClientOriginalExtension();
-                    $file->move(public_path('images/labResult/'.$inputData['project_id']), "/".$imageName);
+                    $file->move(public_path('images/labResult/' . $inputData['project_id']), "/" . $imageName);
                     $savData['leb2LaboratoryResult2'] =  $imageName;
                 }
 
                 if ($request->has('project.leb2LabList')) {
-                    if(@$projectData['leb2LabList']){
-                        $imagePath =  public_path("images/labResult" ."/". $proid . "/".$projectData['leb2LabList']);
+                    if (@$projectData['leb2LabList']) {
+                        $imagePath =  public_path("images/labResult" . "/" . $proid . "/" . $projectData['leb2LabList']);
                         // Check if the image file exists before attempting to delete
-                
+
                         if (file_exists($imagePath)) {
                             unlink($imagePath);
                         }
                     }
                     $file = $request->file('project.leb2LabList');
                     $imageName = time() . rand(10, 99) . '.' . $file->getClientOriginalExtension();
-                    $file->move(public_path('images/labResult/'.$inputData['project_id']), "/".$imageName);
+                    $file->move(public_path('images/labResult/' . $inputData['project_id']), "/" . $imageName);
                     $savData['leb2LabList'] =  $imageName;
                 }
-              
+
                 Projects::where(['id' => $inputData['id']])->update($savData);
             }
             return response()->json(['isStatus' => true, 'message' => 'Project assign successfully!!']);
@@ -372,6 +372,7 @@ class ProjectsController extends Controller
             $suspectedHazmatId = $request->input('hasid');
             $tableTypes = $request->input('table_type');
             $images = $request->file('image');
+            $doc = $request->file('doc');
 
             $projectDetail = Projects::with(['client' => function ($query) {
                 $query->select('id', 'manager_initials'); // Replace with the fields you want to select
@@ -383,8 +384,8 @@ class ProjectsController extends Controller
                     $projectCount = "0";
                 } else {
                     $projectCount = $lastCheck['initialsChekId'];
-                 }
-                 $name = $projectDetail['ship_initials'].'vsc#' . str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
+                }
+                $name = $projectDetail['ship_initials'] . 'vsc#' . str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
 
                 $inputData['name'] = $name;
                 $inputData['initialsChekId'] = str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
@@ -420,8 +421,23 @@ class ProjectsController extends Controller
                         $hazmatData['image'] = $imageName;
                     }
 
+                    // Check if there's an doc for the current suspected hazmat
+                    if (isset($doc[$value])) {
+
+                        $docs = $doc[$value];
+
+                        $docName = "hazmat_{$data->id}_" . time() . rand(10, 99) . '.' . $docs->getClientOriginalExtension();
+
+                        // Move the uploaded image to the desired location
+                        $docs->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $inputData['project_id']), $docName);
+
+                        // Assign the image name to the corresponding hazmat data
+                        $hazmatData['doc'] = $docName;
+                    }
+
                     if ($tableTypes[$value] == 'Unknown') {
                         $hazmatData['image'] = NULL;
+                        $hazmatData['doc'] = NULL;
                     }
 
                     if (!empty($suspectedHazmatId[$value])) {
@@ -461,6 +477,33 @@ class ProjectsController extends Controller
             return response()->json(['isStatus' => false, 'message' => $e->validator->errors()]);
         } catch (\Throwable $th) {
             return response()->json(['isStatus' => false, 'error' => $th->getMessage()]);
+        }
+    }
+
+    public function removeHazmatDocument($hazmat_id, $type)
+    {
+        try {
+            $document = CheckHasHazmat::find($hazmat_id);
+
+            if (!$document) {
+                return response()->json(["isStatus" => false, 'message' => 'Hazmat not found']);
+            }
+
+            $documentPath = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $document->project_id . "/") . basename($document->getOriginal($type));
+
+            // Delete the file if it exists
+            if (file_exists($documentPath)) {
+                if (!unlink($documentPath)) {
+                    throw new \Exception('Failed to delete the document file.');
+                }
+            }
+
+            // Update the document's type to NULL
+            $document->update([$type => NULL]);
+
+            return response()->json(['isStatus' => true, 'message' => "Document deleted successfully"]);
+        } catch (\Throwable $th) {
+            return response()->json(['isStatus' => false, 'message' => $th->getMessage()]);
         }
     }
 
@@ -592,7 +635,7 @@ class ProjectsController extends Controller
             }
 
             // Construct the image path
-            $imagePath = $hazImagePath = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId . "/") . basename($deck->getOriginal('image'));
+            $imagePath = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId . "/") . basename($deck->getOriginal('image'));
             // Check if the image file exists before attempting to delete
 
             if (file_exists($imagePath)) {
@@ -658,10 +701,10 @@ class ProjectsController extends Controller
     public function attachmentSave(Request $request)
     {
         $post = $request->input();
-        if(@$post['id']){
+        if (@$post['id']) {
             if ($request->hasFile('details')) {
                 $data = Attechments::find($post['id']);
-                $imagePath =  public_path("images/attachment" ."/". $post['project_id'] . "/".$data['documents']);
+                $imagePath =  public_path("images/attachment" . "/" . $post['project_id'] . "/" . $data['documents']);
                 if (file_exists($imagePath)) {
                     unlink($imagePath);
                 }
@@ -670,11 +713,11 @@ class ProjectsController extends Controller
         if ($request->hasFile('details')) {
             $file = $request->file('details');
             $imageName = time() . rand(10, 99) . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('images/attachment/'.$post['project_id']), "/".$imageName);
+            $file->move(public_path('images/attachment/' . $post['project_id']), "/" . $imageName);
             unset($post['documents']);
             $post['documents'] =  $imageName;
         }
-      
+
         Attechments::updateOrCreate(['id' => $post['id']], $post);
         $attachment = Attechments::where('project_id', $post['project_id'])->get();
         $html = view('projects.attachmentAjax', compact('attachment'))->render();
@@ -689,7 +732,7 @@ class ProjectsController extends Controller
     {
         $attachment =  Attechments::find($id);
         $proid = $attachment['project_id'];
-        $imagePath =  public_path("images/attachment" ."/". $proid . "/".$attachment['documents']);
+        $imagePath =  public_path("images/attachment" . "/" . $proid . "/" . $attachment['documents']);
         // Check if the image file exists before attempting to delete
 
         if (file_exists($imagePath)) {
