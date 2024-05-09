@@ -36,6 +36,11 @@ class PermissionSeeder extends Seeder
                 "is_show" => 1
             ],
 
+            'makemodel' => [
+                'actions' => ['read' => 0, 'add' => 0, 'edit' => 0,'remove' => 0],
+                "is_show" => 1
+            ],
+
             'APP' => [
                 'actions' => ['access' => 0],
                 'is_show' => 0,

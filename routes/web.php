@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClientContoller;
+use App\Http\Controllers\MakeModelContoller;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\QrCodeController;
@@ -94,7 +95,6 @@ Route::middleware('auth')->group(function () {
             Route::get('projects/check/{id}', 'deleteCheck')->name('check.delete');
             Route::post('attachment/save','attachmentSave')->name('attachmentSave');
             Route::delete('attachment/remove/{laboratoryRemove}','attachmentRemove');
-
         });
 
         Route::get('excelReport/{project_id}', [ReportContoller::class, 'exportDataInExcel'])->name('excelReport');
@@ -110,6 +110,17 @@ Route::middleware('auth')->group(function () {
             Route::get('users/{id}/edit', 'edit')->name('users.edit');
             Route::get('users/{id}/delete', 'destroy')->name('users.delete');
             Route::post('changeUserStatus', 'changeUserStatus')->name('change.isVerified');
+        });
+    });
+
+    Route::middleware('can:makemodel')->group(function () {
+        // Route::resource('makemodel', MakeModelContoller::class);
+        Route::controller(MakeModelContoller::class)->group(function () {
+            Route::get('makemodel', 'index')->name('makemodel')->middleware('can:makemodel');
+            Route::get('makemodel/add', 'create')->name('makemodel.add')->middleware('can:makemodel.add');
+            Route::post('makemodel', 'store')->name('makemodel.store')->middleware('can:makemodel.add');
+            Route::get('makemodel/{id}/delete', 'destroy')->name('makemodel.delete');
+            Route::get('makemodel/{id}/edit', 'edit')->name('makemodel.edit');
         });
     });
 
