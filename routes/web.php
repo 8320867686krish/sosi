@@ -96,6 +96,7 @@ Route::middleware('auth')->group(function () {
             Route::post('attachment/save','attachmentSave')->name('attachmentSave');
             Route::delete('attachment/remove/{laboratoryRemove}','attachmentRemove');
         });
+        Route::get('generateDocx', [ReportContoller::class, 'generateDocx'])->name('generateDocx');
 
         Route::get('excelReport/{project_id}/{isSample?}', [ReportContoller::class, 'exportDataInExcel'])->name('excelReport')->middleware('can:projects.edit');
 

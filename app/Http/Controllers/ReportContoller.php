@@ -10,6 +10,8 @@ use App\Models\Hazmat;
 use App\Models\Projects;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Exception;
+use Illuminate\Support\Facades\Response;
 
 class ReportContoller extends Controller
 {
@@ -41,7 +43,7 @@ class ReportContoller extends Controller
 
         $checks = Checks::with('deck:id,name')->with('check_hazmats.hazmat')->where('project_id', $id);
 
-        if($isSample) {
+        if ($isSample) {
             $checks = $checks->where('type', 'sample');
         }
 
@@ -49,5 +51,29 @@ class ReportContoller extends Controller
 
         $filename = "projects-{$id}-" . time() . "." . $fileExt;
         return Excel::download(new MultiSheetExport($project, $hazmats, $checks), $filename, $exportFormat);
+    }
+    public function generateDocx()
+    {
+        
+        $wordTest = new \PhpOffice\PhpWord\PhpWord();
+ 
+        $newSection = $wordTest->addSection();
+     
+        $desc1 = "The Portfolio details is a very useful feature of the web page. You can establish your archived details and the works to the entire web community. It was outlined to bring in extra clients, get you selected based on this details.";
+     
+        $newSection->addText($desc1, array('name' => 'Tahoma', 'size' => 15, 'color' => 'red'));
+        $catImageUrl = 'https://via.placeholder.com/150?text=Cat'; // Placeholder cat image URL
+$newSection->addImage($catImageUrl);
+        $objectWriter = \PhpOffice\PhpWord\IOFactory::createWriter($wordTest, 'Word2007');
+        try {
+            $objectWriter->save(storage_path('TestWordFile.docx'));
+        } catch (Exception $e) {
+        }
+     
+        return response()->download(storage_path('TestWordFile.docx'));
+          
+
+
+//         return response()->download(storage_path('helloWorld.docx'));
     }
 }
