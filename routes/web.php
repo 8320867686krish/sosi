@@ -95,6 +95,8 @@ Route::middleware('auth')->group(function () {
             Route::get('projects/check/{id}', 'deleteCheck')->name('check.delete');
             Route::post('attachment/save','attachmentSave')->name('attachmentSave');
             Route::delete('attachment/remove/{laboratoryRemove}','attachmentRemove');
+
+            Route::get('removeHazmatDocument/{id}/{type}', 'removeHazmatDocument')->middleware('can:projects.edit')->name('removeHazmatDocument');
         });
 
         Route::get('excelReport/{project_id}/{isSample?}', [ReportContoller::class, 'exportDataInExcel'])->name('excelReport')->middleware('can:projects.edit');

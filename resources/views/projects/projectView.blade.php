@@ -545,10 +545,10 @@
         </div>
 
         <div class="col-12" style="display: none;">
-            <div class="col-12 col-md-12 col-lg-12   cloneTableTypeDiv" id="cloneTableTypeDiv">
+            <div class="col-12 col-md-12 col-lg-12 cloneTableTypeDiv" id="cloneTableTypeDiv">
                 <label for="table_type" id="tableTypeLable"></label>
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-12">
                         <div class="form-group">
                             <select class="form-control" id="table_type" name="table_type">
                                 <option value="Contained">Contained</option>
@@ -560,13 +560,12 @@
                     </div>
                     <div class="col-4 imagehazmat">
                         <div class="form-group">
-                            <input type="file" class="form-control" accept="image/*">
+                            <input type="file" class="form-control hazmatImg" accept="image/*">
                         </div>
                     </div>
-
                     <div class="col-4 dochazmat">
                         <div class="form-group">
-                            <input type="file" class="form-control" accept="image/*">
+                            <input type="file" class="form-control hazmatDoc">
                         </div>
                     </div>
                 </div>
@@ -609,13 +608,13 @@
                 console.error("Missing parameters for handleTableTypeChange function");
                 return;
             }
-            const targetElements = cloneTableTypeDiv.find(".col-12, .col-6");
+            const targetElements = cloneTableTypeDiv.find(".col-12, .col-4");
 
-            const newClass = (selectedValue === "Unknown") ? "col-12" : "col-6";
+            const newClass = (selectedValue === "Unknown") ? "col-12" : "col-4";
 
-            targetElements.removeClass("col-12 col-6").addClass(newClass);
+            targetElements.removeClass("col-12 col-4").addClass(newClass);
             cloneTableTypeDiv.find(".imagehazmat").toggle(selectedValue !== "Unknown");
-          //  cloneTableTypeDiv.find(".dochazmat").toggle(selectedValue !== "Unknown");
+            cloneTableTypeDiv.find(".dochazmat").toggle(selectedValue !== "Unknown");
         }
 
         function triggerFileInput(inputId) {
@@ -705,9 +704,7 @@
                     $.each(response.check.hazmats, function(index, hazmatData) {
                         if (hazmatData.type === 'Unknown') {
                             $(`#imagehazmat${hazmatData.hazmat_id}`).hide();
-                         //   $(`#dochazmat${hazmatData.hazmat_id}`).hide();
-
-
+                            $(`#dochazmat${hazmatData.hazmat_id}`).hide();
                         }
                     });
 
@@ -1152,23 +1149,42 @@
                     clonedElement.find('select').attr('id', `table_type_${selectedValue}`).attr('name',
                         `table_type[${selectedValue}]`);
 
-                    clonedElement.find('input[type="file"]').prop({
+                    clonedElement.find('input[type="file"].hazmatImg').prop({
                         id: `image_${selectedValue}`,
                         name: `image[${selectedValue}]`
                     });
 
-                    clonedElement.find('input[type="file"]').prop({
+                    clonedElement.find('input[type="file"].hazmatDoc').prop({
                         id: `doc_${selectedValue}`,
                         name: `doc[${selectedValue}]`
                     });
 
-
                     clonedElement.find(`.imagehazmat`).hide();
-                 //   clonedElement.find(`.dochazmat`).hide();
+                    clonedElement.find(`.dochazmat`).hide();
 
                     // Append cloned element to showTableTypeDiv
                     $('#showTableTypeDiv').append(clonedElement);
                 }
+            });
+
+            // Remove Hazmat Document Analysis Results Document
+            $(document).on('click', '.removeHazmatDocument', function(e){
+                e.preventDefault();
+                let parentDiv = $(this).closest('div');
+
+                $.ajax({
+                    type: 'GET',
+                    url: $(this).attr('href'),
+                    success: function(response) {
+                        console.log(response);
+                        if (response.isStatus) {
+                            parentDiv.empty();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(error);
+                    }
+                });
             });
 
             // Add event listener for Save button click

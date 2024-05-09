@@ -158,7 +158,7 @@
                             <input type="file" class="form-control" accept="image/*">
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -321,6 +321,7 @@
                     $.each(response.check.hazmats, function(index, hazmatData) {
                         if (hazmatData.type === 'Unknown') {
                             $(`#imagehazmat${hazmatData.hazmat_id}`).hide();
+                            $(`#dochazmat${hazmatData.hazmat_id}`).hide();
                         }
                     });
 
@@ -658,8 +659,7 @@
                     clonedElement.attr("id", "cloneTableTypeDiv" + selectedValue);
 
                     clonedElement.find('label').text($(this).find('option').eq(clickedIndex).text());
-                    clonedElement.find('select').attr('id', `table_type_${selectedValue}`).attr('name',
-                        `table_type[${selectedValue}]`);
+                    clonedElement.find('select').attr('id', `table_type_${selectedValue}`).attr('name', `table_type[${selectedValue}]`);
 
                     clonedElement.find('input[type="file"]').prop({
                         id: `image_${selectedValue}`,
