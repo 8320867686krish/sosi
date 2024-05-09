@@ -6,7 +6,7 @@
         <div class="row">
             <div class="form-group col-12 mt-3">
                 @can('projects.edit')
-                <button class="btn btn-primary float-right formteamButton" type="button">Save</button>
+                <button class="btn btn-primary float-right" type="submit">Save</button>
                 @endcan
             </div>
         </div>
@@ -79,12 +79,40 @@
                         <div class="card-body row">
                             <div class="form-group col-6">
                                 <label for="assign_date">Laboratory 1</label>
-                                <input type="text" class="form-control form-control-lg  @error('laboratorie1') is-invalid @enderror" value="{{ old('laboratorie1', $project->laboratorie1 ?? '') }}" name="project[laboratorie1]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                <input type="text" class="form-control form-control-lg  @error('laboratorie1') is-invalid @enderror" value="{{ old('laboratorie1', $project->laboratorie1 ?? '') }}" name="project[laboratorie1]" autocomplete="off" onchange="removeInvalidClass(this)"   {{ $readonly }} placeholder="Lab Name">
                             </div>
                             <div class="form-group col-6">
                                 <label for="assign_date">Laboratory 2</label>
-                                <input type="text" class="form-control form-control-lg @error('laboratorie2') is-invalid @enderror" id="laboratorie2" value="{{ old('laboratorie2', $project->laboratorie2 ?? '') }}" name="project[laboratorie2]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                <input type="text" class="form-control form-control-lg @error('laboratorie2') is-invalid @enderror" id="laboratorie2" value="{{ old('laboratorie2', $project->laboratorie2 ?? '') }}" name="project[laboratorie2]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }} placeholder="Lab Name">
                             </div>
+                            
+                            <div class="form-group col-6">
+                                <label for="assign_date"></label>
+                                <button class="form-control btn btn-primary p-3" type="button">Genrate Lab List</button>
+                            </div>
+
+                            <div class="form-group col-6">
+                                <label for="assign_date">Upload Lab List</label>
+                                <input type="file" class="form-control form-control-lg @error('leb2LabList') is-invalid @enderror" id="leb2LabList" value="{{ old('leb2LabList', $project->leb2LabList ?? '') }}" name="project[leb2LabList]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="assign_date">Result1</label>
+                                <input type="file" class="form-control form-control-lg @error('leb1LaboratoryResult1') is-invalid @enderror" id="leb1LaboratoryResult1" value="{{ old('leb1LaboratoryResult1', $project->leb1LaboratoryResult1 ?? '') }}" name="project[leb1LaboratoryResult1]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="assign_date">Result1</label>
+                                <input type="file" class="form-control form-control-lg @error('leb2LaboratoryResult1') is-invalid @enderror" id="leb2LaboratoryResult1" value="{{ old('leb2LaboratoryResult1', $project->leb2LaboratoryResult1 ?? '') }}" name="project[leb2LaboratoryResult1]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="assign_date">Result 2</label>
+                                <input type="file" class="form-control form-control-lg @error('leb1LaboratoryResult2') is-invalid @enderror" id="leb1LaboratoryResult2" value="{{ old('leb1LaboratoryResult2', $project->leb1LaboratoryResult2 ?? '') }}" name="project[leb1LaboratoryResult2]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                            </div>
+
+                            <div class="form-group col-6">
+                                <label for="assign_date">Result 2</label>
+                                <input type="file" class="form-control form-control-lg @error('leb2LaboratoryResult2') is-invalid @enderror" id="leb2LaboratoryResult2" value="{{ old('leb2LaboratoryResult2', $project->leb2LaboratoryResult2 ?? '') }}" name="project[leb2LaboratoryResult2]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -128,24 +156,19 @@
 </div>
 @push('js')
 <script>
-    // $(".SurveyFormButton").click(function() {
-    //     $('span').html("");
+  
 
-    //     $.ajax({
-    //         type: "POST",
-    //         url: "{{ url('detail/save') }}",
-    //         data: $("#SurveyForm").serialize(),
-    //         success: function(msg) {
-    //             $(".sucessSurveylMsg").show();
-    //         }
-    //     });
-    // });
+    $('#SurveyForm').submit(function(e) {
 
-    $(".formteamButton").click(function() {
+        e.preventDefault();
+        var form = $(this); // Get the form element
+        var formData = new FormData(form[0]); // Create FormData object from the form
         $.ajax({
             type: "POST",
             url: "{{ url('detail/assignProject') }}",
-            data: $("#SurveyForm").serialize(),
+            data: formData,
+            contentType: false,
+            processData: false,
             success: function(msg) {
                 $(".sucessSurveylMsg").show();
             },

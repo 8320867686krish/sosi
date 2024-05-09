@@ -130,11 +130,11 @@
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="project_no">Ship Initiate <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control @error('ship_initiate') is-invalid @enderror"
-                                            id="ship_initiate" name="ship_initiate" placeholder="Ship Initiate..."
-                                            value="{{ old('ship_initiate', $project->ship_initiate ?? '') }}"  onchange="removeInvalidClass(this)">
-                                            @error('ship_initiate')
+                                        <label for="project_no">Ship Initials <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control @error('ship_initials') is-invalid @enderror"
+                                            id="ship_initials" name="ship_initials" placeholder="Ship Initials..."
+                                            value="{{ old('ship_initials', $project->ship_initials ?? '') }}"  onchange="removeInvalidClass(this)" {{ @$project->ship_initials ? 'readonly' : '' }}> 
+                                            @error('ship_initials')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>

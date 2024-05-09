@@ -472,7 +472,7 @@ class ApiController extends Controller
             } else {
                 $projectCount = $lastCheck['initialsChekId'];
              }
-             $name = $projectDetail['ship_initiate'].'#' . str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
+             $name = $projectDetail['ship_initials'].'vsc#' . str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
 
             $inputData['name'] = $name;
             $inputData['initialsChekId'] = str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
@@ -481,7 +481,7 @@ class ApiController extends Controller
             } else {
                 $projectCount = $lastCheck['initialsChekId'] + (1);
             }
-            $name = $projectDetail['ship_initiate']."#".$projectCount;
+            $name = $projectDetail['ship_initials']."vsc#".$projectCount;
             $inputData['name'] = $name;
             $inputData['initialsChekId'] =  $projectCount;
             // Eager load project and deck to reduce database queries
