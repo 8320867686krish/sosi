@@ -158,6 +158,7 @@
                             <input type="file" class="form-control" accept="image/*">
                         </div>
                     </div>
+                    
                 </div>
             </div>
         </div>

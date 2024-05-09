@@ -432,7 +432,7 @@
 
         <div class="modal fade" data-backdrop="static" id="checkDataAddModal" tabindex="-1" role="dialog"
             aria-labelledby="checkDataAddModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document" style="width: 50% !important; max-width: none !important;">
+            <div class="modal-dialog" role="document" style="width: 70% !important; max-width: none !important;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Title</h5>
@@ -545,10 +545,10 @@
         </div>
 
         <div class="col-12" style="display: none;">
-            <div class="col-12 col-md-12 col-lg-6 cloneTableTypeDiv" id="cloneTableTypeDiv">
+            <div class="col-12 col-md-12 col-lg-12   cloneTableTypeDiv" id="cloneTableTypeDiv">
                 <label for="table_type" id="tableTypeLable"></label>
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-4">
                         <div class="form-group">
                             <select class="form-control" id="table_type" name="table_type">
                                 <option value="Contained">Contained</option>
@@ -558,7 +558,13 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-6 imagehazmat">
+                    <div class="col-4 imagehazmat">
+                        <div class="form-group">
+                            <input type="file" class="form-control" accept="image/*">
+                        </div>
+                    </div>
+
+                    <div class="col-4 dochazmat">
                         <div class="form-group">
                             <input type="file" class="form-control" accept="image/*">
                         </div>
@@ -609,6 +615,7 @@
 
             targetElements.removeClass("col-12 col-6").addClass(newClass);
             cloneTableTypeDiv.find(".imagehazmat").toggle(selectedValue !== "Unknown");
+          //  cloneTableTypeDiv.find(".dochazmat").toggle(selectedValue !== "Unknown");
         }
 
         function triggerFileInput(inputId) {
@@ -698,6 +705,9 @@
                     $.each(response.check.hazmats, function(index, hazmatData) {
                         if (hazmatData.type === 'Unknown') {
                             $(`#imagehazmat${hazmatData.hazmat_id}`).hide();
+                         //   $(`#dochazmat${hazmatData.hazmat_id}`).hide();
+
+
                         }
                     });
 
@@ -1147,7 +1157,14 @@
                         name: `image[${selectedValue}]`
                     });
 
+                    clonedElement.find('input[type="file"]').prop({
+                        id: `doc_${selectedValue}`,
+                        name: `doc[${selectedValue}]`
+                    });
+
+
                     clonedElement.find(`.imagehazmat`).hide();
+                 //   clonedElement.find(`.dochazmat`).hide();
 
                     // Append cloned element to showTableTypeDiv
                     $('#showTableTypeDiv').append(clonedElement);
