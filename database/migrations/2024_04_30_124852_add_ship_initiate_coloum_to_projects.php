@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('projects', function (Blueprint $table) {
             //
-            $table->string('ship_initiate')->nullable()->after('ship_name');
+            $table->string('ship_initials')->nullable()->after('ship_name');
 
         });
     }
