@@ -377,8 +377,9 @@
                             <div class="title"><span>Check List</span></div>
                         </div>
                         <div class="col-6">
-                            <a href="{{ route('excelReport', ['project_id' => $project->id]) }}"
-                                class="btn btn-primary float-right">Export</a>
+                            @can('projects.edit')
+                                <a href="{{ route('excelReport', ['project_id' => $project->id]) }}" class="btn btn-primary float-right">Export</a>
+                            @endcan
                         </div>
                     </div>
                 </div>
@@ -395,7 +396,9 @@
                                 <th>Equip. & Comp.</th>
                                 <th>Hazmat</th>
                                 <th>Document analyisis result</th>
-                                <th width="10%">Action</th>
+                                @can('projects.edit')
+                                    <th width="10%">Action</th>
+                                @endcan
                             </tr>
                         </thead>
                         <tbody id="checkListTable">

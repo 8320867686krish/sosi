@@ -9,7 +9,9 @@
  							<th>Attachment Name</th>
  							<th>Attachment File</th>
 							 <th>Attachment Type</th>
- 							<th>Action</th>
+							@can('projects.edit')
+ 								<th>Action</th>
+							@endcan
 
  						</tr>
  					</thead>
@@ -24,23 +26,18 @@
  								</a>
  							</td>
 							 <td>{{$value['attachment_type']}}</td>
- 							<td><a href="#" rel="noopener noreferrer" data-attachment="{{json_encode($value)}}" class="editAttachment" title="Edit">
- 									<i class="fas fa-edit text-primary" style="font-size: 1rem"></i>
- 								</a>
- 								<a href="#" class="ml-2" onclick="removeLab('{{ $value['id'] }}')" title="Delete">
- 									<i class="fas fa-trash-alt text-danger" style="font-size: 1rem"></i>
- 								</a>
- 							</td>
+							@can('projects.edit')
+								<td><a href="#" rel="noopener noreferrer" data-attachment="{{json_encode($value)}}" class="editAttachment" title="Edit">
+										<i class="fas fa-edit text-primary" style="font-size: 1rem"></i>
+									</a>
+									<a href="#" class="ml-2" onclick="removeLab('{{ $value['id'] }}')" title="Delete">
+										<i class="fas fa-trash-alt text-danger" style="font-size: 1rem"></i>
+									</a>
+								</td>
+							@endcan
 
- 						</tr>
- 						@endforeach
- 					</tbody>
-
- 				</table>
- 			</div>
-
- 		</div>
- 	</div>
+         </div>
+     </div>
  </div>
  @push('js')
  <script>

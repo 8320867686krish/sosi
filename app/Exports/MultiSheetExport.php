@@ -20,7 +20,7 @@ class MultiSheetExport implements WithMultipleSheets
     public function sheets(): array
     {
         return [
-            'COVER' => new CoverSheetExport($this->coverData, "OnBoard IHM Survey Plan"),
+            'COVER' => new CoverSheetExport($this->coverData, "Onboard IHM Survey Plan"),
             'SUMMARY' => new SummarySheetExport($this->summaryData),
             'VSCP' => new VSCPSheetExport($this->vscpData)
         ];

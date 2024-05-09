@@ -24,7 +24,7 @@
             <tr>
                 <th></th>
                 <th valign="middle" align="center" style="border: 2px solid #000000" width="12"><b>Table</b></th>
-                <th valign="middle" align="center" style="border: 2px solid #000000"><b>Key</b></th>
+                <th valign="middle" align="center" style="border: 2px solid #000000"><b>HM</b></th>
                 <th valign="middle" align="center" style="border: 2px solid #000000" width="40"><b>Name</b></th>
                 <th valign="middle" align="center" style="border: 2px solid #000000"><b>Sampling</b></th>
                 <th valign="middle" align="center" style="border: 2px solid #000000"><b>Visual/<br>Sample</b></th>

@@ -85,7 +85,7 @@ Route::middleware('auth')->group(function () {
             Route::post('project/save-image','saveImage');
             Route::post('project/updateDeckTitle','updateDeckTitle');
             Route::get('project/deleteDeckImg/{id}', 'deleteDeckImg')->name('deleteDeckImg');
-            Route::get('projects/deck/{id}', 'deckBasedCheckView')->name('deck.detail');
+            Route::get('projects/deck/{id}', 'deckBasedCheckView')->name('deck.detail')->middleware('can:projects.edit');
             Route::post('/set-session', 'setBackSession')->name('set.session');
 
             Route::get('project/{project_id}/check', 'getProjectBasedCheck')->name('project.check');
@@ -97,9 +97,9 @@ Route::middleware('auth')->group(function () {
             Route::delete('attachment/remove/{laboratoryRemove}','attachmentRemove');
         });
 
-        Route::get('excelReport/{project_id}', [ReportContoller::class, 'exportDataInExcel'])->name('excelReport');
+        Route::get('excelReport/{project_id}', [ReportContoller::class, 'exportDataInExcel'])->name('excelReport')->middleware('can:projects.edit');
 
-        Route::get('generatorQRcode/{deckId}', [QrCodeController::class, 'show'])->name('generatorQRcode');
+        Route::get('generatorQRcode/{deckId}', [QrCodeController::class, 'show'])->name('generatorQRcode')->middleware('can:projects.edit');
     });
 
     Route::middleware('can:users')->group(function () {
