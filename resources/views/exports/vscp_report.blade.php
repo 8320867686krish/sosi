@@ -14,16 +14,22 @@
             <tr>
                 <th style="font-size: 14px; background-color: #DADADA;" valign="middle" align="center"><b></b></th>
                 <th style="font-size: 14px; background-color: #DADADA;" valign="middle" align="center"><b></b></th>
-                <th style="font-size: 14px; background-color: #DADADA;" colspan="2" valign="middle" align="center"><b>Hazardous<br> Materials</b></th>
-                <th style="font-size: 14px; background-color: #DADADA;" valign="middle" align="center"><b>Location</b></th>
+                <th style="font-size: 14px; background-color: #DADADA;" colspan="2" valign="middle" align="center">
+                    <b>Hazardous<br> Materials</b></th>
+                <th style="font-size: 14px; background-color: #DADADA;" valign="middle" align="center"><b>Location</b>
+                </th>
                 <th style="background-color: #DADADA;"></th>
                 <th style="background-color: #DADADA;"></th>
                 {{-- <th style="background-color: #DADADA;"></th> --}}
                 <th width="20" style="background-color: #DADADA;"></th>
-                <th style="font-size: 14px; background-color: #DADADA;" valign="middle" align="center"><b>Manufacture/<br>Brand Name</b></th>
-                <th style="font-size: 12px; background-color: #DADADA;" valign="middle" align="center"><b>Document<br>Analysis Result</b></th>
-                <th style="font-size: 14px; background-color: #DADADA;" colspan="2" valign="middle" align="center"><b>Check</b></th>
-                <th style="font-size: 14px; background-color: #DADADA;" valign="middle" align="center"><b>References/Remarks</b></th>
+                <th style="font-size: 14px; background-color: #DADADA;" valign="middle" align="center">
+                    <b>Manufacture/<br>Brand Name</b></th>
+                <th style="font-size: 12px; background-color: #DADADA;" valign="middle" align="center">
+                    <b>Document<br>Analysis Result</b></th>
+                <th style="font-size: 14px; background-color: #DADADA;" colspan="2" valign="middle" align="center">
+                    <b>Check</b></th>
+                <th style="font-size: 14px; background-color: #DADADA;" valign="middle" align="center">
+                    <b>References/Remarks</b></th>
             </tr>
 
             <tr height="25">
@@ -49,20 +55,43 @@
                 $counter = 1;
             @endphp
             @foreach ($checks as $check)
+                @php $hazmatsCount = count($check->check_hazmats); @endphp
+                @if ($hazmatsCount == 0)
+                    <tr height="25">
+                        <td valign="middle" align="center" style="font-size: 14px;">{{ $counter }}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->name }}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;"></td>
+                        <td valign="middle" align="center" style="font-size: 14px;"></td>
+                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->deck->name }}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->equipment }}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->component }}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;"></td>
+                        <td valign="middle" align="center" style="font-size: 14px;"></td>
+                        <td valign="middle" align="center" style="font-size: 14px;"></td>
+                        <td valign="middle" align="center" style="font-size: 14px;">
+                            {{ $check->type == 'sample' ? 'sampling' : 'visual' }}
+                        </td>
+                        <td valign="middle" align="center" style="font-size: 14px;"></td>
+                        <td valign="middle" align="left" style="font-size: 14px;"></td>
+                    </tr>
+                @endif
                 @foreach ($check->check_hazmats as $checkHazmat)
                     <tr height="25">
-                        <td valign="middle" align="center" style="font-size: 14px;">{{$counter}}</td>
-                        <td valign="middle" align="center" style="font-size: 14px;">{{$check->name}}</td>
-                        <td valign="middle" align="center" style="font-size: 14px;">{{$checkHazmat->hazmat->short_name}}</td>
-                        <td valign="middle" align="center" style="font-size: 14px;">{{$checkHazmat->hazmat->table_type}}</td>
-                        <td valign="middle" align="center" style="font-size: 14px;">{{$check->deck->name}}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;">{{ $counter }}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->name }}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;">
+                            {{ $checkHazmat->hazmat->short_name }}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;">
+                            {{ $checkHazmat->hazmat->table_type }}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->deck->name }}</td>
                         {{-- <td valign="middle" align="center" style="font-size: 14px;"></td> --}}
-                        <td valign="middle" align="center" style="font-size: 14px;">{{$check->equipment}}</td>
-                        <td valign="middle" align="center" style="font-size: 14px;">{{$check->component}}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->equipment }}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->component }}</td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
-                        <td valign="middle" align="center" style="font-size: 14px;">{{$checkHazmat->type}}</td>
-                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->type == 'sample' ? 'sampling' : 'visual' }}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;">{{ $checkHazmat->type }}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;">
+                            {{ $check->type == 'sample' ? 'sampling' : 'visual' }}</td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
                         <td valign="middle" align="left" style="font-size: 14px;"></td>
                     </tr>
