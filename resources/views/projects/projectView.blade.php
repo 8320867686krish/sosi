@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/select.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/fixedHeader.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/fancybox/fancybox.min.css') }}">
-
+<link rel="stylesheet" type="text/css" href="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.css">
     <style>
         #pdf-container {
             position: relative;
@@ -76,6 +76,7 @@
         }
     </style>
 @endsection
+
 @section('content')
     <div class="container-fluid dashboard-content" id="projectViewContent">
         <aside class="page-aside" id="page-aside">
@@ -568,6 +569,8 @@
 @endsection
 
 @push('js')
+<script src="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="{{ asset('assets/vendor/jquery.areaSelect.js') }}"></script>
@@ -740,6 +743,7 @@
                 $('#ship_particulars').hide();
                 $('#check_list').hide();
                 $('#assign_project').hide();
+                $("#attachment_list").hide();
                 $('#create_vscp').show();
                 $('#laboratory_list').hide();
             } else {
@@ -748,6 +752,7 @@
                 $('#assign_project').hide();
                 $('#create_vscp').hide();
                 $('#laboratory_list').hide();
+                $("#attachment_list").hide();
             }
 
             $('.aside-nav .nav li a').click(function() {

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->string('heading')->nullable();
             $table->text('documents')->nullable();
+            $table->string('attachment_type',20)->nullable();
+
             $table->timestamps();
         });
     }
