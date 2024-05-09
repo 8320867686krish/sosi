@@ -1,10 +1,12 @@
 <div class="email-head">
     <div class="email-head-subject">
         <div class="title"><span>VSCP</span>
-            <div style="float:right">
-                <button class="btn btn-primary" onclick="triggerFileInput('pdfFile')">Add</button>
-                <input type="file" id="pdfFile" name="pdfFile" accept=".pdf" style="display: none;">
-            </div>
+            @can('projects.edit')
+                <div style="float:right">
+                    <button class="btn btn-primary" onclick="triggerFileInput('pdfFile')">Add</button>
+                    <input type="file" id="pdfFile" name="pdfFile" accept=".pdf" style="display: none;">
+                </div>
+            @endcan
         </div>
     </div>
 </div>
@@ -17,22 +19,31 @@
                     <div class="card-body">
                         <h5 class="card-title text-center" id="deckTitle_{{ $deck->id }}">{{ $deck->name }}</h5>
                         <div class="deck-img">
-                            <a href="{{ route('deck.detail', ['id' => $deck->id]) }}"><img class="img-fluid px-3" src="{{ $deck->image }}" alt="{{ $deck->name }}"></a>
+                            @can('projects.edit')
+                                <a href="{{ route('deck.detail', ['id' => $deck->id]) }}"><img class="img-fluid px-3"
+                                src="{{ $deck->image }}" alt="{{ $deck->name }}"></a>
+                            @else
+                                <img class="img-fluid px-3" src="{{ $deck->image }}" alt="{{ $deck->name }}">
+                            @endcan
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <div class="float-right">
-                            <a href="{{route('generatorQRcode', [ 'deckId'=>$deck->id ])}}" data-id="{{ $deck->id }}">
-                                <i class="fas fa-qrcode" style="font-size: 1rem;"></i>
-                            </a>
-                            <a href="javascript:;" class="ml-2 deckImgEditBtn" data-id="{{ $deck->id }}" rel="noopener noreferrer" title="Edit">
-                                <i class="fas fa-edit text-primary" style="font-size: 1rem;"></i>
-                            </a>
-                            <a href="javascript:;" class="ml-2 deckImgDeleteBtn" data-id="{{ $deck->id }}">
-                                <i class="fas fa-trash-alt text-danger" style="font-size: 1rem;"></i>
-                            </a>
+                    @can('projects.edit')
+                        <div class="card-footer">
+                            <div class="float-right">
+                                <a href="{{ route('generatorQRcode', ['deckId' => $deck->id]) }}"
+                                    data-id="{{ $deck->id }}">
+                                    <i class="fas fa-qrcode" style="font-size: 1rem;"></i>
+                                </a>
+                                <a href="javascript:;" class="ml-2 deckImgEditBtn" data-id="{{ $deck->id }}"
+                                    rel="noopener noreferrer" title="Edit">
+                                    <i class="fas fa-edit text-primary" style="font-size: 1rem;"></i>
+                                </a>
+                                <a href="javascript:;" class="ml-2 deckImgDeleteBtn" data-id="{{ $deck->id }}">
+                                    <i class="fas fa-trash-alt text-danger" style="font-size: 1rem;"></i>
+                                </a>
+                            </div>
                         </div>
-                    </div>
+                    @endcan
                 </div>
             </div>
         @endforeach

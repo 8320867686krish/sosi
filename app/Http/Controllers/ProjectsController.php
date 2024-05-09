@@ -84,9 +84,9 @@ class ProjectsController extends Controller
             $project->decks = $project->decks()->orderBy('id', 'desc')->get();
             $project->checks = $project->checks()->with('check_hazmats.hazmat')->orderBy('id', 'desc')->get();
         }
-   
+
         $attachment = Attechments::where('project_id', $project_id)->get();
-      
+
         $project['imagePath'] = $project->image != null ? $project->image : asset('assets/images/giphy.gif');
 
         $project['user_id'] = $project->project_teams->pluck('user_id')->toArray();

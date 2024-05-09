@@ -14,26 +14,26 @@ class HazmatSeeder extends Seeder
     public function run(): void
     {
         $hazmats = [
-            ['name' => 'Asbestos', 'short_name'=> 'Asb', 'table_type' => 'table a', 'color' => 'Blue'],
-            ['name' => 'Polychlorinated Biphenyls (PCB)', 'short_name'=> 'PCB', 'table_type' => 'table a', 'color' => 'Green'],
-            ['name' => 'Ozone depleting substances (ODS)', 'short_name'=> 'ODS', 'table_type' => 'table a', 'color' => 'Brown'],
-            ['name' => 'Organotin Compounds', 'short_name'=> 'OC', 'table_type' => 'table a', 'color' => 'Red'],
-            ['name' => 'Cybutryne', 'short_name'=> 'CY', 'table_type' => 'table a', 'color' => 'Black'],
-            ['name' => 'Perfluorooctane Sulfonic Acid (PFOS)', 'short_name'=> 'PFOS', 'table_type' => 'table a (eu)', 'color' => 'Orange'],
-            ['name' => 'Cadmium (and compounds)', 'short_name'=> 'CD', 'table_type' => 'table b', 'color' => 'Blue'],
-            ['name' => 'Hexavalent Chromium (and compounds)', 'short_name'=> 'CR', 'table_type' => 'table b', 'color' => 'Green'],
-            ['name' => 'Lead (and compounds)', 'short_name'=> 'LD', 'table_type' => 'table b', 'color' => 'Brown'],
-            ['name' => 'Mercury (and compounds)', 'short_name'=> 'HG', 'table_type' => 'table b', 'color' => 'Red'],
-            ['name' => 'Polybrominated Biphenyls (PBB)', 'short_name'=> 'PBB', 'table_type' => 'table b', 'color' => 'Black'],
-            ['name' => 'Polybrominated Diphenyl Ethers (PBDE)', 'short_name'=> 'PBDE', 'table_type' => 'table b', 'color' => 'Orange'],
-            ['name' => 'Polychloronaphthalenes (Cl≥3)', 'short_name'=> 'Cl≥3', 'table_type' => 'table b', 'color' => 'Blue'],
-            ['name' => 'Radioactive Substances', 'short_name'=> 'RS', 'table_type' => 'table b', 'color' => 'Green'],
-            ['name' => 'Certain Shortchain Chlorinated Paraffins', 'short_name'=> 'CSCP', 'table_type' => 'table b', 'color' => 'Brown'],
-            ['name' => 'Hexabromocyclododecane (HBCDD)', 'short_name'=> 'HBCDD', 'table_type' => 'table b (eu)', 'color' => 'Red']
+            ['name' => 'Asbestos', 'short_name' => 'Asb', 'table_type' => 'A-1', 'color' => 'Blue'],
+            ['name' => 'Polychlorinated Biphenyls (PCB)', 'short_name' => 'PCB', 'table_type' => 'A-2', 'color' => 'Green'],
+            ['name' => 'Ozone depleting substances (ODS)', 'short_name' => 'ODS', 'table_type' => 'A-3', 'color' => 'Brown'],
+            ['name' => 'Organotin Compounds', 'short_name' => 'Otin', 'table_type' => 'A-4', 'color' => 'Red'],
+            ['name' => 'Cybutryne', 'short_name' => 'CY', 'table_type' => 'table a', 'color' => 'Black'],
+            ['name' => 'Perfluorooctane Sulfonic Acid (PFOS)', 'short_name' => 'PFOS', 'table_type' => 'A-6', 'color' => 'Orange'],
+            ['name' => 'Cadmium (and compounds)', 'short_name' => 'Cd', 'table_type' => 'B-1', 'color' => 'Blue'],
+            ['name' => 'Chromium (and compounds)', 'short_name' => 'Cr', 'table_type' => 'B-2', 'color' => 'Green'],
+            ['name' => 'Lead (and compounds)', 'short_name' => 'Pb', 'table_type' => 'B-3', 'color' => 'Brown'],
+            ['name' => 'Mercury (and compounds)', 'short_name' => 'Hg', 'table_type' => 'B-4', 'color' => 'Red'],
+            ['name' => 'Polybrominated Biphenyls (PBB)', 'short_name' => 'PBB', 'table_type' => 'B-5', 'color' => 'Black'],
+            ['name' => 'Polybrominated Diphenyl Ethers (PBDE)', 'short_name' => 'PBDE', 'table_type' => 'B-6', 'color' => 'Orange'],
+            ['name' => 'Polychloronaphthalenes (Cl≥3)', 'short_name' => 'PCN', 'table_type' => 'B-7', 'color' => 'Blue'],
+            ['name' => 'Radioactive Material', 'short_name' => 'Radio', 'table_type' => 'B-8', 'color' => 'Green'],
+            ['name' => 'Certain Shortchain Chlorinated Paraffins', 'short_name' => 'SCCP', 'table_type' => 'B-9', 'color' => 'Brown'],
+            ['name' => 'Hexabromocyclododecane (HBCDD)', 'short_name' => 'HBCDD', 'table_type' => 'B-10', 'color' => 'Red']
         ];
 
         foreach ($hazmats as $hazmat) {
-            Hazmat::updateOrCreate(["name" => $hazmat['name']],$hazmat);
+            Hazmat::updateOrCreate(["name" => $hazmat['name']], $hazmat);
         }
     }
 }
