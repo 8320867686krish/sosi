@@ -2,7 +2,7 @@
 
     <form method="post" action="#" class="needs-validation" novalidate id="SurveyForm">
         @csrf
-       
+
         <div class="row">
             <div class="form-group col-12 mt-3">
                 @can('projects.edit')
@@ -55,7 +55,7 @@
                                     <label for="assign_date">Assign Date</label>
                                     <input type="date" class="form-control form-control-lg  @error('assign_date') is-invalid @enderror" id="assign_date" value="{{ old('assign_date', $project->assign_date[0] ?? '') }}" name="assign_date" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
                                     <div class="invalid-feedback error" id="assign_dateError"></div>
-                                    
+
                                 </div>
                                 <div class="form-group col-6">
                                     <label for="assign_date">End Date</label>
@@ -85,10 +85,10 @@
                                 <label for="assign_date">Laboratory 2</label>
                                 <input type="text" class="form-control form-control-lg @error('laboratorie2') is-invalid @enderror" id="laboratorie2" value="{{ old('laboratorie2', $project->laboratorie2 ?? '') }}" name="project[laboratorie2]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }} placeholder="Lab Name">
                             </div>
-                            
+
                             <div class="form-group col-6">
                                 <label for="assign_date"></label>
-                                <button class="form-control btn btn-primary p-3" type="button">Genrate Lab List</button>
+                                <a href="{{ route('excelReport', ['project_id'=>$project->id, 'isSample'=>true]) }}" class="form-control btn btn-primary p-3" type="button">Genrate Lab List</a>
                             </div>
 
                             <div class="form-group col-6">
@@ -156,7 +156,7 @@
 </div>
 @push('js')
 <script>
-  
+
 
     $('#SurveyForm').submit(function(e) {
 

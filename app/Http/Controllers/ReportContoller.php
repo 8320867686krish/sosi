@@ -13,7 +13,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ReportContoller extends Controller
 {
-    public function exportDataInExcel(Request $request, $id)
+    public function exportDataInExcel(Request $request, $id, $isSample = null)
     {
         if ($request->type == 'xlsx') {
             $fileExt = 'xlsx';
@@ -39,7 +39,13 @@ class ReportContoller extends Controller
             $query->where('project_id', $id);
         }])->get();
 
-        $checks = Checks::with('deck:id,name')->with('check_hazmats.hazmat')->where('project_id', $id)->get();
+        $checks = Checks::with('deck:id,name')->with('check_hazmats.hazmat')->where('project_id', $id);
+
+        if($isSample) {
+            $checks = $checks->where('type', 'sample');
+        }
+
+        $checks = $checks->get();
 
         $filename = "projects-{$id}-" . time() . "." . $fileExt;
         return Excel::download(new MultiSheetExport($project, $hazmats, $checks), $filename, $exportFormat);

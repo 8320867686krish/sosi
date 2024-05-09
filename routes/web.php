@@ -97,7 +97,7 @@ Route::middleware('auth')->group(function () {
             Route::delete('attachment/remove/{laboratoryRemove}','attachmentRemove');
         });
 
-        Route::get('excelReport/{project_id}', [ReportContoller::class, 'exportDataInExcel'])->name('excelReport')->middleware('can:projects.edit');
+        Route::get('excelReport/{project_id}/{isSample?}', [ReportContoller::class, 'exportDataInExcel'])->name('excelReport')->middleware('can:projects.edit');
 
         Route::get('generatorQRcode/{deckId}', [QrCodeController::class, 'show'])->name('generatorQRcode')->middleware('can:projects.edit');
     });
