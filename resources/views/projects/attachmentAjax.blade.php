@@ -35,6 +35,7 @@
 									</a>
 								</td>
 							@endcan
+							@endforeach
 
          </div>
      </div>
