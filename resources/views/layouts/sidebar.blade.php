@@ -34,7 +34,11 @@
                                         $endsWithS = substr($string, -1) === 's';
 
                                         if (!$endsWithS) {
-                                            $string = $string . "s";
+                                            if ($permission['name'] == $string) {
+                                                $string = $string;
+                                            } else {
+                                                $string = $string . "s";
+                                            }
                                         }
 
                                         if (request()->routeIs($permission['name'])) {
