@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/select.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/fixedHeader.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/fancybox/fancybox.min.css') }}">
-<link rel="stylesheet" type="text/css" href="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.css">
+    <link rel="stylesheet" type="text/css" href="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.css">
     <style>
         #pdf-container {
             position: relative;
@@ -109,7 +109,8 @@
                                 List</a>
                         </li>
                         <li>
-                            <a href="#assign_project"><span class="icon"><i class="fas fa-fw fa-briefcase"></i></span>OnBoard Survey Plan</a>
+                            <a href="#assign_project"><span class="icon"><i
+                                        class="fas fa-fw fa-briefcase"></i></span>OnBoard Survey Plan</a>
                         </li>
                         <li>
                             <a href="#attachment_list"><span class="icon"><i
@@ -378,7 +379,8 @@
                         </div>
                         <div class="col-6">
                             @can('projects.edit')
-                                <a href="{{ route('excelReport', ['project_id' => $project->id]) }}" class="btn btn-primary float-right">Export</a>
+                                <a href="{{ route('excelReport', ['project_id' => $project->id]) }}"
+                                    class="btn btn-primary float-right">Export</a>
                             @endcan
                         </div>
                     </div>
@@ -427,7 +429,6 @@
         <div class="main-content container-fluid p-0" id="attachment_list">
             @include('projects.attachment')
         </div>
-
 
         <div class="modal fade" data-backdrop="static" id="checkDataAddModal" tabindex="-1" role="dialog"
             aria-labelledby="checkDataAddModalLabel" aria-hidden="true">
@@ -542,25 +543,25 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-12" style="display: none;">
-        <div class="col-12 col-md-12 col-lg-6 cloneTableTypeDiv" id="cloneTableTypeDiv">
-            <label for="table_type" id="tableTypeLable"></label>
-            <div class="row">
-                <div class="col-12">
-                    <div class="form-group">
-                        <select class="form-control" id="table_type" name="table_type">
-                            <option value="Contained">Contained</option>
-                            <option value="Not Contained">Not Contained</option>
-                            <option value="PCHM">PCHM</option>
-                            <option value="Unknown" selected>Unknown</option>
-                        </select>
+        <div class="col-12" style="display: none;">
+            <div class="col-12 col-md-12 col-lg-6 cloneTableTypeDiv" id="cloneTableTypeDiv">
+                <label for="table_type" id="tableTypeLable"></label>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <select class="form-control" id="table_type" name="table_type">
+                                <option value="Contained">Contained</option>
+                                <option value="Not Contained">Not Contained</option>
+                                <option value="PCHM">PCHM</option>
+                                <option value="Unknown" selected>Unknown</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="col-6 imagehazmat">
-                    <div class="form-group">
-                        <input type="file" class="form-control" accept="image/*">
+                    <div class="col-6 imagehazmat">
+                        <div class="form-group">
+                            <input type="file" class="form-control" accept="image/*">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -569,7 +570,7 @@
 @endsection
 
 @push('js')
-<script src="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.min.js"></script>
+    <script src="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>

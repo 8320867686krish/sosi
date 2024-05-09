@@ -30,7 +30,7 @@
 
                 <td>{{ $hazmat->hazmat->name }}</td>
                 <td>{{ $hazmat->type }}</td>
-                @can('projects.edit')
+                {{-- @can('projects.edit') --}}
                     <td class="text-center">
                         <a href="javascript:;" class="editCheckbtn" data-dotId="dot_{{ $loop->iteration }}"
                             data-id="{{ $check->id }}"><i class="fas fa-edit text-primary"
@@ -38,7 +38,7 @@
                         <a href="javascript:;" class="modalCheckbtn ml-2" data-id="{{ $check->id }}"><i
                                 class="fas fa-images text-primary" style="font-size: 1rem"></i></a>
                     </td>
-                @endcan
+                {{-- @endcan --}}
             </tr>
         @endforeach
     @endforeach
