@@ -307,7 +307,23 @@ class ProjectsController extends Controller
             return response()->json(['error' => $th->getMessage()]);
         }
     }
+    public function removeLebDoc(Request $request){
+        $project_id = $request->input('project_id');
+        $filed = $request->input('type');
+        $projectData =  Projects::find($project_id);
+        if (@$projectData[$filed]) {
+            $imagePath =  public_path("images/labResult" . "/" . $project_id . "/" . $projectData[$filed]);
+            // Check if the image file exists before attempting to delete
 
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+                $projectData[$filed] = NULL;
+                $projectData->save();
+            }
+            return response()->json(['isStatus' => true, 'message' => 'Document Remove successfully!!']);
+
+        }
+    }
     public function pdfcrop(Request $request)
     {
         return view('projects.pdfCrop');
