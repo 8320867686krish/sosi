@@ -531,7 +531,13 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label for="remarks">Remarks</label>
-                                        <textarea name="remarks" id="remarks" class="form-control" rows="1"></textarea>
+                                        <textarea name="remarks" id="remarks" class="form-control" rows="2"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="recommendation">Recommendation</label>
+                                        <textarea name="recommendation" id="recommendation" class="form-control" rows="2"></textarea>
                                     </div>
                                 </div>
                             </div>

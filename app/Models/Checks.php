@@ -11,7 +11,7 @@ class Checks extends Model
 
     protected $table = "checks";
 
-    protected $fillable = ["project_id", "deck_id", "type", "name", "equipment", "component", "location", "sub_location", "remarks", "position_left", "position_top", "pairWitthTag", "isApp", 'initialsChekId', 'isCompleted'];
+    protected $fillable = ["project_id", "deck_id", "type", "name", "equipment", "component", "location", "sub_location", "remarks", "recommendation", "position_left", "position_top", "pairWitthTag", "isApp", 'initialsChekId', 'isCompleted'];
 
     protected $hidden = ['created_at', 'updated_at'];
 
@@ -29,8 +29,6 @@ class Checks extends Model
     {
       //  return $this->belongsToMany(Hazmat::class, CheckHasHazmat::class, 'check_id');
       return $this->hasMany(CheckHasHazmat::class, 'check_id', 'id');
-
-
     }
 
     public function deck()

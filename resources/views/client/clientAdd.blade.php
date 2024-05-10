@@ -37,7 +37,7 @@
                             <div class="row">
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="form-group">
-                                        <label for="manager_name">Name</label>
+                                        <label for="manager_name">Name <span class="text-danger">*</span></label>
                                         <input type="text"
                                             class="form-control @error('manager_name') is-invalid @enderror"
                                             id="manager_name" value="{{ old('manager_name', $client->manager_name ?? '') }}"
@@ -50,7 +50,7 @@
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4">
                                     <div class="form-group">
-                                        <label for="manager_initials">Ship Manager Initials</label>
+                                        <label for="manager_initials">Ship Manager Initials <span class="text-danger">*</span></label>
                                         <input type="text"
                                             class="form-control @error('manager_initials') is-invalid @enderror"
                                             id="manager_initials" name="manager_initials"
