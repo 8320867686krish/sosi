@@ -31,6 +31,10 @@
         <tbody>
             <tr>
                 <td>&nbsp;</td>
+                <td colspan="7" align="center" style="border: 2px solid #000000"><b>Ship Particulars Details</b></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
                 <td colspan="3" style="border: 2px solid #000000">Name of Ship</td>
                 <td colspan="4" style="border: 2px solid #000000">{{ $project->ship_name ?? '' }}</td>
             </tr>
@@ -39,31 +43,6 @@
                 <td colspan="3" style="border: 2px solid #000000">IMO Number</td>
                 <td colspan="4" align="left" style="border: 2px solid #000000">{{ $project->imo_number ?? '' }}
                 </td>
-            </tr>
-            <tr>
-                <td>&nbsp;</td>
-                <td colspan="3" style="border: 2px solid #000000">Gross Tonnage</td>
-                <td colspan="4" align="left" style="border: 2px solid #000000">{{ $project->gross_tonnage ?? '' }}
-                </td>
-            </tr>
-            <tr>
-                <td>&nbsp;</td>
-                <td colspan="3" style="border: 2px solid #000000">L x B x D</td>
-                <td colspan="4" style="border: 2px solid #000000">{{ $project->x_breadth_depth ?? '' }}</td>
-            </tr>
-            <tr>
-                <td>&nbsp;</td>
-                <td colspan="3" style="border: 2px solid #000000">Date of Delivery</td>
-                <td colspan="4" style="border: 2px solid #000000">
-                    {{ !empty($project->delivery_date) ? date('d-m-Y', strtotime($project->delivery_date)) : '' }}</td>
-            </tr>
-            <tr>
-                <td>&nbsp;</td>
-                <td colspan="7" align="center" style="border: 2px solid #000000"><b>&nbsp;</b></td>
-            </tr>
-            <tr>
-                <td>&nbsp;</td>
-                <td colspan="7" align="center" style="border: 2px solid #000000"><b>Ship Other Details</b></td>
             </tr>
             <tr>
                 <td>&nbsp;</td>
@@ -97,8 +76,25 @@
             </tr>
             <tr>
                 <td>&nbsp;</td>
+                <td colspan="3" style="border: 2px solid #000000">Date of Delivery</td>
+                <td colspan="4" style="border: 2px solid #000000">
+                    {{ !empty($project->delivery_date) ? date('d-m-Y', strtotime($project->delivery_date)) : '' }}</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
                 <td colspan="3" style="border: 2px solid #000000">Building Yard Details</td>
                 <td colspan="4" style="border: 2px solid #000000">{{ $project->building_details }}</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td colspan="3" style="border: 2px solid #000000">L x B x D</td>
+                <td colspan="4" style="border: 2px solid #000000">{{ $project->x_breadth_depth ?? '' }}</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td colspan="3" style="border: 2px solid #000000">Gross Tonnage</td>
+                <td colspan="4" align="left" style="border: 2px solid #000000">{{ $project->gross_tonnage ?? '' }}
+                </td>
             </tr>
             <tr>
                 <td>&nbsp;</td>
@@ -174,7 +170,7 @@
             <tr>
                 <td>&nbsp;</td>
                 <td colspan="3" style="border: 2px solid #000000">Name</td>
-                <td colspan="4" style="border: 2px solid #000000">S.O.S</td>
+                <td colspan="4" style="border: 2px solid #000000">Solution Ovelall For Shipping (S.O.S) India Pvt. Ltd.</td>
             </tr>
             <tr>
                 <td>&nbsp;</td>
@@ -188,8 +184,13 @@
             </tr>
             <tr>
                 <td>&nbsp;</td>
-                <td colspan="3" style="border: 2px solid #000000">Approved By</td>
-                <td colspan="4" style="border: 2px solid #000000">S.O.S. Recycling Pvt. Ltd.</td>
+                <td colspan="3" rowspan="2" valign="middle" style="border: 2px solid #000000">Approved By</td>
+                <td colspan="4" style="border: 2px solid #000000">Lloyed's Register (LR Class)</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                {{-- <td colspan="3" style="border: 2px solid #000000"></td> --}}
+                <td colspan="4" style="border: 2px solid #000000">India Register Of Shipping (IR Class)</td>
             </tr>
             <tr>
                 <td>&nbsp;</td>
@@ -228,11 +229,13 @@
                 <td>&nbsp;</td>
                 <td colspan="7" align="center" style="border: 2px solid #000000"><b>Laboratory</b></td>
             </tr>
-            <tr>
-                <td>&nbsp;</td>
-                <td colspan="3" style="border: 2px solid #000000">Laboratory</td>
-                <td colspan="4" style="border: 2px solid #000000">{{ $project->laboratorie1 }}</td>
-            </tr>
+            @if (!empty($project->laboratorie1))
+                <tr>
+                    <td>&nbsp;</td>
+                    <td colspan="3" style="border: 2px solid #000000">Laboratory</td>
+                    <td colspan="4" style="border: 2px solid #000000">{{ $project->laboratorie1 }}</td>
+                </tr>
+            @endif
             @if (!empty($project->laboratorie2))
                 <tr>
                     <td>&nbsp;</td>

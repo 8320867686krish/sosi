@@ -69,7 +69,7 @@
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
                         <td valign="middle" align="center" style="font-size: 14px;">
-                            {{ $check->type == 'sample' ? 'sampling' : 'visual' }}
+                            {{ $check->type }}
                         </td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
                         <td valign="middle" align="left" style="font-size: 14px;"></td>
@@ -91,7 +91,7 @@
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
                         <td valign="middle" align="center" style="font-size: 14px;">{{ $checkHazmat->type }}</td>
                         <td valign="middle" align="center" style="font-size: 14px;">
-                            {{ $check->type == 'sample' ? 'sampling' : 'visual' }}</td>
+                            {{ $check->type }}</td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
                         <td valign="middle" align="left" style="font-size: 14px;"></td>
                     </tr>
