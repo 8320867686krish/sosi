@@ -15,6 +15,10 @@ class CheckHasHazmat extends Model
         return asset(env('IMAGE_COMMON_PATH', "images/projects/") . $this->project_id . "/" . $value);
     }
 
+    public function getDocAttribute($value){
+        return asset(env('IMAGE_COMMON_PATH', "images/projects/") . $this->project_id . "/" . $value);
+    }
+
     public function hazmat()
     {
         return $this->belongsTo(Hazmat::class, 'hazmat_id', 'id');

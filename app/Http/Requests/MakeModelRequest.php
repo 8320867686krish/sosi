@@ -21,18 +21,22 @@ class MakeModelRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'hazmat_id' => 'required',
             'equipment' => 'required|max:254',
             'model' => 'required|max:254',
             'make' => 'required|max:254',
             'manufacturer' => 'required|max:254',
             'part' => 'required|max:254',
-            'document1' => 'required',
-
-            // `manufacturer`, `part`, `document1`, `document2`
         ];
+
+        if (empty($this->id)) {
+            $rules['document1'] = 'required';
+        }
+
+        return $rules;
     }
+
 
     public function messages(): array
     {

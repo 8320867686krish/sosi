@@ -39,24 +39,22 @@ class MakeModelContoller extends Controller
             $inputData = $request->input();
 
             if ($request->hasFile('document1')) {
-                $inputData['document1'] = $this->uploadDocument($request->file('document1'));
-
                 if (!empty($id)) {
                     $this->deleteOldDocument($id, 'document1');
                 }
+                $inputData['document1'] = $this->uploadDocument($request->file('document1'));
             }
 
             if ($request->hasFile('document2')) {
-                $inputData['document2'] = $this->uploadDocument($request->file('document2'));
-
                 if (!empty($id)) {
                     $this->deleteOldDocument($id, 'document2');
                 }
+                $inputData['document2'] = $this->uploadDocument($request->file('document2'));
             }
 
             MakeModel::updateOrCreate(['id' => $id], $inputData);
 
-            $message = empty($id) ? "Make Model added successfully" : "Make Model updated successfully";
+            $message = empty($id) ? "Document added successfully" : "Document updated successfully";
 
             return response()->json(['isStatus' => true, 'message' => $message]);
         } catch (\Throwable $th) {
@@ -101,20 +99,18 @@ class MakeModelContoller extends Controller
             $makemodel = MakeModel::findOrFail($id);
 
             if (!$makemodel) {
-                return response()->json(['isStatus' => false, 'message' => 'This make model not found']);
+                return response()->json(['isStatus' => false, 'message' => 'This document not found']);
             }
 
-            $file = basename($makemodel->getOriginal('document1'));
-            $this->deleteDocument($file);
+            $this->deleteDocument($makemodel->document1['name']);
 
-            $file = basename($makemodel->getOriginal('document2'));
-            $this->deleteDocument($file);
+            $this->deleteDocument($makemodel->document2['name']);
 
             $makemodel->delete();
 
-            return response()->json(['isStatus' => true, 'message' => 'Make model deleted successfully']);
+            return response()->json(['isStatus' => true, 'message' => 'Document deleted successfully']);
         } catch (\Throwable $th) {
-            return response()->json(['isStatus' => false, 'message' => 'Make model not deleted successfully']);
+            return response()->json(['isStatus' => false, 'message' => 'Document not deleted successfully']);
         }
     }
 
@@ -123,23 +119,25 @@ class MakeModelContoller extends Controller
         $model = MakeModel::findOrFail($id);
 
         if ($model->$document) {
-            $file = basename($model->getOriginal($document));
+            $file = $model->$document['name'];
             $this->deleteDocument($file);
         }
     }
 
     private function uploadDocument($file)
     {
-        $imageName = "modelDocument_" . time() . rand(10, 99) . '.' . $file->getClientOriginalExtension();
+        $imageName = "document_" . time() . rand(10, 99) . '.' . $file->getClientOriginalExtension();
         $file->move(public_path('images/modelDocument'), $imageName);
         return $imageName;
     }
 
     private function deleteDocument($imageName)
     {
-        $path = public_path('images/modelDocument/' . $imageName);
-        if (file_exists($path)) {
-            unlink($path);
+        if(!empty($imageName)){
+            $path = public_path('images/modelDocument/' . $imageName);
+            if (file_exists($path)) {
+                unlink($path);
+            }
         }
     }
 }

@@ -19,24 +19,28 @@ class PermissionSeeder extends Seeder
                 'actions' => [],
                 'is_show' => 0,
             ],
+
             'clients' => [
                 'actions' => ['read' => 0, 'add' => 0,'edit' => 0, 'remove' => 0],
                 "is_show" => 1
             ],
+
             'projects' => [
                 'actions' => ['read' => 0, 'add' => 0, 'edit' => 0,'remove' => 0],
                 "is_show" => 1
             ],
+
             'roles' => [
                 'actions' => ['read' => 0, 'add' => 0, 'edit' => 0,'remove' => 0],
                 "is_show" => 1
             ],
+
             'users' => [
                 'actions' => ['read' => 0, 'add' => 0,  'edit' => 0],
                 "is_show" => 1
             ],
 
-            'makemodel' => [
+            'documentdeclaration' => [
                 'actions' => ['read' => 0, 'add' => 0, 'edit' => 0,'remove' => 0],
                 "is_show" => 1
             ],
