@@ -30,8 +30,8 @@
 
 
                             <div class="row">
-                                <input type="hidden" name="project_id" value="{{ $project->id ?? '' }}">
-                                <div class="form-group col-12">
+                                <input type="hidden" name="project_id" value="{{ $project->id ?? '' }}" id="project_id">
+                                <div class="form-group col-12 mb-3">
                                     <label for="project_no">User</label>
                                     <select class="selectpicker show-tick form-control form-control-lg @error('user_id') is-invalid @enderror" name="user_id[]" id="user_id" multiple data-live-search="true" data-actions-box="true" {{ $readonly }} onchange="removeInvalidClass(this)">
                                         @if ($users->count() > 0)
@@ -59,7 +59,7 @@
                                 </div>
                                 <div class="form-group col-6">
                                     <label for="assign_date">End Date</label>
-                                    <input type="date" class="form-control form-control-lg @error('end_date') is-invalid @enderror" id="end_date" value="{{ old('end_date', $project->end_date[0] ?? '') }}" name="end_date" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }} >
+                                    <input type="date" class="form-control form-control-lg @error('end_date') is-invalid @enderror" id="end_date" value="{{ old('end_date', $project->end_date[0] ?? '') }}" name="end_date" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
                                     <div class="invalid-feedback error" id="end_dateError"></div>
 
                                 </div>
@@ -71,46 +71,117 @@
                     <div class="card-header" id="headingEight">
                         <h5 class="mb-0">
                             <button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
-                                <span class="fas fa-angle-down mr-3"></span>Laboratry Assign
+                                <span class="fas fa-angle-down mr-3"></span>Laboratory Assign
                             </button>
                         </h5>
                     </div>
                     <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordion3">
-                        <div class="card-body row">
-                            <div class="form-group col-6">
-                                <label for="assign_date">Laboratory 1</label>
-                                <input type="text" class="form-control form-control-lg  @error('laboratorie1') is-invalid @enderror" value="{{ old('laboratorie1', $project->laboratorie1 ?? '') }}" name="project[laboratorie1]" autocomplete="off" onchange="removeInvalidClass(this)"   {{ $readonly }} placeholder="Lab Name">
-                            </div>
-                            <div class="form-group col-6">
-                                <label for="assign_date">Laboratory 2</label>
-                                <input type="text" class="form-control form-control-lg @error('laboratorie2') is-invalid @enderror" id="laboratorie2" value="{{ old('laboratorie2', $project->laboratorie2 ?? '') }}" name="project[laboratorie2]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }} placeholder="Lab Name">
-                            </div>
+                        <div class="card-body">
+                            <h4>Laboratory1</h4>
 
-                            <div class="form-group col-6">
-                                <label for="assign_date"></label>
-                                <a href="{{ route('excelReport', ['project_id'=>$project->id, 'isSample'=>true]) }}" class="form-control btn btn-primary p-3" type="button">Genrate Lab List</a>
-                            </div>
+                            <div class="row">
+                                <div class="form-group col-6 mb-3">
+                                    <label for="assign_date">Name</label>
+                                    <input type="text" class="form-control form-control-lg  @error('laboratorie1') is-invalid @enderror" value="{{ old('laboratorie1', $project->laboratorie1 ?? '') }}" name="project[laboratorie1]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }} placeholder="Lab Name">
+                                </div>
+                                <div class="form-group col-6 mb-3">
+                                    <label for="excelReport"></label>
+                                    <a href="{{ route('excelReport', ['project_id'=>$project->id, 'isSample'=>true]) }}" class="form-control btn btn-primary p-3" type="button">Genrate Lab List</a>
+                                </div>
 
-                            <div class="form-group col-6">
-                                <label for="assign_date">Upload Lab List</label>
-                                <input type="file" class="form-control form-control-lg @error('leb2LabList') is-invalid @enderror" id="leb2LabList" value="{{ old('leb2LabList', $project->leb2LabList ?? '') }}" name="project[leb2LabList]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
-                            </div>
-                            <div class="form-group col-6">
-                                <label for="assign_date">Result1</label>
-                                <input type="file" class="form-control form-control-lg @error('leb1LaboratoryResult1') is-invalid @enderror" id="leb1LaboratoryResult1" value="{{ old('leb1LaboratoryResult1', $project->leb1LaboratoryResult1 ?? '') }}" name="project[leb1LaboratoryResult1]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
-                            </div>
-                            <div class="form-group col-6">
-                                <label for="assign_date">Result1</label>
-                                <input type="file" class="form-control form-control-lg @error('leb2LaboratoryResult1') is-invalid @enderror" id="leb2LaboratoryResult1" value="{{ old('leb2LaboratoryResult1', $project->leb2LaboratoryResult1 ?? '') }}" name="project[leb2LaboratoryResult1]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
-                            </div>
-                            <div class="form-group col-6">
-                                <label for="assign_date">Result 2</label>
-                                <input type="file" class="form-control form-control-lg @error('leb1LaboratoryResult2') is-invalid @enderror" id="leb1LaboratoryResult2" value="{{ old('leb1LaboratoryResult2', $project->leb1LaboratoryResult2 ?? '') }}" name="project[leb1LaboratoryResult2]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
-                            </div>
+                                <div class="form-group col-6 mb-4">
+                                    <label for="assign_date">Result1</label>
+                                    <input type="file" class="form-control form-control-lg @error('leb1LaboratoryResult1') is-invalid @enderror" id="leb1LaboratoryResult1" value="{{ old('leb1LaboratoryResult1', $project->leb1LaboratoryResult1 ?? '') }}" name="project[leb1LaboratoryResult1]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                    @if($project->leb1LaboratoryResult1)
+                                    <label class="mt-2 leb1LaboratoryResult1">
+                                        <a href="{{ asset('images/labResult/' . $project->id . '/' . $project->leb1LaboratoryResult1) }}" target="_blank">
+                                            {{ $project->leb1LaboratoryResult1 }}
+                                        </a>
+                                        <a href="javascript:;" class="ml-2 removeDoc" data-filed="leb1LaboratoryResult1">
+                                            <i class="fas fa-trash-alt text-danger" style="font-size: 1rem;"></i>
+                                        </a>
+                                    </label>
 
-                            <div class="form-group col-6">
-                                <label for="assign_date">Result 2</label>
-                                <input type="file" class="form-control form-control-lg @error('leb2LaboratoryResult2') is-invalid @enderror" id="leb2LaboratoryResult2" value="{{ old('leb2LaboratoryResult2', $project->leb2LaboratoryResult2 ?? '') }}" name="project[leb2LaboratoryResult2]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                    @endif
+
+                                </div>
+
+                                <div class="form-group col-6 mb-4">
+                                    <label for="assign_date">Result 2</label>
+                                    <input type="file" class="form-control form-control-lg @error('leb1LaboratoryResult2') is-invalid @enderror" id="leb1LaboratoryResult2" value="{{ old('leb1LaboratoryResult2', $project->leb1LaboratoryResult2 ?? '') }}" name="project[leb1LaboratoryResult2]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                    @if($project->leb1LaboratoryResult2)
+                                    <label class="mt-2 docleb1LaboratoryResult2">
+                                        <a href="{{ asset('images/labResult/' . $project->id . '/' . $project->leb1LaboratoryResult2) }}" target="_blank">
+                                            {{ $project->leb1LaboratoryResult2 }}
+                                        </a>
+                                        <a href="javascript:;" class="ml-2 removeDoc" data-filed="leb1LaboratoryResult2">
+                                            <i class="fas fa-trash-alt text-danger" style="font-size: 1rem;"></i>
+                                        </a>
+                                    </label>
+
+                                    @endif
+                                </div>
+
+                            </div>
+                            <div class=" border-top">
+                                <h4 class="mt-3">Laboratory2</h4>
+                            </div>
+                            <div class="row">
+
+                                <div class="form-group col-6 mb-1">
+                                    <label for="assign_date">Name</label>
+                                    <input type="text" class="form-control form-control-lg @error('laboratorie2') is-invalid @enderror" id="laboratorie2" value="{{ old('laboratorie2', $project->laboratorie2 ?? '') }}" name="project[laboratorie2]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }} placeholder="Lab Name">
+                                </div>
+
+                                <div class="form-group col-6  mb-1">
+                                    <label for="assign_date">Upload Lab List</label>
+                                    <input type="file" class="form-control form-control-lg @error('leb2LabList') is-invalid @enderror" id="leb2LabList" value="{{ old('leb2LabList', $project->leb2LabList ?? '') }}" name="project[leb2LabList]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+
+                                    @if($project->leb2LabList)
+                                    <label class="mt-2 docleb2LabList">
+                                        <a href="{{ asset('images/labResult/' . $project->id . '/' . $project->leb2LabList) }}" target="_blank">
+                                            {{ $project->leb2LabList }}
+                                        </a>
+                                        <a href="javascript:;" class="ml-2 removeDoc" data-filed="leb2LabList">
+                                            <i class="fas fa-trash-alt text-danger" style="font-size: 1rem;"></i>
+                                        </a>
+                                    </label>
+
+                                    @endif
+                                </div>
+
+                                <div class="form-group col-6">
+                                    <label for="assign_date">Result1</label>
+                                    <input type="file" class="form-control form-control-lg @error('leb2LaboratoryResult1') is-invalid @enderror" id="leb2LaboratoryResult1" value="{{ old('leb2LaboratoryResult1', $project->leb2LaboratoryResult1 ?? '') }}" name="project[leb2LaboratoryResult1]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                    @if($project->leb2LaboratoryResult1)
+                                    <label class="mt-2 docleb2LaboratoryResult1">
+                                        <a href="{{ asset('images/labResult/' . $project->id . '/' . $project->leb2LaboratoryResult1) }}" target="_blank">
+                                            {{ $project->leb2LaboratoryResult1 }}
+                                        </a>
+                                        <a href="javascript:;" class="ml-2 removeDoc" data-filed="leb2LaboratoryResult1">
+                                            <i class="fas fa-trash-alt text-danger" style="font-size: 1rem;"></i>
+                                        </a>
+                                    </label>
+
+                                    @endif
+                                </div>
+
+
+                                <div class="form-group col-6">
+                                    <label for="assign_date">Result 2</label>
+                                    <input type="file" class="form-control form-control-lg @error('leb2LaboratoryResult2') is-invalid @enderror" id="leb2LaboratoryResult2" value="{{ old('leb2LaboratoryResult2', $project->leb2LaboratoryResult2 ?? '') }}" name="project[leb2LaboratoryResult2]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                    @if($project->leb2LaboratoryResult2)
+                                    <label class="mt-2 docleb2LaboratoryResult2">
+                                        <a href="{{ asset('images/labResult/' . $project->id . '/' . $project->leb2LaboratoryResult2) }}" target="_blank">
+                                            {{ $project->leb2LaboratoryResult2 }}
+                                        </a>
+                                        <a href="javascript:;" class="ml-2 removeDoc" data-filed="leb2LaboratoryResult2">
+                                            <i class="fas fa-trash-alt text-danger" style="font-size: 1rem;"></i>
+                                        </a>
+                                    </label>
+
+                                    @endif
+                                </div>
                             </div>
 
                         </div>
@@ -133,11 +204,11 @@
                                     <label for="project_no">Survey Location Name</label>
                                     <input type="text" class="form-control  form-control-lg @error('survey_location_name') is-invalid @enderror" id="survey_location_name" value="{{ old('survey_location_name', $project->survey_location_name ?? '') }}" name="project[survey_location_name]" placeholder="Survey Location Name" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
                                 </div>
-                                <div class="form-group col-6">
+                                <div class="form-group col-6 mb-3">
                                     <label for="additional_hazmats">Survey Location Address</label>
                                     <input type="text" class="form-control form-control-lg @error('survey_location_address') is-invalid @enderror" id="survey_location_address" value="{{ old('survey_location_address', $project->survey_location_address ?? '') }}" name="project[survey_location_address]" placeholder="Survey Location Address..." autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
                                 </div>
-                                <div class="form-group col-6">
+                                <div class="form-group col-6 mb-3">
                                     <label for="client_name">Survey Type</label>
                                     <input type="text" class="form-control form-control-lg @error('survey_type') is-invalid @enderror" id="survey_type" name="project[survey_type]" value="{{ old('survey_type', $project->survey_type ?? '') }}" placeholder="Survey Type..." autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
                                 </div>
@@ -156,7 +227,45 @@
 </div>
 @push('js')
 <script>
+    $(".removeDoc").click(function(e) {
+        var type = $(this).attr('data-filed');
+        var project_id = $("#project_id").val();
+        e.preventDefault();
+        swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this imaginary file!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel plx!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+            function(isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: "post",
+                        url: "{{ url('remove/lebDoc') }}",
+                        data: {
+                            project_id: project_id,
+                            type: type
+                        }, // Convert data object to JSON string
+                        dataType: 'json',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(msg) {
+                            $(".doc"+type).remove();
+                        }
+                    });
+                    swal("Deleted!", "Your imaginary file has been deleted.", "success");
+                } else {
+                    swal("Cancelled", "Your imaginary file is safe :)", "error");
+                }
+            });
 
+    });
 
     $('#SurveyForm').submit(function(e) {
         e.preventDefault();
@@ -168,6 +277,7 @@
             data: formData,
             contentType: false,
             processData: false,
+
             success: function(msg) {
                 $(".sucessSurveylMsg").show();
             },
