@@ -17,7 +17,7 @@
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
-                    <h2 class="pageheader-title">Make Model Management</h2>
+                    <h2 class="pageheader-title">Document Declaration Management</h2>
                 </div>
             </div>
         </div>
@@ -32,12 +32,12 @@
                     <h4 class="card-header">
                         <div class="row">
                             <div class="col-6">
-                                <h3>Make Model</h3>
+                                <h3>Document Declaration</h3>
                             </div>
                             <div class="col-6">
-                                @can('makemodel.add')
-                                    <a href="{{ route('makemodel.add') }}"
-                                        class="btn btn-primary float-right btn-rounded addNewBtn">Add New Model</a>
+                                @can('documentdeclaration.add')
+                                    <a href="{{ route('documentdeclaration.add') }}"
+                                        class="btn btn-primary float-right btn-rounded addNewBtn">Add New Document</a>
                                 @endcan
                             </div>
                         </div>
@@ -54,6 +54,8 @@
                                         <th>Make</th>
                                         <th>Manufacturer</th>
                                         <th>Part</th>
+                                        <th>Document 1</th>
+                                        <th>Document 2</th>
                                         <th width="10%">Action</th>
                                     </tr>
                                 </thead>
@@ -68,15 +70,24 @@
                                                 <td>{{ $model->make }}</td>
                                                 <td>{{ $model->manufacturer }}</td>
                                                 <td>{{ $model->part }}</td>
+                                                <td>
+                                                    <a href="{{ $model->document1['path'] }}" target="_black">{{ $model->document1['name'] }}</a>
+                                                </td>
+                                                <td>
+                                                    <a href="{{ $model->document2['path'] }}" target="_black" >{{ $model->document2['name'] }}</a>
+                                                </td>
                                                 <td class="text-center">
-                                                    @can('makemodel.edit')
-                                                        <a href="{{ route('makemodel.edit', ['id' => $model->id]) }}" rel="noopener noreferrer" title="Edit" class="text-center">
+                                                    @can('documentdeclaration.edit')
+                                                        <a href="{{ route('documentdeclaration.edit', ['id' => $model->id]) }}"
+                                                            rel="noopener noreferrer" title="Edit" class="text-center">
                                                             <i class="fas fa-edit text-primary" style="font-size: 1rem"></i>
                                                         </a>
                                                     @endcan
-                                                    @can('makemodel.remove')
-                                                        <a href="javascript:;" data-id="{{ $model->id }}" class="ml-2 delete-btn" title="Delete">
-                                                            <i class="fas fa-trash-alt text-danger" style="font-size: 1rem !important"></i>
+                                                    @can('documentdeclaration.remove')
+                                                        <a href="javascript:;" data-id="{{ $model->id }}"
+                                                            class="ml-2 delete-btn" title="Delete">
+                                                            <i class="fas fa-trash-alt text-danger"
+                                                                style="font-size: 1rem !important"></i>
                                                         </a>
                                                     @endcan
                                                 </td>
@@ -122,7 +133,7 @@
 
             $('.delete-btn').on('click', function() {
                 let recordId = $(this).data('id');
-                let deleteUrl = "{{ route('makemodel.delete', ':id') }}".replace(':id', recordId);
+                let deleteUrl = "{{ route('documentdeclaration.delete', ':id') }}".replace(':id', recordId);
                 let $deleteButton = $(this);
 
                 // Show confirmation dialog

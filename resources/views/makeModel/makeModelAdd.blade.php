@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
-                    <h2 class="pageheader-title">Make Model Management</h2>
+                    <h2 class="pageheader-title">Document Declaration Management</h2>
                 </div>
             </div>
         </div>
@@ -23,9 +23,9 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                 @include('layouts.message')
                 <div class="card">
-                    <h5 class="card-header">{{ $head_title ?? '' }} Model</h5>
+                    <h5 class="card-header">{{ $head_title ?? '' }} Document</h5>
                     <div class="card-body">
-                        <form method="post" action="{{ route('makemodel.store') }}" class="needs-validation" novalidate id="makeModelForm">
+                        <form method="post" action="{{ route('documentdeclaration.store') }}" class="needs-validation" novalidate id="makeModelForm">
                             @csrf
                             <input type="hidden" name="id" value="{{ $model->id ?? '' }}">
                             <div class="row">
@@ -108,7 +108,7 @@
                             <div class="row mt-3">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <a href="{{ route('makemodel') }}" id="modelBackBtn" type="button"><i class="fas fa-arrow-left"></i> <b>Back</b></a>
+                                        <a href="{{ route('documentdeclaration') }}" id="modelBackBtn" type="button"><i class="fas fa-arrow-left"></i> <b>Back</b></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
@@ -171,7 +171,7 @@
                         if (response.isStatus) {
                             localStorage.setItem('message', response.message);
                         }
-                        window.location.href = "{{ route('makemodel') }}";
+                        window.location.href = "{{ route('documentdeclaration') }}";
                     },
                     error: function(xhr, status, error) {
                         let errors = xhr.responseJSON.errors;

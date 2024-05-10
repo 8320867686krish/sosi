@@ -116,14 +116,14 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    Route::middleware('can:makemodel')->group(function () {
+    Route::middleware('can:documentdeclaration')->group(function () {
         // Route::resource('makemodel', MakeModelContoller::class);
         Route::controller(MakeModelContoller::class)->group(function () {
-            Route::get('makemodel', 'index')->name('makemodel')->middleware('can:makemodel');
-            Route::get('makemodel/add', 'create')->name('makemodel.add')->middleware('can:makemodel.add');
-            Route::post('makemodel', 'store')->name('makemodel.store')->middleware('can:makemodel.add');
-            Route::get('makemodel/{id}/delete', 'destroy')->name('makemodel.delete');
-            Route::get('makemodel/{id}/edit', 'edit')->name('makemodel.edit');
+            Route::get('documentdeclaration', 'index')->name('documentdeclaration')->middleware('can:documentdeclaration');
+            Route::get('documentdeclaration/add', 'create')->name('documentdeclaration.add')->middleware('can:documentdeclaration.add');
+            Route::post('documentdeclaration', 'store')->name('documentdeclaration.store')->middleware('can:documentdeclaration.add');
+            Route::get('documentdeclaration/{id}/delete', 'destroy')->name('documentdeclaration.delete');
+            Route::get('documentdeclaration/{id}/edit', 'edit')->name('documentdeclaration.edit');
         });
     });
 

@@ -159,7 +159,6 @@
 
 
     $('#SurveyForm').submit(function(e) {
-
         e.preventDefault();
         var form = $(this); // Get the form element
         var formData = new FormData(form[0]); // Create FormData object from the form

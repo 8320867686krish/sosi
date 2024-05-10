@@ -37,7 +37,7 @@
                                             if ($permission['name'] == $string) {
                                                 $string = $string;
                                             } else {
-                                                $string = $string . "s";
+                                                $string = $string . 's';
                                             }
                                         }
 
@@ -47,6 +47,10 @@
 
                                         if ($string == $permission['name']) {
                                             $isActive = true;
+                                        }
+
+                                        if (strpos($newPermissionName, 'declaration') !== false) {
+                                            $newPermissionName = "Document Declaration";
                                         }
 
                                     @endphp
