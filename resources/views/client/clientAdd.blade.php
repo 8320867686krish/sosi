@@ -36,7 +36,7 @@
                             <input type="hidden" name="id" value="{{ $client->id ?? '' }}">
                             <div class="row">
                                 <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="manager_name">Name <span class="text-danger">*</span></label>
                                         <input type="text"
                                             class="form-control @error('manager_name') is-invalid @enderror"
@@ -49,7 +49,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="manager_initials">Ship Manager Initials <span class="text-danger">*</span></label>
                                         <input type="text"
                                             class="form-control @error('manager_initials') is-invalid @enderror"
@@ -63,7 +63,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="manager_email">Email</label>
                                         <input type="email"
                                             class="form-control @error('manager_email') is-invalid @enderror"
@@ -79,7 +79,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="manager_phone">Phone</label>
                                         <input type="number"
                                             class="form-control @error('manager_phone') is-invalid @enderror"
@@ -93,7 +93,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="manager_contact_person_name">Contact Person Name</label>
                                         <input type="text"
                                             class="form-control @error('manager_contact_person_name') is-invalid @enderror"
@@ -107,7 +107,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="manager_contact_person_email">Contact Person Email</label>
                                         <input type="email"
                                             class="form-control @error('manager_contact_person_email') is-invalid @enderror"
@@ -123,7 +123,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="manager_contact_person_phone">Contact Person Phone</label>
                                         <input type="number"
                                             class="form-control @error('manager_contact_person_phone') is-invalid @enderror"
@@ -137,7 +137,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="rpsl">RPSL Details</label>
                                         <input type="text" class="form-control @error('rpsl') is-invalid @enderror"
                                             id="rpsl" name="rpsl" value="{{ old('rpsl', $client->rpsl ?? '') }}"
@@ -149,7 +149,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="manager_website">Website</label>
                                         <input type="text"
                                             class="form-control @error('manager_website') is-invalid @enderror"
@@ -165,7 +165,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12 col-md-6 col-lg-6">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="manager_tax_information">Tax Information</label>
                                         <input type="text" name="manager_tax_information" id="manager_tax_information"
                                             class="form-control @error('manager_tax_information') is-invalid @enderror"
@@ -178,7 +178,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-6">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="manager_address">Address</label>
                                         <textarea name="manager_address" id="manager_address" rows="1"
                                             class="form-control @error('manager_address') is-invalid @enderror" onchange="removeInvalidClass(this)">{{ old('manager_address', $client->manager_address ?? '') }}</textarea>
@@ -188,7 +188,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="manager_logo">Ship Manager Logo</label>
                                         <input type="file"
                                             class="form-control @error('manager_logo') is-invalid @enderror"
@@ -223,7 +223,7 @@
 
                             <div class="row">
                                 <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="owner_name">Name</label>
                                         <input type="text"
                                             class="form-control @error('owner_name') is-invalid @enderror"
@@ -236,7 +236,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="owner_email">Email</label>
                                         <input type="email"
                                             class="form-control @error('owner_email') is-invalid @enderror"
@@ -250,7 +250,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="owner_phone">Phone</label>
                                         <input type="number"
                                             class="form-control @error('owner_phone') is-invalid @enderror"
@@ -266,7 +266,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="owner_address">Address</label>
                                         <textarea name="owner_address" id="owner_address" rows="1"
                                             class="form-control @error('owner_address') is-invalid @enderror">{{ old('owner_address', $client->owner_address ?? '') }}</textarea>
@@ -276,7 +276,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="IMO_ship_owner_details">IMO Ship owner details</label>
                                         <input type="text" class="form-control" id="IMO_ship_owner_details"
                                             name="IMO_ship_owner_details"
@@ -288,7 +288,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="owner_contact_person_name">Contact Person Name</label>
                                         <input type="text"
                                             class="form-control @error('owner_contact_person_name') is-invalid @enderror"
@@ -302,7 +302,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="owner_contact_person_email">Email</label>
                                         <input type="email"
                                             class="form-control @error('owner_contact_person_email') is-invalid @enderror"
@@ -316,7 +316,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="owner_contact_person_phone">Phone</label>
                                         <input type="number"
                                             class="form-control @error('owner_contact_person_phone') is-invalid @enderror"
@@ -332,7 +332,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="owner_website">Website</label>
                                         <input type="text"
                                             class="form-control @error('owner_website') is-invalid @enderror"
@@ -344,7 +344,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="owner_logo">Ship Owner Logo</label>
                                         <input type="file"
                                             class="form-control @error('owner_logo') is-invalid @enderror"
@@ -362,13 +362,13 @@
                             </div>
                             <div class="row mt-3">
                                 <div class="col-sm-12 col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <a href="{{ route('clients') }}" type="button" class="btn pl-0"><i
                                                 class="fas fa-arrow-left"></i> <b>Back</b></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <button class="btn btn-primary float-right formSubmitBtn"
                                             type="submit">{!! $button ?? 'Add' !!}</button>
                                     </div>
