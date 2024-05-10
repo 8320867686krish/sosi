@@ -8,7 +8,6 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/select.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/fixedHeader.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/fancybox/fancybox.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.css">
     <style>
         #pdf-container {
             position: relative;
@@ -141,24 +140,31 @@
                     @csrf
                     <input type="hidden" name="id" value="{{ $project->id ?? '' }}">
                     <div class="row mb-5">
-                        <div class="col-offset-2 col-sm-12 col-md-6 col-lg-3">
+                        <div class="col-sm-6 col-md-8 col-lg-3">
+                        <div class="preview-image-container">
+
                             <img id="previewImg" src="{{ $project->imagePath }}"
                                 onerror="this.onerror=null;this.src='{{ asset('assets/images/logo.png') }}';"
                                 style="max-width: 300px" alt="Upload Image">
                         </div>
-                        <div class="col-sm-12 col-md-6 col-lg-2 pt-10">
-                            <div class="form-group">
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-1 pt-10">
+                            <div class="form-group mb-3">
+
+                            <button class="addfiles btn btn-primary"><i class="fas fa-upload"></i></button>
+
                                 <input type="file" class="form-control  @error('image') is-invalid @enderror"
                                     id="image" name="image" autocomplete="off"
                                     onchange="previewFile(this); removeInvalidClass(this)" {{ $readonly }}
-                                    accept="image/*">
+                                    accept="image/*" style="display:none">
+
                                 <div class="invalid-feedback" id="imageError"></div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-12 col-md-6 col-lg-4">
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label for="ship_name">Ship Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control  @error('ship_name') is-invalid @enderror"
                                     id="ship_name" value="{{ old('ship_name', $project->ship_name ?? '') }}"
@@ -168,7 +174,7 @@
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-6 col-lg-4">
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label for="imo_number">Ship IMO Number <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control  @error('imo_number') is-invalid @enderror"
                                     id="imo_number" name="imo_number" onchange="removeInvalidClass(this)"
@@ -178,7 +184,7 @@
                         </div>
 
                         <div class="col-sm-12 col-md-6 col-lg-4">
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label for="call_sign">Call Sign</label>
                                 <input type="text" class="form-control  @error('call_sign') is-invalid @enderror"
                                     id="call_sign" name="call_sign" placeholder="Call Sign..."
@@ -191,7 +197,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12 col-md-6 col-lg-4">
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label for="manager_name">Manager Name</label>
                                 <input type="text" class="form-control  @error('manager_name') is-invalid @enderror"
                                     id="manager_name"
@@ -455,7 +461,7 @@
                             <input type="hidden" id="position_top" name="position_top">
                             <div class="row">
                                 <div class="col-12 col-md-6" id="chkName">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="name">Name</label>
                                         <input type="text" id="name" name="name" value=""
                                             class="form-control" readonly>
@@ -463,7 +469,7 @@
                                 </div>
 
                                 <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="type">Type <span class="text-danger">*</span></label>
                                         <select name="type" id="type" class="form-control">
                                             <option value>Select Type</option>
@@ -474,32 +480,32 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="location">Location</label>
                                         <input type="text" id="location" name="location" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="sub_location">Sub Location</label>
                                         <input type="text" id="sub_location" name="sub_location"
                                             class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="equipment">Equipment</label>
                                         <input type="text" id="equipment" name="equipment" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="component">Component</label>
                                         <input type="text" id="component" name="component" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="suspected_hazmat">Suspected Hazmat</label>
                                         <select class="form-control selectpicker" id="suspected_hazmat"
                                             name="suspected_hazmat[]" multiple="multiple">
@@ -529,7 +535,7 @@
                                 </div>
 
                                 <div class="col-12">
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="remarks">Remarks</label>
                                         <textarea name="remarks" id="remarks" class="form-control" rows="1"></textarea>
                                     </div>
@@ -549,7 +555,7 @@
                 <label for="table_type" id="tableTypeLable"></label>
                 <div class="row">
                     <div class="col-12">
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <select class="form-control" id="table_type" name="table_type">
                                 <option value="Contained">Contained</option>
                                 <option value="Not Contained">Not Contained</option>
@@ -559,12 +565,12 @@
                         </div>
                     </div>
                     <div class="col-4 imagehazmat">
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <input type="file" class="form-control hazmatImg" accept="image/*">
                         </div>
                     </div>
                     <div class="col-4 dochazmat">
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <input type="file" class="form-control hazmatDoc">
                         </div>
                     </div>
@@ -575,9 +581,7 @@
 @endsection
 
 @push('js')
-    <script src="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="{{ asset('assets/vendor/jquery.areaSelect.js') }}"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
@@ -1238,5 +1242,7 @@
                 });
             });
         });
+        $('.addfiles').on('click', function() { $('#image').click();return false;});
+
     </script>
 @endpush
