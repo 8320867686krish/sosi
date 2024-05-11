@@ -18,7 +18,7 @@ class HazmatSeeder extends Seeder
             ['name' => 'Polychlorinated Biphenyls (PCB)', 'short_name' => 'PCB', 'table_type' => 'A-2', 'color' => 'Green'],
             ['name' => 'Ozone depleting substances (ODS)', 'short_name' => 'ODS', 'table_type' => 'A-3', 'color' => 'Brown'],
             ['name' => 'Organotin Compounds', 'short_name' => 'Otin', 'table_type' => 'A-4', 'color' => 'Red'],
-            ['name' => 'Cybutryne', 'short_name' => 'CY', 'table_type' => 'table a', 'color' => 'Black'],
+            ['name' => 'Cybutryne', 'short_name' => 'Cyb', 'table_type' => 'A-5', 'color' => 'Black'],
             ['name' => 'Perfluorooctane Sulfonic Acid (PFOS)', 'short_name' => 'PFOS', 'table_type' => 'A-6', 'color' => 'Orange'],
             ['name' => 'Cadmium (and compounds)', 'short_name' => 'Cd', 'table_type' => 'B-1', 'color' => 'Blue'],
             ['name' => 'Chromium (and compounds)', 'short_name' => 'Cr', 'table_type' => 'B-2', 'color' => 'Green'],

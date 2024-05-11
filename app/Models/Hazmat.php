@@ -24,4 +24,8 @@ class Hazmat extends Model
     public function checkHasHazmatsVisual(){
         return $this->hasMany(CheckHasHazmat::class)->where('check_type', 'visual');
     }
+
+    public function equipment(){
+        return $this->hasMany(MakeModel::class);
+    }
 }

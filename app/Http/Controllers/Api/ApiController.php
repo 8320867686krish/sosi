@@ -568,12 +568,28 @@ class ApiController extends Controller
     public function getCheckDetail($checkId)
     {
         try {
-            $checks = Checks::with('deck')->find($checkId);
+            $checks = Checks::with(['hazmats' => function ($query) {
+                $query->with('hazmat:id,name'); // Eager load hazmat with only id, name, and image columns
+            }])->with('deck')->find($checkId);
 
             if (!$checks) {
                 return response()->json(['isStatus' => false, 'message' => 'Check not found.']);
             }
-            $checkDetails = $checks ;
+
+            if ($checks->hazmats->count() > 0) {
+                $hazmatNames = [];
+
+                foreach ($checks->hazmats as $hazmat) {
+                    $hazmatNames[] = $hazmat->hazmat->name;
+                }
+
+                $checks->suspected_hazmat = implode(', ', $hazmatNames);
+                unset($checks->hazmats);
+            } else {
+                $checks->suspected_hazmat = null;
+            }
+
+            $checkDetails = $checks;
             $checkDetails['deckImage'] = $checks['deck']['image'];
             unset($checkDetails['deck']);
 
@@ -716,13 +732,13 @@ class ApiController extends Controller
         $projects = DB::select('describe projects');
         $clients = DB::select('describe clients');
         foreach ($clients as $clientField) {
-        
+
 
             if($clientField->Field == 'manager_name' || $clientField->Field == 'manager_address' || $clientField->Field == 'owner_name' || $clientField->Field == 'owner_address' )
               $projects[] = $clientField;
-         
+
         }
-        
+
         $decks = DB::select('describe decks');
         $checks = DB::select('describe checks');
         $check_has_images = DB::select('describe check_has_images');
