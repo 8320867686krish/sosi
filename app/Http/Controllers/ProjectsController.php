@@ -12,6 +12,7 @@ use App\Models\Client;
 use App\Models\Deck;
 use App\Models\Hazmat;
 use App\Models\Attechments;
+use App\Models\MakeModel;
 use App\Models\Projects;
 use App\Models\ProjectTeam;
 use App\Models\User;
@@ -307,7 +308,8 @@ class ProjectsController extends Controller
             return response()->json(['error' => $th->getMessage()]);
         }
     }
-    public function removeLebDoc(Request $request){
+    public function removeLebDoc(Request $request)
+    {
         $project_id = $request->input('project_id');
         $filed = $request->input('type');
         $projectData =  Projects::find($project_id);
@@ -321,7 +323,6 @@ class ProjectsController extends Controller
                 $projectData->save();
             }
             return response()->json(['isStatus' => true, 'message' => 'Document Remove successfully!!']);
-
         }
     }
     public function pdfcrop(Request $request)
@@ -356,13 +357,30 @@ class ProjectsController extends Controller
             $query->with('hazmat:id,name'); // Eager load hazmat with only id, name, and image columns
         }])->find($id);
 
+        //
+
         $hazmatIds = $check->hazmats->pluck('hazmat_id')->toArray();
 
+        // $makeModels = MakeModel::whereIn('hazmat_id', $hazmatIds)
+        //     ->groupBy('equipment')
+        //     ->get();
+
         $hazmats = $check->hazmats;
+
 
         $htmllist = view('check.checkAddModal', compact('hazmats'))->render();
 
         return response()->json(['html' => $htmllist, 'hazmatIds' => $hazmatIds, "check" => $check]);
+    }
+
+    public function getHazmatEquipment($hazmat_id) {
+        try {
+            $hazmat = Hazmat::with('equipment')->find($hazmat_id);
+            $groupedEquipment = $hazmat->equipment->groupBy('equipment');
+            return response()->json(['isStatus' => true, 'message' => 'Equipment retrieved successfully.', 'equipments' => $groupedEquipment]);
+        } catch (Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
     }
 
     public function checkBasedImage($id)

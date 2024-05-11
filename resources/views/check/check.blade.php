@@ -458,6 +458,16 @@
             cloneTableTypeDiv.find(".dochazmat").toggle(selectedValue !== "Unknown");
         }
 
+        function getHazmatEquipment(hazmat_id) {
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('getHazmatEquipment') }}" + "/" + hazmat_id,
+                success: function(response) {
+                    console.log(response);
+                } ,
+            });
+        }
+
         $(document).ready(function() {
             let checkId;
             $(".imagehazmat").hide();
@@ -675,6 +685,7 @@
                         name: `image[${selectedValue}]`
                     });
 
+                    getHazmatEquipment(selectedValue);
                     // Append cloned element to showTableTypeDiv
                     $('#showTableTypeDiv').append(clonedElement);
                 }
