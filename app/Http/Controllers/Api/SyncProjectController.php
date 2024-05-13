@@ -77,8 +77,29 @@ class SyncProjectController extends Controller
         $checks = Checks::with(['hazmats' => function ($query) {
             $query->with('hazmat:id,name');
         }])->where('project_id', $projectId)->get();
+        $checksArray = $checks->map(function ($check) {
+            return [
+                'id' => $check->id,
+                'project_id' => $check->project_id,
+                'deck_id' => $check->deck_id,
+                'type' => $check->type,
+                'name' => $check->name,
+                'equipment' => $check->equipment,
+                'component' => $check->component,
+                'location' => $check->location,
+                'sub_location' => $check->sub_location,
+                'pairWitthTag' => $check->pairWitthTag,
+                'remarks' => $check->remarks,
+                'position_left' => $check->position_left,
+                'position_top' => $check->position_top,
+                'initialsChekId' => $check->initialsChekId,
+                'isApp' => $check->isApp,
+                'isCompleted' => $check->isCompleted,
+                'suspected_hazmat' => $check->hazmats->pluck('hazmat.name')->implode(', '),
+            ];
+        });
         $checkImages = CheckImage::where('project_id', $projectId)->get();
-        return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages]);
+        return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'decks' => $decks, 'checks' => $checksArray, 'checkImages' => $checkImages]);
     }
 
     public function createZip(Request $request)
