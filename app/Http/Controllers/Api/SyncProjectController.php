@@ -74,7 +74,9 @@ class SyncProjectController extends Controller
         $client_id = Projects::select('client_id')->find($projectId);
         $client = Client::find($client_id)->toArray();
         $decks = Deck::where('project_id', $projectId)->get();
-        $checks = Checks::where('project_id', $projectId)->get();
+        $checks = Checks::with(['hazmats' => function ($query) {
+            $query->with('hazmat:id,name');
+        }])->where('project_id', $projectId)->get();
         $checkImages = CheckImage::where('project_id', $projectId)->get();
         return response()->json(['isStatus' => true, 'message' => 'Project list retrieved successfully.', 'decks' => $decks, 'checks' => $checks, 'checkImages' => $checkImages]);
     }
