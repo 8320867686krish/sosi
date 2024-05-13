@@ -558,8 +558,7 @@
             });
 
             $(document).on("click", "#editCheckbtn", function(event) {
-                event
-                    .stopPropagation(); // Prevents the click event from bubbling up to the parent .dot element
+                event.stopPropagation(); // Prevents the click event from bubbling up to the parent .dot element
                 let checkDataId = $(this).attr('data-dotId');
                 let dotElement = $(`#${checkDataId}`)[0];
                 openAddModalBox(dotElement);

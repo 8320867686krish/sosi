@@ -357,17 +357,18 @@ class ProjectsController extends Controller
             $query->with('hazmat:id,name'); // Eager load hazmat with only id, name, and image columns
         }])->find($id);
 
-        //
-
         $hazmatIds = $check->hazmats->pluck('hazmat_id')->toArray();
 
-        // $makeModels = MakeModel::whereIn('hazmat_id', $hazmatIds)
-        //     ->groupBy('equipment')
-        //     ->get();
+        $collection = collect($check->hazmats);
+
+        $groupedEquipment = $collection->map(function ($hazmatId) {
+            $hazmat = Hazmat::with('equipment:id,hazmat_id,equipment')->find($hazmatId->hazmat->id);
+            $hazmatId->hazmat->equipment = $hazmat->equipment->groupBy('equipment');
+            return $hazmatId;
+        });
 
         $hazmats = $check->hazmats;
-
-
+        // dd($hazmats->hazmat);
         $htmllist = view('check.checkAddModal', compact('hazmats'))->render();
 
         return response()->json(['html' => $htmllist, 'hazmatIds' => $hazmatIds, "check" => $check]);
@@ -375,9 +376,18 @@ class ProjectsController extends Controller
 
     public function getHazmatEquipment($hazmat_id) {
         try {
-            $hazmat = Hazmat::with('equipment')->find($hazmat_id);
+            $hazmat = Hazmat::with('equipment:id,hazmat_id,equipment')->find($hazmat_id);
             $groupedEquipment = $hazmat->equipment->groupBy('equipment');
             return response()->json(['isStatus' => true, 'message' => 'Equipment retrieved successfully.', 'equipments' => $groupedEquipment]);
+        } catch (Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function getEquipmentBasedManufacturer($hazmat_id, $type) {
+        try {
+            $manufacturers = MakeModel::where('hazmat_id', $hazmat_id)->where('equipment', $type)->select('manufacturer')->distinct()->get();
+            return response()->json(['isStatus' => true, 'message' => 'Equipment besed manufacturers retrieved successfully.', 'manufacturers' => $manufacturers]);
         } catch (Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }

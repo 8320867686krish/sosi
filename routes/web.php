@@ -101,6 +101,8 @@ Route::middleware('auth')->group(function () {
             Route::get('removeHazmatDocument/{id}/{type}', 'removeHazmatDocument')->middleware('can:projects.edit')->name('removeHazmatDocument');
 
             Route::get('getHazmatEquipment/{hazmat_id}', 'getHazmatEquipment')->name('getHazmatEquipment');
+
+            Route::get('getManufacturer/{hazmat_id}/{equipment}', 'getEquipmentBasedManufacturer')->name('getManufacturer');
         });
         Route::get('generateDocx', [ReportContoller::class, 'generateDocx'])->name('generateDocx');
 
