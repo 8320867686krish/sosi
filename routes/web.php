@@ -100,7 +100,7 @@ Route::middleware('auth')->group(function () {
 
             Route::get('removeHazmatDocument/{id}/{type}', 'removeHazmatDocument')->middleware('can:projects.edit')->name('removeHazmatDocument');
         });
-        Route::get('generateDocx', [ReportContoller::class, 'generateDocx'])->name('generateDocx');
+        Route::get('genratePdf', [ReportContoller::class, 'genratePdf'])->name('generateDocx');
 
         Route::get('excelReport/{project_id}/{isSample?}', [ReportContoller::class, 'exportDataInExcel'])->name('excelReport')->middleware('can:projects.edit');
 

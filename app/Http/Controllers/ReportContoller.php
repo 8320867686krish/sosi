@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
+
 use App\Exports\MultiSheetExport;
 use App\Models\CheckHasHazmat;
 use App\Models\Checks;
@@ -12,8 +14,16 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Exception;
 use Illuminate\Support\Facades\Response;
-use PhpOffice\PhpWord\PhpWord;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use setasign\Fpdi\Fpdi;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Illuminate\Support\Facades\File;
+use \ConvertApi\ConvertApi;
+
+
 
 class ReportContoller extends Controller
 {
@@ -54,82 +64,166 @@ class ReportContoller extends Controller
         $filename = "projects-{$id}-" . time() . "." . $fileExt;
         return Excel::download(new MultiSheetExport($project, $hazmats, $checks), $filename, $exportFormat);
     }
-//     public function generateDocx()
-//     {
-//         $wordTest = new \PhpOffice\PhpWord\PhpWord();
+    public function genratePdf1()
+    {
+        $pdf = new Fpdi('L');
 
-//         // Load the PDF file
-//         $pdfFilePath = public_path('images/attachment/1/PDF-Home Decor1714742328.pdf');
-//         $pdf = new \setasign\Fpdi\Fpdi();
+        // Load the existing PDF file
+        $pdfFile = public_path('images/attachment/1/IAPP Cert.pdf');
+        $pdf->setSourceFile($pdfFile);
 
-//         $numPages = $pdf->setSourceFile($pdfFilePath);
+        // Get the total number of pages in the PDF
+        $totalPages = $pdf->setSourceFile($pdfFile);
+        $pageCount = $pdf->setSourceFile($pdfFile);
 
-//         // Iterate through each page of the PDF
-//         for ($pageNo = 1; $pageNo <= $numPages; $pageNo++) {
-//             $templateId = $pdf->importPage($pageNo);
-//             $pdf->AddPage();
-//             $pdf->useTemplate($templateId);
-//         }
-//         $wordFilePath = public_path('images/file.docx');
-//         // Save the Word document
-//              $objectWriter = \PhpOffice\PhpWord\IOFactory::createWriter($wordTest, 'Word2007');
-//              $objectWriter->save($wordFilePath);
+        // Iterate through each page and import them into the new PDF
+        for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+            // Add a new page to the PDF
+            $pdf->AddPage();
 
-//              return response()->download($wordFilePath, 'converted_word_file.docx')->deleteFileAfterSend();
+            // Import the current page from the source PDF
+            $templateId = $pdf->importPage($pageNo);
 
-//         // Return the path to the generated Word file
-//        // return response()->download($wordFilePath, 'converted_word_file.docx')->deleteFileAfterSend();
-        
-// //         $wordTest = new \PhpOffice\PhpWord\PhpWord();
- 
-// //         $newSection = $wordTest->addSection();
-     
-// //         $desc1 = "The Portfolio details is a very useful feature of the web page. You can establish your archived details and the works to the entire web community. It was outlined to bring in extra clients, get you selected based on this details.";
-     
-// //         $newSection->addText($desc1, array('name' => 'Tahoma', 'size' => 15, 'color' => 'red'));
-// //         $catImageUrl = 'https://via.placeholder.com/150?text=Cat'; // Placeholder cat image URL
-// // $newSection->addImage($catImageUrl);
-// //         $objectWriter = \PhpOffice\PhpWord\IOFactory::createWriter($wordTest, 'Word2007');
-// //         try {
-// //             $objectWriter->save(storage_path('TestWordFile.docx'));
-// //         } catch (Exception $e) {
-// //         }
-     
-// //         return response()->download(storage_path('TestWordFile.docx'));
-          
+            // Use the imported page
+            $pdf->useTemplate($templateId, null, null, null, null, true);
+        }
+
+        $pdfFile = public_path('images/attachment/1/PDF-Home Decor1714742328.pdf');
+        $pdf->setSourceFile($pdfFile);
+
+        // Get the total number of pages in the PDF
+        $totalPages = $pdf->setSourceFile($pdfFile);
+        $pageCount = $pdf->setSourceFile($pdfFile);
+
+        // Iterate through each page and import them into the new PDF
+        for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+            // Add a new page to the PDF
+            $pdf->AddPage();
+
+            // Import the current page from the source PDF
+            $templateId = $pdf->importPage($pageNo);
+
+            // Use the imported page
+            $pdf->useTemplate($templateId, null, null, null, null, true);
+        }
 
 
-// //         return response()->download(storage_path('helloWorld.docx'));
-//     }
-public function generateDocx()
-{
-    // Create a new Word document
-    $phpWord = new \PhpOffice\PhpWord\PhpWord();
-
-    // Load the PDF file
-    $pdfFilePath = public_path('images/attachment/1/PDF-Home Decor1714742328.pdf');
-    $pdf = new \setasign\Fpdi\Fpdi();
-    $numPages = $pdf->setSourceFile($pdfFilePath);
-
-    // Iterate through each page of the PDF
-    for ($pageNo = 1; $pageNo <= $numPages; $pageNo++) {
-        $pdf->AddPage();
-        $templateId = $pdf->importPage($pageNo);
-        $pdf->useTemplate($templateId);
-        
-        // Capture PDF content as an image and add it to the Word document
-        $imageData = $pdf->Output('S');
-        $section = $phpWord->addSection();
-        $section->addImageFromString($imageData);
+        // Output the merged PDF
+        $pdfFilePath = public_path('merged.pdf');
+        $pdf->Output('F', $pdfFilePath);
+        // Return a binary response with the merged PDF file as a download
+        return new BinaryFileResponse(public_path('merged.pdf'));
     }
+    public function genratePdf()
+     {
+        $files = ['IAPP Cert.pdf', 'MT SONG Lab Report.pdf'];
+        ConvertApi::setApiSecret('jOdICzbeHiZJafIQ');
 
-    // Save the Word document
-    $wordFilePath = public_path('images/file.docx');
-    $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-    $objWriter->save($wordFilePath);
-
-    // Download the Word document
-    return response()->download($wordFilePath, 'converted_word_file.docx')->deleteFileAfterSend();
+$pdfPaths = [];
+foreach ($files as $file) {
+    $pdfPaths[] = public_path('images/attachment/1/' . $file);
 }
 
+ConvertApi::setApiSecret('jOdICzbeHiZJafIQ');
+$result = ConvertApi::convert('pdf','merge',
+
+
+
+['File' => $pdfPaths]);
+# save to file
+$combinedPdfPath = storage_path('app/temp/combined.pdf');
+$result->getFile()->save($combinedPdfPath);
+
+    //     // Initialize variables to hold combined content
+    //     $combinedBinary = '';
+        
+    //     // Iterate through each PDF file
+    //     foreach ($files as $pdfFile) {
+    //         // Get the path of the PDF file
+    //         $pdfPath = public_path('images/attachment/1/' . $pdfFile);
+        
+    //         // Create an instance of FPDI
+    //         $pdf = new Fpdi();
+        
+    //         // Get the number of pages in the PDF
+    //         $pageCount = $pdf->setSourceFile($pdfPath);
+        
+    //         // Iterate through each page of the PDF
+    //         for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+    //             // Add a new page to the combined PDF
+    //             $pdf->AddPage();
+        
+    //             // Import the current page from the source PDF
+    //             $templateId = $pdf->importPage($pageNo);
+        
+    //             // Use the imported page
+    //             $pdf->useTemplate($templateId);
+    //         }
+        
+    //         // Get the content of the PDF after importing pages
+    //         $combinedBinary .= $pdf->Output('', 'S');
+    //     }
+        
+    //     // Perform string replacement if needed
+    //     if (strpos($combinedBinary, "Hello You") === false) {
+    //         $combinedBinary = str_replace("Go Away", "Hello You", $combinedBinary);
+    //     }
+        
+    //     // Save the combined binary data to a temporary file
+    //     $combinedPdfPath = storage_path('app/temp/combined.pdf');
+    //     file_put_contents($combinedPdfPath, $combinedBinary);
+        // foreach ($files as $filename) {
+        //     $pdfPath = public_path('images/attachment/1/' . $filename);
+        //     $file = file_get_contents( $pdfPath);
+        //     $combinedBase64 = base64_encode( $file);
+        //     $combinedBinary = base64_decode($combinedBase64);
+        //     if(strpos($file, "Hello You") !== false){
+        //         echo "Already Replaced";
+        //     }
+        //     else {
+        //         $combinedPdfPath = storage_path('app/temp/combined.pdf');
+        //      //   $str = str_replace("Go Away", "Hello You", $file);
+        //         file_put_contents( $combinedPdfPath, $combinedBinary); 
+        //         echo "done";
+        //     }
+        // }
+        //  $dompdf = new Dompdf();
+        // $dompdf->loadHtml('<h1>Merged PDF</h1>');
+        // $dompdf->setPaper('A4', 'portrait');
+        // $dompdf->loadHtml('<h1>Merged PDF</h1>');
+        // $dompdf->loadHtmlFile($combinedPdfPath); // Load HTML from the combined PDF file
+        // $dompdf->render();
+        // return $dompdf->stream('merged_pdf.pdf');
+        // $files = ['IAPP Cert.pdf', 'MT SONG Lab Report.pdf'];
+        // $combinedBase64 = '';
+
+        // // Convert each PDF file to base64 encoding and concatenate
+        // foreach ($files as $file) {
+        //     $pdfPath = public_path('images/attachment/1/' . $file);
+        //     $combinedBase64 .= base64_encode(file_get_contents($pdfPath));
+        // }
+
+        // // Decode the combined base64 string back to binary data
+        // $combinedBinary = base64_decode($combinedBase64);
+
+        // // Save the combined binary data to a temporary file
+        // $combinedPdfPath = storage_path('app/temp/combined.pdf');
+        // file_put_contents($combinedPdfPath, $combinedBinary);
+
+        // // Generate PDF using Dompdf
+        // $dompdf = new Dompdf();
+        // $dompdf->loadHtml('<h1>Merged PDF</h1>');
+        // $dompdf->setPaper('A4', 'portrait');
+        // $dompdf->loadHtml('<h1>Merged PDF</h1>');
+        // $dompdf->loadHtmlFile($combinedPdfPath); // Load HTML from the combined PDF file
+        // $dompdf->render();
+
+        // // Return the generated PDF
+        // return $dompdf->stream('merged_pdf.pdf');
+
+
+        // Return the generated PDF
+
+    }
+    
 }
