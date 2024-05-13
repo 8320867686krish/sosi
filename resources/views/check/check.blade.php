@@ -190,7 +190,8 @@
                                 <div class="col-12 col-md-6" id="chkName">
                                     <div class="form-group">
                                         <label for="name">Name</label>
-                                        <input type="text" id="name" name="name" class="form-control" readonly>
+                                        <input type="text" id="name" name="name" class="form-control"
+                                            readonly>
                                     </div>
                                 </div>
 
@@ -454,6 +455,17 @@
 
             targetElements.removeClass("col-12 col-6").addClass(newClass);
             cloneTableTypeDiv.find(".imagehazmat").toggle(selectedValue !== "Unknown");
+            cloneTableTypeDiv.find(".dochazmat").toggle(selectedValue !== "Unknown");
+        }
+
+        function getHazmatEquipment(hazmat_id) {
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('getHazmatEquipment') }}" + "/" + hazmat_id,
+                success: function(response) {
+                    console.log(response);
+                } ,
+            });
         }
 
         $(document).ready(function() {
@@ -618,7 +630,8 @@
                             $('#showSuccessMsg').fadeIn().delay(20000).fadeOut();
                             $("#checkDataAddForm").trigger('reset');
                             $("#id").val("");
-                            $('#suspected_hazmat option').prop("selected", false).trigger('change');
+                            $('#suspected_hazmat option').prop("selected", false).trigger(
+                                'change');
                             $("#showTableTypeDiv").empty();
                             $submitButton.html(originalText);
                             $submitButton.prop('disabled', false);
@@ -664,13 +677,15 @@
                     clonedElement.attr("id", "cloneTableTypeDiv" + selectedValue);
 
                     clonedElement.find('label').text($(this).find('option').eq(clickedIndex).text());
-                    clonedElement.find('select').attr('id', `table_type_${selectedValue}`).attr('name', `table_type[${selectedValue}]`);
+                    clonedElement.find('select').attr('id', `table_type_${selectedValue}`).attr('name',
+                        `table_type[${selectedValue}]`);
 
                     clonedElement.find('input[type="file"]').prop({
                         id: `image_${selectedValue}`,
                         name: `image[${selectedValue}]`
                     });
 
+                    getHazmatEquipment(selectedValue);
                     // Append cloned element to showTableTypeDiv
                     $('#showTableTypeDiv').append(clonedElement);
                 }
@@ -719,6 +734,26 @@
                         }
                     });
                 }
+            });
+
+            // Remove Hazmat Document Analysis Results Document
+            $(document).on('click', '.removeHazmatDocument', function(e) {
+                e.preventDefault();
+                let parentDiv = $(this).closest('div');
+
+                $.ajax({
+                    type: 'GET',
+                    url: $(this).attr('href'),
+                    success: function(response) {
+                        console.log(response);
+                        if (response.isStatus) {
+                            parentDiv.empty();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(error);
+                    }
+                });
             });
         });
 

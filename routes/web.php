@@ -99,6 +99,8 @@ Route::middleware('auth')->group(function () {
             Route::delete('attachment/remove/{laboratoryRemove}','attachmentRemove');
 
             Route::get('removeHazmatDocument/{id}/{type}', 'removeHazmatDocument')->middleware('can:projects.edit')->name('removeHazmatDocument');
+
+            Route::get('getHazmatEquipment/{hazmat_id}', 'getHazmatEquipment')->name('getHazmatEquipment');
         });
         Route::get('genratePdf', [ReportContoller::class, 'genratePdf'])->name('generateDocx');
 

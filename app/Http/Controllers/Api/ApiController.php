@@ -19,11 +19,12 @@ use Illuminate\Validation\ValidationException;
 use Throwable;
 use  App\Jobs\SendVerificationEmail;
 use App\Models\AppUserVerify;
+use App\Models\CheckHasHazmat;
 use App\Models\CheckImage;
 use App\Models\Deck;
 use App\Models\Checks;
 use App\Models\ChecksQrCodePair;
-
+use App\Models\Hazmat;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
@@ -301,19 +302,29 @@ class ApiController extends Controller
             $currentUserRoleLevel = $user->roles->first()->level;
 
             if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
-                $projects = Projects::select('*','clients.manager_name','clients.owner_name',
-                'clients.owner_address','clients.manager_address')
+                $projects = Projects::select(
+                    '*',
+                    'clients.manager_name',
+                    'clients.owner_name',
+                    'clients.owner_address',
+                    'clients.manager_address'
+                )
                     ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
                     ->get();
             } else {
-                $projects = Projects::select('projects.*','clients.manager_name','clients.owner_name',
-                'clients.owner_address','clients.manager_address')
-                ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
-                ->leftJoin('project_teams', 'projects.id', '=', 'project_teams.project_id')
-                ->where('project_teams.isExpire', 0)
-                ->where('project_teams.user_id', $user->id)
-                ->whereDate('project_teams.assign_date', '<=', date('Y-m-d'))
-                ->get();
+                $projects = Projects::select(
+                    'projects.*',
+                    'clients.manager_name',
+                    'clients.owner_name',
+                    'clients.owner_address',
+                    'clients.manager_address'
+                )
+                    ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
+                    ->leftJoin('project_teams', 'projects.id', '=', 'project_teams.project_id')
+                    ->where('project_teams.isExpire', 0)
+                    ->where('project_teams.user_id', $user->id)
+                    ->whereDate('project_teams.assign_date', '<=', date('Y-m-d'))
+                    ->get();
             }
 
             $modifiedProjects = [];
@@ -398,47 +409,56 @@ class ApiController extends Controller
     {
         try {
 
-           $validator = Validator::make($request->all(), [
+            $messages = [
+                'project_id.required' => 'The project is required.',
+                'project_id.exists' => 'The selected project is invalid.',
+                'deck_id.required' => 'The deck is required.',
+                'deck_id.exists' => 'The selected deck is invalid.',
+                'position_left.required' => 'The position left field is required',
+                'position_top.required' => 'The position top field is required',
+            ];
+
+            $validator = Validator::make($request->all(), [
                 'project_id' => 'required|exists:projects,id',
                 'deck_id' => 'required|exists:decks,id',
                 'position_left' => 'required', // Require position_left only if apiType is 'location'
                 'position_top' => 'required', // Require position_top only if apiType is 'location'
-            ]);
+            ], $messages);
 
             if ($validator->fails()) {
                 throw new ValidationException($validator);
             }
 
-            $projectId = $request->input('project_id');
-            $deckId = $request->input('deck_id');
-
-            // Eager load project and deck to reduce database queries
-            $project = Projects::find($projectId);
-
-            // Check if project and deck exist
-            if (!$project) {
-                return response()->json(['isStatus' => false, 'message' => 'Project not found.']);
-            }
-
-            $deckExists = Deck::where([
-                ['id', $deckId],
-                ['project_id', $projectId]
-            ])->exists();
-
-            if (!$deckExists) {
-                return response()->json(['isStatus' => false, 'message' => 'Deck not found.']);
-            }
-
             $id = $request->input('id');
-            $inputData = $request->except('id');
-            //Determine if it's created by the app side.
-            $inputData['isApp'] = 1;
+            $inputData = $request->input();
+            // $suspected_hazmat = $request->input('suspected_hazmat');
+            unset($inputData['suspected_hazmat']);
 
-            Checks::updateOrCreate(['id' => $id], $inputData);
+            Checks::where('id', $id)->update($inputData);
 
-            $message = empty($id) ? "Check added successfully" : "Check updated successfully";
+            if ($request->filled('suspected_hazmat')) {
+                $suspectedHazmat = explode(', ', $request->input('suspected_hazmat'));
+                $hazmatIds = Hazmat::whereIn('name', $suspectedHazmat)->pluck('id')->toArray();
 
-            return response()->json(['isStatus' => true, 'message' => $message]);
+                CheckHasHazmat::where([
+                    "project_id" => $inputData['project_id'],
+                    "check_id" => $inputData['id'],
+                ])->whereNotIn('hazmat_id', $hazmatIds)->delete();
+
+                foreach ($hazmatIds as $hazmatId) {
+                    $hazmatData = [
+                        "project_id" => $inputData['project_id'],
+                        "check_id" => $inputData['id'],
+                        "hazmat_id" => $hazmatId,
+                        "type" => "Unknown",
+                        "check_type" => $inputData['type']
+                    ];
+
+                    CheckHasHazmat::updateOrCreate(["project_id" => $inputData['project_id'], "check_id" => $inputData['id'], "hazmat_id" => $hazmatId], $hazmatData);
+                }
+            }
+
+            return response()->json(['isStatus' => true, 'message' => "Check updated successfully"]);
         } catch (ValidationException $e) {
             return response()->json(['isStatus' => false, 'message' => $e->validator->errors()->first()]);
         } catch (Throwable $th) {
@@ -446,23 +466,32 @@ class ApiController extends Controller
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
     }
+
     public function addCheck(Request $request)
     {
         try {
 
+            $messages = [
+                'project_id.required' => 'The project is required.',
+                'project_id.exists' => 'The selected project is invalid.',
+                'deck_id.required' => 'The deck is required.',
+                'deck_id.exists' => 'The selected deck is invalid.',
+                'position_left.required_if' => 'The position left field is required when API type is location.',
+                'position_top.required_if' => 'The position top field is required when API type is location.',
+            ];
+
             $validator = Validator::make($request->all(), [
                 'project_id' => 'required|exists:projects,id',
                 'deck_id' => 'required|exists:decks,id',
-                'position_left' => 'required_if:apiType,location', // Require position_left only if apiType is 'location'
-                'position_top' => 'required_if:apiType,location', // Require position_top only if apiType is 'location'
-            ]);
+                'position_left' => 'required_if:apiType,location',
+                'position_top' => 'required_if:apiType,location',
+            ], $messages);
 
             if ($validator->fails()) {
                 throw new ValidationException($validator);
             }
 
             $projectId = $request->input('project_id');
-            $deckId = $request->input('deck_id');
             $inputData = $request->input();
             $inputData['isApp'] = 1;
             $projectDetail = Projects::find($inputData['project_id']);
@@ -471,8 +500,8 @@ class ApiController extends Controller
                 $projectCount = "0";
             } else {
                 $projectCount = $lastCheck['initialsChekId'];
-             }
-             $name = $projectDetail['ship_initials'].'vsc#' . str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
+            }
+            $name = $projectDetail['ship_initials'] . 'vsc#' . str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
 
             $inputData['name'] = $name;
             $inputData['initialsChekId'] = str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
@@ -481,25 +510,9 @@ class ApiController extends Controller
             } else {
                 $projectCount = $lastCheck['initialsChekId'] + (1);
             }
-            $name = $projectDetail['ship_initials']."vsc#".$projectCount;
+            $name = $projectDetail['ship_initials'] . "vsc#" . $projectCount;
             $inputData['name'] = $name;
             $inputData['initialsChekId'] =  $projectCount;
-            // Eager load project and deck to reduce database queries
-            $project = Projects::find($projectId);
-
-            // Check if project and deck exist
-            if (!$project) {
-                return response()->json(['isStatus' => false, 'message' => 'Project not found.']);
-            }
-
-            $deckExists = Deck::where([
-                ['id', $deckId],
-                ['project_id', $projectId]
-            ])->exists();
-
-            if (!$deckExists) {
-                return response()->json(['isStatus' => false, 'message' => 'Deck not found.']);
-            }
 
             $checkAdd =  Checks::create($inputData);
 
@@ -511,6 +524,24 @@ class ApiController extends Controller
                 $checkData['image'] = $imageName;
                 $checkData['check_id'] = $checkId;
                 CheckImage::create($checkData);
+            }
+
+            if (!empty($request->input('suspected_hazmat'))) {
+                $suspectedHazmat = explode(', ', $request->input('suspected_hazmat'));
+
+                foreach ($suspectedHazmat as $hazmat) {
+                    $hazmatId = Hazmat::where('name', $hazmat)->first();
+
+                    $hazmatData = [
+                        "project_id" => $inputData['project_id'],
+                        "check_id" => $checkId,
+                        "hazmat_id" => $hazmatId->id,
+                        "type" => "Unknown",
+                        "check_type" => $inputData['type']
+                    ];
+
+                    CheckHasHazmat::create($hazmatData);
+                }
             }
 
             $message = "Check added successfully";
@@ -568,12 +599,28 @@ class ApiController extends Controller
     public function getCheckDetail($checkId)
     {
         try {
-            $checks = Checks::with('deck')->find($checkId);
+            $checks = Checks::with(['hazmats' => function ($query) {
+                $query->with('hazmat:id,name'); // Eager load hazmat with only id, name, and image columns
+            }])->with('deck')->find($checkId);
 
             if (!$checks) {
                 return response()->json(['isStatus' => false, 'message' => 'Check not found.']);
             }
-            $checkDetails = $checks ;
+
+            if ($checks->hazmats->count() > 0) {
+                $hazmatNames = [];
+
+                foreach ($checks->hazmats as $hazmat) {
+                    $hazmatNames[] = $hazmat->hazmat->name;
+                }
+
+                $checks->suspected_hazmat = implode(', ', $hazmatNames);
+                unset($checks->hazmats);
+            } else {
+                $checks->suspected_hazmat = null;
+            }
+
+            $checkDetails = $checks;
             $checkDetails['deckImage'] = $checks['deck']['image'];
             unset($checkDetails['deck']);
 
@@ -715,23 +762,38 @@ class ApiController extends Controller
     {
         $projects = DB::select('describe projects');
         $clients = DB::select('describe clients');
+        $hazmats = DB::select('describe hazmats');
         foreach ($clients as $clientField) {
-        
 
-            if($clientField->Field == 'manager_name' || $clientField->Field == 'manager_address' || $clientField->Field == 'owner_name' || $clientField->Field == 'owner_address' )
-              $projects[] = $clientField;
-         
+
+            if ($clientField->Field == 'manager_name' || $clientField->Field == 'manager_address' || $clientField->Field == 'owner_name' || $clientField->Field == 'owner_address')
+                $projects[] = $clientField;
         }
-        
+
         $decks = DB::select('describe decks');
         $checks = DB::select('describe checks');
+        $checks = array_values($checks);
+
+        foreach ($hazmats as $hazmatField) {
+            if ($hazmatField->Field == 'name') {
+                $checks[] = $hazmatField;
+                break; // No need to continue loop once found
+            }
+        }
+        $in = array_key_last($checks);
+        $checks[$in]->Field = 'suspected_hazmats';
+        // foreach ($checks as &$check) {
+        //     if ($check->Field === 'name') {
+        //         $check->Field = 'suspected_hazmats';
+        //     }
+        // }
         $check_has_images = DB::select('describe check_has_images');
         $projects = $this->modifyTypeValues($projects);
         $clients = $this->modifyTypeValues($clients);
         $decks = $this->modifyTypeValues($decks);
         $checks = $this->modifyTypeValues($checks);
         $check_has_images = $this->modifyTypeValues($check_has_images);
-        return response()->json(['isStatus' => true, 'message' => 'table strture.', 'projects' => $projects,'decks' => $decks, 'checks' => $checks, 'check_has_images' => $check_has_images]);
+        return response()->json(['isStatus' => true, 'message' => 'table strture.', 'projects' => $projects, 'decks' => $decks, 'checks' => $checks, 'check_has_images' => $check_has_images]);
     }
 
     public function modifyTypeValues($tableDescription)
