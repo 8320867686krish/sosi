@@ -22,6 +22,8 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Illuminate\Support\Facades\File;
 use \ConvertApi\ConvertApi;
+use ZendPdf\PdfDocument;
+use ZendPdf\Page;
 
 
 
@@ -116,24 +118,32 @@ class ReportContoller extends Controller
     }
     public function genratePdf()
      {
-        $files = ['IAPP Cert.pdf', 'MT SONG Lab Report.pdf'];
-        ConvertApi::setApiSecret('jOdICzbeHiZJafIQ');
-
-$pdfPaths = [];
-foreach ($files as $file) {
-    $pdfPaths[] = public_path('images/attachment/1/' . $file);
-}
-
-ConvertApi::setApiSecret('jOdICzbeHiZJafIQ');
-$result = ConvertApi::convert('pdf','merge',
-
-
-
-['File' => $pdfPaths]);
-# save to file
-$combinedPdfPath = storage_path('app/temp/combined.pdf');
-$result->getFile()->save($combinedPdfPath);
-
+        $pdfFiles = ['IAPP Cert.pdf','PDF-Home Decor1714742328.pdf'];
+        $outputPdf = 'Combined.pdf';
+        
+        // Create a new PDF document
+        $combinedPdf = new PdfDocument();
+        
+        // Iterate through each PDF file
+        foreach ($pdfFiles as $pdfFile) {
+            // Get the full path to the PDF file
+            $pdfPath = public_path('images/attachment/1/' . $pdfFile);
+        
+            // Open the PDF file and add its pages to the combined PDF document
+            $pdf = PdfDocument::load($pdfPath);
+            foreach ($pdf->pages as $page) {
+                // Clone the page and add it to the combined PDF document
+                $clonedPage = clone $page;
+                $combinedPdf->pages[] = $clonedPage;
+            }
+        }
+        
+        // Save the combined PDF document to a file
+        $combinedPdfPath = public_path('merged_pdfs/' . $outputPdf);
+        $combinedPdf->save($combinedPdfPath);
+        
+        // Return the path to the merged PDF
+        return $combinedPdfPath;
     //     // Initialize variables to hold combined content
     //     $combinedBinary = '';
         
