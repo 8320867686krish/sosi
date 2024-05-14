@@ -174,6 +174,7 @@ class SyncProjectController extends Controller
     public function syncAdd(Request $request)
     {
         $post = $request->input();
+        print_r( $post);
         if (@$post['insertList']) {
         
             foreach ($post['insertList'] as $value) {
