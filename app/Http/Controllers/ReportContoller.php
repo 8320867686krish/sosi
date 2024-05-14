@@ -26,7 +26,7 @@ use FPDF;
 use ZendPdf\PdfDocument;
 use ZendPdf\Page;
 
-
+use Imagick; 
 
 class ReportContoller extends Controller
 {
@@ -119,61 +119,66 @@ class ReportContoller extends Controller
     }
     public function genratePdf()
      {
-        $pdf = new Fpdi('L');
+         $pdf = new Fpdi('L');
+
+        
+      // Add an initial page to the new PDF document
+$pdf->AddPage();
 
 $filesToMerge = [
-    public_path('images/MAERSK PATRAS_Test Report.pdf'),
-    public_path('images/attachment/1/IAPP Cert.pdf'),
+    'https://sosindi.com/IHM/public/images/1.pdf',
+    'https://sosindi.com/IHM/public/images/attachment/1/IAPP Cert.pdf',
 ];
 
 // Initialize Imagick
 $imagick = new Imagick();
 
-foreach ($filesToMerge as $pdfFile) {
+foreach ($filesToMerge as $pdfUrl) {
+    // Fetch the PDF file contents
+    $pdfContents = file_get_contents($pdfUrl);
+
+    // Create a temporary file to store the PDF contents
+    $tempPdfFile = tempnam(sys_get_temp_dir(), 'pdf');
+    echo  $tempPdfFile;
+    file_put_contents($tempPdfFile, $pdfContents);
+
     // Set the source file
-    $pdf->setSourceFile($pdfFile);
+    $pdf->setSourceFile($tempPdfFile);
 
     // Get the total number of pages in the PDF
-    $pageCount = $pdf->setSourceFile($pdfFile);
+    $pageCount = $pdf->setSourceFile($tempPdfFile);
 
     // Iterate through each page and import them into the new PDF
     for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
         // Import the current page from the source PDF
         $templateId = $pdf->importPage($pageNo);
 
+        // Add a new page to the new PDF document
+        $pdf->AddPage();
+
         // Use the imported page
         $pdf->useTemplate($templateId);
 
         // Get the dimensions of the page
         $size = $pdf->getTemplateSize($templateId);
-        $width = $size['w'];
-        $height = $size['h'];
+     $width = isset($size['w']) ? $size['w'] : 0;
+$height = isset($size['h']) ? $size['h'] : 0;
 
         // Create a new Imagick object for the current page
         $imagickPage = new Imagick();
         $imagickPage->setResolution(150, 150); // Set resolution for better quality
 
         // Convert PDF page to image
-        $imagickPage->readImage('pdf:'.$pdfFile.'['.$pageNo.']');
+        $imagickPage->readImage('pdf:'.$tempPdfFile.'['.$pageNo.']');
         $imagickPage->setImageFormat('png'); // You can change the format as needed
         $imagickPage->setImageCompressionQuality(100); // Adjust compression quality as needed
-
-        // Check for digital signatures (hypothetical example)
-        // Example code to check for digital signatures
-        /*
-        $signature = $pdf->getSignatureInfo();
-        if ($signature) {
-            // Digital signature found, handle it accordingly
-            // You can extract signature details and verify its validity here
-            // For example:
-            // $isValid = $pdf->verifySignature($signature);
-            // Then, based on $isValid, display a message or take other actions
-        }
-        */
 
         // Append the converted page image to the Imagick object
         $imagick->addImage($imagickPage);
     }
+
+    // Clean up temporary file
+    unlink($tempPdfFile);
 }
 
 // Merge all page images into one image
