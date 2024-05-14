@@ -189,7 +189,6 @@ return [
         // 'Example' => App\Facades\Example::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'PDFMerger' => Webklex\PDFMerger\Facades\PDFMergerFacade::class
 
     ])->toArray(),
 
