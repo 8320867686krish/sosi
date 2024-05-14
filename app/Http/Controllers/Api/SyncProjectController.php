@@ -14,6 +14,8 @@ use App\Models\Checks;
 use App\Models\CheckImage;
 use Carbon\Carbon;
 use App\Models\Client;
+use App\Models\CheckHasHazmat;
+use App\Models\Hazmat;
 
 use PDO;
 
@@ -175,7 +177,6 @@ class SyncProjectController extends Controller
     {
         $post = $request->input();
         if (@$post['insertList']) {
-        
             foreach ($post['insertList'] as $value) {
                 $projectDetail = Projects::with(['client' => function ($query) {
                     $query->select('id', 'manager_initials'); // Replace with the fields you want to select
@@ -194,9 +195,32 @@ class SyncProjectController extends Controller
                 $value['isApp'] = 1;
                 $value['project_id'] = $value['project_id'];
                 $value['deck_id'] = $value['deck_id'];
+                $checkAdd = Checks::updateOrCreate(['id' => $value['id']], $value);
+                $checkId = $checkAdd->id;
+                if (!empty($request->input('suspected_hazmat'))) {
+                    $suspectedHazmat = explode(', ', $request->input('suspected_hazmat'));
+    
+                    foreach ($suspectedHazmat as $hazmat) {
+                        $hazmatId = Hazmat::where('name', $hazmat)->first();
+    
+                        $hazmatData = [
+                            "project_id" => $value['project_id'],
+                            "check_id" => $checkId,
+                            "hazmat_id" => $hazmatId->id,
+                            "type" => "Unknown",
+                            "check_type" => $value['type']
+                        ];
+    
+                        CheckHasHazmat::create($hazmatData);
+                    }
+                }
             }
-
-            Checks::updateOrCreate(['id' => $value['id']], $value);
+        }
+        if($post['deletedData']){
+            foreach ($post['deletedData'] as $value){
+                $check = Checks::find($value['id']);
+                $check->delete();
+            }
         }
         return response()->json(['isStatus' => true, 'message' => 'successfully saved.']);
 
