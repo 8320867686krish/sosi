@@ -781,7 +781,7 @@ class ApiController extends Controller
             }
         }
         $in = array_key_last($checks);
-        $checks[$in]->Field = 'suspected_hazmats';
+        $checks[$in]->Field = 'suspected_hazmat';
         // foreach ($checks as &$check) {
         //     if ($check->Field === 'name') {
         //         $check->Field = 'suspected_hazmats';
