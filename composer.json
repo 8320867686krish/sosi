@@ -17,10 +17,12 @@
         "laravel/tinker": "^2.8",
         "maatwebsite/excel": "^3.1",
         "mikehaertl/php-pdftk": "^0.13.1",
-        "setasign/fpdi": "^2.6.0",
+        "setasign/fpdi": "^2.6",
         "setasign/fpdi-fpdf": "^2.3",
+        "setasign/fpdi-protection": "^2.0",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-permission": "^6.3",
+        "spatie/pdf-to-image": "^1.2",
         "spatie/pdf-to-text": "^1.52",
         "webklex/laravel-pdfmerger": "^1.3",
         "zendframework/zendpdf": "^2.0"

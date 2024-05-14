@@ -119,145 +119,111 @@ class ReportContoller extends Controller
     }
     public function genratePdf()
      {
-        $pdfFiles = ['IAPP Cert.pdf', 'MT SONG Lab Report.pdf'];
-        $outputPdf = 'Combined.pdf';
-              $outputPath = public_path('merged_pdfs/' . $outputPdf);
+        $pdf = new Fpdi('L');
 
-        $pdf1Path= public_path('images/attachment/1/' . $pdfFiles[0]);
-        $pdf2Path= public_path('images/attachment/1/' . $pdfFiles[1]);
-        $pdftkPath = "C:\\Program Files\\pdftk_free-2.02-win-setup.exe"; // Update this with the full path to pdftk.exe
+$filesToMerge = [
+    public_path('images/MAERSK PATRAS_Test Report.pdf'),
+    public_path('images/attachment/1/IAPP Cert.pdf'),
+];
 
-        $process = new Process([$pdftkPath, $pdf1Path, $pdf2Path, 'cat', 'output', $outputPath]);
-        $process->run();
+// Initialize Imagick
+$imagick = new Imagick();
 
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+foreach ($filesToMerge as $pdfFile) {
+    // Set the source file
+    $pdf->setSourceFile($pdfFile);
+
+    // Get the total number of pages in the PDF
+    $pageCount = $pdf->setSourceFile($pdfFile);
+
+    // Iterate through each page and import them into the new PDF
+    for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+        // Import the current page from the source PDF
+        $templateId = $pdf->importPage($pageNo);
+
+        // Use the imported page
+        $pdf->useTemplate($templateId);
+
+        // Get the dimensions of the page
+        $size = $pdf->getTemplateSize($templateId);
+        $width = $size['w'];
+        $height = $size['h'];
+
+        // Create a new Imagick object for the current page
+        $imagickPage = new Imagick();
+        $imagickPage->setResolution(150, 150); // Set resolution for better quality
+
+        // Convert PDF page to image
+        $imagickPage->readImage('pdf:'.$pdfFile.'['.$pageNo.']');
+        $imagickPage->setImageFormat('png'); // You can change the format as needed
+        $imagickPage->setImageCompressionQuality(100); // Adjust compression quality as needed
+
+        // Check for digital signatures (hypothetical example)
+        // Example code to check for digital signatures
+        /*
+        $signature = $pdf->getSignatureInfo();
+        if ($signature) {
+            // Digital signature found, handle it accordingly
+            // You can extract signature details and verify its validity here
+            // For example:
+            // $isValid = $pdf->verifySignature($signature);
+            // Then, based on $isValid, display a message or take other actions
         }
-        // foreach ($pdf2->pages as $page) {
-        //     $clonedPage = clone $page;
-        //     $pdf1->pages[] = $clonedPage;
-        // }
-      //  $combinedPdfPath = public_path('merged_pdfs/' . $outputPdf);
+        */
 
-       // $pdf1->save($combinedPdfPath);
-        exit();
-        // Initialize a new PDF document
-        $combinedPdf = new PdfDocument();
-        
-        // Iterate through each PDF file
-        foreach ($pdfFiles as $pdfFile) {
-            // Get the full path to the PDF file
-            $pdfPath = public_path('images/attachment/1/' . $pdfFile);
-        
-            // Load the PDF file
-                  $pdf = new Fpdi('L');
-            $pageCount = $pdf->setSourceFile($pdfPath);
+        // Append the converted page image to the Imagick object
+        $imagick->addImage($imagickPage);
+    }
+}
 
-            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-                // Add a new page to the PDF
-                $pdf->AddPage();
-    
-                // Import the current page from the source PDF
-                $templateId = $pdf->importPage($pageNo);
-    
-                // Use the imported page
-                $pdf->useTemplate($templateId, null, null, null, null, true);
-            }
-        }
+// Merge all page images into one image
+$imagick->resetIterator();
+$combinedImage = $imagick->appendImages(true);
+
+// Set the image format (e.g., JPEG)
+$combinedImage->setImageFormat('jpeg');
+
+// Save or output the combined image
+$combinedImage->writeImage(public_path('merged_image.jpg'));
+
+// Clean up resources
+$imagick->clear();
+$imagick->destroy();
+        // $pdf = new Fpdi('L');
+
+        // $filesToMerge = [
+        //     public_path('images/MAERSK PATRAS_Test Report.pdf'),
+        //     public_path('images/attachment/1/IAPP Cert.pdf'),
+        // ];
         
-        // Save the combined PDF document to a file
-        $combinedPdfPath = public_path('merged_pdfs/' . $outputPdf);
-        $combinedPdf->Output('F', $combinedPdfPath);
-    //     // Initialize variables to hold combined content
-    //     $combinedBinary = '';
+        // foreach ($filesToMerge as $pdfFile) {
+        //     // Set the source file
+        //     $pdf->setSourceFile($pdfFile);
         
-    //     // Iterate through each PDF file
-    //     foreach ($files as $pdfFile) {
-    //         // Get the path of the PDF file
-    //         $pdfPath = public_path('images/attachment/1/' . $pdfFile);
+        //     // Get the total number of pages in the PDF
+        //     $pageCount = $pdf->setSourceFile($pdfFile);
         
-    //         // Create an instance of FPDI
-    //         $pdf = new Fpdi();
+        //     // Iterate through each page and import them into the new PDF
+        //     for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+        //         // Add a new page to the PDF
+        //         $pdf->AddPage();
         
-    //         // Get the number of pages in the PDF
-    //         $pageCount = $pdf->setSourceFile($pdfPath);
+        //         // Import the current page from the source PDF
+        //         $templateId = $pdf->importPage($pageNo);
         
-    //         // Iterate through each page of the PDF
-    //         for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-    //             // Add a new page to the combined PDF
-    //             $pdf->AddPage();
-        
-    //             // Import the current page from the source PDF
-    //             $templateId = $pdf->importPage($pageNo);
-        
-    //             // Use the imported page
-    //             $pdf->useTemplate($templateId);
-    //         }
-        
-    //         // Get the content of the PDF after importing pages
-    //         $combinedBinary .= $pdf->Output('', 'S');
-    //     }
-        
-    //     // Perform string replacement if needed
-    //     if (strpos($combinedBinary, "Hello You") === false) {
-    //         $combinedBinary = str_replace("Go Away", "Hello You", $combinedBinary);
-    //     }
-        
-    //     // Save the combined binary data to a temporary file
-    //     $combinedPdfPath = storage_path('app/temp/combined.pdf');
-    //     file_put_contents($combinedPdfPath, $combinedBinary);
-        // foreach ($files as $filename) {
-        //     $pdfPath = public_path('images/attachment/1/' . $filename);
-        //     $file = file_get_contents( $pdfPath);
-        //     $combinedBase64 = base64_encode( $file);
-        //     $combinedBinary = base64_decode($combinedBase64);
-        //     if(strpos($file, "Hello You") !== false){
-        //         echo "Already Replaced";
-        //     }
-        //     else {
-        //         $combinedPdfPath = storage_path('app/temp/combined.pdf');
-        //      //   $str = str_replace("Go Away", "Hello You", $file);
-        //         file_put_contents( $combinedPdfPath, $combinedBinary); 
-        //         echo "done";
+        //         // Use the imported page
+        //         $pdf->useTemplate($templateId, null, null, null, null, true);
+        //       //  $pdf->Rect(0, $pdf->GetPageHeight() - 15, $pdf->GetPageWidth(), 15, 'F', [], [255, 255, 255]);
+
         //     }
         // }
-        //  $dompdf = new Dompdf();
-        // $dompdf->loadHtml('<h1>Merged PDF</h1>');
-        // $dompdf->setPaper('A4', 'portrait');
-        // $dompdf->loadHtml('<h1>Merged PDF</h1>');
-        // $dompdf->loadHtmlFile($combinedPdfPath); // Load HTML from the combined PDF file
-        // $dompdf->render();
-        // return $dompdf->stream('merged_pdf.pdf');
-        // $files = ['IAPP Cert.pdf', 'MT SONG Lab Report.pdf'];
-        // $combinedBase64 = '';
-
-        // // Convert each PDF file to base64 encoding and concatenate
-        // foreach ($files as $file) {
-        //     $pdfPath = public_path('images/attachment/1/' . $file);
-        //     $combinedBase64 .= base64_encode(file_get_contents($pdfPath));
-        // }
-
-        // // Decode the combined base64 string back to binary data
-        // $combinedBinary = base64_decode($combinedBase64);
-
-        // // Save the combined binary data to a temporary file
-        // $combinedPdfPath = storage_path('app/temp/combined.pdf');
-        // file_put_contents($combinedPdfPath, $combinedBinary);
-
-        // // Generate PDF using Dompdf
-        // $dompdf = new Dompdf();
-        // $dompdf->loadHtml('<h1>Merged PDF</h1>');
-        // $dompdf->setPaper('A4', 'portrait');
-        // $dompdf->loadHtml('<h1>Merged PDF</h1>');
-        // $dompdf->loadHtmlFile($combinedPdfPath); // Load HTML from the combined PDF file
-        // $dompdf->render();
-
-        // // Return the generated PDF
-        // return $dompdf->stream('merged_pdf.pdf');
-
-
-        // Return the generated PDF
-
+        
+        // // Output the merged PDF
+        // $pdfFilePath = public_path('merged.pdf');
+        // $pdf->Output('F', $pdfFilePath);
+        
+        // // Return a binary response with the merged PDF file as a download
+        // return response()->download($pdfFilePath)->deleteFileAfterSend(true);
     }
     
 }
