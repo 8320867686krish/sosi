@@ -126,8 +126,8 @@ class ReportContoller extends Controller
 $pdf->AddPage();
 
 $filesToMerge = [
-    'https://sosindi.com/IHM/public/images/1.pdf',
-    'https://sosindi.com/IHM/public/images/attachment/1/IAPP Cert.pdf',
+    '1.pdf',
+    'IAPP Cert.pdf',
 ];
 
 // Initialize Imagick
@@ -135,11 +135,12 @@ $imagick = new Imagick();
 
 foreach ($filesToMerge as $pdfUrl) {
     // Fetch the PDF file contents
-    $pdfContents = file_get_contents($pdfUrl);
+    $pdfPath = asset('images'."/".$pdfUrl);
+    $pdfContents = file_get_contents($pdfPath);
 
     // Create a temporary file to store the PDF contents
-    $tempPdfFile = tempnam(sys_get_temp_dir(), 'pdf');
-    echo  $tempPdfFile;
+    $tempPdfFile =  $pdfPath;
+    //echo  $tempPdfFile;
     file_put_contents($tempPdfFile, $pdfContents);
 
     // Set the source file
