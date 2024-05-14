@@ -139,7 +139,7 @@ foreach ($filesToMerge as $pdfUrl) {
     $pdfContents = file_get_contents($pdfPath);
 
     // Create a temporary file to store the PDF contents
-    $tempPdfFile =  $pdfPath;
+    $tempPdfFile =  asset('mergePdf/');
     //echo  $tempPdfFile;
     file_put_contents($tempPdfFile, $pdfContents);
 
