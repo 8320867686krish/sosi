@@ -25,31 +25,31 @@ class SyncProjectController extends Controller
         // Extract project_id from request parameters
         $projectId = $request->input('project_id');
         $project = Projects::select('client_id')->find($projectId);
-        if(!$project){
+        if (!$project) {
             return response()->json(['isStatus' => false, 'message' => 'Sorry project does not eist.']);
         }
         // Check if a file named 'image' has been uploaded
         if ($request->hasFile('image')) {
             $zipFile = $request->file('image');
-    
+
             // Create a unique extraction path
             $extractPath = $projectId;
-    
+
             // Initialize ZipArchive
             $zip = new ZipArchive;
-    
+
             // Check if the zip file can be opened
             if ($zip->open($zipFile) === true) {
                 // Extract the zip file
                 if ($zip->extractTo('public/images/appImages/' . $extractPath)) {
                     $zip->close();
-    
+
                     // Get the original name of the zip file
                     $zipFileName = $zipFile->getClientOriginalName();
-    
+
                     // Extract the inner folder name
                     $innerFolderName = pathinfo($zipFileName, PATHINFO_FILENAME);
-    
+
                     // Respond with success message
                     return response()->json(['isStatus' => true, 'message' => 'File uploaded and extracted successfully.', 'zipFileName' => $zipFileName, 'innerFolderName' => $innerFolderName]);
                 } else {
@@ -65,7 +65,7 @@ class SyncProjectController extends Controller
             return response()->json(['isStatus' => false, 'message' => 'Please upload a file.']);
         }
     }
-    
+
     public function syncProject(Request $request)
     {
         $projectId = $request->input('projectId');
@@ -125,7 +125,7 @@ class SyncProjectController extends Controller
                 }
                 $zip->close();
             }
-           
+
 
             return response()->json(['isStatus' => true, 'message' => 'Successfully zip download', 'zipPath' => $downLoadFile]);
         } else {
@@ -174,35 +174,31 @@ class SyncProjectController extends Controller
     public function syncAdd(Request $request)
     {
         $post = $request->input();
-        if (@$post['checks']) {
-            $checkIds = array_column($post['checks'], 'id');
-            $dbChecks = Checks::where('project_id', $post['project_id'])->where('deck_id', $post['deck_id'])->pluck('id')->toArray();
-            $arrdiff = array_diff($dbChecks, $checkIds);
-            $checkDelete = Checks::whereIn('id', $arrdiff)->delete();
-
-            $projectDetail = Projects::with(['client' => function ($query) {
-                $query->select('id', 'manager_initials'); // Replace with the fields you want to select
-            }])->withCount('checks')->find($post['project_id']);
-
-            foreach ($post['checks'] as $value) {
-                if (!in_array($value['id'], $dbChecks)) {
-                    $lastCheck = Checks::where('project_id', $post['project_id'])
-                        ->latest()
-                        ->first();
-                    if (!$lastCheck) {
-                        $projectCount = "1001";
-                    } else {
-                        $projectCount = $lastCheck['initialsChekId'] + (1);
-                    }
-                    $name = "sos" . $projectDetail['client']['manager_initials'] . $projectCount;
-                    $value['name'] = $name;
-                    $value['initialsChekId'] =  $projectCount;
-                    $value['isApp'] = 1;
-                    $value['project_id'] = $post['project_id'];
-                    $value['deck_id'] = $post['deck_id'];
+        if (@$post['insertList']) {
+        
+            foreach ($post['insertList'] as $value) {
+                $projectDetail = Projects::with(['client' => function ($query) {
+                    $query->select('id', 'manager_initials'); // Replace with the fields you want to select
+                }])->withCount('checks')->find($value['project_id']);
+    
+                $lastCheck = Checks::latest()->first();
+                if (!$lastCheck) {
+                    $projectCount = "1001";
+                } else {
+                    $projectCount = $lastCheck['initialsChekId'];
                 }
-                Checks::updateOrCreate(['id' => $value['id']], $value);
+                $name = $projectDetail['ship_initials'] . 'vsc#' . str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
+
+                $value['name'] = $name;
+                $value['initialsChekId'] =  $projectCount;
+                $value['isApp'] = 1;
+                $value['project_id'] = $post['project_id'];
+                $value['deck_id'] = $post['deck_id'];
             }
+
+            Checks::updateOrCreate(['id' => $value['id']], $value);
         }
+        return response()->json(['isStatus' => true, 'message' => 'successfully saved.']);
+
     }
 }
