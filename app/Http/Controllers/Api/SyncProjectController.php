@@ -174,7 +174,6 @@ class SyncProjectController extends Controller
     public function syncAdd(Request $request)
     {
         $post = $request->input();
-        print_r( $post);
         if (@$post['insertList']) {
         
             foreach ($post['insertList'] as $value) {
@@ -193,8 +192,8 @@ class SyncProjectController extends Controller
                 $value['name'] = $name;
                 $value['initialsChekId'] =  $projectCount;
                 $value['isApp'] = 1;
-                $value['project_id'] = $post['project_id'];
-                $value['deck_id'] = $post['deck_id'];
+                $value['project_id'] = $value['project_id'];
+                $value['deck_id'] = $value['deck_id'];
             }
 
             Checks::updateOrCreate(['id' => $value['id']], $value);
