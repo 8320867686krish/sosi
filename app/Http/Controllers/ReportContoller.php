@@ -119,118 +119,47 @@ class ReportContoller extends Controller
     }
     public function genratePdf()
      {
-         $pdf = new Fpdi('L');
-
-        
-      // Add an initial page to the new PDF document
-$pdf->AddPage();
-
-$filesToMerge = [
-    '1.pdf',
-    'IAPP Cert.pdf',
-];
-
-// Initialize Imagick
-$imagick = new Imagick();
+       $pdf = new Fpdi('L');
+ $filesToMerge = [
+            '55.pdf',
+            'IAPP Cert.pdf',
+        ];
 
 foreach ($filesToMerge as $pdfUrl) {
     // Fetch the PDF file contents
-    $pdfPath = asset('images'."/".$pdfUrl);
-    $pdfContents = file_get_contents($pdfPath);
-
-    // Create a temporary file to store the PDF contents
-    $tempPdfFile = tempnam(sys_get_temp_dir(), 'pdf_');
-
-    //echo  $tempPdfFile;
-    file_put_contents($tempPdfFile, $pdfContents);
-
+    $pdfPath = public_path('images' . '/' . $pdfUrl);
+    
     // Set the source file
-    $pdf->setSourceFile($tempPdfFile);
+    $pdf->setSourceFile($pdfPath);
 
     // Get the total number of pages in the PDF
-    $pageCount = $pdf->setSourceFile($tempPdfFile);
+    $pageCount = $pdf->setSourceFile($pdfPath);
 
     // Iterate through each page and import them into the new PDF
     for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-        // Import the current page from the source PDF
-        $templateId = $pdf->importPage($pageNo);
-
         // Add a new page to the new PDF document
         $pdf->AddPage();
 
+        // Import the current page from the source PDF
+        $templateId = $pdf->importPage($pageNo);
+
         // Use the imported page
         $pdf->useTemplate($templateId);
-
-        // Get the dimensions of the page
-        $size = $pdf->getTemplateSize($templateId);
-     $width = isset($size['w']) ? $size['w'] : 0;
-$height = isset($size['h']) ? $size['h'] : 0;
-
-        // Create a new Imagick object for the current page
-        $imagickPage = new Imagick();
-        $imagickPage->setResolution(150, 150); // Set resolution for better quality
-
-        // Convert PDF page to image
-        $imagickPage->readImage('pdf:'.$tempPdfFile.'['.$pageNo.']');
-        $imagickPage->setImageFormat('png'); // You can change the format as needed
-        $imagickPage->setImageCompressionQuality(100); // Adjust compression quality as needed
-
-        // Append the converted page image to the Imagick object
-        $imagick->addImage($imagickPage);
+  $pdf->SetFillColor(255, 255, 255); // Set fill color to white
+        $pdf->Rect(0, $pdf->GetPageHeight() - 15, $pdf->GetPageWidth(), 15, 'F'); // Overlay with a white rectangle
+        // Optionally, you can adjust the position and size of the imported page using $pdf->getTemplateSize($templateId)
     }
-
-    // Clean up temporary file
-    unlink($tempPdfFile);
 }
 
-// Merge all page images into one image
-$imagick->resetIterator();
-$combinedImage = $imagick->appendImages(true);
-
-// Set the image format (e.g., JPEG)
-$combinedImage->setImageFormat('jpeg');
-
-// Save or output the combined image
-$combinedImage->writeImage(public_path('merged_image.jpg'));
+// Output the merged PDF
+$pdfFilePath = public_path('merged.pdf');
+$pdf->Output('F', $pdfFilePath);
 
 // Clean up resources
-$imagick->clear();
-$imagick->destroy();
-        // $pdf = new Fpdi('L');
+$pdf->close();
 
-        // $filesToMerge = [
-        //     public_path('images/MAERSK PATRAS_Test Report.pdf'),
-        //     public_path('images/attachment/1/IAPP Cert.pdf'),
-        // ];
-        
-        // foreach ($filesToMerge as $pdfFile) {
-        //     // Set the source file
-        //     $pdf->setSourceFile($pdfFile);
-        
-        //     // Get the total number of pages in the PDF
-        //     $pageCount = $pdf->setSourceFile($pdfFile);
-        
-        //     // Iterate through each page and import them into the new PDF
-        //     for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-        //         // Add a new page to the PDF
-        //         $pdf->AddPage();
-        
-        //         // Import the current page from the source PDF
-        //         $templateId = $pdf->importPage($pageNo);
-        
-        //         // Use the imported page
-        //         $pdf->useTemplate($templateId, null, null, null, null, true);
-        //       //  $pdf->Rect(0, $pdf->GetPageHeight() - 15, $pdf->GetPageWidth(), 15, 'F', [], [255, 255, 255]);
-
-        //     }
-        // }
-        
-        // // Output the merged PDF
-        // $pdfFilePath = public_path('merged.pdf');
-        // $pdf->Output('F', $pdfFilePath);
-        
-        // // Return a binary response with the merged PDF file as a download
-        // return response()->download($pdfFilePath)->deleteFileAfterSend(true);
+// Optionally, you can return a binary response with the merged PDF file as a download
+return response()->download($pdfFilePath)->deleteFileAfterSend(true);
     }
     
 }
