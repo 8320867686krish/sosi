@@ -374,7 +374,8 @@ class ProjectsController extends Controller
         return response()->json(['html' => $htmllist, 'hazmatIds' => $hazmatIds, "check" => $check]);
     }
 
-    public function getHazmatEquipment($hazmat_id) {
+    public function getHazmatEquipment($hazmat_id)
+    {
         try {
             $hazmat = Hazmat::with('equipment:id,hazmat_id,equipment')->find($hazmat_id);
             $groupedEquipment = $hazmat->equipment->groupBy('equipment');
@@ -384,10 +385,38 @@ class ProjectsController extends Controller
         }
     }
 
-    public function getEquipmentBasedManufacturer($hazmat_id, $type) {
+    public function getEquipmentBasedManufacturer($hazmat_id, $type)
+    {
         try {
             $manufacturers = MakeModel::where('hazmat_id', $hazmat_id)->where('equipment', $type)->select('manufacturer')->distinct()->get();
             return response()->json(['isStatus' => true, 'message' => 'Equipment besed manufacturers retrieved successfully.', 'manufacturers' => $manufacturers]);
+        } catch (Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function getManufacturerBasedDocumentData($hazmat_id, $equipment, $manufacturer)
+    {
+        try {
+            $documentData = MakeModel::where('hazmat_id', $hazmat_id)->where('equipment', $equipment)->where('manufacturer', $manufacturer)->get();
+
+            $data = $documentData->map(function ($document) {
+                $document->modelmakepart = "{$document->model}-{$document->make}-{$document->part}";
+                return $document;
+            });
+
+            return response()->json(['isStatus' => true, 'message' => 'Manufacturers besed document data retrieved successfully.', 'documentData' => $data]);
+        } catch (Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function getPartBasedDocumentFile($id)
+    {
+        try {
+            $documentFile = MakeModel::select('id', 'document1', 'document2')->find($id);
+
+            return response()->json(['isStatus' => true, 'message' => 'Part besed document file retrieved successfully.', 'documentFile' => $documentFile]);
         } catch (Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
@@ -415,7 +444,9 @@ class ProjectsController extends Controller
             $suspectedHazmat = $request->input('suspected_hazmat');
             $suspectedHazmatId = $request->input('hasid');
             $tableTypes = $request->input('table_type');
+            $remarks = $request->input('remark');
             $images = $request->file('image');
+            $modelmakepart = $request->input('modelmakepart');
             $doc = $request->file('doc');
 
             $projectDetail = Projects::with(['client' => function ($query) {
@@ -443,6 +474,7 @@ class ProjectsController extends Controller
             if (!empty($suspectedHazmat)) {
 
                 foreach ($suspectedHazmat as $value) {
+
                     $hazmatData = [
                         "project_id" => $inputData['project_id'],
                         "check_id" => $data->id,
@@ -451,37 +483,70 @@ class ProjectsController extends Controller
                         "check_type" => $inputData['type']
                     ];
 
-                    // Check if there's an image for the current suspected hazmat
-                    if (isset($images[$value])) {
-                        // && $tableTypes[$value] !== 'Unknown'
-                        $image = $images[$value];
-
-                        $imageName = "hazmat_{$data->id}_" . time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
-
-                        // Move the uploaded image to the desired location
-                        $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $inputData['project_id']), $imageName);
-
-                        // Assign the image name to the corresponding hazmat data
-                        $hazmatData['image'] = $imageName;
+                    if(isset($modelmakepart[$value])) {
+                        $documentFile = MakeModel::select('id', 'document1', 'document2')->find($modelmakepart[$value]);
+                    } else {
+                        $documentFile = null;
                     }
 
-                    // Check if there's an doc for the current suspected hazmat
-                    if (isset($doc[$value])) {
+                    if (empty($documentFile)) {
+                        // Check if there's an image for the current suspected hazmat
+                        if (isset($images[$value])) {
 
-                        $docs = $doc[$value];
+                            $image = $images[$value];
 
-                        $docName = "hazmat_{$data->id}_" . time() . rand(10, 99) . '.' . $docs->getClientOriginalExtension();
+                            $imageName = "hazmat_{$data->id}_" . time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
 
-                        // Move the uploaded image to the desired location
-                        $docs->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $inputData['project_id']), $docName);
+                            // Move the uploaded image to the desired location
+                            $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $inputData['project_id']), $imageName);
 
-                        // Assign the image name to the corresponding hazmat data
-                        $hazmatData['doc'] = $docName;
+                            // Assign the image name to the corresponding hazmat data
+                            $hazmatData['image'] = $imageName;
+                        }
+
+                        // Check if there's an doc for the current suspected hazmat
+                        if (isset($doc[$value])) {
+
+                            $docs = $doc[$value];
+
+                            $docName = "hazmat_{$data->id}_" . time() . rand(10, 99) . '.' . $docs->getClientOriginalExtension();
+
+                            // Move the uploaded image to the desired location
+                            $docs->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $inputData['project_id']), $docName);
+
+                            // Assign the image name to the corresponding hazmat data
+                            $hazmatData['doc'] = $docName;
+                        }
+                    } else {
+                        $document1 = "hazmat_{$data->id}_" . $documentFile->document1['name'];
+
+                        $directoryPath = public_path('images/hazmat/' . $inputData['project_id']);
+
+                        if (!File::isDirectory($directoryPath)) {
+                            // If directory doesn't exist, create it
+                            File::makeDirectory($directoryPath, 0755, true, true);
+                        }
+
+                        File::copy(public_path('images/modelDocument/' . $documentFile->document1['name']), $directoryPath . '/' . $document1);
+
+                        $hazmatData['image'] = $document1;
+
+                        if (!empty($documentFile->document2['name'])) {
+                            $document2 = "hazmat_{$data->id}_" . $documentFile->document2['name'];
+
+                            File::copy(public_path('images/modelDocument/' . $documentFile->document2['name']), $directoryPath . '/' . $document2);
+
+                            $hazmatData['doc'] = $document2;
+                        }
                     }
 
                     if ($tableTypes[$value] == 'Unknown') {
                         $hazmatData['image'] = NULL;
                         $hazmatData['doc'] = NULL;
+                    }
+
+                    if ($tableTypes[$value] == 'PCHM') {
+                        $hazmatData['remarks'] = $remarks[$value];
                     }
 
                     if (!empty($suspectedHazmatId[$value])) {

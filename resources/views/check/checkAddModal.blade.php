@@ -7,11 +7,15 @@
         <div class="col-12 col-md-12 col-lg-12 cloneTableTypeDiv" id="cloneTableTypeDiv{{ $hazmat->hazmat_id }}">
             <input type="hidden" id="hasid_{{ $hazmat->hazmat_id }}" name="hasid[{{ $hazmat->hazmat_id }}]"
                 value="{{ $hazmat->id }}">
-            <label for="table_type" id="tableTypeLable">{{ $hazmat->hazmat->name }}</label>
+            <label for="table_type" id="tableTypeLable" class="mr-5 tableTypeLable">{{ $hazmat->hazmat->name }}</label>
+            <span>
+                <input type="checkbox" id="myCheckbox" class="documentLoadCheckbox" data-id="{{$hazmat->hazmat_id}}">
+                <label for="myCheckbox">Load Document From Master Data</label>
+            </span>
             <div class="row">
-                <div class="col-{{ $hazmat->type == 'Unknown' ? 12 : ($isEquipment ? 3 : 4) }}">
+                <div class="col-{{ $hazmat->type == 'Unknown' ? 12 : 4 }} table_typecol mb-3">
                     <div class="form-group">
-                        <select class="form-control tableType{{ $hazmat->hazmat_id }}"
+                        <select class="form-control table_type tableType{{ $hazmat->hazmat_id }}"
                             id="table_type_{{ $hazmat->hazmat_id }}" name="table_type[{{ $hazmat->hazmat_id }}]">
                             <option value="Contained" {{ $hazmat->type == 'Contained' ? 'selected' : '' }}>Contained
                             </option>
@@ -25,12 +29,12 @@
                     </div>
                 </div>
 
-                <div class="col-{{ $isEquipment ? 3 : 4 }} imagehazmat" id="imagehazmat{{ $hazmat->hazmat_id }}">
+                <div class="col-4 imagehazmat" id="imagehazmat{{ $hazmat->hazmat_id }}">
                     <div class="form-group">
-                        <input type="file" class="form-control" accept="image/*" id="image_{{ $hazmat->hazmat_id }}"
+                        <input type="file" class="form-control" accept="*/*" id="image_{{ $hazmat->hazmat_id }}"
                             name="image[{{ $hazmat->hazmat_id }}]">
                     </div>
-                    <div style="font-size: 13px">
+                    <div class="imageNameShow" style="font-size: 13px">
                         @if (basename($hazmat->getOriginal('image')) != $hazmat->project_id)
                             <a href="{{ $hazmat->image }}"
                                 target="_black">{{ basename($hazmat->getOriginal('image')) }}</a> <a
@@ -40,12 +44,11 @@
                     </div>
                 </div>
 
-                <div class="col-{{ $isEquipment ? 3 : 4 }} dochazmat" id="dochazmat{{ $hazmat->hazmat_id }}">
+                <div class="col-4 dochazmat" id="dochazmat{{ $hazmat->hazmat_id }}">
                     <div class="form-group">
-                        <input type="file" class="form-control" id="doc_{{ $hazmat->hazmat_id }}"
-                            name="doc[{{ $hazmat->hazmat_id }}]">
+                        <input type="file" class="form-control" id="doc_{{ $hazmat->hazmat_id }}" name="doc[{{ $hazmat->hazmat_id }}]">
                     </div>
-                    <div style="font-size: 13px">
+                    <div style="font-size: 13px; margin-bottom: 10px;">
                         @if (basename($hazmat->getOriginal('doc')) != $hazmat->project_id)
                             <a href="{{ $hazmat->doc }}"
                                 target="_black">{{ basename($hazmat->getOriginal('doc')) }}</a> <a
@@ -55,18 +58,11 @@
                     </div>
                 </div>
 
-                @if ($isEquipment)
-                    <div class="col-3 equipment" id="equipment{{ $hazmat->hazmat_id }}">
-                        <div class="form-group">
-                            <select class="form-control equipment{{ $hazmat->hazmat_id }}"
-                                id="equipment_{{ $hazmat->hazmat_id }}" name="equipment[{{ $hazmat->hazmat_id }}]">
-                                @foreach ($hazmat->hazmat->equipment as $key => $value)
-                                    <option value="{{ $key }}">{{ $key }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                <div class="col-12 remarks" style="{{ empty($hazmat->remarks) ? 'display: none;' : '' }}">
+                    <div class="form-group">
+                        <textarea class="form-control remarksTextarea" placeholder="Remark..." id="remarks_{{ $hazmat->hazmat_id }}" name="remark[{{ $hazmat->hazmat_id }}]" rows="2">{{ $hazmat->remarks ?? '' }}</textarea>
                     </div>
-                @endif
+                </div>
             </div>
         </div>
     @endforeach

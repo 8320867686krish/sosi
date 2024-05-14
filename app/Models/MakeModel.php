@@ -11,6 +11,8 @@ class MakeModel extends Model
 
     protected $fillable = ["hazmat_id", "equipment", "model", "make", "manufacturer", "part", "document1", "document2"];
 
+    protected $hidden = ['created_at', 'updated_at'];
+
     public function hazmat()
     {
         return $this->belongsTo(Hazmat::class);

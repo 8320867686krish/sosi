@@ -103,7 +103,11 @@ Route::middleware('auth')->group(function () {
             Route::get('getHazmatEquipment/{hazmat_id}', 'getHazmatEquipment')->name('getHazmatEquipment');
 
             Route::get('getManufacturer/{hazmat_id}/{equipment}', 'getEquipmentBasedManufacturer')->name('getManufacturer');
+
+            Route::get('getManufacturerBasedDocumentData/{hazmat_id}/{equipment}/{manufacturer}', 'getManufacturerBasedDocumentData')->name('getDocumentData');
+            Route::get('getPartBasedDocumentFile/{id}', 'getPartBasedDocumentFile')->name('getPartBasedDocumentFile');
         });
+
         Route::get('generateDocx', [ReportContoller::class, 'generateDocx'])->name('generateDocx');
 
         Route::get('excelReport/{project_id}/{isSample?}', [ReportContoller::class, 'exportDataInExcel'])->name('excelReport')->middleware('can:projects.edit');
