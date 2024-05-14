@@ -21,12 +21,13 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Illuminate\Support\Facades\File;
-use \ConvertApi\ConvertApi;
-use FPDF;
-use ZendPdf\PdfDocument;
-use ZendPdf\Page;
-
+use setasign\Fpdi\Tcpdf\Fpdi as TcpdfFpdi;
+use setasign\Fpdi\PdfParser\StreamReader;
+use setasign\Fpdi\PdfParser\CrossReference\CrossReference;
+use setasign\Fpdi\PdfParser\CrossReference\CrossReferenceException;
 use Imagick; 
+use mikehaertl\pdftk\Pdf;
+use setasign\FpdiProtection\FpdiProtection;
 
 class ReportContoller extends Controller
 {
@@ -119,47 +120,45 @@ class ReportContoller extends Controller
     }
     public function genratePdf()
      {
-       $pdf = new Fpdi('L');
- $filesToMerge = [
-            '55.pdf',
-            'IAPP Cert.pdf',
+        // $filePath = public_path('images/7. IHM Expert Training Certificate- Praveen Raj.pdf');
+  
+        // $pdf = new Pdf($filePath);
+  
+        // $password = '123456';
+        // $userPassword = '123456a9';
+  
+        // $result = $pdf->allow('AllFeatures')
+        //                 ->setPassword($password)
+        //                 ->setUserPassword($userPassword)
+        //                 ->passwordEncryption(128)
+        //                 ->saveAs($filePath);
+  
+        // if ($result === false) {
+        //     $error = $pdf->getError();
+        // }
+      
+        // return response()->download($filePath);
+        $pdfPaths = [
+            public_path('images/7. IHM Expert Training Certificate- Praveen Raj.pdf'),
+            public_path('images/IAPP Cert.pdf'),
+            // Add more PDF file paths as needed
         ];
-
-foreach ($filesToMerge as $pdfUrl) {
-    // Fetch the PDF file contents
-    $pdfPath = public_path('images' . '/' . $pdfUrl);
-    
-    // Set the source file
-    $pdf->setSourceFile($pdfPath);
-
-    // Get the total number of pages in the PDF
-    $pageCount = $pdf->setSourceFile($pdfPath);
-
-    // Iterate through each page and import them into the new PDF
-    for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-        // Add a new page to the new PDF document
-        $pdf->AddPage();
-
-        // Import the current page from the source PDF
-        $templateId = $pdf->importPage($pageNo);
-
-        // Use the imported page
-        $pdf->useTemplate($templateId);
-  $pdf->SetFillColor(255, 255, 255); // Set fill color to white
-        $pdf->Rect(0, $pdf->GetPageHeight() - 15, $pdf->GetPageWidth(), 15, 'F'); // Overlay with a white rectangle
-        // Optionally, you can adjust the position and size of the imported page using $pdf->getTemplateSize($templateId)
-    }
-}
-
-// Output the merged PDF
-$pdfFilePath = public_path('merged.pdf');
-$pdf->Output('F', $pdfFilePath);
-
-// Clean up resources
-$pdf->close();
-
-// Optionally, you can return a binary response with the merged PDF file as a download
-return response()->download($pdfFilePath)->deleteFileAfterSend(true);
+       
+        
+        // Output file path for the merged PDF
+        $outputFilePath = public_path('merge/1.pdf') ;
+        
+        // Create a new PDF instance
+        $pdf = new Pdf($pdfPaths);
+        $pdf->addFile( $pdfPaths[0]);
+        $pdf->addFile( $pdfPaths[1]);
+        $result = $pdf->cat($pdfPaths)
+        ->saveAs($outputFilePath);
+        if ($result === false) {
+            $error = $pdf->getError();
+        }
+        // Return a response to download the merged PDF
+      //  return response()->download($outputFilePath)->deleteFileAfterSend(true);
     }
     
 }

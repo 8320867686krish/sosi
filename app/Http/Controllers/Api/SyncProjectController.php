@@ -216,7 +216,7 @@ class SyncProjectController extends Controller
                 }
             }
         }
-        if($post['deletedData']){
+        if(@$post['deletedCheck']){
             foreach ($post['deletedData'] as $value){
                 $check = Checks::find($value['id']);
                 $check->delete();
