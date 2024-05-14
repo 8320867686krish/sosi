@@ -171,7 +171,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        Webklex\PDFMerger\Providers\PDFMergerServiceProvider::class
     ])->toArray(),
 
     /*
