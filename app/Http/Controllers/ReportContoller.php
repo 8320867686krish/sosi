@@ -22,6 +22,7 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Illuminate\Support\Facades\File;
 use \ConvertApi\ConvertApi;
+use FPDF;
 use ZendPdf\PdfDocument;
 use ZendPdf\Page;
 
@@ -118,10 +119,29 @@ class ReportContoller extends Controller
     }
     public function genratePdf()
      {
-        $pdfFiles = ['IAPP Cert.pdf','PDF-Home Decor1714742328.pdf'];
+        $pdfFiles = ['IAPP Cert.pdf', 'MT SONG Lab Report.pdf'];
         $outputPdf = 'Combined.pdf';
-        
-        // Create a new PDF document
+              $outputPath = public_path('merged_pdfs/' . $outputPdf);
+
+        $pdf1Path= public_path('images/attachment/1/' . $pdfFiles[0]);
+        $pdf2Path= public_path('images/attachment/1/' . $pdfFiles[1]);
+        $pdftkPath = "C:\\Program Files\\pdftk_free-2.02-win-setup.exe"; // Update this with the full path to pdftk.exe
+
+        $process = new Process([$pdftkPath, $pdf1Path, $pdf2Path, 'cat', 'output', $outputPath]);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        // foreach ($pdf2->pages as $page) {
+        //     $clonedPage = clone $page;
+        //     $pdf1->pages[] = $clonedPage;
+        // }
+      //  $combinedPdfPath = public_path('merged_pdfs/' . $outputPdf);
+
+       // $pdf1->save($combinedPdfPath);
+        exit();
+        // Initialize a new PDF document
         $combinedPdf = new PdfDocument();
         
         // Iterate through each PDF file
@@ -129,21 +149,25 @@ class ReportContoller extends Controller
             // Get the full path to the PDF file
             $pdfPath = public_path('images/attachment/1/' . $pdfFile);
         
-            // Open the PDF file and add its pages to the combined PDF document
-            $pdf = PdfDocument::load($pdfPath);
-            foreach ($pdf->pages as $page) {
-                // Clone the page and add it to the combined PDF document
-                $clonedPage = clone $page;
-                $combinedPdf->pages[] = $clonedPage;
+            // Load the PDF file
+                  $pdf = new Fpdi('L');
+            $pageCount = $pdf->setSourceFile($pdfPath);
+
+            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                // Add a new page to the PDF
+                $pdf->AddPage();
+    
+                // Import the current page from the source PDF
+                $templateId = $pdf->importPage($pageNo);
+    
+                // Use the imported page
+                $pdf->useTemplate($templateId, null, null, null, null, true);
             }
         }
         
         // Save the combined PDF document to a file
         $combinedPdfPath = public_path('merged_pdfs/' . $outputPdf);
-        $combinedPdf->save($combinedPdfPath);
-        
-        // Return the path to the merged PDF
-        return $combinedPdfPath;
+        $combinedPdf->Output('F', $combinedPdfPath);
     //     // Initialize variables to hold combined content
     //     $combinedBinary = '';
         
