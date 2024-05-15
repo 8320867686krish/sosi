@@ -141,17 +141,17 @@
                     <input type="hidden" name="id" value="{{ $project->id ?? '' }}">
                     <div class="row mb-5">
                         <div class="col-sm-6 col-md-8 col-lg-3">
-                        <div class="preview-image-container">
+                            <div class="preview-image-container">
 
-                            <img id="previewImg" src="{{ $project->imagePath }}"
-                                onerror="this.onerror=null;this.src='{{ asset('assets/images/logo.png') }}';"
-                                style="max-width: 300px" alt="Upload Image">
-                        </div>
+                                <img id="previewImg" src="{{ $project->imagePath }}"
+                                    onerror="this.onerror=null;this.src='{{ asset('assets/images/logo.png') }}';"
+                                    style="max-width: 300px" alt="Upload Image">
+                            </div>
                         </div>
                         <div class="col-sm-6 col-md-6 col-lg-1 pt-10">
                             <div class="form-group mb-3">
 
-                            <button class="addfiles btn btn-primary"><i class="fas fa-upload"></i></button>
+                                <button class="addfiles btn btn-primary"><i class="fas fa-upload"></i></button>
 
                                 <input type="file" class="form-control  @error('image') is-invalid @enderror"
                                     id="image" name="image" autocomplete="off"
@@ -558,11 +558,15 @@
 
         <div class="col-12" style="display: none;">
             <div class="col-12 col-md-12 col-lg-12 cloneTableTypeDiv" id="cloneTableTypeDiv">
-                <label for="table_type" id="tableTypeLable"></label>
+                <label for="table_type" id="tableTypeLable" class="mr-5 tableTypeLable"></label>
+                <span>
+                    <input type="checkbox" id="myCheckbox" class="documentLoadCheckbox">
+                    <label for="myCheckbox">Load Document From Master Data</label>
+                </span>
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 table_typecol">
                         <div class="form-group mb-3">
-                            <select class="form-control" id="table_type" name="table_type">
+                            <select class="form-control table_type" id="table_type" name="table_type">
                                 <option value="Contained">Contained</option>
                                 <option value="Not Contained">Not Contained</option>
                                 <option value="PCHM">PCHM</option>
@@ -574,10 +578,39 @@
                         <div class="form-group mb-3">
                             <input type="file" class="form-control hazmatImg" accept="image/*">
                         </div>
+                        <div class="imageNameShow mb-3" style="font-size: 13px;"></div>
                     </div>
                     <div class="col-4 dochazmat">
                         <div class="form-group mb-3">
                             <input type="file" class="form-control hazmatDoc">
+                        </div>
+                        <div class="docNameShow mb-3" style="font-size: 13px;"></div>
+                    </div>
+                    <div class="col-4 equipment">
+                        <div class="form-group">
+                            <select class="form-control equipmentSelectTag">
+                                <option value="">Select Equipment</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-4 manufacturer">
+                        <div class="form-group">
+                            <select class="form-control manufacturerSelectTag">
+                                <option value="">First Select Equipment</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-4 modelMakePart">
+                        <div class="form-group mb-3">
+                            <select class="form-control modelMakePartTag">
+                                <option value="">First Select Manufacturer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 remarks">
+                        <div class="form-group mb-3">
+                            <textarea class="form-control remarksTextarea" rows="2" placeholder="Remark..."></textarea>
                         </div>
                     </div>
                 </div>
@@ -587,7 +620,7 @@
 @endsection
 
 @push('js')
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="{{ asset('assets/vendor/jquery.areaSelect.js') }}"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
@@ -618,13 +651,18 @@
                 console.error("Missing parameters for handleTableTypeChange function");
                 return;
             }
-            const targetElements = cloneTableTypeDiv.find(".col-12, .col-4");
+
+            const targetElements = cloneTableTypeDiv.find(".table_typecol, .dochazmat, .imagehazmat");
 
             const newClass = (selectedValue === "Unknown") ? "col-12" : "col-4";
 
             targetElements.removeClass("col-12 col-4").addClass(newClass);
             cloneTableTypeDiv.find(".imagehazmat").toggle(selectedValue !== "Unknown");
             cloneTableTypeDiv.find(".dochazmat").toggle(selectedValue !== "Unknown");
+            cloneTableTypeDiv.find(".equipment").toggle(selectedValue !== "Unknown");
+            cloneTableTypeDiv.find(".manufacturer").toggle(selectedValue !== "Unknown");
+            cloneTableTypeDiv.find(".modelMakePart").toggle(selectedValue !== "Unknown");
+            cloneTableTypeDiv.find(".remarks").toggle(selectedValue == "PCHM");
         }
 
         function triggerFileInput(inputId) {
@@ -723,6 +761,24 @@
             });
         }
 
+        function getHazmatEquipment(hazmat_id) {
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('getHazmatEquipment') }}" + "/" + hazmat_id,
+                success: function(response) {
+                    if (response.isStatus) {
+                        $(`#equipmentSelectTag_${hazmat_id}`).attr('data-id', hazmat_id);
+                        $.each(response.equipments, function(index, value) {
+                            $(`#equipmentSelectTag_${hazmat_id}`).append($('<option>', {
+                                value: index,
+                                text: index
+                            }));
+                        });
+                    }
+                },
+            });
+        }
+
         $(document).ready(function() {
             const url = window.location.href;
             const segments = url.split('/');
@@ -794,8 +850,6 @@
             setTimeout(function() {
                 $('.alert-success').fadeOut();
             }, 15000);
-
-
 
             $(".formgenralButton").click(function() {
                 $('span').html("");
@@ -961,7 +1015,6 @@
                 $("#hotsportNameType").append(cloneHtml);
             });
 
-            // });
 
             $('#getDeckCropImg').click(function() {
 
@@ -1137,7 +1190,7 @@
                 });
             });
 
-            $("#showTableTypeDiv").on("change", ".cloneTableTypeDiv select", function() {
+            $("#showTableTypeDiv").on("change", ".cloneTableTypeDiv select.table_type", function() {
                 const selectedValue = $(this).val();
                 const cloneTableTypeDiv = $(this).closest(".cloneTableTypeDiv");
                 handleTableTypeChange(selectedValue, cloneTableTypeDiv);
@@ -1155,7 +1208,12 @@
                     clonedElement.removeAttr("id");
                     clonedElement.attr("id", "cloneTableTypeDiv" + selectedValue);
 
-                    clonedElement.find('label').text($(this).find('option').eq(clickedIndex).text());
+                    clonedElement.find('label.tableTypeLable').text($(this).find('option').eq(clickedIndex)
+                        .text());
+
+                    clonedElement.find('input[type="checkbox"].documentLoadCheckbox').attr('data-id',
+                        selectedValue);
+
                     clonedElement.find('select').attr('id', `table_type_${selectedValue}`).attr('name',
                         `table_type[${selectedValue}]`);
 
@@ -1164,21 +1222,223 @@
                         name: `image[${selectedValue}]`
                     });
 
+                    clonedElement.find('div.imageNameShow').prop({
+                        id: `imageNameShow_${selectedValue}`,
+                    });
+
                     clonedElement.find('input[type="file"].hazmatDoc').prop({
                         id: `doc_${selectedValue}`,
                         name: `doc[${selectedValue}]`
                     });
 
+                    clonedElement.find('div.docNameShow').prop({
+                        id: `docNameShow_${selectedValue}`,
+                    });
+
+                    clonedElement.find('select.equipmentSelectTag').prop({
+                        id: `equipmentSelectTag_${selectedValue}`,
+                        name: `equipmenttt[${selectedValue}]`
+                    });
+
+                    clonedElement.find('select.manufacturerSelectTag').prop({
+                        id: `manufacturerSelectTag_${selectedValue}`,
+                        name: `manufacturer[${selectedValue}]`
+                    });
+
+                    clonedElement.find('select.modelMakePartTag').prop({
+                        id: `modelMakePartTag_${selectedValue}`,
+                        name: `modelmakepart[${selectedValue}]`
+                    });
+
+                    clonedElement.find('textarea.remarksTextarea').prop({
+                        id: `remarks_${selectedValue}`,
+                        name: `remark[${selectedValue}]`
+                    });
+
                     clonedElement.find(`.imagehazmat`).hide();
                     clonedElement.find(`.dochazmat`).hide();
+                    clonedElement.find(`.equipment`).hide();
+                    clonedElement.find(`.manufacturer`).hide();
+                    clonedElement.find(`.modelMakePart`).hide();
+                    clonedElement.find(`.remarks`).hide();
 
                     // Append cloned element to showTableTypeDiv
                     $('#showTableTypeDiv').append(clonedElement);
                 }
             });
 
+            $(document).on('change', '.documentLoadCheckbox', function() {
+                let id = $(this).attr('data-id');
+
+                if ($(this).is(':checked')) {
+                    console.log('Checkbox checked');
+                    getHazmatEquipment(id);
+                } else {
+                    // getHazmatEquipment(selectedValue);
+                    console.log('Checkbox unchecked');
+                }
+
+                // if (optionValue != "") {
+                //     $.ajax({
+                //         type: 'GET',
+                //         url: "{{ url('getManufacturer') }}" + "/" + id + "/" + optionValue,
+                //         success: function(response) {
+                //             if (response.isStatus) {
+                //                 $(`#manufacturerSelectTag_${id}`).attr('data-id', id);
+                //                 $(`#manufacturerSelectTag_${id}`).attr('data-equipment',
+                //                     optionValue);
+                //                 $(`#manufacturerSelectTag_${id}`).empty();
+                //                 $(`#manufacturerSelectTag_${id}`).append($(
+                //                     '<option>', {
+                //                         value: "",
+                //                         text: "Select Manufacturer"
+                //                     }));
+
+                //                 $.each(response.manufacturers, function(index, value) {
+                //                     $(`#manufacturerSelectTag_${id}`).append($(
+                //                         '<option>', {
+                //                             value: value.manufacturer,
+                //                             text: value.manufacturer
+                //                         }));
+                //                 });
+                //             }
+                //         },
+                //     });
+                // } else {
+                //     $(`#manufacturerSelectTag_${id}`).empty().append($('<option>', {
+                //         value: "",
+                //         text: "First Select Equipment"
+                //     }));
+                //     $(`#modelMakePartTag_${id}`).empty().append($('<option>', {
+                //         value: "",
+                //         text: "First Select Manufacturer"
+                //     }));
+                //     $(`#docNameShow_${id}`).empty();
+                //     $(`#imageNameShow_${id}`).empty();
+                // }
+            });
+
+            $(document).on('change', '.equipmentSelectTag', function() {
+                let optionValue = $(this).val();
+                let id = $(this).attr('data-id');
+
+                if (optionValue != "") {
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{ url('getManufacturer') }}" + "/" + id + "/" + optionValue,
+                        success: function(response) {
+                            if (response.isStatus) {
+                                $(`#manufacturerSelectTag_${id}`).attr('data-id', id);
+                                $(`#manufacturerSelectTag_${id}`).attr('data-equipment',
+                                    optionValue);
+                                $(`#manufacturerSelectTag_${id}`).empty();
+                                $(`#manufacturerSelectTag_${id}`).append($(
+                                    '<option>', {
+                                        value: "",
+                                        text: "Select Manufacturer"
+                                    }));
+
+                                $.each(response.manufacturers, function(index, value) {
+                                    $(`#manufacturerSelectTag_${id}`).append($(
+                                        '<option>', {
+                                            value: value.manufacturer,
+                                            text: value.manufacturer
+                                        }));
+                                });
+                            }
+                        },
+                    });
+                } else {
+                    $(`#manufacturerSelectTag_${id}`).empty().append($('<option>', {
+                        value: "",
+                        text: "First Select Equipment"
+                    }));
+                    $(`#modelMakePartTag_${id}`).empty().append($('<option>', {
+                        value: "",
+                        text: "First Select Manufacturer"
+                    }));
+                    $(`#docNameShow_${id}`).empty();
+                    $(`#imageNameShow_${id}`).empty();
+                }
+            });
+
+            $(document).on('change', '.manufacturerSelectTag', function() {
+                let optionValue = $(this).val();
+                let id = $(this).attr('data-id');
+                let equipment = $(this).attr('data-equipment');
+
+                if (optionValue != "") {
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{ url('getManufacturerBasedDocumentData') }}" + "/" + id + "/" +
+                            equipment + "/" + optionValue,
+                        success: function(response) {
+                            if (response.isStatus) {
+                                $(`#modelMakePartTag_${id}`).attr('data-id', id);
+                                $(`#modelMakePartTag_${id}`).empty();
+                                $(`#modelMakePartTag_${id}`).append($(
+                                    '<option>', {
+                                        value: "",
+                                        text: "Select Model Make and Part"
+                                    }));
+
+                                $.each(response.documentData, function(index, value) {
+                                    $(`#modelMakePartTag_${id}`).append($(
+                                        '<option>', {
+                                            value: value.id,
+                                            text: value.modelmakepart
+                                        }));
+                                });
+                            }
+                        },
+                    });
+                } else {
+                    $(`#modelMakePartTag_${id}`).empty().append($('<option>', {
+                        value: "",
+                        text: "First Select Manufacturer"
+                    }));
+                    $(`#docNameShow_${id}`).empty();
+                    $(`#imageNameShow_${id}`).empty();
+                }
+            });
+
+            $(document).on('change', '.modelMakePartTag', function() {
+                let optionValue = $(this).val();
+                let id = $(this).attr('data-id');
+
+                if (optionValue != "") {
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{ url('getPartBasedDocumentFile') }}" + "/" + optionValue,
+                        success: function(response) {
+                            // console.log(response.documentFile.document1['name']);
+                            if (response.isStatus) {
+                                let data = response.documentFile;
+
+                                if (data.document1['name'] != null) {
+                                    $(`#imageNameShow_${id}`).empty();
+                                    let html =
+                                        `<a href="${data.document1['path']}" target="_black" > ${data.document1['name']} </a>`;
+                                    $(`#imageNameShow_${id}`).append(html);
+                                }
+
+                                if (data.document2['name'] != null) {
+                                    $(`#docNameShow_${id}`).empty();
+                                    let html =
+                                        `<a href="${data.document2['path']}" target="_black"> ${data.document2['name']} </a>`;
+                                    $(`#docNameShow_${id}`).append(html);
+                                }
+                            }
+                        },
+                    });
+                } else {
+                    $(`#docNameShow_${id}`).empty();
+                    $(`#imageNameShow_${id}`).empty();
+                }
+            });
+
             // Remove Hazmat Document Analysis Results Document
-            $(document).on('click', '.removeHazmatDocument', function(e){
+            $(document).on('click', '.removeHazmatDocument', function(e) {
                 e.preventDefault();
                 let parentDiv = $(this).closest('div');
 
@@ -1214,7 +1474,6 @@
                     processData: false,
                     success: function(response) {
                         if (response.isStatus) {
-                            console.log(response.trtd);
                             $("#checkListTable").html(response.trtd);
 
                             let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
@@ -1248,7 +1507,9 @@
                 });
             });
         });
-        $('.addfiles').on('click', function() { $('#image').click();return false;});
-
+        $('.addfiles').on('click', function() {
+            $('#image').click();
+            return false;
+        });
     </script>
 @endpush
