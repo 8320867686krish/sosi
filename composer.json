@@ -7,16 +7,25 @@
     "require": {
         "php": "^8.1",
         "barryvdh/laravel-dompdf": "^2.1",
+        "clegginabox/pdf-merger": "dev-master",
+        "convertapi/convertapi-php": "^2.0",
+        "elibyy/tcpdf-laravel": "^11.1",
         "guzzlehttp/guzzle": "^7.2",
+        "jurosh/pdf-merge": "^2.1",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "maatwebsite/excel": "^3.1",
-        "phpoffice/phpword": "^1.2",
+        "mikehaertl/php-pdftk": "^0.13.1",
         "setasign/fpdi": "^2.6",
-        "setasign/fpdi-fpdf": "2.3",
+        "setasign/fpdi-fpdf": "^2.3",
+        "setasign/fpdi-protection": "^2.0",
         "simplesoftwareio/simple-qrcode": "^4.2",
-        "spatie/laravel-permission": "^6.3"
+        "spatie/laravel-permission": "^6.3",
+        "spatie/pdf-to-image": "^1.2",
+        "spatie/pdf-to-text": "^1.52",
+        "webklex/laravel-pdfmerger": "^1.3",
+        "zendframework/zendpdf": "^2.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

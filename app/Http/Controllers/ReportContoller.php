@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
+
 use App\Exports\MultiSheetExport;
 use App\Models\CheckHasHazmat;
 use App\Models\Checks;
@@ -12,8 +14,20 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Exception;
 use Illuminate\Support\Facades\Response;
-use PhpOffice\PhpWord\PhpWord;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use setasign\Fpdi\Fpdi;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Illuminate\Support\Facades\File;
+use setasign\Fpdi\Tcpdf\Fpdi as TcpdfFpdi;
+use setasign\Fpdi\PdfParser\StreamReader;
+use setasign\Fpdi\PdfParser\CrossReference\CrossReference;
+use setasign\Fpdi\PdfParser\CrossReference\CrossReferenceException;
+use Imagick; 
+use mikehaertl\pdftk\Pdf;
+use setasign\FpdiProtection\FpdiProtection;
 
 class ReportContoller extends Controller
 {
@@ -54,82 +68,97 @@ class ReportContoller extends Controller
         $filename = "projects-{$id}-" . time() . "." . $fileExt;
         return Excel::download(new MultiSheetExport($project, $hazmats, $checks), $filename, $exportFormat);
     }
-//     public function generateDocx()
-//     {
-//         $wordTest = new \PhpOffice\PhpWord\PhpWord();
+    public function genratePdf1()
+    {
+        $pdf = new Fpdi('L');
 
-//         // Load the PDF file
-//         $pdfFilePath = public_path('images/attachment/1/PDF-Home Decor1714742328.pdf');
-//         $pdf = new \setasign\Fpdi\Fpdi();
+        // Load the existing PDF file
+        $pdfFile = public_path('images/attachment/1/IAPP Cert.pdf');
+        $pdf->setSourceFile($pdfFile);
 
-//         $numPages = $pdf->setSourceFile($pdfFilePath);
+        // Get the total number of pages in the PDF
+        $totalPages = $pdf->setSourceFile($pdfFile);
+        $pageCount = $pdf->setSourceFile($pdfFile);
 
-//         // Iterate through each page of the PDF
-//         for ($pageNo = 1; $pageNo <= $numPages; $pageNo++) {
-//             $templateId = $pdf->importPage($pageNo);
-//             $pdf->AddPage();
-//             $pdf->useTemplate($templateId);
-//         }
-//         $wordFilePath = public_path('images/file.docx');
-//         // Save the Word document
-//              $objectWriter = \PhpOffice\PhpWord\IOFactory::createWriter($wordTest, 'Word2007');
-//              $objectWriter->save($wordFilePath);
+        // Iterate through each page and import them into the new PDF
+        for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+            // Add a new page to the PDF
+            $pdf->AddPage();
 
-//              return response()->download($wordFilePath, 'converted_word_file.docx')->deleteFileAfterSend();
+            // Import the current page from the source PDF
+            $templateId = $pdf->importPage($pageNo);
 
-//         // Return the path to the generated Word file
-//        // return response()->download($wordFilePath, 'converted_word_file.docx')->deleteFileAfterSend();
-        
-// //         $wordTest = new \PhpOffice\PhpWord\PhpWord();
- 
-// //         $newSection = $wordTest->addSection();
-     
-// //         $desc1 = "The Portfolio details is a very useful feature of the web page. You can establish your archived details and the works to the entire web community. It was outlined to bring in extra clients, get you selected based on this details.";
-     
-// //         $newSection->addText($desc1, array('name' => 'Tahoma', 'size' => 15, 'color' => 'red'));
-// //         $catImageUrl = 'https://via.placeholder.com/150?text=Cat'; // Placeholder cat image URL
-// // $newSection->addImage($catImageUrl);
-// //         $objectWriter = \PhpOffice\PhpWord\IOFactory::createWriter($wordTest, 'Word2007');
-// //         try {
-// //             $objectWriter->save(storage_path('TestWordFile.docx'));
-// //         } catch (Exception $e) {
-// //         }
-     
-// //         return response()->download(storage_path('TestWordFile.docx'));
-          
+            // Use the imported page
+            $pdf->useTemplate($templateId, null, null, null, null, true);
+        }
+
+        $pdfFile = public_path('images/attachment/1/PDF-Home Decor1714742328.pdf');
+        $pdf->setSourceFile($pdfFile);
+
+        // Get the total number of pages in the PDF
+        $totalPages = $pdf->setSourceFile($pdfFile);
+        $pageCount = $pdf->setSourceFile($pdfFile);
+
+        // Iterate through each page and import them into the new PDF
+        for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+            // Add a new page to the PDF
+            $pdf->AddPage();
+
+            // Import the current page from the source PDF
+            $templateId = $pdf->importPage($pageNo);
+
+            // Use the imported page
+            $pdf->useTemplate($templateId, null, null, null, null, true);
+        }
 
 
-// //         return response()->download(storage_path('helloWorld.docx'));
-//     }
-public function generateDocx()
-{
-    // Create a new Word document
-    $phpWord = new \PhpOffice\PhpWord\PhpWord();
-
-    // Load the PDF file
-    $pdfFilePath = public_path('images/attachment/1/PDF-Home Decor1714742328.pdf');
-    $pdf = new \setasign\Fpdi\Fpdi();
-    $numPages = $pdf->setSourceFile($pdfFilePath);
-
-    // Iterate through each page of the PDF
-    for ($pageNo = 1; $pageNo <= $numPages; $pageNo++) {
-        $pdf->AddPage();
-        $templateId = $pdf->importPage($pageNo);
-        $pdf->useTemplate($templateId);
-        
-        // Capture PDF content as an image and add it to the Word document
-        $imageData = $pdf->Output('S');
-        $section = $phpWord->addSection();
-        $section->addImageFromString($imageData);
+        // Output the merged PDF
+        $pdfFilePath = public_path('merged.pdf');
+        $pdf->Output('F', $pdfFilePath);
+        // Return a binary response with the merged PDF file as a download
+        return new BinaryFileResponse(public_path('merged.pdf'));
     }
-
-    // Save the Word document
-    $wordFilePath = public_path('images/file.docx');
-    $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-    $objWriter->save($wordFilePath);
-
-    // Download the Word document
-    return response()->download($wordFilePath, 'converted_word_file.docx')->deleteFileAfterSend();
-}
-
+    public function genratePdf()
+     {
+        // $filePath = public_path('images/7. IHM Expert Training Certificate- Praveen Raj.pdf');
+  
+        // $pdf = new Pdf($filePath);
+  
+        // $password = '123456';
+        // $userPassword = '123456a9';
+  
+        // $result = $pdf->allow('AllFeatures')
+        //                 ->setPassword($password)
+        //                 ->setUserPassword($userPassword)
+        //                 ->passwordEncryption(128)
+        //                 ->saveAs($filePath);
+  
+        // if ($result === false) {
+        //     $error = $pdf->getError();
+        // }
+      
+        // return response()->download($filePath);
+        $pdfPaths = [
+            public_path('images/7. IHM Expert Training Certificate- Praveen Raj.pdf'),
+            public_path('images/IAPP Cert.pdf'),
+            // Add more PDF file paths as needed
+        ];
+       
+        
+        // Output file path for the merged PDF
+        $outputFilePath = public_path('merge/1.pdf') ;
+        
+        // Create a new PDF instance
+        $pdf = new Pdf($pdfPaths);
+        $pdf->addFile( $pdfPaths[0]);
+        $pdf->addFile( $pdfPaths[1]);
+        $result = $pdf->cat($pdfPaths)
+        ->saveAs($outputFilePath);
+        if ($result === false) {
+            $error = $pdf->getError();
+        }
+        // Return a response to download the merged PDF
+      //  return response()->download($outputFilePath)->deleteFileAfterSend(true);
+    }
+    
 }
