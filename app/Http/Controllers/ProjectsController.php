@@ -498,7 +498,7 @@ class ProjectsController extends Controller
                             $imageName = "hazmat_{$data->id}_" . time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
 
                             // Move the uploaded image to the desired location
-                            $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $inputData['project_id']), $imageName);
+                            $image->move(public_path('images/hazmat/' . $inputData['project_id']), $imageName);
 
                             // Assign the image name to the corresponding hazmat data
                             $hazmatData['image'] = $imageName;
@@ -512,7 +512,7 @@ class ProjectsController extends Controller
                             $docName = "hazmat_{$data->id}_" . time() . rand(10, 99) . '.' . $docs->getClientOriginalExtension();
 
                             // Move the uploaded image to the desired location
-                            $docs->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $inputData['project_id']), $docName);
+                            $docs->move(public_path('images/hazmat/' . $inputData['project_id']), $docName);
 
                             // Assign the image name to the corresponding hazmat data
                             $hazmatData['doc'] = $docName;
@@ -598,7 +598,7 @@ class ProjectsController extends Controller
                 return response()->json(["isStatus" => false, 'message' => 'Hazmat not found']);
             }
 
-            $documentPath = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $document->project_id . "/") . basename($document->getOriginal($type));
+            $documentPath = public_path('images/hazmat/' . $document->project_id . "/") . basename($document->getOriginal($type));
 
             // Delete the file if it exists
             if (file_exists($documentPath)) {
@@ -777,7 +777,7 @@ class ProjectsController extends Controller
 
             $hazmats = CheckHasHazmat::where('check_id', $id)->get();
 
-            $hazImagePath = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $check->project_id . "/");
+            $hazImagePath = public_path('images/hazmat/' . $check->project_id . "/");
             $prefixToRemove = "hazmat_{$check->id}_"; // Specify the prefix to remove
 
             $pattern = "{$hazImagePath}{$prefixToRemove}*";
