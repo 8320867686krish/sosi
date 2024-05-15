@@ -559,19 +559,19 @@
         <div class="col-12" style="display: none;">
             <div class="col-12 col-md-12 col-lg-12 cloneTableTypeDiv" id="cloneTableTypeDiv">
                 <label for="table_type" id="tableTypeLable" class="mr-5 tableTypeLable"></label>
-                <span>
-                    <input type="checkbox" id="myCheckbox" class="documentLoadCheckbox">
-                    <label for="myCheckbox">Load Document From Master Data</label>
-                </span>
                 <div class="row">
                     <div class="col-12 table_typecol">
-                        <div class="form-group mb-3">
+                        <div class="form-group">
                             <select class="form-control table_type" id="table_type" name="table_type">
                                 <option value="Contained">Contained</option>
                                 <option value="Not Contained">Not Contained</option>
                                 <option value="PCHM">PCHM</option>
                                 <option value="Unknown" selected>Unknown</option>
                             </select>
+                        </div>
+                        <div class="documentLoadCheckboxDiv">
+                            <input type="checkbox" id="myCheckbox" class="documentLoadCheckbox">
+                            <label for="myCheckbox">Load Document From Master Data</label>
                         </div>
                     </div>
                     <div class="col-4 imagehazmat">
@@ -659,10 +659,12 @@
             targetElements.removeClass("col-12 col-4").addClass(newClass);
             cloneTableTypeDiv.find(".imagehazmat").toggle(selectedValue !== "Unknown");
             cloneTableTypeDiv.find(".dochazmat").toggle(selectedValue !== "Unknown");
-            cloneTableTypeDiv.find(".equipment").toggle(selectedValue !== "Unknown");
-            cloneTableTypeDiv.find(".manufacturer").toggle(selectedValue !== "Unknown");
-            cloneTableTypeDiv.find(".modelMakePart").toggle(selectedValue !== "Unknown");
             cloneTableTypeDiv.find(".remarks").toggle(selectedValue == "PCHM");
+            if (selectedValue == "Unknown") {
+                cloneTableTypeDiv.find(".documentLoadCheckbox").prop('checked', false);
+                cloneTableTypeDiv.find(".equipment, .manufacturer, .modelMakePart").hide();
+            }
+            cloneTableTypeDiv.find(`.documentLoadCheckboxDiv`).toggle(selectedValue !== "Unknown");
         }
 
         function triggerFileInput(inputId) {
@@ -756,6 +758,13 @@
                         }
                     });
 
+                    const cloneTableTypeDiv = $(".cloneTableTypeDiv select.table_type").closest(
+                        ".cloneTableTypeDiv");
+
+                    cloneTableTypeDiv.find(".equipment").hide();
+                    cloneTableTypeDiv.find(".manufacturer").hide();
+                    cloneTableTypeDiv.find(".modelMakePart").hide();
+
                     $("#checkDataAddModal").modal('show');
                 },
             });
@@ -774,6 +783,12 @@
                                 text: index
                             }));
                         });
+
+                        const cloneTableTypeDiv = $(".cloneTableTypeDiv select.table_type").closest(".cloneTableTypeDiv");
+
+                        cloneTableTypeDiv.find(`#equipmentDiv_${hazmat_id}`).closest('.equipment').show();
+                        cloneTableTypeDiv.find(`#manufacturerDiv_${hazmat_id}`).closest('.manufacturer').show();
+                        cloneTableTypeDiv.find(`#modelMakePartDiv_${hazmat_id}`).closest('.modelMakePart').show();
                     }
                 },
             });
@@ -1214,6 +1229,10 @@
                     clonedElement.find('input[type="checkbox"].documentLoadCheckbox').attr('data-id',
                         selectedValue);
 
+                    clonedElement.find('input[type="checkbox"].documentLoadCheckbox').closest('div').prop({
+                        id: `documentLoadCheckboxDiv_${selectedValue}`,
+                    });
+
                     clonedElement.find('select').attr('id', `table_type_${selectedValue}`).attr('name',
                         `table_type[${selectedValue}]`);
 
@@ -1238,16 +1257,22 @@
                     clonedElement.find('select.equipmentSelectTag').prop({
                         id: `equipmentSelectTag_${selectedValue}`,
                         name: `equipmenttt[${selectedValue}]`
+                    }).closest('div').prop({
+                        id: `equipmentDiv_${selectedValue}`,
                     });
 
                     clonedElement.find('select.manufacturerSelectTag').prop({
                         id: `manufacturerSelectTag_${selectedValue}`,
                         name: `manufacturer[${selectedValue}]`
+                    }).closest('div').prop({
+                        id: `manufacturerDiv_${selectedValue}`,
                     });
 
                     clonedElement.find('select.modelMakePartTag').prop({
                         id: `modelMakePartTag_${selectedValue}`,
                         name: `modelmakepart[${selectedValue}]`
+                    }).closest('div').prop({
+                        id: `modelMakePartDiv_${selectedValue}`,
                     });
 
                     clonedElement.find('textarea.remarksTextarea').prop({
@@ -1261,6 +1286,7 @@
                     clonedElement.find(`.manufacturer`).hide();
                     clonedElement.find(`.modelMakePart`).hide();
                     clonedElement.find(`.remarks`).hide();
+                    clonedElement.find(`#documentLoadCheckboxDiv_${selectedValue}`).hide();
 
                     // Append cloned element to showTableTypeDiv
                     $('#showTableTypeDiv').append(clonedElement);
@@ -1271,51 +1297,28 @@
                 let id = $(this).attr('data-id');
 
                 if ($(this).is(':checked')) {
-                    console.log('Checkbox checked');
                     getHazmatEquipment(id);
                 } else {
-                    // getHazmatEquipment(selectedValue);
-                    console.log('Checkbox unchecked');
+                    const cloneTableTypeDiv = $(".cloneTableTypeDiv select.table_type").closest(
+                        ".cloneTableTypeDiv");
+
+                    cloneTableTypeDiv.find(`#equipmentSelectTag_${id}`).empty().append($('<option>', {
+                        value: "",
+                        text: "Select Equipment"
+                    }));
+                    cloneTableTypeDiv.find(`#manufacturerSelectTag_${id}`).empty().append($('<option>', {
+                        value: "",
+                        text: "First Select Equipment"
+                    }));
+                    cloneTableTypeDiv.find(`#modelMakePartTag_${id}`).empty().append($('<option>', {
+                        value: "",
+                        text: "First Select Manufacturer"
+                    }));
+
+                    cloneTableTypeDiv.find(`#equipmentDiv_${id}`).closest('.equipment').hide();
+                    cloneTableTypeDiv.find(`#manufacturerDiv_${id}`).closest('.manufacturer').hide();
+                    cloneTableTypeDiv.find(`#modelMakePartDiv_${id}`).closest('.modelMakePart').hide();
                 }
-
-                // if (optionValue != "") {
-                //     $.ajax({
-                //         type: 'GET',
-                //         url: "{{ url('getManufacturer') }}" + "/" + id + "/" + optionValue,
-                //         success: function(response) {
-                //             if (response.isStatus) {
-                //                 $(`#manufacturerSelectTag_${id}`).attr('data-id', id);
-                //                 $(`#manufacturerSelectTag_${id}`).attr('data-equipment',
-                //                     optionValue);
-                //                 $(`#manufacturerSelectTag_${id}`).empty();
-                //                 $(`#manufacturerSelectTag_${id}`).append($(
-                //                     '<option>', {
-                //                         value: "",
-                //                         text: "Select Manufacturer"
-                //                     }));
-
-                //                 $.each(response.manufacturers, function(index, value) {
-                //                     $(`#manufacturerSelectTag_${id}`).append($(
-                //                         '<option>', {
-                //                             value: value.manufacturer,
-                //                             text: value.manufacturer
-                //                         }));
-                //                 });
-                //             }
-                //         },
-                //     });
-                // } else {
-                //     $(`#manufacturerSelectTag_${id}`).empty().append($('<option>', {
-                //         value: "",
-                //         text: "First Select Equipment"
-                //     }));
-                //     $(`#modelMakePartTag_${id}`).empty().append($('<option>', {
-                //         value: "",
-                //         text: "First Select Manufacturer"
-                //     }));
-                //     $(`#docNameShow_${id}`).empty();
-                //     $(`#imageNameShow_${id}`).empty();
-                // }
             });
 
             $(document).on('change', '.equipmentSelectTag', function() {
@@ -1337,6 +1340,10 @@
                                         value: "",
                                         text: "Select Manufacturer"
                                     }));
+                                $(`#modelMakePartTag_${id}`).empty().append($('<option>', {
+                                    value: "",
+                                    text: "First Select Manufacturer"
+                                }));
 
                                 $.each(response.manufacturers, function(index, value) {
                                     $(`#manufacturerSelectTag_${id}`).append($(

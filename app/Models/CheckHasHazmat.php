@@ -12,11 +12,11 @@ class CheckHasHazmat extends Model
     protected $fillable = ["project_id", "check_id", "hazmat_id", "image", "type", "check_type","doc","remarks"];
 
     public function getImageAttribute($value){
-        return asset(env('IMAGE_COMMON_PATH', "images/projects/") . $this->project_id . "/" . $value);
+        return asset('images/hazmat/' . $this->project_id . "/" . $value);
     }
 
     public function getDocAttribute($value){
-        return asset(env('IMAGE_COMMON_PATH', "images/projects/") . $this->project_id . "/" . $value);
+        return asset('images/hazmat/' . $this->project_id . "/" . $value);
     }
 
     public function hazmat()

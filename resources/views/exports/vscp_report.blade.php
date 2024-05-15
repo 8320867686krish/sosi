@@ -72,7 +72,7 @@
                             {{ $check->type }}
                         </td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
-                        <td valign="middle" align="left" style="font-size: 14px;"></td>
+                        <td valign="middle" align="left" style="font-size: 14px;">{{$check->remarks}}</td>
                     </tr>
                 @endif
                 @foreach ($check->check_hazmats as $checkHazmat)
@@ -93,7 +93,7 @@
                         <td valign="middle" align="center" style="font-size: 14px;">
                             {{ $check->type }}</td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
-                        <td valign="middle" align="left" style="font-size: 14px;"></td>
+                        <td valign="middle" align="left" style="font-size: 14px;">{{$check->remarks}}</td>
                     </tr>
                     @php
                         $counter++;
