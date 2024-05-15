@@ -11,7 +11,7 @@ class Hazmat extends Model
 
     protected $fillable = ["name", "short_name", "table_type", "color"];
 
-    protected $hidden = ['created_at', 'updated_at', 'color'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function checkHasHazmats(){
         return $this->hasMany(CheckHasHazmat::class);
