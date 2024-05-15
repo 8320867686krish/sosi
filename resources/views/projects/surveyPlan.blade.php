@@ -93,7 +93,7 @@
                                     <label for="assign_date">Result1</label>
                                     <input type="file" class="form-control form-control-lg @error('leb1LaboratoryResult1') is-invalid @enderror" id="leb1LaboratoryResult1" value="{{ old('leb1LaboratoryResult1', $project->leb1LaboratoryResult1 ?? '') }}" name="project[leb1LaboratoryResult1]" autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
                                     @if($project->leb1LaboratoryResult1)
-                                    <label class="mt-2 leb1LaboratoryResult1">
+                                    <label class="mt-2 docleb1LaboratoryResult1">
                                         <a href="{{ asset('images/labResult/' . $project->id . '/' . $project->leb1LaboratoryResult1) }}" target="_blank">
                                             {{ $project->leb1LaboratoryResult1 }}
                                         </a>

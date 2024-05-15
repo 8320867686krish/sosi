@@ -762,6 +762,7 @@ class ApiController extends Controller
     {
         $projects = DB::select('describe projects');
         $clients = DB::select('describe clients');
+        $hazmats = DB::select('describe hazmats');
         foreach ($clients as $clientField) {
 
 
@@ -771,6 +772,21 @@ class ApiController extends Controller
 
         $decks = DB::select('describe decks');
         $checks = DB::select('describe checks');
+        $checks = array_values($checks);
+
+        foreach ($hazmats as $hazmatField) {
+            if ($hazmatField->Field == 'name') {
+                $checks[] = $hazmatField;
+                break; // No need to continue loop once found
+            }
+        }
+        $in = array_key_last($checks);
+        $checks[$in]->Field = 'suspected_hazmat';
+        // foreach ($checks as &$check) {
+        //     if ($check->Field === 'name') {
+        //         $check->Field = 'suspected_hazmats';
+        //     }
+        // }
         $check_has_images = DB::select('describe check_has_images');
         $projects = $this->modifyTypeValues($projects);
         $clients = $this->modifyTypeValues($clients);
