@@ -815,7 +815,17 @@ class ApiController extends Controller
             }
         }
 
-
         return $tableDescription;
+    }
+
+    public function getHazmat()
+    {
+        try {
+            $hazmats = Hazmat::get();
+            return response()->json(['isStatus' => true, 'message' => 'Hazmat list retrieved successfully.', 'hazmats' => $hazmats]);
+        } catch (Throwable $th) {
+            // print_r($th->getMessage());
+            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
+        }
     }
 }
