@@ -75,5 +75,8 @@ Route::controller(ApiController::class)->group(function () {
         Route::post('check/image', 'addCheckImg');
         Route::get('check/image/{check_id}', 'getCheckImgList');
         Route::delete('check/image/{id}', 'deleteCheckImg');
+
+        //Hazmat Api
+        Route::get('getHazmat', 'getHazmat');
     });
 });
