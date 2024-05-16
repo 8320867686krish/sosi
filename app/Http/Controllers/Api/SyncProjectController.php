@@ -177,9 +177,10 @@ class SyncProjectController extends Controller
     {
         $post = $request->input();
         $projectId = $post['projectId'];
-        if (@$post['insertList']) {
-            Log::info($post['insertList']);
-            foreach ($post['insertList'] as $value) {
+        if (@$post['insertCheck']) {
+           
+            foreach ($post['insertCheck'] as $value) {
+                Log::info($post['insertCheck']);
                 $projectDetail = Projects::with(['client' => function ($query) {
                     $query->select('id', 'manager_initials'); // Replace with the fields you want to select
                 }])->withCount('checks')->find($value['project_id']);
