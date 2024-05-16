@@ -256,13 +256,18 @@ class SyncProjectController extends Controller
             }
         }
         if (@$post['surveyUpdated']){
-            Log::info($post['surveyUpdated']);
             $projectData = $post['surveyUpdated'][0];
             $projectUpdateData ['survey_location_name'] =$projectData['survey_location_name'];
             $projectUpdateData['survey_location_address'] =$projectData['survey_location_address'];
             $projectUpdateData['survey_type'] =$projectData['survey_type'];
             $projectUpdateData['survey_date'] =$projectData['survey_date'];
             Projects::where('id',$projectId)->update($projectUpdateData);
+        }
+
+        if(@$post['updatedCheck']){
+            foreach($post['updatedCheck'] as $value){
+                Log::info($post['updatedCheck']);
+            }
         }
         return response()->json(['isStatus' => true, 'message' => 'successfully saved.']);
     }
