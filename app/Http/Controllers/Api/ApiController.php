@@ -437,10 +437,11 @@ class ApiController extends Controller
             Checks::where('id', $id)->update($inputData);
 
             if ($request->filled('suspected_hazmat')) {
-                Log::info("callll haz");
+              
                 $suspectedHazmat = explode(', ', $request->input('suspected_hazmat'));
                 $hazmatIds = Hazmat::whereIn('name', $suspectedHazmat)->pluck('id')->toArray();
-
+                Log::inf($suspectedHazmat);
+                Log::info(  $hazmatIds);
                 CheckHasHazmat::where([
                     "project_id" => $inputData['project_id'],
                     "check_id" => $inputData['id'],
