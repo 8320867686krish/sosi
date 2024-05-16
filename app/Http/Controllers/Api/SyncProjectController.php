@@ -243,7 +243,7 @@ class SyncProjectController extends Controller
         if (@$post['checkHazImageDeleted']) {
             foreach ($post['checkHazImageDeleted'] as $value) {
                 Log::info($post['checkHazImageDeleted']);
-                $checkImg = CheckImage::find($value['check_id']);
+                $checkImg = CheckImage::find($value['id']);
                 $path = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $checkImg->project_id . "/" . $checkImg->image);
                 if (file_exists($path)) {
                     unlink($path);
