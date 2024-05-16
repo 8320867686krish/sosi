@@ -182,7 +182,7 @@ class SyncProjectController extends Controller
                 $projectDetail = Projects::with(['client' => function ($query) {
                     $query->select('id', 'manager_initials'); // Replace with the fields you want to select
                 }])->withCount('checks')->find($value['project_id']);
-    
+
                 $lastCheck = Checks::latest()->first();
                 if (!$lastCheck) {
                     $projectCount = "1001";
@@ -200,10 +200,10 @@ class SyncProjectController extends Controller
                 $checkId = $checkAdd->id;
                 if (!empty($request->input('suspected_hazmat'))) {
                     $suspectedHazmat = explode(', ', $request->input('suspected_hazmat'));
-    
+
                     foreach ($suspectedHazmat as $hazmat) {
                         $hazmatId = Hazmat::where('name', $hazmat)->first();
-    
+
                         $hazmatData = [
                             "project_id" => $value['project_id'],
                             "check_id" => $checkId,
@@ -211,37 +211,49 @@ class SyncProjectController extends Controller
                             "type" => "Unknown",
                             "check_type" => $value['type']
                         ];
-    
+
                         CheckHasHazmat::create($hazmatData);
                     }
                 }
             }
         }
-        if(@$post['deletedCheck']){
-            foreach ($post['deletedData'] as $value){
+        if (@$post['deletedCheck']) {
+            foreach ($post['deletedData'] as $value) {
                 $check = Checks::find($value['id']);
                 $check->delete();
             }
         }
-        if(@$post['checkHazImageInsert']){
-            foreach($post['checkHazImageInsert'] as $value){
+        if (@$post['checkHazImageInsert']) {
+            foreach ($post['checkHazImageInsert'] as $value) {
                 $exploded = explode('/', $value['image']);
-                $appImages = public_path('images/appImages'."/".$value['project_id']."/". end($exploded));
-                $desiredPath = public_path('images/projects'."/".$value['project_id']);
-                $newPath = $desiredPath."/".end($exploded);
-                if(rename($appImages, $newPath)){
+                $appImages = public_path('images/appImages' . "/" . $value['project_id'] . "/" . end($exploded));
+                $desiredPath = public_path('images/projects' . "/" . $value['project_id']);
+                $newPath = $desiredPath . "/" . end($exploded);
+                if (rename($appImages, $newPath)) {
                     $inputData['image'] = end($exploded);
                     $inputData['project_id'] = $value['project_id'];
                     $inputData['check_id'] = $value['check_id'];
                     $inputData['isCompleted'] = 1;
                     CheckImage::create($inputData);
-                    Checks::where('id',$value['check_id'])->update(['isCompleted'=>1]);
-
+                    Checks::where('id', $value['check_id'])->update(['isCompleted' => 1]);
                 }
+            }
+        }
 
+        if (@$post['checkHazImageDeleted']) {
+            foreach ($post['checkHazImageDeleted'] as $value) {
+                $checkImg = CheckImage::find($value['check_id ']);
+                $path = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $checkImg->project_id . "/" . $checkImg->image);
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+                $checkImg->delete();
+                $checkData = Checks::withCount('check_image')->find($checkImg['check_id']);
+                if ($checkData->check_image_count === 0) {
+                    $checkData->update(['isCompleted' => 0]);
+                }
             }
         }
         return response()->json(['isStatus' => true, 'message' => 'successfully saved.']);
-
     }
 }
