@@ -225,7 +225,6 @@ class SyncProjectController extends Controller
             }
         }
         if (@$post['checkHazImageInsert']) {
-            Log::info($post['checkHazImageInsert']);
             foreach ($post['checkHazImageInsert'] as $value) {
                 $exploded = explode('/', $value['image']);
                 $appImages = public_path('images/appImages' . "/" . $value['project_id'] . "/" . end($exploded));
@@ -244,7 +243,6 @@ class SyncProjectController extends Controller
 
         if (@$post['checkHazImageDeleted']) {
             foreach ($post['checkHazImageDeleted'] as $value) {
-                Log::info($post['checkHazImageDeleted']);
                 $checkImg = CheckImage::find($value['id']);
                 $path = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $checkImg->project_id . "/" . $checkImg->image);
                 if (file_exists($path)) {
@@ -268,7 +266,7 @@ class SyncProjectController extends Controller
 
         if(@$post['updatedCheck']){
             foreach($post['updatedCheck'] as $value){
-                Log::info($post['updatedCheck']);
+               // Log::info($post['updatedCheck']);
             }
         }
         return response()->json(['isStatus' => true, 'message' => 'successfully saved.']);
