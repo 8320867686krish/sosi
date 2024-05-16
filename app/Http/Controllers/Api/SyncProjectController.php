@@ -275,7 +275,8 @@ class SyncProjectController extends Controller
         if (@$post['updatedCheck']) {
             foreach ($post['updatedCheck'] as $value) {
                 if ($value['suspected_hazmat']) {
-                    $suspectedHazmat = explode(',', $value('suspected_hazmat'));
+                    Log::info($value['suspected_hazmat']);
+                    $suspectedHazmat = explode(',',$value('suspected_hazmat'));
                     $logArray = array_map('trim', $suspectedHazmat);
 
                     $hazmatIds = Hazmat::whereIn('name', $logArray)->pluck('id')->toArray();
