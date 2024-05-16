@@ -16,7 +16,7 @@ use Carbon\Carbon;
 use App\Models\Client;
 use App\Models\CheckHasHazmat;
 use App\Models\Hazmat;
-
+use Illuminate\Support\Facades\Log;
 use PDO;
 
 class SyncProjectController extends Controller
@@ -242,6 +242,7 @@ class SyncProjectController extends Controller
 
         if (@$post['checkHazImageDeleted']) {
             foreach ($post['checkHazImageDeleted'] as $value) {
+                Log::info($post['checkHazImageDeleted']);
                 $checkImg = CheckImage::find($value['check_id']);
                 $path = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $checkImg->project_id . "/" . $checkImg->image);
                 if (file_exists($path)) {
