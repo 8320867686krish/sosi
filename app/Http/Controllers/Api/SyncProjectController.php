@@ -292,7 +292,7 @@ class SyncProjectController extends Controller
                             "check_id" => $value['id'],
                             "hazmat_id" => $hazmatId,
                             "type" => "Unknown",
-                            "check_type" => $inputData['type']
+                            "check_type" => $value['type']
                         ];
                         $checkhasData = CheckHasHazmat::where('hazmat_id', $hazmatId)->where('check_id', $value['id'])->first();
                         if (!@$checkhasData) {
