@@ -438,14 +438,14 @@ class ApiController extends Controller
 
             if ($request->filled('suspected_hazmat')) {
               
-                $suspectedHazmat = explode(',', $request->input('suspected_hazmat'));
+                $suspectedHazmat = explode(',',$request->input('suspected_hazmat'));
                 $hazmatIds = Hazmat::whereIn('name', $suspectedHazmat)->pluck('id')->toArray();
                 Log::info($suspectedHazmat);
                 Log::info(  $hazmatIds);
-                // CheckHasHazmat::where([
-                //     "project_id" => $inputData['project_id'],
-                //     "check_id" => $inputData['id'],
-                // ])->whereNotIn('hazmat_id', $hazmatIds)->delete();
+                CheckHasHazmat::where([
+                    "project_id" => $inputData['project_id'],
+                    "check_id" => $inputData['id'],
+                ])->whereNotIn('hazmat_id', $hazmatIds)->delete();
 
                 foreach ($hazmatIds as $hazmatId) {
                     $hazmatData = [
