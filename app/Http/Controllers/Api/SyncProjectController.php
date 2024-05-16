@@ -255,6 +255,14 @@ class SyncProjectController extends Controller
                 }
             }
         }
+        if (@$post['surveyUpdated']){
+            $projectUpdateData = [];
+            $projectUpdateData ['survey_location_name'] =$post['surveyUpdated']['survey_location_name'];
+            $projectUpdateData['survey_location_address'] =$post['surveyUpdated']['survey_location_address'];
+            $projectUpdateData['survey_type'] =$post['surveyUpdated']['survey_type'];
+            $projectUpdateData['survey_date'] =$post['surveyUpdated']['survey_date'];
+            Projects::where('id',$post['surveyUpdated']['id'])->update($projectUpdateData);
+        }
         return response()->json(['isStatus' => true, 'message' => 'successfully saved.']);
     }
 }
