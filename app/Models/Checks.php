@@ -27,8 +27,13 @@ class Checks extends Model
 
     public function check_hazmats()
     {
-      //  return $this->belongsToMany(Hazmat::class, CheckHasHazmat::class, 'check_id');
-      return $this->hasMany(CheckHasHazmat::class, 'check_id', 'id');
+        //  return $this->belongsToMany(Hazmat::class, CheckHasHazmat::class, 'check_id');
+        return $this->hasMany(CheckHasHazmat::class, 'check_id', 'id');
+    }
+
+    public function labResults()
+    {
+        return $this->hasMany(labResult::class, 'check_id', 'id');
     }
 
     public function deck()
