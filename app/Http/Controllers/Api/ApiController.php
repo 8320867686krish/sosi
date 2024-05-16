@@ -457,8 +457,11 @@ class ApiController extends Controller
                         "type" => "Unknown",
                         "check_type" => $inputData['type']
                     ];
-
-                    CheckHasHazmat::updateOrCreate(["project_id" => $inputData['project_id'], "check_id" => $inputData['id'], "hazmat_id" => $hazmatId], $hazmatData);
+                    $checkhasData = CheckHasHazmat::where('hazmat_id',$hazmatId)->where('check_id',$inputData['id'])->first();
+                    if(!@$checkhasData){
+                        CheckHasHazmat::create($hazmatData);
+                    }
+                
                 }
             }
 
