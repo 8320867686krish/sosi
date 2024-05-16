@@ -274,11 +274,11 @@ class SyncProjectController extends Controller
 
         if(@$post['updatedCheck']){
             foreach($post['updatedCheck'] as $value){
-                Log::info($post['updatedCheck']);
                 if($value['suspected_hazmat']){
                     $suspectedHazmat = explode(', ', $request->input('suspected_hazmat'));
                     $hazmatIds = Hazmat::whereIn('name', $suspectedHazmat)->pluck('id')->toArray();
-    
+                    Log::info($hazmatIds);
+
                     CheckHasHazmat::where([
                         "project_id" => $value['project_id'],
                         "check_id" => $value['id'],
