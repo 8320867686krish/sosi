@@ -235,7 +235,6 @@ class SyncProjectController extends Controller
                     $inputData['check_id'] = $value['check_id'];
                     $inputData['isCompleted'] = 1;
                     CheckImage::create($inputData);
-                    unlink($appImages);
                     Checks::where('id',$value['check_id'])->update(['isCompleted'=>1]);
 
                 }
