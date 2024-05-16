@@ -178,6 +178,7 @@ class SyncProjectController extends Controller
         $post = $request->input();
         $projectId = $post['projectId'];
         if (@$post['insertList']) {
+            Log::info($post['insertList']);
             foreach ($post['insertList'] as $value) {
                 $projectDetail = Projects::with(['client' => function ($query) {
                     $query->select('id', 'manager_initials'); // Replace with the fields you want to select
