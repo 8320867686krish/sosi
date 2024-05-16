@@ -438,7 +438,7 @@ class ApiController extends Controller
 
             if ($request->filled('suspected_hazmat')) {
               
-                $suspectedHazmat = explode(',',$request->input('suspected_hazmat'));
+                $suspectedHazmat = explode(',', $request->input('suspected_hazmat'));
                 $logArray = array_map('trim', $suspectedHazmat);
 
                 $hazmatIds = Hazmat::whereIn('name',$logArray)->pluck('id')->toArray();
