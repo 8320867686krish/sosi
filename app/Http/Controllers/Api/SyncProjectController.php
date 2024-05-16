@@ -201,7 +201,7 @@ class SyncProjectController extends Controller
                 $value['deck_id'] = $value['deck_id'];
                 $checkAdd = Checks::updateOrCreate(['id' => $value['id']], $value);
                 $checkId = $checkAdd->id;
-                $checkImage[$value['check_id']] = $checkId;
+                $checkImage[$value['id']] = $checkId;
 
                 if (!empty($request->input('suspected_hazmat'))) {
                     $suspectedHazmat = explode(', ', $request->input('suspected_hazmat'));
