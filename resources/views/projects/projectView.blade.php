@@ -534,6 +534,15 @@
                                     </div>
                                 </div>
 
+                                <div class="col-12 col-md-12 mb-3">
+                                    <div style="border: 2px solid black;" class="p-2">
+                                        <h5 class="text-center">Lab Result</h5>
+                                        <div class="row" id="showLabResult">
+
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="col-12">
                                     <div class="form-group mb-3">
                                         <label for="remarks">Remarks</label>
@@ -616,6 +625,53 @@
                 </div>
             </div>
         </div>
+
+        <div style="display: none;">
+            <div class="col-12 col-md-12 col-lg-12 cloneIHMTableDiv" id="cloneIHMTableDiv">
+                <label for="ihm_table" id="ihmTableLable" class="mr-5 ihmTableLable"></label>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            {{-- <label for="IHM_part">IHM Part</label> --}}
+                            <select class="form-control IHM_part">
+                                <option value="">Select IHM Part</option>
+                                <option value="Contained">Contained</option>
+                                <option value="PCHM">PCHM</option>
+                                <option value="Not Contained">Not Contained</option>
+                                <option value="Below Threshold">Below Threshold</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group mb-3">
+                            {{-- <label for="unit">Unit</label> --}}
+                            <input type="text" class="form-control unit" placeholder="Unit...">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            {{-- <label for="number">Number</label> --}}
+                            <input type="text" class="form-control number" placeholder="Number...">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            {{-- <label for="total">Total (KG.)</label> --}}
+                            <input type="text" class="form-control total" placeholder="Total (KG.)">
+                        </div>
+                    </div>
+                    <div class="col-12 lab_remarks">
+                        <div class="form-group mb-3">
+                            {{-- <label for="lab_remarks">Remarks</label> --}}
+                            <textarea class="form-control labRemarksTextarea" rows="2" placeholder="Remark..."></textarea>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <hr>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -665,6 +721,41 @@
                 cloneTableTypeDiv.find(".equipment, .manufacturer, .modelMakePart").hide();
             }
             cloneTableTypeDiv.find(`.documentLoadCheckboxDiv`).toggle(selectedValue !== "Unknown");
+        }
+
+        function labResult(selectedValue, selectedText) {
+
+            let clonedElement = $('#cloneIHMTableDiv').clone();
+            clonedElement.removeAttr("id");
+            clonedElement.attr("id", "cloneIHMTableDiv" + selectedValue);
+
+            clonedElement.find('label.ihmTableLable').text(selectedText);
+
+            clonedElement.find('select.IHM_part').attr('id', `IHM_part_${selectedValue}`).attr('name',
+                `IHM_part[${selectedValue}]`);
+
+            clonedElement.find('input[type="text"].unit').prop({
+                id: `unit_${selectedValue}`,
+                name: `unit[${selectedValue}]`
+            });
+
+            clonedElement.find('input[type="text"].number').prop({
+                id: `number_${selectedValue}`,
+                name: `number[${selectedValue}]`
+            });
+
+            clonedElement.find('input[type="text"].total').prop({
+                id: `total_${selectedValue}`,
+                name: `total[${selectedValue}]`
+            });
+
+            clonedElement.find('textarea.labRemarksTextarea').prop({
+                id: `lab_remarks_${selectedValue}`,
+                name: `lab_remarks[${selectedValue}]`
+            });
+
+            // // Append cloned element to showTableTypeDiv
+            $('#showLabResult').append(clonedElement);
         }
 
         function triggerFileInput(inputId) {
@@ -784,11 +875,13 @@
                             }));
                         });
 
-                        const cloneTableTypeDiv = $(".cloneTableTypeDiv select.table_type").closest(".cloneTableTypeDiv");
+                        const cloneTableTypeDiv = $(".cloneTableTypeDiv select.table_type").closest(
+                            ".cloneTableTypeDiv");
 
                         cloneTableTypeDiv.find(`#equipmentDiv_${hazmat_id}`).closest('.equipment').show();
                         cloneTableTypeDiv.find(`#manufacturerDiv_${hazmat_id}`).closest('.manufacturer').show();
-                        cloneTableTypeDiv.find(`#modelMakePartDiv_${hazmat_id}`).closest('.modelMakePart').show();
+                        cloneTableTypeDiv.find(`#modelMakePartDiv_${hazmat_id}`).closest('.modelMakePart')
+                        .show();
                     }
                 },
             });
@@ -1214,17 +1307,18 @@
             let selectedHazmatsIds = [];
             $('#suspected_hazmat').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
                 let selectedValue = $(this).find('option').eq(clickedIndex).val();
+                let selectedText = $(this).find('option').eq(clickedIndex).text();
 
                 if (!isSelected) {
                     selectedHazmatsIds.push(selectedValue);
                     $(`#cloneTableTypeDiv${selectedValue}`).remove();
+                    $(`#cloneIHMTableDiv${selectedValue}`).remove();
                 } else {
                     let clonedElement = $('#cloneTableTypeDiv').clone();
                     clonedElement.removeAttr("id");
                     clonedElement.attr("id", "cloneTableTypeDiv" + selectedValue);
 
-                    clonedElement.find('label.tableTypeLable').text($(this).find('option').eq(clickedIndex)
-                        .text());
+                    clonedElement.find('label.tableTypeLable').text(selectedText);
 
                     clonedElement.find('input[type="checkbox"].documentLoadCheckbox').attr('data-id',
                         selectedValue);
@@ -1288,6 +1382,7 @@
                     clonedElement.find(`.remarks`).hide();
                     clonedElement.find(`#documentLoadCheckboxDiv_${selectedValue}`).hide();
 
+                    labResult(selectedValue, selectedText);
                     // Append cloned element to showTableTypeDiv
                     $('#showTableTypeDiv').append(clonedElement);
                 }

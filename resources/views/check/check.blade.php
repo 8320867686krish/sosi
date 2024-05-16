@@ -141,9 +141,11 @@
 
         <div class="col-12" style="display: none;">
             <div class="col-12 col-md-12 col-lg-12 cloneTableTypeDiv" id="cloneTableTypeDiv">
-                <label for="table_type" id="tableTypeLable" class="mr-5 tableTypeLable"></label>
+                {{-- <label for="table_type" id="tableTypeLable" class="mr-5 tableTypeLable"></label> --}}
+                <label for="table_type" id="tableTypeLable" class="mr-5 tableTypeLable text-dark p-2"
+                    style="background-color: #e2e3e5"></label>
                 <div class="row">
-                    <div class="col-12 table_typecol">
+                    <div class="col-12 mt-2 table_typecol">
                         <div class="form-group">
                             <select class="form-control table_type" id="table_type" name="table_type">
                                 <option value="Contained">Contained</option>
@@ -157,13 +159,13 @@
                             <label for="myCheckbox">Load Document From Master Data</label>
                         </div>
                     </div>
-                    <div class="col-4 imagehazmat">
+                    <div class="col-4 mt-2 imagehazmat">
                         <div class="form-group mb-3">
                             <input type="file" class="form-control hazmatImg" accept="image/*">
                         </div>
                         <div class="imageNameShow mb-3" style="font-size: 13px;"></div>
                     </div>
-                    <div class="col-4 dochazmat">
+                    <div class="col-4 mt-2 dochazmat">
                         <div class="form-group mb-3">
                             <input type="file" class="form-control hazmatDoc">
                         </div>
@@ -192,9 +194,59 @@
                         </div>
                     </div>
                     <div class="col-12 remarks">
-                        <div class="form-group mb-3">
+                        <div class="form-group">
                             <textarea class="form-control remarksTextarea" rows="2" placeholder="Remark..."></textarea>
                         </div>
+                    </div>
+                    <div class="col-12">
+                        <hr>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: none;">
+            <div class="col-12 col-md-12 col-lg-12 cloneIHMTableDiv" id="cloneIHMTableDiv">
+                <label for="ihm_table" id="ihmTableLable" class="mr-5 ihmTableLable"></label>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            {{-- <label for="IHM_part">IHM Part</label> --}}
+                            <select class="form-control IHM_part">
+                                <option value="">Select IHM Part</option>
+                                <option value="Contained">Contained</option>
+                                <option value="PCHM">PCHM</option>
+                                <option value="Not Contained">Not Contained</option>
+                                <option value="Below Threshold">Below Threshold</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group mb-3">
+                            {{-- <label for="unit">Unit</label> --}}
+                            <input type="text" class="form-control unit" placeholder="Unit...">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            {{-- <label for="number">Number</label> --}}
+                            <input type="text" class="form-control number" placeholder="Number...">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            {{-- <label for="total">Total (KG.)</label> --}}
+                            <input type="text" class="form-control total" placeholder="Total (KG.)">
+                        </div>
+                    </div>
+                    <div class="col-12 lab_remarks">
+                        <div class="form-group mb-3">
+                            {{-- <label for="lab_remarks">Remarks</label> --}}
+                            <textarea class="form-control labRemarksTextarea" rows="2" placeholder="Remark..."></textarea>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <hr>
                     </div>
                 </div>
             </div>
@@ -202,7 +254,7 @@
 
         <div class="modal fade" data-backdrop="static" id="checkDataAddModal" tabindex="-1" role="dialog"
             aria-labelledby="checkDataAddModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document" style="width: 50% !important; max-width: none !important;">
+            <div class="modal-dialog" role="document" style="width: 70% !important; max-width: none !important;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Title</h5>
@@ -214,7 +266,8 @@
 
                     <form method="post" action="{{ route('addImageHotspots') }}" id="checkDataAddForm"
                         enctype="multipart/form-data">
-                        <div class="modal-body">
+                        <div class="modal-body"
+                            style="overflow-x: auto; overflow-y: auto; max-height: calc(81vh - 1rem);">
                             @csrf
                             <input type="hidden" id="id" name="id">
                             <input type="hidden" id="formType" value="add">
@@ -298,6 +351,15 @@
                                     </div>
                                 </div>
 
+                                <div class="col-12 col-md-12 mb-3" id="labResultSection">
+                                    <div style="border: 2px solid black;" class="p-2">
+                                        <h5 class="text-center">Lab Result</h5>
+                                        <div class="row" id="showLabResult">
+
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label for="remarks">Remarks</label>
@@ -333,7 +395,6 @@
         let widthPercent = 100;
         let previewImgInWidth = $("#previewImg1").width();
         let currectWithPercent = widthPercent;
-        // let zoomValue = 100;
 
         function makeDotsDraggable() {
             $(".dot").draggable({
@@ -360,6 +421,7 @@
                 success: function(response) {
                     $('#suspected_hazmat').selectpicker('val', response.hazmatIds);
                     $('#showTableTypeDiv').html(response.html);
+                    $('#showLabResult').html(response.labResult);
 
                     $.each(response.check.hazmats, function(index, hazmatData) {
                         if (hazmatData.type === 'Unknown') {
@@ -395,10 +457,11 @@
 
             if (checkId) {
                 $("#chkName").show();
+                $("#labResultSection").show();
             } else {
                 $("#chkName").hide();
+                $("#labResultSection").hide();
             }
-
             if (checkId) {
                 // $("#checkDataAddModal").removeClass("addForm").addClass("editForm");
                 detailOfHazmats(checkId);
@@ -413,7 +476,6 @@
                     }
                 }
             }
-
             // Show the modal box
             $("#checkDataAddModal").modal('show');
         }
@@ -517,6 +579,41 @@
             }
         }
 
+        function labResult(selectedValue, selectedText) {
+
+            let clonedElement = $('#cloneIHMTableDiv').clone();
+            clonedElement.removeAttr("id");
+            clonedElement.attr("id", "cloneIHMTableDiv" + selectedValue);
+
+            clonedElement.find('label.ihmTableLable').text(selectedText);
+
+            clonedElement.find('select.IHM_part').attr('id', `IHM_part_${selectedValue}`).attr('name',
+                `IHM_part[${selectedValue}]`);
+
+            clonedElement.find('input[type="text"].unit').prop({
+                id: `unit_${selectedValue}`,
+                name: `unit[${selectedValue}]`
+            });
+
+            clonedElement.find('input[type="text"].number').prop({
+                id: `number_${selectedValue}`,
+                name: `number[${selectedValue}]`
+            });
+
+            clonedElement.find('input[type="text"].total').prop({
+                id: `total_${selectedValue}`,
+                name: `total[${selectedValue}]`
+            });
+
+            clonedElement.find('textarea.labRemarksTextarea').prop({
+                id: `lab_remarks_${selectedValue}`,
+                name: `lab_remarks[${selectedValue}]`
+            });
+
+            // // Append cloned element to showTableTypeDiv
+            $('#showLabResult').append(clonedElement);
+        }
+
         function getHazmatEquipment(hazmat_id) {
             $.ajax({
                 type: 'GET',
@@ -537,7 +634,7 @@
                         cloneTableTypeDiv.find(`#equipmentDiv_${hazmat_id}`).closest('.equipment').show();
                         cloneTableTypeDiv.find(`#manufacturerDiv_${hazmat_id}`).closest('.manufacturer').show();
                         cloneTableTypeDiv.find(`#modelMakePartDiv_${hazmat_id}`).closest('.modelMakePart')
-                        .show();
+                            .show();
                     }
                 },
             });
@@ -634,7 +731,7 @@
 
             $(document).on("click", "#editCheckbtn", function(event) {
                 event
-                    .stopPropagation(); // Prevents the click event from bubbling up to the parent .dot element
+            .stopPropagation(); // Prevents the click event from bubbling up to the parent .dot element
                 let checkDataId = $(this).attr('data-dotId');
                 let dotElement = $(`#${checkDataId}`)[0];
                 openAddModalBox(dotElement);
@@ -689,7 +786,8 @@
                                 component: $("#component").val(),
                                 location: $("#location").val(),
                                 sub_location: $("#sub_location").val(),
-                                remarks: $("#remarks").val()
+                                remarks: $("#remarks").val(),
+                                recommendation: $("#recommendation").val()
                             };
                             let checkDataJson = JSON.stringify(checkData);
                             $(".dot.selected").attr('data-check', checkDataJson);
@@ -708,6 +806,7 @@
                             $('#suspected_hazmat option').prop("selected", false).trigger(
                                 'change');
                             $("#showTableTypeDiv").empty();
+                            $("#showLabResult").empty();
                             $submitButton.html(originalText);
                             $submitButton.prop('disabled', false);
                             $("#type").removeClass('is-invalid');
@@ -736,55 +835,33 @@
                 $("#id").val("");
                 $('#suspected_hazmat option').prop("selected", false).trigger('change');
                 $("#showTableTypeDiv").empty();
+                $("#showLabResult").empty();
                 $("#type").removeClass('is-invalid');
                 $("#formType").val("add");
                 $("#typeError").text('');
             });
 
             let selectedHazmatsIds = [];
-            // $('#suspected_hazmat').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
-            //     let selectedValue = $(this).find('option').eq(clickedIndex).val();
-
-            //     if (!isSelected) {
-            //         selectedHazmatsIds.push(selectedValue);
-            //         $(`#cloneTableTypeDiv${selectedValue}`).remove();
-            //     } else {
-            //         let clonedElement = $('#cloneTableTypeDiv').clone();
-            //         clonedElement.removeAttr("id");
-            //         clonedElement.attr("id", "cloneTableTypeDiv" + selectedValue);
-
-            //         clonedElement.find('label').text($(this).find('option').eq(clickedIndex).text());
-            //         clonedElement.find('select').attr('id', `table_type_${selectedValue}`).attr('name',
-            //             `table_type[${selectedValue}]`);
-
-            //         clonedElement.find('input[type="file"]').prop({
-            //             id: `image_${selectedValue}`,
-            //             name: `image[${selectedValue}]`
-            //         });
-
-            //         $('#showTableTypeDiv').append(clonedElement);
-            //     }
-            // });
 
             $('#suspected_hazmat').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
                 let selectedValue = $(this).find('option').eq(clickedIndex).val();
+                let selectedText = $(this).find('option').eq(clickedIndex).text();
 
                 if (!isSelected) {
                     selectedHazmatsIds.push(selectedValue);
                     $(`#cloneTableTypeDiv${selectedValue}`).remove();
+                    $(`#cloneIHMTableDiv${selectedValue}`).remove();
                 } else {
                     let clonedElement = $('#cloneTableTypeDiv').clone();
                     clonedElement.removeAttr("id");
                     clonedElement.attr("id", "cloneTableTypeDiv" + selectedValue);
 
-                    clonedElement.find('label.tableTypeLable').text($(this).find('option').eq(clickedIndex)
-                        .text());
+                    clonedElement.find('label.tableTypeLable').text(selectedText);
 
                     clonedElement.find('input[type="checkbox"].documentLoadCheckbox').attr('data-id',
                         selectedValue).prop({
                         id: `equipmentcheckbox_${selectedValue}`,
-                    });
-;
+                    });;
 
                     clonedElement.find('input[type="checkbox"].documentLoadCheckbox').closest('div').prop({
                         id: `documentLoadCheckboxDiv_${selectedValue}`,
@@ -845,6 +922,9 @@
                     clonedElement.find(`.remarks`).hide();
                     clonedElement.find(`#documentLoadCheckboxDiv_${selectedValue}`).hide();
 
+                    if ($("#formType").val() == 'edit') {
+                        labResult(selectedValue, selectedText);
+                    }
                     // Append cloned element to showTableTypeDiv
                     $('#showTableTypeDiv').append(clonedElement);
                 }
