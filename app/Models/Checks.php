@@ -33,7 +33,7 @@ class Checks extends Model
 
     public function labResults()
     {
-        return $this->hasMany(labResult::class, 'check_id', 'id');
+        return $this->hasMany(LabResult::class, 'check_id', 'id');
     }
 
     public function deck()
