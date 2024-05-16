@@ -256,6 +256,7 @@ class SyncProjectController extends Controller
             }
         }
         if (@$post['surveyUpdated']){
+            Log::info($post['surveyUpdated']);
             $projectUpdateData = [];
             $projectUpdateData ['survey_location_name'] =$post['surveyUpdated']['survey_location_name'];
             $projectUpdateData['survey_location_address'] =$post['surveyUpdated']['survey_location_address'];
