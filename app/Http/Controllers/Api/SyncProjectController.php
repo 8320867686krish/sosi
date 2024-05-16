@@ -177,6 +177,7 @@ class SyncProjectController extends Controller
     {
         $post = $request->input();
         $projectId = $post['projectId'];
+        $checkImage = [];
         if (@$post['insertCheck']) {
            
             foreach ($post['insertCheck'] as $value) {
@@ -200,6 +201,8 @@ class SyncProjectController extends Controller
                 $value['deck_id'] = $value['deck_id'];
                 $checkAdd = Checks::updateOrCreate(['id' => $value['id']], $value);
                 $checkId = $checkAdd->id;
+                $checkImage[$value['check_id']] = $checkId;
+
                 if (!empty($request->input('suspected_hazmat'))) {
                     $suspectedHazmat = explode(', ', $request->input('suspected_hazmat'));
 
@@ -227,6 +230,7 @@ class SyncProjectController extends Controller
         }
         if (@$post['checkHazImageInsert']) {
             foreach ($post['checkHazImageInsert'] as $value) {
+                Log::info( $checkImage);
                 $exploded = explode('/', $value['image']);
                 $appImages = public_path('images/appImages' . "/" . $value['project_id'] . "/" . end($exploded));
                 $desiredPath = public_path('images/projects' . "/" . $value['project_id']);
