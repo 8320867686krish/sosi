@@ -238,8 +238,13 @@ class SyncProjectController extends Controller
                 if (rename($appImages, $newPath)) {
                     $inputData['image'] = end($exploded);
                     $inputData['project_id'] = $value['project_id'];
-                    $inputData['check_id'] = $value['check_id'];
+                    if(isset($checkImage[$value['check_id']])) {
+                        $check_id = $checkImage[$value['check_id']];
+                        // Use $check_id_value as needed
+                    }
+                    $inputData['check_id'] =  $check_id ?? $value['check_id'];
                     $inputData['isCompleted'] = 1;
+                    
                     CheckImage::create($inputData);
                     Checks::where('id', $value['check_id'])->update(['isCompleted' => 1]);
                 }
