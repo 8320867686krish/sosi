@@ -724,7 +724,7 @@ class ApiController extends Controller
     {
         try {
             $checkImg = CheckImage::find($id);
-
+            $checkData = Checks::withCount('check_image')->find($checkImg);
             if (!$checkImg) {
                 return response()->json(['isStatus' => false, 'message' => 'Check image not found.']);
             }
@@ -736,6 +736,12 @@ class ApiController extends Controller
             }
 
             $checkImg->delete();
+            // Check if $checkData has no associated images
+            if ($checkData->check_image_count === 0) {
+                // Perform your update here
+                // For example, you can update a specific attribute or perform any desired action
+                $checkData->update(['isCompleted' => 0]);
+            }
 
             return response()->json(['isStatus' => true, 'message' => 'Check image deleted successfully.']);
         } catch (Throwable $th) {
