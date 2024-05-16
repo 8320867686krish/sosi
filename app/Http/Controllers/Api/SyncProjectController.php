@@ -224,6 +224,7 @@ class SyncProjectController extends Controller
             }
         }
         if (@$post['checkHazImageInsert']) {
+            Log::info($post['checkHazImageInsert']);
             foreach ($post['checkHazImageInsert'] as $value) {
                 $exploded = explode('/', $value['image']);
                 $appImages = public_path('images/appImages' . "/" . $value['project_id'] . "/" . end($exploded));
