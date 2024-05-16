@@ -181,7 +181,6 @@ class SyncProjectController extends Controller
         if (@$post['insertCheck']) {
            
             foreach ($post['insertCheck'] as $value) {
-                Log::info($post['insertCheck']);
                 $projectDetail = Projects::with(['client' => function ($query) {
                     $query->select('id', 'manager_initials'); // Replace with the fields you want to select
                 }])->withCount('checks')->find($value['project_id']);
@@ -230,7 +229,6 @@ class SyncProjectController extends Controller
         }
         if (@$post['checkHazImageInsert']) {
             foreach ($post['checkHazImageInsert'] as $value) {
-                Log::info( $checkImage);
                 $exploded = explode('/', $value['image']);
                 $appImages = public_path('images/appImages' . "/" . $value['project_id'] . "/" . end($exploded));
                 $desiredPath = public_path('images/projects' . "/" . $value['project_id']);
@@ -276,7 +274,7 @@ class SyncProjectController extends Controller
 
         if(@$post['updatedCheck']){
             foreach($post['updatedCheck'] as $value){
-               // Log::info($post['updatedCheck']);
+                Log::info($post['updatedCheck']);
             }
         }
         return response()->json(['isStatus' => true, 'message' => 'successfully saved.']);
