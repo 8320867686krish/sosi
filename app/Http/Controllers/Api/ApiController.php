@@ -439,9 +439,11 @@ class ApiController extends Controller
             if ($request->filled('suspected_hazmat')) {
               
                 $suspectedHazmat = explode(',',$request->input('suspected_hazmat'));
-                $hazmatIds = Hazmat::whereIn('name', $suspectedHazmat)->pluck('id')->toArray();
-                Log::info($suspectedHazmat);
-                Log::info(  $hazmatIds);
+                $logArray = array_map('trim', $suspectedHazmat);
+
+                $hazmatIds = Hazmat::whereIn('name',$logArray)->pluck('id')->toArray();
+                Log::info($logArray);
+                Log::info( $hazmatIds);
                 CheckHasHazmat::where([
                     "project_id" => $inputData['project_id'],
                     "check_id" => $inputData['id'],
