@@ -176,6 +176,7 @@ class SyncProjectController extends Controller
     public function syncAdd(Request $request)
     {
         $post = $request->input();
+        $projectId = $post['projectId'];
         if (@$post['insertList']) {
             foreach ($post['insertList'] as $value) {
                 $projectDetail = Projects::with(['client' => function ($query) {
@@ -220,6 +221,23 @@ class SyncProjectController extends Controller
             foreach ($post['deletedData'] as $value){
                 $check = Checks::find($value['id']);
                 $check->delete();
+            }
+        }
+        if(@$post['checkHazImageInsert']){
+            foreach($post['checkHazImageInsert'] as $value){
+                $exploded = explode('-', $value['image']);
+                $appImages = public_path('images/appImages'."/".$value['project_id']."/". end($exploded));
+                $desiredPath = public_path('images/projects'."/".$value['project_id']);
+                $newPath = $desiredPath."/".end($exploded);
+                if(rename($appImages, $newPath)){
+                    $inputData['image'] = end($exploded);
+                    $inputData['project_id'] = $value['project_id'];
+                    $inputData['check_id'] = $value['check_id'];
+                    $inputData['isCompleted'] = 1;
+                    CheckImage::create($inputData);
+
+                }
+
             }
         }
         return response()->json(['isStatus' => true, 'message' => 'successfully saved.']);
