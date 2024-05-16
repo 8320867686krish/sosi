@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
 
 use App\Exports\MultiSheetExport;
 use App\Models\CheckHasHazmat;
@@ -16,11 +15,10 @@ use Exception;
 use Illuminate\Support\Facades\Response;
 use Dompdf\Dompdf;
 use Dompdf\Options;
-use Illuminate\Support\Facades\Crypt;
-use setasign\Fpdi\Fpdi;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Imagick;
-use Spatie\PdfToImage\Pdf;
+use setasign\Fpdi\Fpdi;
+use setasign\Fpdi\PdfParser\StreamReader;
 
 class ReportContoller extends Controller
 {
@@ -113,139 +111,66 @@ class ReportContoller extends Controller
     }
     public function genratePdf()
     {
-
-        $fileArray = [
-            '7. IHM Expert Training Certificate- Praveen Raj.pdf',
-            'IAPP Cert.pdf',
-        ];
-
-        // Temporary directory for storing converted images
-        $tempDir = sys_get_temp_dir();
-
-        // Initialize FPDI
+        // Initialize FPDI instance
         $pdf = new Fpdi('L');
 
-        foreach ($fileArray as $file) {
-            $filePath = public_path('images/' . $file);
-            $pdfContent = file_get_contents($filePath);
+        // Initialize Dompdf instance
+        $dompdf = new Dompdf();
+
+        // Load HTML content with a header
+        $htmlContent = view('pdf')->render();
+
+        // Load HTML content into Dompdf
+        $dompdf->loadHtml($htmlContent);
+
+        // Set paper size and orientation (adjust as needed)
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the PDF
+        $dompdf->render();
+
+        // Save the rendered PDF
+        $dompdfOutput = $dompdf->output();
+
+        // Import each page of the generated PDF into FPDI
+        $pdfData = $dompdfOutput;
+        $pageCount = $pdf->setSourceFile(StreamReader::createByString($pdfData));
+        for ($pageNumber = 1; $pageNumber <= $pageCount; $pageNumber++) {
+            $templateId = $pdf->importPage($pageNumber);
+            $pdf->AddPage();
+            $pdf->useTemplate($templateId, ['adjustPageSize' => true]);
+
+           
+        }
+        $pdfFolder = public_path('images/attachment/1/');
+        $pdfFiles = glob($pdfFolder . '*.pdf');
+        foreach ($pdfFiles as $pdfFile) {
+            // Set source file for FPDI
+            $pdf->setSourceFile($pdfFile);
         
-            // If PDF is not encrypted, add its content
-            if (strpos($pdfContent, '/Encrypt') === false) {
-                // Add pages directly
-                $pageCount = $pdf->setSourceFile($filePath);
-                for ($pageNumber = 1; $pageNumber <= $pageCount; $pageNumber++) {
-                    $templateId = $pdf->importPage($pageNumber);
-                    $pdf->AddPage();
-                    $pdf->useTemplate($templateId);
-                }
-            } else {
-                // Handle encrypted PDFs (if needed)
-                $pdf1 = new Pdf($filePath);
-                $pdf1->saveImage($tempDir);
-                $imageFiles = glob($tempDir . '/*.{jpg,png}', GLOB_BRACE);
+            // Get the total number of pages in the PDF
+            $totalPages = $pdf->setSourceFile($pdfFile);
+            $pageCount = $pdf->setSourceFile($pdfFile);
         
-                // Add each image as a page to the merged PDF
-                foreach ($imageFiles as $imageFile) {
-                    $pdf->AddPage();
-                    $pdf->Image($imageFile, 0, 0, 210, 297); // Assuming A4 size, adjust as needed
-                }
-                
-                // Clean up temporary image files
-                foreach ($imageFiles as $imageFile) {
-                    unlink($imageFile);
-                }    
+            // Iterate through each page and import them into the new PDF
+            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                // Add a new page to the PDF
+                $pdf->AddPage();
+        
+                // Import the current page from the source PDF
+                $templateId = $pdf->importPage($pageNo);
+        
+                // Use the imported page
+                $pdf->useTemplate($templateId, ['adjustPageSize' => true]);
+
+                $pdf->SetFont('Arial', 'I', 8);
+         
             }
         }
-        
-        // Output merged PDF
-        // foreach ($fileArray as $file) {
-        //     $filePath = public_path('images/' . $file);
-        //     // Read the PDF file
-        //     $pdfContent = file_get_contents($filePath);
+        // Output the merged PDF
+        $pdfFilePath = public_path('merged_with_header.pdf');
+        $pdf->Output('F', $pdfFilePath);
 
-        //     // Check if the PDF is password protected
-        //     if (strpos($pdfContent, '/Encrypt') === false) {
-        //         // If not password protected, proceed without modification
-        //         $pdfContent = preg_replace("/\/Encrypt[\s\n]*\{[^\}]+\}/", '', $pdfContent);
-        //         file_put_contents($filePath, $pdfContent);
-        //         continue;
-        //     }
-
-        //     // Load PDF without password protection
-        //     $pdfContent = preg_replace("/\/Encrypt[\s\n]*\{[^\}]+\}/", '', $pdfContent);
-
-        //     // Save the PDF without password protection
-        //     file_put_contents($filePath, $pdfContent);
-        // }
-        // $pdf = new Fpdi('L');
-
-        // // Load the existing PDF file
-        // $pdfFile = public_path('images/attachment/1/IAPP Cert.pdf');
-        // $pdf->setSourceFile($pdfFile);
-
-        // // Get the total number of pages in the PDF
-        // $totalPages = $pdf->setSourceFile($pdfFile);
-        // $pageCount = $pdf->setSourceFile($pdfFile);
-
-        // // Iterate through each page and import them into the new PDF
-        // for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-        //     // Add a new page to the PDF
-        //     $pdf->AddPage();
-
-        //     // Import the current page from the source PDF
-        //     $templateId = $pdf->importPage($pageNo);
-
-        //     // Use the imported page
-        //     $pdf->useTemplate($templateId, null, null, null, null, true);
-        // }
-
-        // $pdfFile = public_path('images/7. IHM Expert Training Certificate- Praveen Raj.pdf');
-        // $pdf->setSourceFile($pdfFile);
-
-        // // Get the total number of pages in the PDF
-        // $totalPages = $pdf->setSourceFile($pdfFile);
-        // $pageCount = $pdf->setSourceFile($pdfFile);
-
-        // // Iterate through each page and import them into the new PDF
-        // for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-        //     // Add a new page to the PDF
-        //     $pdf->AddPage();
-
-        //     // Import the current page from the source PDF
-        //     $templateId = $pdf->importPage($pageNo);
-
-        //     // Use the imported page
-        //     $pdf->useTemplate($templateId, null, null, null, null, true);
-        // }
-
-
-        // // Output the merged PDF
-        // $pdfFilePath = public_path('merged.pdf');
-        // $pdf->Output('F', $pdfFilePath);
-        // // Return a binary response with the merged PDF file as a download
-        // return new BinaryFileResponse(public_path('merged.pdf'));
-        // $filePath = public_path('images/7. IHM Expert Training Certificate- Praveen Raj.pdf');
-        // $pdf = new Pdf($filePath);
-
-        // $password = '123456';
-        // $userPassword = '123456a9';
-
-        // $result = $pdf->allow('AllFeatures')
-
-        //                 ->passwordEncryption(128)
-        //                 ->saveAs($filePath);
-
-        // if ($result === false) {
-        //     $error = $pdf->getError();
-        // }
-
-        // return response()->download($filePath);
-
-
-
-        // Output file path for the merged PDF
-
-        // Return a response to download the merged PDF
-        //  return response()->download($outputFilePath)->deleteFileAfterSend(true);
+        echo 'PDF generated successfully!';
     }
 }
