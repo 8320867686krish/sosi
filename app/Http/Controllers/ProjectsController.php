@@ -17,7 +17,6 @@ use App\Models\MakeModel;
 use App\Models\Projects;
 use App\Models\ProjectTeam;
 use App\Models\User;
-use App\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
