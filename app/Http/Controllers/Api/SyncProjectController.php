@@ -277,12 +277,9 @@ class SyncProjectController extends Controller
                 if($value['suspected_hazmat']){
                     $suspectedHazmat = explode(', ', $request->input('suspected_hazmat'));
                     $hazmatIds = Hazmat::whereIn('name', $suspectedHazmat)->pluck('id')->toArray();
-                    Log::info($value['suspected_hazmat']);
-
-                    CheckHasHazmat::where([
-                        "project_id" => $value['project_id'],
-                        "check_id" => $value['id'],
-                    ])->whereNotIn('hazmat_id', $hazmatIds)->delete();
+                    Log::info($post['updatedCheck']);
+                    Log::info($hazmatIds);
+                    
                     foreach ($hazmatIds as $hazmatId) {
                         $hazmatData = [
                             "project_id" => $inputData['project_id'],
