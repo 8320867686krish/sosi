@@ -280,8 +280,8 @@ class SyncProjectController extends Controller
                     $hazmatIds = Hazmat::whereIn('name', $suspectedHazmat)->pluck('id')->toArray();
     
                     CheckHasHazmat::where([
-                        "project_id" => $inputData['project_id'],
-                        "check_id" => $inputData['id'],
+                        "project_id" => $value['project_id'],
+                        "check_id" => $value['id'],
                     ])->whereNotIn('hazmat_id', $hazmatIds)->delete();
                     foreach ($hazmatIds as $hazmatId) {
                         $hazmatData = [
