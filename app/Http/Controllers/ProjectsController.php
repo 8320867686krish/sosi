@@ -12,6 +12,7 @@ use App\Models\Client;
 use App\Models\Deck;
 use App\Models\Hazmat;
 use App\Models\Attechments;
+use App\Models\LabResult;
 use App\Models\MakeModel;
 use App\Models\Projects;
 use App\Models\ProjectTeam;
@@ -219,9 +220,6 @@ class ProjectsController extends Controller
                 $projectData =  Projects::find($inputData['id']);
                 $proid = $projectData['id'];
 
-
-
-
                 if ($request->has('project.leb1LaboratoryResult1')) {
                     if (@$projectData['leb1LaboratoryResult1']) {
                         $imagePath =  public_path("images/labResult" . "/" . $proid . "/" . $projectData['leb1LaboratoryResult1']);
@@ -251,7 +249,6 @@ class ProjectsController extends Controller
                     $file->move(public_path('images/labResult/' . $inputData['project_id']), "/" . $imageName);
                     $savData['leb1LaboratoryResult2'] =  $imageName;
                 }
-
 
 
                 if ($request->has('project.leb2LaboratoryResult1')) {
@@ -308,6 +305,7 @@ class ProjectsController extends Controller
             return response()->json(['error' => $th->getMessage()]);
         }
     }
+
     public function removeLebDoc(Request $request)
     {
         $project_id = $request->input('project_id');
@@ -353,8 +351,10 @@ class ProjectsController extends Controller
 
     public function checkBasedHazmat($id)
     {
-        $check = Checks::with(['hazmats' => function ($query) {
-            $query->with('hazmat:id,name'); // Eager load hazmat with only id, name, and image columns
+        $check = Checks::with(['labResults' => function ($query) {
+            $query->with('hazmat:id,name');
+        }])->with(['hazmats' => function ($query) {
+            $query->with('hazmat:id,name');
         }])->find($id);
 
         $hazmatIds = $check->hazmats->pluck('hazmat_id')->toArray();
@@ -368,10 +368,12 @@ class ProjectsController extends Controller
         });
 
         $hazmats = $check->hazmats;
-        // dd($hazmats->hazmat);
-        $htmllist = view('check.checkAddModal', compact('hazmats'))->render();
+        $labs = $check->labResults;
 
-        return response()->json(['html' => $htmllist, 'hazmatIds' => $hazmatIds, "check" => $check]);
+        $htmllist = view('check.checkAddModal', compact('hazmats'))->render();
+        $labresult = view('check.labResultModal', compact('labs', 'hazmats'))->render();
+
+        return response()->json(['html' => $htmllist, 'labResult'=>$labresult, 'hazmatIds' => $hazmatIds, "check" => $check]);
     }
 
     public function getHazmatEquipment($hazmat_id)
@@ -448,6 +450,12 @@ class ProjectsController extends Controller
             $images = $request->file('image');
             $modelmakepart = $request->input('modelmakepart');
             $doc = $request->file('doc');
+            $IHM_part = $request->input('IHM_part');
+            $unit = $request->input('unit');
+            $number = $request->input('number');
+            $total = $request->input('total');
+            $lab_remarks = $request->input('lab_remarks');
+            $labid = $request->input('labid');
 
             $projectDetail = Projects::with(['client' => function ($query) {
                 $query->select('id', 'manager_initials'); // Replace with the fields you want to select
@@ -554,6 +562,27 @@ class ProjectsController extends Controller
                     } else {
                         CheckHasHazmat::create($hazmatData);
                     }
+
+                    if(isset($IHM_part[$value])){
+
+                        $labResultData = [
+                            "project_id" => $inputData['project_id'],
+                            "check_id" => $data->id,
+                            "hazmat_id" => $value,
+                            "IHM_part" => $IHM_part[$value],
+                            "unit" => $unit[$value],
+                            "number" => $number[$value],
+                            "total" => $total[$value],
+                            "lab_remarks" => $lab_remarks[$value]
+                        ];
+
+                        if(!empty($labid[$value])){
+                            LabResult::updateOrCreate(['id'=>$labid[$value]], $labResultData);
+                        } else {
+                            LabResult::create($labResultData);
+                        }
+                    }
+
                 }
             }
 
@@ -562,6 +591,7 @@ class ProjectsController extends Controller
                 foreach ($deselectIds as $deselectId) {
                     if (!empty($deselectId)) {
                         CheckHasHazmat::where("check_id", $data->id)->where('hazmat_id', $deselectId)->delete();
+                        LabResult::where("check_id", $data->id)->where('hazmat_id', $deselectId)->delete();
                     }
                 }
             }
@@ -585,6 +615,7 @@ class ProjectsController extends Controller
         } catch (ValidationException $e) {
             return response()->json(['isStatus' => false, 'message' => $e->validator->errors()]);
         } catch (\Throwable $th) {
+            \Log::error('Logout error: ' . $th->getMessage());
             return response()->json(['isStatus' => false, 'error' => $th->getMessage()]);
         }
     }
