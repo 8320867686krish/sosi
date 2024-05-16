@@ -179,7 +179,7 @@ class SyncProjectController extends Controller
         $projectId = $post['projectId'];
         $checkImage = [];
         if (@$post['insertCheck']) {
-           
+
             foreach ($post['insertCheck'] as $value) {
                 $projectDetail = Projects::with(['client' => function ($query) {
                     $query->select('id', 'manager_initials'); // Replace with the fields you want to select
@@ -236,13 +236,13 @@ class SyncProjectController extends Controller
                 if (rename($appImages, $newPath)) {
                     $inputData['image'] = end($exploded);
                     $inputData['project_id'] = $value['project_id'];
-                    if(isset($checkImage[$value['check_id']])) {
+                    if (isset($checkImage[$value['check_id']])) {
                         $check_id = $checkImage[$value['check_id']];
                         // Use $check_id_value as needed
                     }
                     $inputData['check_id'] =  $check_id ?? $value['check_id'];
                     $inputData['isCompleted'] = 1;
-                    
+
                     CheckImage::create($inputData);
                     Checks::where('id', $value['check_id'])->update(['isCompleted' => 1]);
                 }
@@ -263,34 +263,40 @@ class SyncProjectController extends Controller
                 }
             }
         }
-        if (@$post['surveyUpdated']){
+        if (@$post['surveyUpdated']) {
             $projectData = $post['surveyUpdated'][0];
-            $projectUpdateData ['survey_location_name'] =$projectData['survey_location_name'];
-            $projectUpdateData['survey_location_address'] =$projectData['survey_location_address'];
-            $projectUpdateData['survey_type'] =$projectData['survey_type'];
-            $projectUpdateData['survey_date'] =$projectData['survey_date'];
-            Projects::where('id',$projectId)->update($projectUpdateData);
+            $projectUpdateData['survey_location_name'] = $projectData['survey_location_name'];
+            $projectUpdateData['survey_location_address'] = $projectData['survey_location_address'];
+            $projectUpdateData['survey_type'] = $projectData['survey_type'];
+            $projectUpdateData['survey_date'] = $projectData['survey_date'];
+            Projects::where('id', $projectId)->update($projectUpdateData);
         }
 
-        if(@$post['updatedCheck']){
-            foreach($post['updatedCheck'] as $value){
-                if($value['suspected_hazmat']){
-                    $suspectedHazmat = explode(', ', $value('suspected_hazmat'));
-                    $hazmatIds = Hazmat::whereIn('name', $suspectedHazmat)->pluck('id')->toArray();
+        if (@$post['updatedCheck']) {
+            foreach ($post['updatedCheck'] as $value) {
+                if ($value['suspected_hazmat']) {
+                    $suspectedHazmat = explode(',', $value('suspected_hazmat'));
+                    $logArray = array_map('trim', $suspectedHazmat);
+
+                    $hazmatIds = Hazmat::whereIn('name', $logArray)->pluck('id')->toArray();
+
                     CheckHasHazmat::where([
-                        "project_id" => $inputData['project_id'],
-                        "check_id" => $inputData['id'],
+                        "project_id" => $value['project_id'],
+                        "check_id" => $value['id'],
                     ])->whereNotIn('hazmat_id', $hazmatIds)->delete();
+
                     foreach ($hazmatIds as $hazmatId) {
                         $hazmatData = [
-                            "project_id" => $inputData['project_id'],
+                            "project_id" => $value['project_id'],
                             "check_id" => $value['id'],
                             "hazmat_id" => $hazmatId,
                             "type" => "Unknown",
                             "check_type" => $inputData['type']
                         ];
-    
-                        CheckHasHazmat::create($hazmatData);
+                        $checkhasData = CheckHasHazmat::where('hazmat_id', $hazmatId)->where('check_id', $value['id'])->first();
+                        if (!@$checkhasData) {
+                            CheckHasHazmat::create($hazmatData);
+                        }
                     }
                 }
             }

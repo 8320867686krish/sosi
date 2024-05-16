@@ -442,8 +442,7 @@ class ApiController extends Controller
                 $logArray = array_map('trim', $suspectedHazmat);
 
                 $hazmatIds = Hazmat::whereIn('name',$logArray)->pluck('id')->toArray();
-                Log::info($logArray);
-                Log::info( $hazmatIds);
+              
                 CheckHasHazmat::where([
                     "project_id" => $inputData['project_id'],
                     "check_id" => $inputData['id'],
