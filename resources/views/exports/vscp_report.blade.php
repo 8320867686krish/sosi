@@ -12,7 +12,7 @@
     <table>
         <thead>
             <tr>
-                <th style="font-size: 14px; background-color: #DADADA;" valign="middle" align="center"><b></b></th>
+                <th style="font-size: 14px; background-color: #DADADA;" valign="middle" align="center"><b>NO</b></th>
                 <th style="font-size: 14px; background-color: #DADADA;" valign="middle" align="center"><b></b></th>
                 <th style="font-size: 14px; background-color: #DADADA;" colspan="2" valign="middle" align="center">
                     <b>Hazardous<br> Materials</b></th>
@@ -26,10 +26,9 @@
                     <b>Manufacture/<br>Brand Name</b></th>
                 <th style="font-size: 12px; background-color: #DADADA;" valign="middle" align="center">
                     <b>Document<br>Analysis Result</b></th>
-                <th style="font-size: 14px; background-color: #DADADA;" colspan="2" valign="middle" align="center">
-                    <b>Check</b></th>
-                <th style="font-size: 14px; background-color: #DADADA;" valign="middle" align="center">
-                    <b>References/Remarks</b></th>
+                <th style="font-size: 14px; background-color: #DADADA;" colspan="3" valign="middle" align="center"><b>Check</b></th>
+                <th style="font-size: 14px; background-color: #DADADA;" valign="middle" align="center"><b>References/Remarks</b></th>
+                <th style="font-size: 14px; background-color: #DADADA;" valign="middle" align="center"><b>Recommendation</b></th>
             </tr>
 
             <tr height="25">
@@ -46,7 +45,8 @@
                 <th style="background-color: #DADADA;" valign="middle" align="center"></th>
                 <th style="background-color: #DADADA;" valign="middle" align="center"><b>Procedure</b></th>
                 <th style="background-color: #DADADA;" valign="middle" align="center"><b>Result</b></th>
-                {{-- <th style="background-color: #DADADA;" valign="middle" align="center"><b>No.</b></th> --}}
+                <th style="background-color: #DADADA;" valign="middle" align="center"><b>Remarks</b></th>
+                <th style="background-color: #DADADA;" valign="middle" align="center"></th>
                 <th style="background-color: #DADADA;" valign="middle" align="center"></th>
             </tr>
         </thead>
@@ -68,11 +68,11 @@
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
-                        <td valign="middle" align="center" style="font-size: 14px;">
-                            {{ $check->type }}
-                        </td>
+                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->type }}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;"></td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
                         <td valign="middle" align="left" style="font-size: 14px;">{{$check->remarks}}</td>
+                        <td valign="middle" align="left" style="font-size: 14px;">{{$check->recommendation}}</td>
                     </tr>
                 @endif
                 @foreach ($check->check_hazmats as $checkHazmat)
@@ -90,10 +90,11 @@
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
                         <td valign="middle" align="center" style="font-size: 14px;">{{ $checkHazmat->type }}</td>
-                        <td valign="middle" align="center" style="font-size: 14px;">
-                            {{ $check->type }}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->type }}</td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
+                        <td valign="middle" align="center" style="font-size: 14px;">{{ $checkHazmat->remarks }}</td>
                         <td valign="middle" align="left" style="font-size: 14px;">{{$check->remarks}}</td>
+                        <td valign="middle" align="left" style="font-size: 14px;">{{$check->recommendation}}</td>
                     </tr>
                     @php
                         $counter++;

@@ -122,7 +122,7 @@ class ProjectsController extends Controller
         try {
             $id = $request->input('id');
             $inputData = $request->input();
-
+            dd($inputData);
             Projects::updateOrCreate(['id' => $id], $inputData);
 
             $message = empty($id) ? "Project added successfully" : "Project updated successfully";
