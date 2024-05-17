@@ -59,6 +59,7 @@ class ReportContoller extends Controller
         $filename = "projects-{$id}-" . time() . "." . $fileExt;
         return Excel::download(new MultiSheetExport($project, $hazmats, $checks), $filename, $exportFormat);
     }
+
     public function genratePdf1()
     {
         $pdf = new Fpdi('L');
@@ -140,31 +141,31 @@ class ReportContoller extends Controller
             $pdf->AddPage();
             $pdf->useTemplate($templateId, ['adjustPageSize' => true]);
 
-           
+
         }
         $pdfFolder = public_path('images/attachment/1/');
         $pdfFiles = glob($pdfFolder . '*.pdf');
         foreach ($pdfFiles as $pdfFile) {
             // Set source file for FPDI
             $pdf->setSourceFile($pdfFile);
-        
+
             // Get the total number of pages in the PDF
             $totalPages = $pdf->setSourceFile($pdfFile);
             $pageCount = $pdf->setSourceFile($pdfFile);
-        
+
             // Iterate through each page and import them into the new PDF
             for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
                 // Add a new page to the PDF
                 $pdf->AddPage();
-        
+
                 // Import the current page from the source PDF
                 $templateId = $pdf->importPage($pageNo);
-        
+
                 // Use the imported page
                 $pdf->useTemplate($templateId, ['adjustPageSize' => true]);
 
                 $pdf->SetFont('Arial', 'I', 8);
-         
+
             }
         }
         // Output the merged PDF

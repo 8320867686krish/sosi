@@ -833,6 +833,8 @@
                 url: "{{ url('check') }}" + "/" + checkId + "/hazmat",
                 success: function(response) {
                     $('#showTableTypeDiv').html(response.html);
+                    $('#showLabResult').html(response.labResult);
+                    console.log(response.labResult);
                     let jsonObject = response.check;
                     for (var key in jsonObject) {
                         if (jsonObject.hasOwnProperty(key)) {
