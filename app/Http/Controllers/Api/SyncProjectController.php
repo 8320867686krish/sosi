@@ -275,7 +275,7 @@ class SyncProjectController extends Controller
         if (@$post['updatedCheck']) {
             foreach ($post['updatedCheck'] as $key=>$value) {
                 if(!empty($value)){
-                    $updateData[$key] = $value['value'];
+                    $updateData[$key] = $value;
                 }
                
                 if(@$value['position_top'] || $value['position_left']){
