@@ -524,9 +524,9 @@
                                         </select>
                                     </div>
                                 </div>
-
+                                <div class="col-12">
                                 <div class="col-12 col-md-12 mb-4" style="background: #efeff6;border: 1px solid #efeff6;">
-                                    <div style="border: 2px solid black;" class="p-2">
+                                    <div class="pt-4">
                                     <h5 class="text-center mb-4" style="color:#757691">Document Analysis Results</h5>
                                         <div class="row col-12 mb-4" id="showTableTypeDiv">
 
@@ -541,6 +541,7 @@
 
                                         </div>
                                     </div>
+                                </div>
                                 </div>
 
                                 <div class="col-12">
