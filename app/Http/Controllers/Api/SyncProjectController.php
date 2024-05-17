@@ -273,18 +273,11 @@ class SyncProjectController extends Controller
         }
 
         if (@$post['updatedCheck']) {
-            foreach ($post['updatedCheck'] as $value) {
-                $updateData['equipment'] = $value['equipment'] ?? "";
-                $updateData['component'] = $value['component'] ?? "";
-                $updateData['location'] = $value['location'] ?? "";
-                $updateData['location'] = $value['location'] ?? "";
-
-                $updateData['pairWitthTag'] = $value['pairWitthTag'] ?? "";
-                $updateData['remarks'] = $value['remarks'] ?? "";
-                $updateData['recommendation'] = $value['recommendation'] ?? "";
-                $updateData['position_top'] = $value['position_top'] ?? "";
-                $updateData['position_left'] = $value['position_left'] ?? "";
-
+            foreach ($post['updatedCheck'] as $key=>$value) {
+                if(!empty($value)){
+                    $updateData[$key] = $value['value'];
+                }
+               
                 if(@$value['position_top'] || $value['position_left']){
                     $updateData['isApp'] = 1;
                 }
