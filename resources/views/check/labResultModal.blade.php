@@ -6,13 +6,13 @@
 @endif
 
 @foreach ($labs->isEmpty() ? $hazmats : $labs as $lab)
-    <div class="col-12 col-md-12 col-lg-12 cloneIHMTableDiv" id="cloneIHMTableDiv{{ $lab->hazmat_id }}">
-        <label for="ihm_table" id="ihmTableLable" class="mr-5 ihmTableLable">
+    <div class="col-12 col-md-12 col-lg-12 cloneIHMTableDiv card" id="cloneIHMTableDiv{{ $lab->hazmat_id }}">
+        <label for="ihm_table" id="ihmTableLable" class="mr-5 mt-3 card-header ihmTableLable">
             {{ $lab->hazmat->name }}
         </label>
-        <div class="row">
+        <div class="row card-body">
             <div class="col-6">
-                <div class="form-group">
+                <div class="form-group mb-3">
                     <select class="form-control IHM_part" id="IHM_part_{{ $lab->hazmat_id }}"
                             name="IHM_part[{{ $lab->hazmat_id }}]">
                         <option value="">Select IHM Part</option>
@@ -34,14 +34,14 @@
                 </div>
             </div>
             <div class="col-2">
-                <div class="form-group">
+                <div class="form-group mb-3">
                     <input type="text" class="form-control number" placeholder="Number..."
                            id="number_{{ $lab->hazmat_id }}" name="number[{{ $lab->hazmat_id }}]"
                            value="{{ $lab->number ?? '' }}">
                 </div>
             </div>
             <div class="col-2">
-                <div class="form-group">
+                <div class="form-group mb-3">
                     <input type="text" class="form-control total" placeholder="Total (KG.)"
                            id="total_{{ $lab->hazmat_id }}" name="total[{{ $lab->hazmat_id }}]"
                            value="{{ $lab->total ?? '' }}">
@@ -53,9 +53,7 @@
                               id="lab_remarks_{{ $lab->hazmat_id }}" name="lab_remarks[{{ $lab->hazmat_id }}]">{{ $lab->lab_remarks ?? '' }}</textarea>
                 </div>
             </div>
-            <div class="col-12">
-                <hr>
-            </div>
+            
         </div>
     </div>
 @endforeach

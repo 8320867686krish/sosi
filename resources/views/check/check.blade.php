@@ -140,11 +140,10 @@
         </div>
 
         <div class="col-12" style="display: none;">
-            <div class="col-12 col-md-12 col-lg-12 cloneTableTypeDiv" id="cloneTableTypeDiv">
+            <div class="col-12 col-md-12 col-lg-12 card cloneTableTypeDiv" id="cloneTableTypeDiv">
                 {{-- <label for="table_type" id="tableTypeLable" class="mr-5 tableTypeLable"></label> --}}
-                <label for="table_type" id="tableTypeLable" class="mr-5 tableTypeLable text-dark p-2"
-                    style="background-color: #e2e3e5"></label>
-                <div class="row">
+                <label for="table_type" id="tableTypeLable" class="mr-5 tableTypeLable mt-3 card-header"></label>
+                <div class="row card-body">
                     <div class="col-12 mt-2 table_typecol">
                         <div class="form-group">
                             <select class="form-control table_type" id="table_type" name="table_type">
@@ -198,19 +197,17 @@
                             <textarea class="form-control remarksTextarea" rows="2" placeholder="Remark..."></textarea>
                         </div>
                     </div>
-                    <div class="col-12">
-                        <hr>
-                    </div>
+                   
                 </div>
             </div>
         </div>
 
         <div style="display: none;">
-            <div class="col-12 col-md-12 col-lg-12 cloneIHMTableDiv" id="cloneIHMTableDiv">
-                <label for="ihm_table" id="ihmTableLable" class="mr-5 ihmTableLable"></label>
-                <div class="row">
+            <div class="col-12 col-md-12 col-lg-12 cloneIHMTableDiv card" id="cloneIHMTableDiv">
+                <label for="ihm_table" id="ihmTableLable" class="mr-5 mt-3 card-header ihmTableLable"></label>
+                <div class="row card-body">
                     <div class="col-6">
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             {{-- <label for="IHM_part">IHM Part</label> --}}
                             <select class="form-control IHM_part">
                                 <option value="">Select IHM Part</option>
@@ -234,8 +231,8 @@
                         </div>
                     </div>
                     <div class="col-2">
-                        <div class="form-group">
-                            {{-- <label for="total">Total (KG.)</label> --}}
+                        <div class="form-group mb-3">
+                            {{-- <label for="total"> (KG.)</label> --}}
                             <input type="text" class="form-control total" placeholder="Total (KG.)">
                         </div>
                     </div>
@@ -276,17 +273,17 @@
                             <input type="hidden" id="deck_id" name="deck_id" value="{{ $deck->id ?? '' }}">
                             <input type="hidden" id="position_left" name="position_left">
                             <input type="hidden" id="position_top" name="position_top">
-                            <div class="row">
-                                <div class="col-12 col-md-6" id="chkName">
-                                    <div class="form-group">
+                            <div class="offset-xl-1 col-xl-10 col-lg-12 col-md-12 col-sm-12 col-12 row">
+                                <div class="col-6 col-md-6" id="chkName">
+                                    <div class="form-group mb-4">
                                         <label for="name">Name</label>
                                         <input type="text" id="name" name="name" class="form-control"
                                             readonly>
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                <div class="col-6 col-md-6">
+                                    <div class="form-group mb-4">
                                         <label for="type">Type <span class="text-danger">*</span></label>
                                         <select name="type" id="type" class="form-control">
                                             <option value>Select Type</option>
@@ -296,33 +293,33 @@
                                         <div class="invalid-feedback error" id="typeError"></div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                <div class="col-6 col-md-6">
+                                    <div class="form-group mb-4">
                                         <label for="location">Location</label>
                                         <input type="text" id="location" name="location" class="form-control">
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                <div class="col-6 col-md-6">
+                                    <div class="form-group mb-4">
                                         <label for="sub_location">Sub Location</label>
                                         <input type="text" id="sub_location" name="sub_location"
                                             class="form-control">
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                <div class="col-6 col-md-6">
+                                    <div class="form-group mb-4">
                                         <label for="equipment">Equipment</label>
                                         <input type="text" id="equipment" name="equipment" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group mb-4">
                                         <label for="component">Component</label>
                                         <input type="text" id="component" name="component" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group mb-4">
                                         <label for="suspected_hazmat">Suspected Hazmat</label>
                                         <select class="form-control selectpicker" id="suspected_hazmat"
                                             name="suspected_hazmat[]" multiple>
@@ -341,33 +338,34 @@
                                         </select>
                                     </div>
                                 </div>
-
-                                <div class="col-12 col-md-12 mb-3">
-                                    <div style="border: 2px solid black;" class="p-2">
-                                        <h5 class="text-center">Document Analysis Results</h5>
-                                        <div class="row" id="showTableTypeDiv">
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-md-12 mb-3" id="labResultSection">
-                                    <div style="border: 2px solid black;" class="p-2">
-                                        <h5 class="text-center">Lab Result</h5>
-                                        <div class="row" id="showLabResult">
-
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <div class="col-12">
-                                    <div class="form-group">
+                                <div class="col-12 col-md-12 mb-4" style="background: #efeff6;border: 1px solid #efeff6;">
+                                    <div class="pt-4">
+                                        <h5 class="text-center mb-4" style="color:#757691">Document Analysis Results</h5>
+                                        <div class="  mb-4 col-12" id="showTableTypeDiv">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-12 mb-4" id="labResultSection" style="background: #efeff6;border: 1px solid #efeff6;">
+                                    <div  class="pt-4">
+                                        <h5 class="text-center" style="color:#757691">Lab Result</h5>
+                                        <div class=" mb-4 col-12" id="showLabResult">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group mb-4">
                                         <label for="remarks">Remarks</label>
                                         <textarea name="remarks" id="remarks" class="form-control" rows="2"></textarea>
                                     </div>
                                 </div>
-                                <div class="col-12">
-                                    <div class="form-group">
+                                <div class="col-6">
+                                    <div class="form-group mb-4">
                                         <label for="recommendation">Recommendation</label>
                                         <textarea name="recommendation" id="recommendation" class="form-control" rows="2"></textarea>
                                     </div>

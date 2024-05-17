@@ -525,19 +525,19 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-md-12 mb-3">
+                                <div class="col-12 col-md-12 mb-4" style="background: #efeff6;border: 1px solid #efeff6;">
                                     <div style="border: 2px solid black;" class="p-2">
-                                        <h5 class="text-center">Document Analysis Results</h5>
-                                        <div class="row" id="showTableTypeDiv">
+                                    <h5 class="text-center mb-4" style="color:#757691">Document Analysis Results</h5>
+                                        <div class="row col-12 mb-4" id="showTableTypeDiv">
 
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-md-12 mb-3">
-                                    <div style="border: 2px solid black;" class="p-2">
-                                        <h5 class="text-center">Lab Result</h5>
-                                        <div class="row" id="showLabResult">
+                                <div class="col-12 col-md-12 mb-3" style="background: #efeff6;border: 1px solid #efeff6;">
+                                    <div  class="pt-4">
+                                        <h5 class="text-center" background: #efeff6;border: 1px solid #efeff6;>Lab Result</h5>
+                                        <div class="mb-4 col-12" id="showLabResult">
 
                                         </div>
                                     </div>
@@ -627,9 +627,9 @@
         </div>
 
         <div style="display: none;">
-            <div class="col-12 col-md-12 col-lg-12 cloneIHMTableDiv" id="cloneIHMTableDiv">
-                <label for="ihm_table" id="ihmTableLable" class="mr-5 ihmTableLable"></label>
-                <div class="row">
+            <div class="col-12 col-md-12 col-lg-12 cloneIHMTableDiv card" id="cloneIHMTableDiv">
+                <label for="ihm_table" id="ihmTableLable" class="mr-5 ihmTableLable card-header"></label>
+                <div class="row card-body">
                     <div class="col-6">
                         <div class="form-group">
                             {{-- <label for="IHM_part">IHM Part</label> --}}

@@ -70,3 +70,6 @@
 .equal-height .card {
     flex: 1;
 }
+.cloneTableTypeDiv label{
+    color: #757691;
+}

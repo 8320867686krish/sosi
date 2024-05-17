@@ -4,13 +4,13 @@
             $isEquipment = $hazmat->hazmat->equipment->count() > 0 ? true : false;
         @endphp
 
-        <div class="col-12 col-md-12 col-lg-12 cloneTableTypeDiv" id="cloneTableTypeDiv{{ $hazmat->hazmat_id }}">
+        <div class="col-12 col-md-12 col-lg-12 cloneTableTypeDiv mb-3 card" id="cloneTableTypeDiv{{ $hazmat->hazmat_id }}">
             <input type="hidden" id="hasid_{{ $hazmat->hazmat_id }}" name="hasid[{{ $hazmat->hazmat_id }}]"
                 value="{{ $hazmat->id }}">
-            <label for="table_type" id="tableTypeLable" class="mr-5 tableTypeLable">{{ $hazmat->hazmat->name }}</label>
-            <div class="row">
+            <label for="table_type" id="tableTypeLable" class="mr-5 mt-3 tableTypeLable card-header">{{ $hazmat->hazmat->name }}</label>
+            <div class="row card-body">
                 <div class="col-{{ $hazmat->type == 'Unknown' ? 12 : 4 }} table_typecol">
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <select class="form-control table_type tableType{{ $hazmat->hazmat_id }}"
                             id="table_type_{{ $hazmat->hazmat_id }}" name="table_type[{{ $hazmat->hazmat_id }}]">
                             <option value="Contained" {{ $hazmat->type == 'Contained' ? 'selected' : '' }}>Contained
@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="col-4 imagehazmat" id="imagehazmat{{ $hazmat->hazmat_id }}">
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <input type="file" class="form-control" accept="*/*" id="image_{{ $hazmat->hazmat_id }}"
                             name="image[{{ $hazmat->hazmat_id }}]">
                     </div>
@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="col-4 dochazmat" id="dochazmat{{ $hazmat->hazmat_id }}">
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <input type="file" class="form-control" id="doc_{{ $hazmat->hazmat_id }}"
                             name="doc[{{ $hazmat->hazmat_id }}]">
                     </div>
@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="col-4 equipment">
-                    <div class="form-group" id="equipmentDiv_{{$hazmat->hazmat_id}}">
+                    <div class="form-group mb-3" id="equipmentDiv_{{$hazmat->hazmat_id}}">
                         <select class="form-control equipmentSelectTag" id="equipmentSelectTag_{{$hazmat->hazmat_id}}" name="equipmenttt[{{$hazmat->hazmat_id}}]" data-id="{{$hazmat->hazmat_id}}">
                             <option value="">Select Equipment</option>
 
@@ -69,7 +69,7 @@
                     </div>
                 </div>
                 <div class="col-4 manufacturer">
-                    <div class="form-group" id="manufacturerDiv_{{$hazmat->hazmat_id}}">
+                    <div class="form-group mb-3" id="manufacturerDiv_{{$hazmat->hazmat_id}}">
                         <select class="form-control manufacturerSelectTag" data-id="{{$hazmat->hazmat_id}}" id="manufacturerSelectTag_{{$hazmat->hazmat_id}}" name="manufacturer[{{$hazmat->hazmat_id}}]">
                             <option value="">First Select Equipment</option>
                         </select>
@@ -84,7 +84,7 @@
                 </div>
 
                 <div class="col-12 remarks" style="{{ empty($hazmat->remarks) ? 'display: none;' : '' }}">
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <textarea class="form-control remarksTextarea" placeholder="Remark..." id="remarks_{{ $hazmat->hazmat_id }}"
                             name="remark[{{ $hazmat->hazmat_id }}]" rows="2">{{ $hazmat->remarks ?? '' }}</textarea>
                     </div>
