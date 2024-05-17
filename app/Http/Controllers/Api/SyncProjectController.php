@@ -274,6 +274,8 @@ class SyncProjectController extends Controller
 
         if (@$post['updatedCheck']) {
             foreach ($post['updatedCheck'] as $value) {
+                $updateData = [];
+
                 if (!empty($value['equipment'])) {
                     $updateData['equipment'] = $value['equipment'];
                 }
