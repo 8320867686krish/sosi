@@ -274,12 +274,37 @@ class SyncProjectController extends Controller
 
         if (@$post['updatedCheck']) {
             foreach ($post['updatedCheck'] as $value) {
-                $updateData = $post['updatedCheck'];
-               
+                if (!empty($value['equipment'])) {
+                    $updateData['equipment'] = $value['equipment'];
+                }
+                if (!empty($value['component'])) {
+                    $updateData['component'] = $value['component'];
+                }
+                if (!empty($value['location'])) {
+                    $updateData['location'] = $value['location'];
+                }
+                if (!empty($value['sub_location'])) {
+                    $updateData['sub_location'] = $value['sub_location'];
+                }
+                if (!empty($value['pairWitthTag'])) {
+                    $updateData['pairWitthTag'] = $value['pairWitthTag'];
+                }
+                if (!empty($value['remarks'])) {
+                    $updateData['remarks'] = $value['remarks'];
+                }
+                if (!empty($value['recommendation'])) {
+                    $updateData['recommendation'] = $value['recommendation'];
+                }
+                if (!empty($value['position_top'])) {
+                    $updateData['position_top'] = $value['position_top'];
+                }
+                if (!empty($value['position_left'])) {
+                    $updateData['position_left'] = $value['position_left'];
+                }
+
                 if(@$value['position_top'] || $value['position_left']){
                     $updateData['isApp'] = 1;
                 }
-                Log::info($updateData);
                 Checks::where('id',$value['id'])->update($updateData);
                 if ($value['suspected_hazmat']) {
                     Log::info($value['suspected_hazmat']);
