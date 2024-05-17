@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Session;
 use Throwable;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use setasign\Fpdi\Fpdi;
 
 class ProjectsController extends Controller
 {
@@ -195,6 +196,47 @@ class ProjectsController extends Controller
         Projects::where(['id' => $inputData['id']])->update($inputData);
         return response()->json(['isStatus' => true, 'message' => 'successfully save details !!']);
     }
+
+    public function checkLaboratoryFile(Request $request)
+    {
+        // Get all files from the request
+        $files = $request->allFiles();
+
+        // Check if there are any files in the request
+        if (!empty($files)) {
+            foreach ($files as $inputName => $file) {
+                // Check file type if needed
+                $mimeType = $file->getMimeType();
+
+                // Example: Check if it's a PDF file
+                if ($mimeType === 'application/pdf') {
+                    try {
+                        // Initialize PDF instance
+                        $pdf = new Fpdi('L');
+
+                        // Get the file path
+                        $filePath = $file->getPathName();
+
+                        // Set source file
+                        $pdf->setSourceFile($filePath);
+
+                        // Return success response
+                        return response()->json(["isStatus" => true, 'message' => 'File processed successfully.'], 200);
+                    } catch (Throwable $e) {
+                        // Return error response if file cannot be processed
+                        return response()->json(["isStatus" => false, 'message' => 'Error processing the file.'], 500);
+                    }
+                } else {
+                    // Return error response if file type is not supported
+                    return response()->json(["isStatus" => false, 'message' => 'Unsupported file type.'], 415);
+                }
+            }
+        } else {
+            // Return error response if no file is found in the request
+            return response()->json(["isStatus" => false, 'message' => 'No file uploaded.'], 400);
+        }
+    }
+
 
     public function assignProject(AssignProjectRequest $request)
     {
@@ -372,7 +414,7 @@ class ProjectsController extends Controller
         $htmllist = view('check.checkAddModal', compact('hazmats'))->render();
         $labresult = view('check.labResultModal', compact('labs', 'hazmats'))->render();
 
-        return response()->json(['html' => $htmllist, 'labResult'=>$labresult, 'hazmatIds' => $hazmatIds, "check" => $check]);
+        return response()->json(['html' => $htmllist, 'labResult' => $labresult, 'hazmatIds' => $hazmatIds, "check" => $check]);
     }
 
     public function getHazmatEquipment($hazmat_id)
@@ -490,7 +532,7 @@ class ProjectsController extends Controller
                         "check_type" => $inputData['type']
                     ];
 
-                    if(isset($modelmakepart[$value])) {
+                    if (isset($modelmakepart[$value])) {
                         $documentFile = MakeModel::select('id', 'document1', 'document2')->find($modelmakepart[$value]);
                     } else {
                         $documentFile = null;
@@ -562,7 +604,7 @@ class ProjectsController extends Controller
                         CheckHasHazmat::create($hazmatData);
                     }
 
-                    if(isset($IHM_part[$value])){
+                    if (isset($IHM_part[$value])) {
 
                         $labResultData = [
                             "project_id" => $inputData['project_id'],
@@ -575,13 +617,12 @@ class ProjectsController extends Controller
                             "lab_remarks" => $lab_remarks[$value]
                         ];
 
-                        if(!empty($labid[$value])){
-                            LabResult::updateOrCreate(['id'=>$labid[$value]], $labResultData);
+                        if (!empty($labid[$value])) {
+                            LabResult::updateOrCreate(['id' => $labid[$value]], $labResultData);
                         } else {
                             LabResult::create($labResultData);
                         }
                     }
-
                 }
             }
 

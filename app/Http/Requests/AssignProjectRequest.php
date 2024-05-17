@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\PDFPasswordProtected;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AssignProjectRequest extends FormRequest
@@ -26,6 +27,10 @@ class AssignProjectRequest extends FormRequest
             'user_id' => 'required',
             'assign_date' => 'required',
             'end_date' => 'required'
+            // 'project.leb1LaboratoryResult1' => ['file', new PDFPasswordProtected()]
+            // 'project.leb1LaboratoryResult2' => ['file', new PDFPasswordProtected()],
+            // 'project.leb2LaboratoryResult1' => ['file', new PDFPasswordProtected()],
+            // 'project.leb2LaboratoryResult2' => ['file', new PDFPasswordProtected()],
         ];
     }
 }

@@ -373,216 +373,55 @@
             });
         });
 
-        // $('#leb1LaboratoryResult1').on('change', function(event) {
-        //     var file = event.target.files[0];
-        //     if (file) {
-        //         var reader = new FileReader();
-        //         reader.onload = function(e) {
-        //             var arrayBuffer = e.target.result;
-        //             var uint8Array = new Uint8Array(arrayBuffer);
-
-        //             // Function to calculate entropy
-        //             function calculateEntropy(data) {
-        //                 var len = data.length;
-        //                 var frequencies = {};
-        //                 for (var i = 0; i < len; i++) {
-        //                     var byte = data[i];
-        //                     if (frequencies[byte] === undefined) {
-        //                         frequencies[byte] = 1;
-        //                     } else {
-        //                         frequencies[byte]++;
-        //                     }
-        //                 }
-
-        //                 var entropy = 0;
-        //                 for (var byte in frequencies) {
-        //                     var frequency = frequencies[byte] / len;
-        //                     entropy -= frequency * Math.log2(frequency);
-        //                 }
-        //                 return entropy;
-        //             }
-
-        //             // Threshold for determining encryption (8 is the max entropy for 8-bit data)
-        //             var entropyThreshold = 7.5;
-        //             var entropy = calculateEntropy(uint8Array);
-
-        //             console.log('File entropy:', entropy);
-        //             if (entropy > entropyThreshold) {
-        //                 alert('The file appears to be encrypted.');
-        //             } else {
-        //                 alert('The file does not appear to be encrypted.');
-        //             }
-        //         };
-        //         reader.readAsArrayBuffer(file);
-        //     }
-        // });
-
-        // $('#leb1LaboratoryResult1').on('change', function(event) {
-        //     const file = event.target.files[0];
-        //     if (file) {
-        //         const reader = new FileReader();
-        //         reader.onload = function(e) {
-        //             const content = e.target.result;
-        //             const entropy = calculateEntropy(content);
-        //             const isEncrypted = entropy > 7.8; // Adjusted threshold for higher accuracy
-
-        //             alert(isEncrypted ? 'The file appears to be encrypted.' :
-        //                 'The file does not appear to be encrypted.');
-        //         };
-        //         reader.readAsArrayBuffer(file);
-        //     }
-        // });
-
         // document.getElementById('leb1LaboratoryResult1').addEventListener('change', function(event) {
-        //     const file = event.target.files[0];
-        //     if (file) {
-        //         const reader = new FileReader();
-        //         reader.onload = function(e) {
-        //             const arrayBuffer = e.target.result;
-        //             const byteArray = new Uint8Array(arrayBuffer);
-
-        //             if (isEncrypted(byteArray)) {
-        //                 alert('This file appears to be encrypted and cannot be uploaded.');
-        //                 event.target.value = ''; // Reset the file input
-        //             } else {
-        //                 // Proceed with file upload
-        //                 console.log('File is not encrypted. Proceeding with upload.');
-        //             }
-        //         };
-        //         reader.readAsArrayBuffer(file);
-        //     }
+        //     handleFileUpload(event);
         // });
 
-        // function isEncrypted(byteArray) {
-        //     // Calculate entropy
-        //     const entropy = calculateEntropy(byteArray);
-        //     const threshold = 7.8; // Set an entropy threshold for encrypted files
-
-        //     // Analyze the content
-        //     return entropy > threshold;
-        // }
-
-        // function calculateEntropy(byteArray) {
-        //     const frequency = {};
-        //     let length = byteArray.length;
-
-        //     // Calculate frequency of each byte value
-        //     for (let i = 0; i < length; i++) {
-        //         const byte = byteArray[i];
-        //         if (frequency[byte] === undefined) {
-        //             frequency[byte] = 1;
-        //         } else {
-        //             frequency[byte]++;
-        //         }
-        //     }
-
-        //     // Calculate entropy
-        //     let entropy = 0;
-        //     for (let byte in frequency) {
-        //         const p = frequency[byte] / length;
-        //         entropy -= p * Math.log2(p);
-        //     }
-
-        //     return entropy;
-        // }
-
-
-
-        // document.getElementById('leb1LaboratoryResult1').addEventListener('change', function(event) {
-        //     const file = event.target.files[0];
-        //     if (file) {
-        //         const reader = new FileReader();
-        //         reader.onload = function(e) {
-        //             const arrayBuffer = e.target.result;
-        //             const byteArray = new Uint8Array(arrayBuffer);
-
-        //             if (isEncryptedPDF(byteArray)) {
-        //                 alert('This PDF file appears to be encrypted and cannot be uploaded.');
-        //                 event.target.value = ''; // Reset the file input
-        //             } else {
-        //                 // Proceed with file upload
-        //                 console.log('PDF file is not encrypted. Proceeding with upload.');
-        //             }
-        //         };
-        //         reader.readAsArrayBuffer(file);
-        //     }
+        // document.getElementById('leb1LaboratoryResult2').addEventListener('change', function(event) {
+        //     handleFileUpload(event);
         // });
 
-        // function isEncryptedPDF(byteArray) {
-        //     // Check for PDF magic number (first 4 bytes)
-        //     const pdfMagicNumber = [0x25, 0x50, 0x44, 0x46]; // '%PDF'
-        //     for (let i = 0; i < pdfMagicNumber.length; i++) {
-        //         if (byteArray[i] !== pdfMagicNumber[i]) {
-        //             return true; // Not a PDF file
-        //         }
-        //     }
-
-        //     // Check for encryption marker
-        //     const encryptionMarker = '/Encrypt';
-        //     const pdfText = new TextDecoder().decode(byteArray);
-        //     return pdfText.includes(encryptionMarker);
-        // }
-
-
-        // document.getElementById('leb1LaboratoryResult1').addEventListener('change', function(event) {
-        //     const file = event.target.files[0];
-        //     if (file) {
-        //         const reader = new FileReader();
-        //         reader.onload = function(e) {
-        //             const arrayBuffer = e.target.result;
-        //             const uint8Array = new Uint8Array(arrayBuffer);
-
-        //             if (isEncrypted(uint8Array, file.type)) {
-        //                 alert('This file appears to be encrypted and cannot be uploaded.');
-        //                 event.target.value = ''; // Reset the file input
-        //             } else {
-        //                 // Proceed with file upload
-        //                 console.log('File is not encrypted. Proceeding with upload.');
-        //             }
-        //         };
-        //         reader.readAsArrayBuffer(file);
-        //     }
+        // document.getElementById('leb2LaboratoryResult1').addEventListener('change', function(event) {
+        //     handleFileUpload(event);
         // });
 
-        // function isEncrypted(uint8Array, fileType) {
-        //     if (fileType === 'application/pdf') {
-        //         return isPdfEncrypted(uint8Array);
-        //     }
-        //     // Add checks for other file types here if needed
-        //     return false;
-        // }
-
-        // function isPdfEncrypted(uint8Array) {
-        //     // Check for PDF encryption by looking for /Encrypt keyword
-        //     const text = new TextDecoder().decode(uint8Array);
-        //     return /\/Encrypt\s/.test(text);
-        // }
-
-
-
-        // document.getElementById('leb1LaboratoryResult1').addEventListener('change', function(event) {
-        //     const file = event.target.files[0];
-        //     if (file) {
-        //         const reader = new FileReader();
-        //         reader.onload = function(e) {
-        //             const arrayBuffer = e.target.result;
-        //             const uint8Array = new Uint8Array(arrayBuffer);
-
-        //             if (isPdfEncrypted(uint8Array)) {
-        //                 alert('This PDF file is encrypted and cannot be uploaded.');
-        //                 event.target.value = ''; // Reset the file input
-        //             } else {
-        //                 // Proceed with file upload
-        //                 console.log('File is not encrypted. Proceeding with upload.');
-        //             }
-        //         };
-        //         reader.readAsArrayBuffer(file);
-        //     }
+        // document.getElementById('leb2LaboratoryResult2').addEventListener('change', function(event) {
+        //     handleFileUpload(event);
         // });
 
-        // function isPdfEncrypted(uint8Array) {
-        //     const text = new TextDecoder().decode(uint8Array);
-        //     return /\/Encrypt\s/.test(text);
-        // }
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const arrayBuffer = e.target.result;
+                    const uint8Array = new Uint8Array(arrayBuffer);
+
+                    if (isEncrypted(uint8Array, file.type)) {
+                        swal({
+                            title: "File Upload Error!",
+                            text: "This file appears to be encrypted and cannot be uploaded.",
+                            timer: 5000
+                        });
+                        event.target.value = ''; // Reset the file input
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        }
+
+        function isEncrypted(uint8Array, fileType) {
+            if (fileType === 'application/pdf') {
+                return isPdfEncrypted(uint8Array);
+            }
+            // Add checks for other file types here if needed
+            return false;
+        }
+
+        function isPdfEncrypted(uint8Array) {
+            // Check for PDF encryption by looking for /Encrypt keyword
+            const text = new TextDecoder().decode(uint8Array);
+            return /\/Encrypt\s/.test(text);
+        }
     </script>
 @endpush('js')

@@ -56,19 +56,24 @@
                             @endcan
                             <div class="card-body">
                                 <div class="campaign-img">
-                                    <img src="{{ $client->manager_logo }}" onerror="this.onerror=null;this.src='{{ asset('assets/images/logo.png') }}';" alt="user" class="user-avatar-xl rounded-circle">
+                                    <img src="{{ $client->manager_logo }}"
+                                        onerror="this.onerror=null;this.src='{{ asset('assets/images/logo.png') }}';"
+                                        alt="user" class="user-avatar-xl rounded-circle">
                                 </div>
                                 <div class="campaign-info">
                                     <h3 class="mb-1 line-clamp">{{ ucfirst($client->manager_name) ?? '' }}</h3>
                                     {{-- <p class="mb-3">Total Project:<span class="text-dark font-medium ml-2">{{ $client->projects_count ?? 0 }}</span>
                                     </p> --}}
                                     @if (!empty($client->manager_contact_person_name))
-                                        <p class="mb-1 line-clamp">Contact Person: <span class="text-dark font-medium ml-2">{{ $client->manager_contact_person_name ?? '' }}</span>
+                                        <p class="mb-1 line-clamp">Contact Person: <span
+                                                class="text-dark font-medium ml-2">{{ $client->manager_contact_person_name ?? '' }}</span>
                                         </p>
                                     @else
-                                        <p class="mb-1 line-clamp">Contact Person: <span class="text-dark font-medium ml-2">-</span></p>
+                                        <p class="mb-1 line-clamp">Contact Person: <span
+                                                class="text-dark font-medium ml-2">-</span></p>
                                     @endif
-                                    <p class="line-clamp">Ship owner.:<span class="text-dark font-medium ml-2">{{ ucwords($client->owner_name) ?? '' }}</span>
+                                    <p class="line-clamp">Ship owner.:<span
+                                            class="text-dark font-medium ml-2">{{ ucwords($client->owner_name) ?? '' }}</span>
                                     </p>
                                     @can('clients.edit')
                                         <a href="{{ route('clients.edit', ['id' => $client->id]) }}" rel="noopener noreferrer"
@@ -133,40 +138,35 @@
                 let deleteUrl = "{{ route('clients.delete', ':id') }}".replace(':id', recordId);
                 var $deleteButton = $(this);
 
-                // Show confirmation dialog
-                if (confirm("Are you sure you want to delete this client?")) {
-                    // User confirmed, send AJAX request
-                    $.ajax({
-                        url: deleteUrl,
-                        method: 'GET',
-                        success: function(response) {
-
-                            if (response.isStatus) {
-                                // $deleteButton.parents('.clientShowCard').first().remove();
-                                $deleteButton.closest('.clientShowCard').remove();
-                            }
-
-                            let successMessage = `
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    ${response.message}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>`;
-
-                            $('.showSuccessMsg').html(successMessage);
-
-                            // Display the .showSuccessMsg element
-                            $('.showSuccessMsg').fadeIn().delay(20000).fadeOut();
-                        },
-                        error: function(xhr, status, error) {
-                            // Handle AJAX errors
-                            alert("Error deleting record: " + error);
+                swal({
+                        title: "Are you sure?",
+                        text: "Are you sure you want to delete this client?",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Yes, delete it!",
+                        closeOnConfirm: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            $.ajax({
+                                url: deleteUrl,
+                                method: 'GET',
+                                success: function(response) {
+                                    if (response.isStatus) {
+                                        $deleteButton.closest('.clientShowCard').remove();
+                                        swal("Deleted!", `${response.message}`, "success");
+                                    } else {
+                                        swal("Unable to Delete!", `${response.message}`, "error");
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    alert("Error deleting record: " + error);
+                                }
+                            });
                         }
                     });
-                }
             });
-
         });
     </script>
 @endpush
