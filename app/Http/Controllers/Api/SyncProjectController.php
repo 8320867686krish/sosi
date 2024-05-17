@@ -273,10 +273,8 @@ class SyncProjectController extends Controller
         }
 
         if (@$post['updatedCheck']) {
-            foreach ($post['updatedCheck'] as $key=>$value) {
-                if(@$value){
-                    $updateData[$key] = $value;
-                }
+            foreach ($post['updatedCheck'] as $value) {
+                $updateData = $post['updatedCheck'];
                
                 if(@$value['position_top'] || $value['position_left']){
                     $updateData['isApp'] = 1;
