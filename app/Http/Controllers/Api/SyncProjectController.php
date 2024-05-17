@@ -279,6 +279,9 @@ class SyncProjectController extends Controller
                 if (!empty($value['equipment'])) {
                     $updateData['equipment'] = $value['equipment'];
                 }
+                if (!empty($value['type'])) {
+                    $updateData['type'] = $value['type'];
+                }
                 if (!empty($value['component'])) {
                     $updateData['component'] = $value['component'];
                 }
