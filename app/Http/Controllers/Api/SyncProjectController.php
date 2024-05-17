@@ -281,6 +281,7 @@ class SyncProjectController extends Controller
                 if(@$value['position_top'] || $value['position_left']){
                     $updateData['isApp'] = 1;
                 }
+                Log::info($updateData);
                 Checks::where('id',$value['id'])->update($updateData);
                 if ($value['suspected_hazmat']) {
                     Log::info($value['suspected_hazmat']);
