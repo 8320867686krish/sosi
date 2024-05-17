@@ -274,7 +274,21 @@ class SyncProjectController extends Controller
 
         if (@$post['updatedCheck']) {
             foreach ($post['updatedCheck'] as $value) {
-                Log::info($value);
+                $updateData['equipment'] = $value['equipment'] ?? "";
+                $updateData['component'] = $value['component'] ?? "";
+                $updateData['location'] = $value['location'] ?? "";
+                $updateData['location'] = $value['location'] ?? "";
+
+                $updateData['pairWitthTag'] = $value['pairWitthTag'] ?? "";
+                $updateData['remarks'] = $value['remarks'] ?? "";
+                $updateData['recommendation'] = $value['recommendation'] ?? "";
+                $updateData['position_top'] = $value['position_top'] ?? "";
+                $updateData['position_left'] = $value['position_left'] ?? "";
+
+                if(@$value['position_top'] || $value['position_left']){
+                    $updateData['isApp'] = 1;
+                }
+                Checks::where('id',$value['id'])->update($updateData);
                 if ($value['suspected_hazmat']) {
                     Log::info($value['suspected_hazmat']);
                     $suspectedHazmat = explode(',', $value['suspected_hazmat']); // Corrected syntax: $value['suspected_hazmat'] instead of $value('suspected_hazmat')
