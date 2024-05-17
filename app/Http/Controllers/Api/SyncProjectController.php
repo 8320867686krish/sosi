@@ -274,6 +274,7 @@ class SyncProjectController extends Controller
 
         if (@$post['updatedCheck']) {
             foreach ($post['updatedCheck'] as $value) {
+                Log::info($value);
                 if ($value['suspected_hazmat']) {
                     Log::info($value['suspected_hazmat']);
                     $suspectedHazmat = explode(',', $value['suspected_hazmat']); // Corrected syntax: $value['suspected_hazmat'] instead of $value('suspected_hazmat')
