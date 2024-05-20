@@ -5,7 +5,8 @@
     </div>
 </div>
 <div class="row mt-4">
-  <form method="get" action="">
-    <
+  <form method="get" action="{{url('genratePdf/'.$project->id)}}">
+    <input type="text" value="{{$project->id}}"/>
+    <button type="submit">Submit</button>
   </form>
 </div>
