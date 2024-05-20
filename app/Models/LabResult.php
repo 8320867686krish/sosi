@@ -9,7 +9,7 @@ class LabResult extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["project_id", "check_id", "hazmat_id", "IHM_part", "unit", "number", "total", "lab_remarks"];
+    protected $fillable = ["project_id", "check_id", "hazmat_id", "type", "IHM_part", "unit", "number", "total", "lab_remarks"];
 
     protected $hidden = ['created_at', 'updated_at'];
 

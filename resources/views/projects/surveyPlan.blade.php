@@ -255,7 +255,6 @@
                     </div>
                     <div id="collapseNine" class="collapse" aria-labelledby="headingNine" data-parent="#accordion3">
                         <div class="card-body">
-
                             <div class="row">
                                 <input type="hidden" name="id" value="{{ $project->id ?? '' }}">
                                 <div class="form-group col-6">

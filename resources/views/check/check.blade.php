@@ -197,7 +197,7 @@
                             <textarea class="form-control remarksTextarea" rows="2" placeholder="Remark..."></textarea>
                         </div>
                     </div>
-                   
+
                 </div>
             </div>
         </div>
@@ -206,11 +206,10 @@
             <div class="col-12 col-md-12 col-lg-12 cloneIHMTableDiv card" id="cloneIHMTableDiv">
                 <label for="ihm_table" id="ihmTableLable" class="mr-5 mt-3 card-header ihmTableLable"></label>
                 <div class="row card-body">
-                    <div class="col-6">
+                    <div class="col-12 IHMTypeDiv">
                         <div class="form-group mb-3">
-                            {{-- <label for="IHM_part">IHM Part</label> --}}
-                            <select class="form-control IHM_part">
-                                <option value="">Select IHM Part</option>
+                            <select class="form-control IHM_type">
+                                <option value="">Select Type</option>
                                 <option value="Contained">Contained</option>
                                 <option value="PCHM">PCHM</option>
                                 <option value="Not Contained">Not Contained</option>
@@ -218,19 +217,29 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-6 IHMPartDiv">
+                        <div class="form-group">
+                            <select class="form-control IHM_part">
+                                <option value="">Select IHM Part</option>
+                                <option value="IHMPart1">IHM Part 1</option>
+                                <option value="IHMPart2">IHM Part 2</option>
+                                <option value="IHMPart3">IHM Part 3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-4">
                         <div class="form-group mb-3">
                             {{-- <label for="unit">Unit</label> --}}
                             <input type="text" class="form-control unit" placeholder="Unit...">
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-4">
                         <div class="form-group">
                             {{-- <label for="number">Number</label> --}}
                             <input type="text" class="form-control number" placeholder="Number...">
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-4">
                         <div class="form-group mb-3">
                             {{-- <label for="total"> (KG.)</label> --}}
                             <input type="text" class="form-control total" placeholder="Total (KG.)">
@@ -339,23 +348,26 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                <div class="col-12 col-md-12 mb-4" style="background: #efeff6;border: 1px solid #efeff6;">
-                                    <div class="pt-4">
-                                        <h5 class="text-center mb-4" style="color:#757691">Document Analysis Results</h5>
-                                        <div class="  mb-4 col-12" id="showTableTypeDiv">
+                                    <div class="col-12 col-md-12 mb-4"
+                                        style="background: #efeff6;border: 1px solid #efeff6;">
+                                        <div class="pt-4">
+                                            <h5 class="text-center mb-4" style="color:#757691">Document Analysis Results
+                                            </h5>
+                                            <div class="mb-4 col-12" id="showTableTypeDiv">
 
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="col-12 col-md-12 mb-4" id="labResultSection" style="background: #efeff6;border: 1px solid #efeff6;">
-                                    <div  class="pt-4">
-                                        <h5 class="text-center" style="color:#757691">Lab Result</h5>
-                                        <div class=" mb-4 col-12" id="showLabResult">
+                                    <div class="col-12 col-md-12 mb-4" id="labResultSection"
+                                        style="background: #efeff6;border: 1px solid #efeff6;">
+                                        <div class="pt-4">
+                                            <h5 class="text-center" style="color:#757691">Lab Result</h5>
+                                            <div class=" mb-4 col-12" id="showLabResult">
 
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 </div>
 
                                 <div class="col-6">
@@ -577,6 +589,20 @@
             }
         }
 
+        function handleIHMTypeChange(selectedValue, cloneTableTypeDiv) {
+            if (!selectedValue || !cloneTableTypeDiv) {
+                console.error("Missing parameters for handleIHMTypeChange function");
+                return;
+            }
+
+            const targetElements = cloneTableTypeDiv.find(".IHMPartDiv, .IHMTypeDiv");
+            const isContainedOrPCHM = selectedValue === "Contained" || selectedValue === "PCHM";
+            const newClass = isContainedOrPCHM ? "col-6" : "col-12";
+
+            targetElements.removeClass("col-12 col-6").addClass(newClass);
+            cloneTableTypeDiv.find(".IHMPartDiv").toggle(isContainedOrPCHM);
+        }
+
         function labResult(selectedValue, selectedText) {
 
             let clonedElement = $('#cloneIHMTableDiv').clone();
@@ -584,6 +610,9 @@
             clonedElement.attr("id", "cloneIHMTableDiv" + selectedValue);
 
             clonedElement.find('label.ihmTableLable').text(selectedText);
+
+            clonedElement.find('select.IHM_type').attr('id', `IHM_type_${selectedValue}`).attr('name',
+                `IHM_type[${selectedValue}]`);
 
             clonedElement.find('select.IHM_part').attr('id', `IHM_part_${selectedValue}`).attr('name',
                 `IHM_part[${selectedValue}]`);
@@ -607,6 +636,8 @@
                 id: `lab_remarks_${selectedValue}`,
                 name: `lab_remarks[${selectedValue}]`
             });
+
+            clonedElement.find(`.IHMPartDiv`).hide();
 
             // // Append cloned element to showTableTypeDiv
             $('#showLabResult').append(clonedElement);
@@ -729,7 +760,7 @@
 
             $(document).on("click", "#editCheckbtn", function(event) {
                 event
-            .stopPropagation(); // Prevents the click event from bubbling up to the parent .dot element
+                    .stopPropagation(); // Prevents the click event from bubbling up to the parent .dot element
                 let checkDataId = $(this).attr('data-dotId');
                 let dotElement = $(`#${checkDataId}`)[0];
                 openAddModalBox(dotElement);
@@ -932,6 +963,12 @@
                 const selectedValue = $(this).val();
                 const cloneTableTypeDiv = $(this).closest(".cloneTableTypeDiv");
                 handleTableTypeChange(selectedValue, cloneTableTypeDiv);
+            });
+
+            $("#showLabResult").on("change", ".cloneIHMTableDiv  select.IHM_type", function() {
+                const selectedValue = $(this).val();
+                const cloneTableTypeDiv = $(this).closest(".cloneIHMTableDiv");
+                handleIHMTypeChange(selectedValue, cloneTableTypeDiv);
             });
 
             $(document).on('change', '.documentLoadCheckbox', function() {
