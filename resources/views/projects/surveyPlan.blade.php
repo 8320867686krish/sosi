@@ -115,8 +115,8 @@
                                         class="form-control form-control-lg @error('leb1LaboratoryResult1') is-invalid @enderror"
                                         id="leb1LaboratoryResult1"
                                         value="{{ old('leb1LaboratoryResult1', $project->leb1LaboratoryResult1 ?? '') }}"
-                                        name="project[leb1LaboratoryResult1]" autocomplete="off"
-                                        onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        name="project[leb1LaboratoryResult1]" autocomplete="off" {{ $readonly }}
+                                        onchange="removeInvalidClass(this)">
                                     @if ($project->leb1LaboratoryResult1)
                                         <label class="mt-2 docleb1LaboratoryResult1">
                                             <a href="{{ asset('images/labResult/' . $project->id . '/' . $project->leb1LaboratoryResult1) }}"
@@ -129,7 +129,7 @@
                                             </a>
                                         </label>
                                     @endif
-
+                                    <div class="invalid-feedback error" id="leb1LaboratoryResult1Error"></div>
                                 </div>
 
                                 <div class="form-group col-6 mb-4">
@@ -152,6 +152,7 @@
                                             </a>
                                         </label>
                                     @endif
+                                    <div class="invalid-feedback error" id="leb1LaboratoryResult2Error"></div>
                                 </div>
 
                             </div>
@@ -213,6 +214,7 @@
                                             </a>
                                         </label>
                                     @endif
+                                    <div class="invalid-feedback error" id="leb2LaboratoryResult1Error"></div>
                                 </div>
 
 
@@ -236,9 +238,9 @@
                                             </a>
                                         </label>
                                     @endif
+                                    <div class="invalid-feedback error" id="leb2LaboratoryResult2Error"></div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -302,8 +304,48 @@
         </div>
     </form>
 </div>
+
 @push('js')
+
     <script>
+        function uploadFileCheck(fileInputId, errorMsgId) {
+            var fileInput = $(`#${fileInputId}`)[0];
+            var file = fileInput.files[0];
+
+            if (!file) {
+                console.log('Please select a file.');
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append(fileInputId, file);
+
+            $.ajax({
+                url: "{{ route('checkLaboratoryFile') }}",
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    console.log(response.isStatus);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    let errorMessage = 'An error occurred: ';
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                        errorMessage += jqXHR.responseJSON.message;
+                    } else {
+                        errorMessage += errorThrown;
+                    }
+                    $(`#${errorMsgId}`).empty().text(errorMessage).show();
+
+                    fileInput.value = '';
+                }
+            });
+        }
+
         $(".removeDoc").click(function(e) {
             var type = $(this).attr('data-filed');
             var project_id = $("#project_id").val();
@@ -341,7 +383,6 @@
                         swal("Cancelled", "Your imaginary file is safe :)", "error");
                     }
                 });
-
         });
 
         $('#SurveyForm').submit(function(e) {
@@ -373,6 +414,22 @@
             });
         });
 
+        $('#leb1LaboratoryResult1').on('change', function() {
+            uploadFileCheck("leb1LaboratoryResult1", "leb1LaboratoryResult1Error");
+        });
+
+        $('#leb1LaboratoryResult2').on('change', function() {
+            uploadFileCheck("leb1LaboratoryResult2", "leb1LaboratoryResult2Error");
+        });
+
+        $('#leb2LaboratoryResult1').on('change', function() {
+            uploadFileCheck("leb2LaboratoryResult1", "leb2LaboratoryResult1Error");
+        });
+
+        $('leb2LaboratoryResult2').on('change', function() {
+            uploadFileCheck("leb2LaboratoryResult2", "leb2LaboratoryResult2Error");
+        });
+
         // document.getElementById('leb1LaboratoryResult1').addEventListener('change', function(event) {
         //     handleFileUpload(event);
         // });
@@ -389,39 +446,39 @@
         //     handleFileUpload(event);
         // });
 
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const arrayBuffer = e.target.result;
-                    const uint8Array = new Uint8Array(arrayBuffer);
+        // function handleFileUpload(event) {
+        //     const file = event.target.files[0];
+        //     if (file) {
+        //         const reader = new FileReader();
+        //         reader.onload = function(e) {
+        //             const arrayBuffer = e.target.result;
+        //             const uint8Array = new Uint8Array(arrayBuffer);
 
-                    if (isEncrypted(uint8Array, file.type)) {
-                        swal({
-                            title: "File Upload Error!",
-                            text: "This file appears to be encrypted and cannot be uploaded.",
-                            timer: 5000
-                        });
-                        event.target.value = ''; // Reset the file input
-                    }
-                };
-                reader.readAsArrayBuffer(file);
-            }
-        }
+        //             if (isEncrypted(uint8Array, file.type)) {
+        //                 swal({
+        //                     title: "File Upload Error!",
+        //                     text: "This file appears to be encrypted and cannot be uploaded.",
+        //                     timer: 5000
+        //                 });
+        //                 event.target.value = ''; // Reset the file input
+        //             }
+        //         };
+        //         reader.readAsArrayBuffer(file);
+        //     }
+        // }
 
-        function isEncrypted(uint8Array, fileType) {
-            if (fileType === 'application/pdf') {
-                return isPdfEncrypted(uint8Array);
-            }
-            // Add checks for other file types here if needed
-            return false;
-        }
+        // function isEncrypted(uint8Array, fileType) {
+        //     if (fileType === 'application/pdf') {
+        //         return isPdfEncrypted(uint8Array);
+        //     }
+        //     // Add checks for other file types here if needed
+        //     return false;
+        // }
 
-        function isPdfEncrypted(uint8Array) {
-            // Check for PDF encryption by looking for /Encrypt keyword
-            const text = new TextDecoder().decode(uint8Array);
-            return /\/Encrypt\s/.test(text);
-        }
+        // function isPdfEncrypted(uint8Array) {
+        //     // Check for PDF encryption by looking for /Encrypt keyword
+        //     const text = new TextDecoder().decode(uint8Array);
+        //     return /\/Encrypt\s/.test(text);
+        // }
     </script>
 @endpush('js')

@@ -107,7 +107,7 @@ Route::middleware('auth')->group(function () {
             Route::get('getManufacturerBasedDocumentData/{hazmat_id}/{equipment}/{manufacturer}', 'getManufacturerBasedDocumentData')->name('getDocumentData');
             Route::get('getPartBasedDocumentFile/{id}', 'getPartBasedDocumentFile')->name('getPartBasedDocumentFile');
 
-            Route::get('checkLaboratoryFile', 'checkLaboratoryFile')->name('checkLaboratoryFile');
+            Route::post('checkLaboratoryFile', 'checkLaboratoryFile')->name('checkLaboratoryFile');
         });
 
         Route::get('genratePdf', [ReportContoller::class, 'genratePdf'])->name('generateDocx');
