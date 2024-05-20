@@ -55,8 +55,7 @@
             </div>
             <div class="col-12 lab_remarks">
                 <div class="form-group mb-3">
-                    <textarea class="form-control labRemarksTextarea" rows="2" placeholder="Remark..."
-                              id="lab_remarks_{{ $lab->hazmat_id }}" name="lab_remarks[{{ $lab->hazmat_id }}]">{{ $lab->lab_remarks ?? '' }}</textarea>
+                    <textarea class="form-control labRemarksTextarea" rows="2" placeholder="Remark..." id="lab_remarks_{{ $lab->hazmat_id }}" name="lab_remarks[{{ $lab->hazmat_id }}]">{{ $lab->lab_remarks ?? '' }}</textarea>
                 </div>
             </div>
 
