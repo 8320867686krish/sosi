@@ -115,6 +115,10 @@
                             <a href="#attachment_list"><span class="icon"><i
                                         class="fas fa-fw fa-briefcase"></i></span>Attachment</a>
                         </li>
+                        <li>
+                            <a href="#report_list"><span class="icon"><i
+                                        class="fas fa-fw fa-briefcase"></i></span>Report</a>
+                        </li>
 
                     </ul>
                 </div>
@@ -434,6 +438,9 @@
 
         <div class="main-content container-fluid p-0" id="attachment_list">
             @include('projects.attachment')
+        </div>
+        <div class="main-content container-fluid p-0" id="report_list">
+            @include('projects.repoert')
         </div>
 
         <div class="modal fade" data-backdrop="static" id="checkDataAddModal" tabindex="-1" role="dialog"
@@ -813,11 +820,12 @@
                     const viewport = page.getViewport({
                         scale: 1
                     });
+              
+
                     const canvas = document.createElement('canvas');
                     const context = canvas.getContext('2d');
                     canvas.width = viewport.width;
                     canvas.height = viewport.height;
-
                     $(".dashboard-spinner").show();
 
                     await page.render({
@@ -828,28 +836,49 @@
                     const img = document.createElement('img');
                     img.src = imageData;
                     img.classList.add('pdf-image'); // Add a class to the image
+
                     const container = document.getElementById('img-container');
-                    container.appendChild(img);
+                    var pdfContainer = document.createElement('div');
+                     pdfContainer.id = 'pdfContainer' + i; // Set the ID for the new div
+
+                     container.appendChild(pdfContainer);
+                    pdfContainer.appendChild(img);
+                    img.onload = function() {
+                        var options = {
+                            currentPage:i,
+                            deleteMethod: 'doubleClick',
+                            handles: true,
+                            area: {
+                                strokeStyle: 'green',
+                                lineWidth: 2
+                            },
+                            onSelectEnd: function(image, selection) {
+                                console.log("Selection End:", selection);
+                            },
+                            initAreas: []
+                        };
+                        $(this).areaSelect(options);
+                    };
                     $(".dashboard-spinner").hide();
                 }
 
                 // Bind event listeners after images are loaded
-                $('.pdf-image').on('load', function() {
-                    var options = {
-                        deleteMethod: 'doubleClick',
-                        handles: true,
-                        area: {
-                            strokeStyle: 'green',
-                            lineWidth: 2
-                        },
+                // $('.pdf-image').on('load', function() {
+                //     var options = {
+                //         deleteMethod: 'doubleClick',
+                //         handles: true,
+                //         area: {
+                //             strokeStyle: 'green',
+                //             lineWidth: 2
+                //         },
 
-                        onSelectEnd: function(image, selection) {
-                            console.log("Selection End:", selection);
-                        },
-                        initAreas: []
-                    };
-                    $(this).areaSelect(options);
-                });
+                //         onSelectEnd: function(image, selection) {
+                //             console.log("Selection End:", selection);
+                //         },
+                //         initAreas: []
+                //     };
+                //     $(this).areaSelect(options);
+                // });
             };
             fileReader.readAsArrayBuffer(pdfFile);
             $('#pdfModal').modal('show');
@@ -956,6 +985,7 @@
                 $('#check_list').hide();
                 $('#assign_project').hide();
                 $("#attachment_list").hide();
+                $("#report_list").hide();
                 $('#create_vscp').show();
                 $('#laboratory_list').hide();
             } else {
@@ -964,6 +994,7 @@
                 $('#assign_project').hide();
                 $('#create_vscp').hide();
                 $('#laboratory_list').hide();
+                $("#report_list").hide();
                 $("#attachment_list").hide();
             }
 

@@ -110,7 +110,7 @@ class ReportContoller extends Controller
         // Return a binary response with the merged PDF file as a download
         return new BinaryFileResponse(public_path('merged.pdf'));
     }
-    public function genratePdf()
+    public function genratePdf($project_id)
     {
         // Initialize FPDI instance
         $pdf = new Fpdi('L');
@@ -143,7 +143,7 @@ class ReportContoller extends Controller
 
 
         }
-        $pdfFolder = public_path('images/attachment/1/');
+        $pdfFolder = public_path('images/attachment/'.$project_id."/");
         $pdfFiles = glob($pdfFolder . '*.pdf');
         foreach ($pdfFiles as $pdfFile) {
             // Set source file for FPDI

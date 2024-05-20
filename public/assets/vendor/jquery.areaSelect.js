@@ -4,7 +4,6 @@
  * Updated by gongshw on 16/7/30.
  */
 (function ($, undefined) {
-
     console.log('jquery.areaSelect.js by Gongshw https://github.com/gongshw/jquery.areaSelect.js');
 
     var AreaSelectStatus = { CREATE: 'create', MOVE: 'move', RESIZE: 'resize', NEAR: 'near' };
@@ -42,7 +41,6 @@
     };
 
     AreaSelect.prototype.init = function () {
-
         var $canvas = $('<canvas/>');
         $canvas.attr('width', this.$ele.width())
             .attr('height', this.$ele.height())
@@ -96,7 +94,7 @@
         }
     };
 
-    AreaSelect.prototype.onDragStop = function () {
+    AreaSelect.prototype.onDragStop = function (event) {
         this.dragging = false;
         switch (this.status) {
             case AreaSelectStatus.RESIZE:
@@ -113,10 +111,13 @@
                 if (this.currentArea) {
                     //let exitsInputTag = img-container
                     // var dynamicId = 'textbox_' + this.areas.length; // Example: textbox_0, textbox_1, ...
-                    addInput(document.getElementById('img-container'), this.currentArea.id, this.currentArea.x, this.currentArea.y, this.currentArea.width, this.currentArea.height);
+                   addInput(this.currentArea.id, this.currentArea.x, this.currentArea.y, this.currentArea.width, this.currentArea.height,this.options.currentPage);
+                }else{
+
                 }
                 break;
             case AreaSelectStatus.MOVE:
+                addInput(this.currentArea.id, this.currentArea.x, this.currentArea.y, this.currentArea.width, this.currentArea.height,this.options.currentPage);
                 this.triggerChange();
                 break;
         }
@@ -126,7 +127,16 @@
         return 'area_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
     }
 
-    function addInput(container, dynamicId, x, y, width) {
+    function addInput(dynamicId, x, y, width,height,curr) {
+        var container = document.getElementById('pdfContainer'+curr);
+       
+        var canvas = container.querySelector('canvas');
+        var canvasTop = canvas.style.top;
+        var canvasTopWithoutPx = parseInt(canvasTop.split('px')[0]); // Extract numeric part
+        if (canvas) {
+            var canvasTop = canvas.style.top;
+           
+        }
         let input = document.getElementById(dynamicId);
 
         if (!input) {
@@ -137,7 +147,7 @@
 
             input.style.position = 'absolute';
             input.style.left = (x + 15) + 'px';
-            input.style.top = (y + 17) + 'px'; // Position at the bottom of the selected area
+            input.style.top = (canvasTopWithoutPx + y) + 'px'; // Position at the bottom of the selected area
             input.style.width = width + 'px';
             // input.style.zIndex = '1'; // Adjust z-index as needed
 
@@ -149,9 +159,8 @@
         } else {
             // Update the position and size of the existing textbox
             input.style.left = (x + 15) + 'px';
-            input.style.top = (y + 17) + 'px';
+            input.style.top = (canvasTopWithoutPx + y) + 'px'; // Position at the bottom of the selected area
             input.style.width = width + 'px';
-
             input.focus();
         }
     }

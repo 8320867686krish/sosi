@@ -501,13 +501,13 @@ class ApiController extends Controller
             $inputData = $request->input();
             $inputData['isApp'] = 1;
             $projectDetail = Projects::find($inputData['project_id']);
-            $lastCheck = Checks::latest()->first();
+            $lastCheck = Checks::where('project_id',$projectId)->latest()->first();
             if (!$lastCheck) {
                 $projectCount = "0";
             } else {
                 $projectCount = $lastCheck['initialsChekId'];
             }
-            $name = $projectDetail['ship_initials'] . 'vsc#' . str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
+            $name = $projectDetail['ship_initials'] . 'VSC#' . str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
 
             $inputData['name'] = $name;
             $inputData['initialsChekId'] = str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
@@ -516,7 +516,7 @@ class ApiController extends Controller
             } else {
                 $projectCount = $lastCheck['initialsChekId'] + (1);
             }
-            $name = $projectDetail['ship_initials'] . "vsc#" . $projectCount;
+            $name = $projectDetail['ship_initials'] . "VSC#" . $projectCount;
             $inputData['name'] = $name;
             $inputData['initialsChekId'] =  $projectCount;
 
