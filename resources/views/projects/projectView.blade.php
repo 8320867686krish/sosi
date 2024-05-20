@@ -631,11 +631,10 @@
             <div class="col-12 col-md-12 col-lg-12 cloneIHMTableDiv card" id="cloneIHMTableDiv">
                 <label for="ihm_table" id="ihmTableLable" class="mr-5 ihmTableLable card-header"></label>
                 <div class="row card-body">
-                    <div class="col-6">
-                        <div class="form-group">
-                            {{-- <label for="IHM_part">IHM Part</label> --}}
-                            <select class="form-control IHM_part">
-                                <option value="">Select IHM Part</option>
+                    <div class="col-12 IHMTypeDiv">
+                        <div class="form-group mb-3">
+                            <select class="form-control IHM_type">
+                                <option value="">Select Type</option>
                                 <option value="Contained">Contained</option>
                                 <option value="PCHM">PCHM</option>
                                 <option value="Not Contained">Not Contained</option>
@@ -643,19 +642,29 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-6 IHMPartDiv">
+                        <div class="form-group">
+                            <select class="form-control IHM_part">
+                                <option value="">Select IHM Part</option>
+                                <option value="IHMPart1">IHM Part 1</option>
+                                <option value="IHMPart2">IHM Part 2</option>
+                                <option value="IHMPart3">IHM Part 3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-4">
                         <div class="form-group mb-3">
                             {{-- <label for="unit">Unit</label> --}}
                             <input type="text" class="form-control unit" placeholder="Unit...">
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-4">
                         <div class="form-group">
                             {{-- <label for="number">Number</label> --}}
                             <input type="text" class="form-control number" placeholder="Number...">
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-4">
                         <div class="form-group">
                             {{-- <label for="total">Total (KG.)</label> --}}
                             <input type="text" class="form-control total" placeholder="Total (KG.)">
@@ -724,6 +733,20 @@
             cloneTableTypeDiv.find(`.documentLoadCheckboxDiv`).toggle(selectedValue !== "Unknown");
         }
 
+        function handleIHMTypeChange(selectedValue, cloneTableTypeDiv) {
+            if (!selectedValue || !cloneTableTypeDiv) {
+                console.error("Missing parameters for handleIHMTypeChange function");
+                return;
+            }
+
+            const targetElements = cloneTableTypeDiv.find(".IHMPartDiv, .IHMTypeDiv");
+            const isContainedOrPCHM = selectedValue === "Contained" || selectedValue === "PCHM";
+            const newClass = isContainedOrPCHM ? "col-6" : "col-12";
+
+            targetElements.removeClass("col-12 col-6").addClass(newClass);
+            cloneTableTypeDiv.find(".IHMPartDiv").toggle(isContainedOrPCHM);
+        }
+
         function labResult(selectedValue, selectedText) {
 
             let clonedElement = $('#cloneIHMTableDiv').clone();
@@ -731,6 +754,9 @@
             clonedElement.attr("id", "cloneIHMTableDiv" + selectedValue);
 
             clonedElement.find('label.ihmTableLable').text(selectedText);
+
+            clonedElement.find('select.IHM_type').attr('id', `IHM_type_${selectedValue}`).attr('name',
+                `IHM_type[${selectedValue}]`);
 
             clonedElement.find('select.IHM_part').attr('id', `IHM_part_${selectedValue}`).attr('name',
                 `IHM_part[${selectedValue}]`);
@@ -755,6 +781,7 @@
                 name: `lab_remarks[${selectedValue}]`
             });
 
+            clonedElement.find(`.IHMPartDiv`).hide();
             // // Append cloned element to showTableTypeDiv
             $('#showLabResult').append(clonedElement);
         }
@@ -1305,6 +1332,12 @@
                 const selectedValue = $(this).val();
                 const cloneTableTypeDiv = $(this).closest(".cloneTableTypeDiv");
                 handleTableTypeChange(selectedValue, cloneTableTypeDiv);
+            });
+
+            $("#showLabResult").on("change", ".cloneIHMTableDiv  select.IHM_type", function() {
+                const selectedValue = $(this).val();
+                const cloneTableTypeDiv = $(this).closest(".cloneIHMTableDiv");
+                handleIHMTypeChange(selectedValue, cloneTableTypeDiv);
             });
 
             let selectedHazmatsIds = [];

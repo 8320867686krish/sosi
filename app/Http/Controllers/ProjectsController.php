@@ -491,6 +491,7 @@ class ProjectsController extends Controller
             $images = $request->file('image');
             $modelmakepart = $request->input('modelmakepart');
             $doc = $request->file('doc');
+            $IHM_type = $request->input('IHM_type');
             $IHM_part = $request->input('IHM_part');
             $unit = $request->input('unit');
             $number = $request->input('number');
@@ -604,18 +605,22 @@ class ProjectsController extends Controller
                         CheckHasHazmat::create($hazmatData);
                     }
 
-                    if (isset($IHM_part[$value])) {
+                    if (isset($IHM_type[$value])) {
 
                         $labResultData = [
                             "project_id" => $inputData['project_id'],
                             "check_id" => $data->id,
                             "hazmat_id" => $value,
-                            "IHM_part" => $IHM_part[$value],
+                            "type" => $IHM_type[$value],
                             "unit" => $unit[$value],
                             "number" => $number[$value],
                             "total" => $total[$value],
                             "lab_remarks" => $lab_remarks[$value]
                         ];
+
+                        if ($IHM_type[$value] === "Contained" || $IHM_type[$value] === "PCHM") {
+                            $labResultData["IHM_part"] = $IHM_part[$value];
+                        }
 
                         if (!empty($labid[$value])) {
                             LabResult::updateOrCreate(['id' => $labid[$value]], $labResultData);
