@@ -1,7 +1,6 @@
  $(function() {
 
         'use strict';
-
         var console = window.console || { log: function() {} };
         var URL = window.URL || window.webkitURL;
         var $image = $('#image');

@@ -503,13 +503,14 @@ class ProjectsController extends Controller
             }])->find($inputData['project_id']);
 
             if (!@$id) {
-                $lastCheck = Checks::latest()->first();
+                $lastCheck = Checks::where('project_id',$inputData['project_id'])->latest()->first();
+
                 if (!$lastCheck) {
                     $projectCount = "0";
                 } else {
                     $projectCount = $lastCheck['initialsChekId'];
                 }
-                $name = $projectDetail['ship_initials'] . 'vsc#' . str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
+                $name = $projectDetail['ship_initials'] . 'VSC#' . str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
 
                 $inputData['name'] = $name;
                 $inputData['initialsChekId'] = str_pad($projectCount + 1, 3, 0, STR_PAD_LEFT);
