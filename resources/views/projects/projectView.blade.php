@@ -73,6 +73,30 @@
                 background: rgba(white, .7);
             }
         }
+
+        .fancybox-button--rotate {
+            position: absolute;
+            bottom: 10px;
+            right: 60px;
+            background: rgba(30, 30, 30, 0.8);
+            border: none;
+            border-radius: 50%;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 9999;
+        }
+
+        .fancybox-button--update {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(30, 30, 30, 0.8);
+            border: none;
+            border-radius: 50%;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 9999;
+        }
     </style>
 @endsection
 
@@ -707,6 +731,7 @@
     <script src="{{ asset('assets/vendor/datatables/js/data-table.js') }}"></script>
     <script src="{{ asset('assets/libs/js/bootstrap4-toggle.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/fancybox/fancybox.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
 
     <script>
         let rotationState = 0;
@@ -1363,7 +1388,9 @@
                                     opts: {
                                         caption: imageData.caption,
                                         thumb: imageData.image,
-                                        id: `fancybox_image_${index}`
+                                        id: `fancybox_image_${index}`,
+                                        imageId: imageData
+                                            .id, // Assuming this is the image ID
                                     }
                                 };
                                 imagesArray.push(imageObject);
@@ -1375,29 +1402,79 @@
                                     autoStart: true
                                 },
                                 afterLoad: function(instance, current) {
-
-                                    if ($('.fancybox-toolbar').find(
-                                            '#fancybox-rotate-button').length ===
-                                        0) {
-                                        $('.fancybox-toolbar').prepend(
-                                            '<button id="fancybox-rotate-button" class="fancybox-button" title="Rotate Image"><i class="fas fa-sync-alt text-white"></i></button>'
+                                    // Add rotate button
+                                    if (!current.$content.find(
+                                            '.fancybox-button--rotate').length) {
+                                        current.$content.append(
+                                            '<button class="fancybox-button fancybox-button--rotate" title="Rotate">' +
+                                            '<i class="fas fa-sync-alt"></i>' +
+                                            '</button>'
                                         );
                                     }
 
-                                    $('.fancybox-toolbar').off('click',
-                                        '#fancybox-rotate-button').on('click',
-                                        '#fancybox-rotate-button',
-                                        function() {
+                                    if (!current.$content.find(
+                                            '.fancybox-button--update').length) {
+                                        current.$content.append(
+                                            '<button class="fancybox-button fancybox-button--update" title="Save">' +
+                                            '<i class="fas fa-save"></i>' +
+                                            '</button>'
+                                        );
+                                    }
 
-                                            let currentIndex = instance
-                                                .currIndex;
-                                            handleRotation(currentIndex);
+                                    // Handle rotate
+                                    current.$content.on('click',
+                                        '.fancybox-button--rotate',
+                                        function() {
+                                            var $img = current.$image;
+                                            var rotation = $img.data(
+                                                'rotation') || 0;
+                                            rotation = (rotation + 90) % 360;
+                                            $img.css('transform', 'rotate(' +
+                                                rotation + 'deg)');
+                                            $img.data('rotation', rotation);
                                         });
 
-                                    // // Handle zoom using wheel event
-                                    // current.$content.on('wheel', function(e) {
-                                    //     handleZoom(instance, current, e);
-                                    // });
+                                    current.$content.on('click',
+                                        '.fancybox-button--update',
+                                        function() {
+                                            let imageId = current.opts.imageId;
+                                            let src = current.src;
+                                            let rotation = current.$image.data(
+                                                'rotation') || 0;
+
+                                            let csrfToken = $(
+                                                    'meta[name="csrf-token"]')
+                                                .attr('content');
+                                            if (rotation !== 0) {
+                                                $.ajax({
+                                                    url: "{{ route('changeCheckImgRotation') }}",
+                                                    type: 'POST',
+                                                    data: {
+                                                        imageId: imageId,
+                                                        src: src,
+                                                        rotation: rotation,
+                                                        _token: csrfToken
+                                                    },
+                                                    success: function(
+                                                        response) {
+
+                                                        swal({
+                                                            title: "Success",
+                                                            text: response.success,
+                                                            timer: 4000
+                                                        });
+                                                    },
+                                                    error: function(
+                                                        error) {
+                                                        swal({
+                                                            title: "Error",
+                                                            text: error.error,
+                                                            timer: 4000
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        });
                                 }
                             });
                         } else {
@@ -1412,72 +1489,66 @@
                 });
             });
 
-            // $('.fancybox-toolbar').on('click', '#fancybox-rotate-button', function() {
-            //     handleRotation();
-            // });
-
             function getCurrentRotationAngle(imageElement) {
-                // Get the computed style of the image
                 let style = window.getComputedStyle(imageElement);
-
-                // Extract the transformation matrix from the computed style
                 let transform = style.transform || style.webkitTransform;
 
-                // If the transform property exists
                 if (transform && transform !== 'none') {
-                    // Extract the rotation angle from the transformation matrix
                     let values = transform.split('(')[1].split(')')[0].split(',');
-                    let a = values[0];
-                    let b = values[1];
+                    let a = parseFloat(values[0]);
+                    let b = parseFloat(values[1]);
                     let angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
-
                     return angle;
                 } else {
-                    // If the transform property doesn't exist or is 'none', return 0 degrees
                     return 0;
                 }
             }
 
             function handleRotation(currentIndex) {
-                let currentImageContent = $('.fancybox-slide').eq(currentIndex).find('.fancybox-image');
+                console.log(currentIndex);
+                let currentImageContent = $('.fancybox-slide').eq(currentIndex).find('.fancybox-image')[0];
+                console.log(currentImageContent);
+                // Get the current rotation angle
+                let currentRotationAngle = getCurrentRotationAngle(currentImageContent);
+                console.log("Current rotation angle: " + currentRotationAngle + " degrees");
 
-                let imageElement = $('.fancybox-slide').eq(currentIndex).find('.fancybox-image')[0];
+                // Calculate the new rotation angle
+                let rotation = (currentRotationAngle + 90) % 360;
 
-                let currentRotationAngle = getCurrentRotationAngle(imageElement);
-
-                let rotation = $('#fancybox-rotate-button').data('rotation') || 0;
-                rotation = (currentRotationAngle + 90) % 360;
-
-                currentImageContent.css({
+                // Apply rotation to the current image content
+                $(currentImageContent).css({
                     'transform': 'rotate(' + rotation + 'deg)',
                     'transition': 'transform 0.5s ease',
                 });
+
+                // Update the rotation data attribute on the rotation button
+                $('#fancybox-rotate-button').data('rotation', rotation);
             }
 
-            function handleZoom(instance, current, e) {
-                // Check if image is loaded
-                if (!instance.current.isLoaded) {
-                    return;
-                }
+            // function handleZoom(instance, current, e) {
+            //     // Check if image is loaded
+            //     if (!instance.current.isLoaded) {
+            //         return;
+            //     }
 
-                // Prevent default behavior
-                e.preventDefault();
+            //     // Prevent default behavior
+            //     e.preventDefault();
 
-                // Calculate new scale based on wheel direction
-                var zoomIn = e.originalEvent.deltaY < 0; // deltaY < 0 means scrolling up (zoom in)
-                var currentScale = instance.current.$content.find('.fancybox-image').css('transform');
-                var scale = currentScale === 'none' ? 1 : parseFloat(currentScale.split(',')[0].replace('matrix(',
-                    ''));
+            //     // Calculate new scale based on wheel direction
+            //     var zoomIn = e.originalEvent.deltaY < 0; // deltaY < 0 means scrolling up (zoom in)
+            //     var currentScale = instance.current.$content.find('.fancybox-image').css('transform');
+            //     var scale = currentScale === 'none' ? 1 : parseFloat(currentScale.split(',')[0].replace('matrix(',
+            //         ''));
 
-                var newScale = zoomIn ? scale + 0.1 : scale - 0.1;
-                newScale = Math.max(0.1, newScale); // Ensure minimum scale
+            //     var newScale = zoomIn ? scale + 0.1 : scale - 0.1;
+            //     newScale = Math.max(0.1, newScale); // Ensure minimum scale
 
-                // Apply new scale to the image
-                instance.current.$content.find('.fancybox-image').css({
-                    'transform': 'scale(' + newScale + ')',
-                    'transition': 'transform 0.2s ease'
-                });
-            }
+            //     // Apply new scale to the image
+            //     instance.current.$content.find('.fancybox-image').css({
+            //         'transform': 'scale(' + newScale + ')',
+            //         'transition': 'transform 0.2s ease'
+            //     });
+            // }
 
             $("#showTableTypeDiv").on("change", ".cloneTableTypeDiv select.table_type", function() {
                 const selectedValue = $(this).val();

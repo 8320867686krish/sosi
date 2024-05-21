@@ -108,6 +108,7 @@ Route::middleware('auth')->group(function () {
             Route::get('getPartBasedDocumentFile/{id}', 'getPartBasedDocumentFile')->name('getPartBasedDocumentFile');
 
             Route::post('checkLaboratoryFile', 'checkLaboratoryFile')->name('checkLaboratoryFile');
+            Route::post('changeCheckImgRotation', 'changeCheckImgRotation')->name('changeCheckImgRotation');
         });
 
         Route::get('genratePdf/{project_id}', [ReportContoller::class, 'genratePdf'])->name('generateDocx');
