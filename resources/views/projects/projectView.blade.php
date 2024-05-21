@@ -73,6 +73,30 @@
                 background: rgba(white, .7);
             }
         }
+
+        .fancybox-button--rotate {
+            position: absolute;
+            bottom: 10px;
+            right: 60px;
+            background: rgba(30, 30, 30, 0.8);
+            border: none;
+            border-radius: 50%;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 9999;
+        }
+
+        .fancybox-button--update {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(30, 30, 30, 0.8);
+            border: none;
+            border-radius: 50%;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 9999;
+        }
     </style>
 @endsection
 
@@ -532,23 +556,27 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                <div class="col-12 col-md-12 mb-4" style="background: #efeff6;border: 1px solid #efeff6;">
-                                    <div class="pt-4">
-                                    <h5 class="text-center mb-4" style="color:#757691">Document Analysis Results</h5>
-                                        <div class="row col-12 mb-4" id="showTableTypeDiv">
+                                    <div class="col-12 col-md-12 mb-4"
+                                        style="background: #efeff6;border: 1px solid #efeff6;">
+                                        <div class="pt-4">
+                                            <h5 class="text-center mb-4" style="color:#757691">Document Analysis Results
+                                            </h5>
+                                            <div class="row col-12 mb-4" id="showTableTypeDiv">
 
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="col-12 col-md-12 mb-3" style="background: #efeff6;border: 1px solid #efeff6;">
-                                    <div  class="pt-4">
-                                        <h5 class="text-center" background: #efeff6;border: 1px solid #efeff6;>Lab Result</h5>
-                                        <div class="mb-4 col-12" id="showLabResult">
+                                    <div class="col-12 col-md-12 mb-3"
+                                        style="background: #efeff6;border: 1px solid #efeff6;">
+                                        <div class="pt-4">
+                                            <h5 class="text-center" background: #efeff6;border: 1px solid #efeff6;>Lab
+                                                Result</h5>
+                                            <div class="mb-4 col-12" id="showLabResult">
 
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 </div>
 
                                 <div class="col-12">
@@ -703,8 +731,11 @@
     <script src="{{ asset('assets/vendor/datatables/js/data-table.js') }}"></script>
     <script src="{{ asset('assets/libs/js/bootstrap4-toggle.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/fancybox/fancybox.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
 
     <script>
+        let rotationState = 0;
+
         function previewFile(input) {
             let file = $("input[type=file]").get(0).files[0];
 
@@ -820,7 +851,7 @@
                     const viewport = page.getViewport({
                         scale: 1
                     });
-              
+
 
                     const canvas = document.createElement('canvas');
                     const context = canvas.getContext('2d');
@@ -839,13 +870,13 @@
 
                     const container = document.getElementById('img-container');
                     var pdfContainer = document.createElement('div');
-                     pdfContainer.id = 'pdfContainer' + i; // Set the ID for the new div
+                    pdfContainer.id = 'pdfContainer' + i; // Set the ID for the new div
 
-                     container.appendChild(pdfContainer);
+                    container.appendChild(pdfContainer);
                     pdfContainer.appendChild(img);
                     img.onload = function() {
                         var options = {
-                            currentPage:i,
+                            currentPage: i,
                             deleteMethod: 'doubleClick',
                             handles: true,
                             area: {
@@ -940,9 +971,33 @@
                         cloneTableTypeDiv.find(`#equipmentDiv_${hazmat_id}`).closest('.equipment').show();
                         cloneTableTypeDiv.find(`#manufacturerDiv_${hazmat_id}`).closest('.manufacturer').show();
                         cloneTableTypeDiv.find(`#modelMakePartDiv_${hazmat_id}`).closest('.modelMakePart')
-                        .show();
+                            .show();
                     }
                 },
+            });
+        }
+
+        function rotateImage() {
+            rotationState = (rotationState + 1) % 4;
+            let degree;
+            switch (rotationState) {
+                case 0:
+                    degree = 0; // Original position
+                    break;
+                case 1:
+                    degree = 90; // Left
+                    break;
+                case 2:
+                    degree = 180; // Bottom
+                    break;
+                case 3:
+                    degree = 270; // Right
+                    break;
+            }
+            $('#demo-image').css({
+                '-webkit-transform': 'rotate(' + degree + 'deg)',
+                '-moz-transform': 'rotate(' + degree + 'deg)',
+                'transform': 'rotate(' + degree + 'deg)'
             });
         }
 
@@ -1328,11 +1383,14 @@
                         if (response.isStatus && response.checkImagesList.length != 0) {
                             let imagesArray = [];
                             $.each(response.checkImagesList, function(index, imageData) {
-                                var imageObject = {
+                                let imageObject = {
                                     src: imageData.image,
                                     opts: {
                                         caption: imageData.caption,
-                                        thumb: imageData.image
+                                        thumb: imageData.image,
+                                        id: `fancybox_image_${index}`,
+                                        imageId: imageData
+                                            .id, // Assuming this is the image ID
                                     }
                                 };
                                 imagesArray.push(imageObject);
@@ -1342,22 +1400,155 @@
                                 loop: true,
                                 thumbs: {
                                     autoStart: true
+                                },
+                                afterLoad: function(instance, current) {
+                                    // Add rotate button
+                                    if (!current.$content.find(
+                                            '.fancybox-button--rotate').length) {
+                                        current.$content.append(
+                                            '<button class="fancybox-button fancybox-button--rotate" title="Rotate">' +
+                                            '<i class="fas fa-sync-alt"></i>' +
+                                            '</button>'
+                                        );
+                                    }
+
+                                    if (!current.$content.find(
+                                            '.fancybox-button--update').length) {
+                                        current.$content.append(
+                                            '<button class="fancybox-button fancybox-button--update" title="Save">' +
+                                            '<i class="fas fa-save"></i>' +
+                                            '</button>'
+                                        );
+                                    }
+
+                                    // Handle rotate
+                                    current.$content.on('click',
+                                        '.fancybox-button--rotate',
+                                        function() {
+                                            var $img = current.$image;
+                                            var rotation = $img.data(
+                                                'rotation') || 0;
+                                            rotation = (rotation + 90) % 360;
+                                            $img.css('transform', 'rotate(' +
+                                                rotation + 'deg)');
+                                            $img.data('rotation', rotation);
+                                        });
+
+                                    current.$content.on('click',
+                                        '.fancybox-button--update',
+                                        function() {
+                                            let imageId = current.opts.imageId;
+                                            let src = current.src;
+                                            let rotation = current.$image.data(
+                                                'rotation') || 0;
+
+                                            let csrfToken = $(
+                                                    'meta[name="csrf-token"]')
+                                                .attr('content');
+                                            if (rotation !== 0) {
+                                                $.ajax({
+                                                    url: "{{ route('changeCheckImgRotation') }}",
+                                                    type: 'POST',
+                                                    data: {
+                                                        imageId: imageId,
+                                                        src: src,
+                                                        rotation: rotation,
+                                                        _token: csrfToken
+                                                    },
+                                                    success: function(
+                                                        response) {
+
+                                                        swal({
+                                                            title: "Success",
+                                                            text: response.success,
+                                                            timer: 4000
+                                                        });
+                                                    },
+                                                    error: function(
+                                                        error) {
+                                                        swal({
+                                                            title: "Error",
+                                                            text: error.error,
+                                                            timer: 4000
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        });
                                 }
                             });
                         } else {
-                            let messages = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                This check image not available.
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>`;
-
-                            $("#showCheckImgMsg").html(messages);
-                            $('#showCheckImgMsg').fadeIn().delay(20000).fadeOut();
+                            swal({
+                                title: "Image Not Found",
+                                text: "The check image is not available at the moment. Please try again later.",
+                                timer: 4000,
+                                icon: "error"
+                            });
                         }
                     },
                 });
             });
+
+            function getCurrentRotationAngle(imageElement) {
+                let style = window.getComputedStyle(imageElement);
+                let transform = style.transform || style.webkitTransform;
+
+                if (transform && transform !== 'none') {
+                    let values = transform.split('(')[1].split(')')[0].split(',');
+                    let a = parseFloat(values[0]);
+                    let b = parseFloat(values[1]);
+                    let angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+                    return angle;
+                } else {
+                    return 0;
+                }
+            }
+
+            function handleRotation(currentIndex) {
+                console.log(currentIndex);
+                let currentImageContent = $('.fancybox-slide').eq(currentIndex).find('.fancybox-image')[0];
+                console.log(currentImageContent);
+                // Get the current rotation angle
+                let currentRotationAngle = getCurrentRotationAngle(currentImageContent);
+                console.log("Current rotation angle: " + currentRotationAngle + " degrees");
+
+                // Calculate the new rotation angle
+                let rotation = (currentRotationAngle + 90) % 360;
+
+                // Apply rotation to the current image content
+                $(currentImageContent).css({
+                    'transform': 'rotate(' + rotation + 'deg)',
+                    'transition': 'transform 0.5s ease',
+                });
+
+                // Update the rotation data attribute on the rotation button
+                $('#fancybox-rotate-button').data('rotation', rotation);
+            }
+
+            // function handleZoom(instance, current, e) {
+            //     // Check if image is loaded
+            //     if (!instance.current.isLoaded) {
+            //         return;
+            //     }
+
+            //     // Prevent default behavior
+            //     e.preventDefault();
+
+            //     // Calculate new scale based on wheel direction
+            //     var zoomIn = e.originalEvent.deltaY < 0; // deltaY < 0 means scrolling up (zoom in)
+            //     var currentScale = instance.current.$content.find('.fancybox-image').css('transform');
+            //     var scale = currentScale === 'none' ? 1 : parseFloat(currentScale.split(',')[0].replace('matrix(',
+            //         ''));
+
+            //     var newScale = zoomIn ? scale + 0.1 : scale - 0.1;
+            //     newScale = Math.max(0.1, newScale); // Ensure minimum scale
+
+            //     // Apply new scale to the image
+            //     instance.current.$content.find('.fancybox-image').css({
+            //         'transform': 'scale(' + newScale + ')',
+            //         'transition': 'transform 0.2s ease'
+            //     });
+            // }
 
             $("#showTableTypeDiv").on("change", ".cloneTableTypeDiv select.table_type", function() {
                 const selectedValue = $(this).val();

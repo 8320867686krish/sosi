@@ -26,6 +26,7 @@ use Throwable;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use setasign\Fpdi\Fpdi;
+use Intervention\Image\Facades\Image as ImageIntervention;
 
 class ProjectsController extends Controller
 {
@@ -504,7 +505,7 @@ class ProjectsController extends Controller
             }])->find($inputData['project_id']);
 
             if (!@$id) {
-                $lastCheck = Checks::where('project_id',$inputData['project_id'])->latest()->first();
+                $lastCheck = Checks::where('project_id', $inputData['project_id'])->latest()->first();
 
                 if (!$lastCheck) {
                     $projectCount = "0";
@@ -939,5 +940,84 @@ class ProjectsController extends Controller
         $checks = Checks::where('project_id', $project_id)->paginate($request->input('length'));
 
         return response()->json($checks);
+    }
+
+    public function changeCheckImgRotation(Request $request)
+    {
+        try {
+            // Retrieve and validate inputs
+            $imageId = $request->input('imageId');
+            $rotation = intval($request->input('rotation'));
+
+            // Fetch the image record from the database
+            $image = CheckImage::findOrFail($imageId);
+            $oldImagePath = public_path(env('IMAGE_COMMON_PATH', 'images/projects/') . $image->project_id . '/' . basename($image->getOriginal('image')));
+
+            // Get the extension of the image
+            $extension = pathinfo($oldImagePath, PATHINFO_EXTENSION);
+
+            // Create an image resource from the image file
+            switch (strtolower($extension)) {
+                case 'jpeg':
+                case 'jpg':
+                    $source = imagecreatefromjpeg($oldImagePath);
+                    break;
+                case 'png':
+                    $source = imagecreatefrompng($oldImagePath);
+                    break;
+                case 'gif':
+                    $source = imagecreatefromgif($oldImagePath);
+                    break;
+                default:
+                    return response()->json(['error' => 'Unsupported image format'], 400);
+            }
+
+            // Convert clockwise to counter-clockwise rotation (as imagerotate rotates counter-clockwise)
+            $rotation = 360 - ($rotation % 360);
+
+            // Rotate the image
+            $rotate = imagerotate($source, $rotation, 0);
+
+            // Define folder and new image path
+            $newImageFolder = public_path(env('IMAGE_COMMON_PATH', 'images/projects/') . $image->project_id);
+            if (!file_exists($newImageFolder)) {
+                mkdir($newImageFolder, 0777, true);
+            }
+
+            $imageName = time() . rand(10, 99) . '.' . $extension;
+            $newImagePath = $newImageFolder . '/' . $imageName;
+
+            // Save the rotated image
+            switch (strtolower($extension)) {
+                case 'jpeg':
+                case 'jpg':
+                    imagejpeg($rotate, $newImagePath);
+                    break;
+                case 'png':
+                    imagepng($rotate, $newImagePath);
+                    break;
+                case 'gif':
+                    imagegif($rotate, $newImagePath);
+                    break;
+            }
+
+            // Free up memory
+            imagedestroy($source);
+            imagedestroy($rotate);
+
+            // Remove the old image
+            if (file_exists($oldImagePath)) {
+                unlink($oldImagePath);
+            }
+
+            // Update the image name in the database
+            $image->image = $imageName;
+            $image->save();
+
+            return response()->json(['success' => 'Image rotated and saved successfully', 'newPath' => $newImagePath], 200);
+        } catch (Throwable $e) {
+            \Log::error('Error rotating image: ' . $e->getMessage());
+            return response()->json(['error' => 'An error occurred while processing the image'], 500);
+        }
     }
 }
