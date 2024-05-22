@@ -16,6 +16,9 @@
                             data-id="{{ $check->id }}"><i class="fas fa-edit text-primary" style="font-size: 1rem"></i></a>
                         <a href="javascript:;" class="modalCheckbtn ml-2" data-id="{{ $check->id }}"><i
                                 class="fas fa-images text-primary" style="font-size: 1rem"></i></a>
+                        <a href="javascript:;" class="modalAddCheckImage ml-2" data-id="{{ $check->id }}" title="Add New Check Image">
+                            <i class="fas fa-plus-square text-primary" style="font-size: 1rem"></i>
+                        </a>
                     </td>
                 @endcan
             </tr>
@@ -37,8 +40,12 @@
                                 style="font-size: 1rem"></i></a>
                         <a href="javascript:;" class="modalCheckbtn ml-2" data-id="{{ $check->id }}"><i
                                 class="fas fa-images text-primary" style="font-size: 1rem"></i></a>
+                        <a href="javascript:;" class="modalAddCheckImage ml-2" data-id="{{ $check->id }}"
+                            title="Add New Check Image">
+                            <i class="fas fa-plus-square text-primary" style="font-size: 1rem"></i>
+                        </a>
                     </td>
-                 @endcan 
+                @endcan
             </tr>
         @endforeach
     @endforeach

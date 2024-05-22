@@ -467,46 +467,6 @@
             @include('projects.repoert')
         </div>
 
-        <div class="modal fade" data-backdrop="static" id="checkImageAddModal" tabindex="-1" role="dialog"
-            aria-labelledby="checkImageAddModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document" style="width: 70% !important; max-width: none !important;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add new check image</h5>
-                        <a href="#" class="close" data-dismiss="modal" aria-label="Close"
-                            id="checkDataImageCloseBtn">
-                            <span aria-hidden="true">×</span>
-                        </a>
-                    </div>
-
-                    <form method="post" action="{{ route('addCheckImage') }}" id="checkImageAddForm"
-                        enctype="multipart/form-data">
-                        <div class="modal-body"
-                            style="overflow-x: auto; overflow-y: auto; max-height: calc(81vh - 1rem);">
-                            @csrf
-                            <input type="hidden" id="project_id" name="project_id"
-                                value="{{ $deck->project_id ?? '' }}">
-                            <input type="hidden" id="checkImageAddFromCheck_id" name="check_id">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <label for="images">Check Image</label>
-                                        <input type="file" name="images[]" id="checkImages" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div id="checkimagePreviewContainer"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" id="checkImageAddSubmitBtn">Save</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
         <div class="modal fade" data-backdrop="static" id="checkDataAddModal" tabindex="-1" role="dialog"
             aria-labelledby="checkDataAddModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document" style="width: 70% !important; max-width: none !important;">
@@ -911,12 +871,8 @@
                     const container = document.getElementById('img-container');
                     var pdfContainer = document.createElement('div');
                     pdfContainer.id = 'pdfContainer' + i; // Set the ID for the new div
-                    pdfContainer.className = 'pdfContainer'; // Set the class for the new div
+
                     container.appendChild(pdfContainer);
-                    // if(i == 1) {
-                    // } else {
-                    //     container.appendChild(pdfContainer).style="display:none";
-                    // }
                     pdfContainer.appendChild(img);
                     img.onload = function() {
                         var options = {
@@ -1283,7 +1239,6 @@
                 $("#hotsportNameType").append(cloneHtml);
             });
 
-
             // $('#getDeckCropImg').click(function() {
             //     let $submitButton = $(this);
             //     let originalText = $submitButton.html();
@@ -1291,29 +1246,28 @@
             //     $submitButton.prop('disabled', true);
             //     $(".pdfModalCloseBtn").prop('disabled', true);
 
-
             //     let textareas = [];
-            //     let areas = $('.pdf-image').areaSelect('get');
+            //     let images = document.querySelectorAll('.pdf-image');
             //     let projectId = {{ $project->id }} || '';
 
-            //     areas.forEach(area => {
-            //         var input = document.getElementById(area.id);
-            //         if (input) {
-            //             textareas.push({
-            //                 ...area, // Copy existing area properties
-            //                 'text': input.value // Add 'text' key with input value
-            //             });
-
-            //         }
-            //     });
-            //     console.log(textareas);
-            //     let areasJSON = JSON.stringify(textareas);
-            //     let images = document.querySelectorAll('.pdf-image');
             //     const pdfFile = document.getElementById('pdfFile').files[0];
 
             //     let imageFiles = [];
             //     images.forEach(function(image, index) {
-            //         // Convert the image data URL to a blob
+            //         let areas = $(image).areaSelect('get');
+
+            //         areas.forEach(area => {
+            //             let input = document.getElementById(area.id);
+            //             if (input) {
+            //                 textareas.push({
+            //                     ...area, // Copy existing area properties
+            //                     'text': input.value // Add 'text' key with input value
+            //                 });
+            //             }
+            //         });
+
+            //         let areasJSON = JSON.stringify(textareas);
+
             //         fetch(image.src).then(res => res.blob())
             //             .then(blob => {
             //                 // Create a new FormData object
@@ -1353,109 +1307,82 @@
             //     });
             // });
 
-            $('#getDeckCropImg').click(async function() {
-                let $submitButton = $(this);
-                let originalText = $submitButton.html();
-                $submitButton.text('Wait...');
-                $submitButton.prop('disabled', true);
-                $(".pdfModalCloseBtn").prop('disabled', true);
+            // $('#getDeckCropImg').click(function() {
+            //     let $submitButton = $(this);
+            //     let originalText = $submitButton.html();
+            //     $submitButton.text('Wait...');
+            //     $submitButton.prop('disabled', true);
+            //     $(".pdfModalCloseBtn").prop('disabled', true);
 
-                let images = document.querySelectorAll('.pdf-image');
-                let projectId = "{{ $project->id }}" || '';
-                const pdfFile = document.getElementById('pdfFile').files[0];
+            //     let images = document.querySelectorAll('.pdf-image');
+            //     let projectId = "{{ $project->id }}" || '';
+            //     const pdfFile = document.getElementById('pdfFile').files[0];
 
-                let allResponses = [];
+            //     images.forEach((image, index) => {
+            //         let areas = $(image).areaSelect('get');
+            //         let textareas = [];
 
-                for (let index = 0; index < images.length; index++) {
-                    let image = images[index];
-                    let areas = $(image).areaSelect('get');
-                    let textareas = [];
+            //         areas.forEach(area => {
+            //             let input = document.getElementById(area.id);
+            //             if (input) {
+            //                 textareas.push({
+            //                     ...area, // Copy existing area properties
+            //                     'text': input
+            //                         .value // Add 'text' key with input value
+            //                 });
+            //             }
+            //         });
 
-                    areas.forEach(area => {
-                        let input = document.getElementById(area.id);
-                        if (input) {
-                            textareas.push({
-                                ...area,
-                                'text': input.value
-                            });
-                        }
-                    });
+            //         saveImageWithAreas(image.src, index, projectId, pdfFile, textareas,
+            //             originalText, $submitButton);
+            //     });
+            // });
 
-                    try {
-                        if(textareas.length > 0) {
-                            allResponses.length = 0;
-                            let response = await saveImageWithAreas(image.src, index, projectId, pdfFile, textareas);
-                            allResponses.push(response);
-                        }
-                    } catch (error) {
-                        console.error('Error saving image:', error);
-                        $submitButton.html(originalText);
-                        $submitButton.prop('disabled', false);
-                        $(".pdfModalCloseBtn").prop('disabled', false);
-                        return;
-                    }
-                }
+            // function saveImageWithAreas(imageSrc, index, projectId, pdfFile, textareas, originalText,
+            //     $submitButton) {
+            //     let areasJSON = JSON.stringify(textareas);
 
-                // All images saved successfully
-                handleSaveSuccess(allResponses);
-                cleanupModal();
-                $submitButton.html(originalText);
-                $submitButton.prop('disabled', false);
-                $(".pdfModalCloseBtn").prop('disabled', false);
-            });
+            //     fetch(imageSrc)
+            //         .then(res => res.blob())
+            //         .then(blob => {
+            //             var formData = new FormData();
+            //             formData.append('image', blob, 'page_' + (index + 1) + '.png');
+            //             formData.append('_token', '{{ csrf_token() }}');
+            //             formData.append('project_id', projectId);
+            //             formData.append('ga_plan', pdfFile);
+            //             formData.append('areas', areasJSON);
 
-            function saveImageWithAreas(imageSrc, index, projectId, pdfFile, textareas) {
-                return new Promise((resolve, reject) => {
-                    let areasJSON = JSON.stringify(textareas);
-
-                    fetch(imageSrc)
-                        .then(res => res.blob())
-                        .then(blob => {
-                            var formData = new FormData();
-                            formData.append('image', blob, 'page_' + (index + 1) + '.png');
-                            formData.append('_token', '{{ csrf_token() }}');
-                            formData.append('project_id', projectId);
-                            formData.append('ga_plan', pdfFile);
-                            formData.append('areas', areasJSON);
-
-                            $.ajax({
-                                type: 'POST',
-                                url: "{{ url('project/save-image') }}",
-                                data: formData,
-                                processData: false,
-                                contentType: false,
-                                success: function(response) {
-                                    resolve(response);
-                                },
-                                error: function(xhr, status, error) {
-                                    reject(new Error(
-                                        `Error ${xhr.status}: ${xhr.statusText}`));
-                                }
-                            });
-                        })
-                        .catch(error => {
-                            reject(new Error(`Failed to fetch image: ${error.message}`));
-                        });
-                });
-            }
-
-            function handleSaveSuccess(responses) {
-                $('.deckView').html('');
-                responses.forEach(response => {
-                    $('.deckView').append(response.html);
-                });
-            }
-
-            function cleanupModal() {
-                $('.pdf-image').empty();
-                $("#pdfFile").val('');
-                $("#pdfModal").removeClass('show');
-                $("body").removeClass('modal-open');
-                $("#img-container").empty();
-                $(".modal-backdrop").remove();
-                $('#pdfModal').modal('hide');
-            }
-
+            //             $.ajax({
+            //                 type: 'POST',
+            //                 url: "{{ url('project/save-image') }}",
+            //                 data: formData,
+            //                 processData: false,
+            //                 contentType: false,
+            //                 success: function(response) {
+            //                     $('.pdf-image').empty();
+            //                     $("#pdfFile").val('');
+            //                     $("#pdfModal").removeClass('show');
+            //                     $("body").removeClass('modal-open');
+            //                     $("#img-container").empty();
+            //                     $(".modal-backdrop").remove();
+            //                     $('.deckView').html(response.html);
+            //                     $submitButton.html(originalText);
+            //                     $submitButton.prop('disabled', false);
+            //                     $('#pdfModal').modal('hide');
+            //                 },
+            //                 error: function(xhr, status, error) {
+            //                     $submitButton.html(originalText);
+            //                     $submitButton.prop('disabled', false);
+            //                     console.error('Failed to save image:', error);
+            //                 }
+            //             });
+            //         })
+            //         .catch(error => {
+            //             console.error('Failed to fetch image:', error);
+            //             $submitButton.html(originalText);
+            //             $submitButton.prop('disabled', false);
+            //         });
+            // }
 
             $(document).on('click', '.deckImgEditBtn', function() {
                 let deckId = $(this).data('id');
@@ -1519,13 +1446,6 @@
                 let checkId = $(this).attr('data-id');
                 let dotElement = $(`#${checkDataId}`)[0];
                 detailOfHazmats(checkId);
-            });
-
-            $(document).on("click", ".modalAddCheckImage", function() {
-                let checkId = $(this).attr('data-id');
-                $("#checkImageAddFromCheck_id").val(checkId);
-                console.log(checkId);
-                $("#checkImageAddModal").modal('show');
             });
 
             $(document).on("click", ".modalCheckbtn", function() {
@@ -1612,12 +1532,13 @@
                                                     },
                                                     success: function(
                                                         response) {
-
                                                         swal({
                                                             title: "Success",
                                                             text: response
                                                                 .success,
-                                                            timer: 4000
+                                                            timer: 4000,
+                                                            confirmButtonColor: '#3085d6',
+                                                            timerProgressBar: true
                                                         });
                                                     },
                                                     error: function(
@@ -1629,6 +1550,14 @@
                                                             timer: 4000
                                                         });
                                                     }
+                                                });
+                                            } else {
+                                                swal({
+                                                    title: "Rotate First",
+                                                    text: "Please rotate first after saving",
+                                                    timer: 4000,
+                                                    confirmButtonColor: '#3085d6',
+                                                    timerProgressBar: true
                                                 });
                                             }
                                         });
@@ -1645,6 +1574,67 @@
                     },
                 });
             });
+
+            function getCurrentRotationAngle(imageElement) {
+                let style = window.getComputedStyle(imageElement);
+                let transform = style.transform || style.webkitTransform;
+
+                if (transform && transform !== 'none') {
+                    let values = transform.split('(')[1].split(')')[0].split(',');
+                    let a = parseFloat(values[0]);
+                    let b = parseFloat(values[1]);
+                    let angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+                    return angle;
+                } else {
+                    return 0;
+                }
+            }
+
+            function handleRotation(currentIndex) {
+                console.log(currentIndex);
+                let currentImageContent = $('.fancybox-slide').eq(currentIndex).find('.fancybox-image')[0];
+                console.log(currentImageContent);
+                // Get the current rotation angle
+                let currentRotationAngle = getCurrentRotationAngle(currentImageContent);
+                console.log("Current rotation angle: " + currentRotationAngle + " degrees");
+
+                // Calculate the new rotation angle
+                let rotation = (currentRotationAngle + 90) % 360;
+
+                // Apply rotation to the current image content
+                $(currentImageContent).css({
+                    'transform': 'rotate(' + rotation + 'deg)',
+                    'transition': 'transform 0.5s ease',
+                });
+
+                // Update the rotation data attribute on the rotation button
+                $('#fancybox-rotate-button').data('rotation', rotation);
+            }
+
+            // function handleZoom(instance, current, e) {
+            //     // Check if image is loaded
+            //     if (!instance.current.isLoaded) {
+            //         return;
+            //     }
+
+            //     // Prevent default behavior
+            //     e.preventDefault();
+
+            //     // Calculate new scale based on wheel direction
+            //     var zoomIn = e.originalEvent.deltaY < 0; // deltaY < 0 means scrolling up (zoom in)
+            //     var currentScale = instance.current.$content.find('.fancybox-image').css('transform');
+            //     var scale = currentScale === 'none' ? 1 : parseFloat(currentScale.split(',')[0].replace('matrix(',
+            //         ''));
+
+            //     var newScale = zoomIn ? scale + 0.1 : scale - 0.1;
+            //     newScale = Math.max(0.1, newScale); // Ensure minimum scale
+
+            //     // Apply new scale to the image
+            //     instance.current.$content.find('.fancybox-image').css({
+            //         'transform': 'scale(' + newScale + ')',
+            //         'transition': 'transform 0.2s ease'
+            //     });
+            // }
 
             $("#showTableTypeDiv").on("change", ".cloneTableTypeDiv select.table_type", function() {
                 const selectedValue = $(this).val();

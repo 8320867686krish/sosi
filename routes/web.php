@@ -109,6 +109,8 @@ Route::middleware('auth')->group(function () {
 
             Route::post('checkLaboratoryFile', 'checkLaboratoryFile')->name('checkLaboratoryFile');
             Route::post('changeCheckImgRotation', 'changeCheckImgRotation')->name('changeCheckImgRotation');
+
+            Route::post('addCheckImage', 'addCheckImage')->name('addCheckImage');
         });
 
         Route::get('genratePdf/{project_id}', [ReportContoller::class, 'genratePdf'])->name('generateDocx');
