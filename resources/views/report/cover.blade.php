@@ -19,7 +19,7 @@
         <h3 style="padding-top: 1px;">SHIP NAME- MV SAFEEN AL NOUR</h3>
         <h3 style="padding-top: 1px;">IMO No: 9442392</h3>
         @php
-        $imageData = file_get_contents(asset('images/projects/1/171411828287.jpg'));
+        $imageData = file_get_contents($image);
 
         // Encode the image data to base64
         $base64EncodedImageData = base64_encode($imageData);

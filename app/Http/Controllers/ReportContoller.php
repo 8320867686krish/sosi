@@ -128,6 +128,8 @@ class ReportContoller extends Controller
             $lebResult = LabResult::with(['check','hazmat'])->where('project_id',$project_id)->where('IHM_part','IHMPart1-1')->where('type','Contained')->orwhere('type','PCHM')->get();
         
             $projectDetail = Projects::find($project_id);
+            $image = $projectDetail['image'];
+          
             foreach($pdfView as $pdf){
                 $options = new Options();
                 $dompdf = new Dompdf($options);
@@ -138,7 +140,7 @@ class ReportContoller extends Controller
                 }else if($pdf == 'Inventory'){
                     $coverHtml = view('report.'.$pdf,compact('lebResult'))->render();
                 }else{
-                    $coverHtml = view('report.'.$pdf)->render();
+                    $coverHtml = view('report.'.$pdf,compact('image'))->render();
 
                 }
                 $dompdf->loadHtml($coverHtml);

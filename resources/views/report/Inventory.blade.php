@@ -85,7 +85,9 @@
                             <td>{{$loop->index}}</td>
                             <td>{{$value['check']['equipment']}}</td>
                             <td>{{$value['check']['component']}}</td>
-                            <td>{{$value['check']['location']}}</td>
+                            <td>{{$value['check']['location']}} @if($value['check']['sub_location'])
+        {{ ',' .$value['check']['sub_location'] }}
+    @endif</td>
                             <td>{{$value['hazmat']['name']}}</td>
                             <td>{{$value['total']}}</td>
                             <td>{{$value['unit']}}</td>
