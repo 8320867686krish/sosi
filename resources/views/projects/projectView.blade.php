@@ -681,9 +681,9 @@
                         <div class="form-group">
                             <select class="form-control IHM_part">
                                 <option value="">Select IHM Part</option>
-                                <option value="IHMPart1">IHM Part 1</option>
-                                <option value="IHMPart2">IHM Part 2</option>
-                                <option value="IHMPart3">IHM Part 3</option>
+                                <option value="IHMPart1-1">IHM Part 1-1</option>
+                                <option value="IHMPart1-2">IHM Part 1-2</option>
+                                <option value="IHMPart1-3">IHM Part 1-3</option>
                             </select>
                         </div>
                     </div>

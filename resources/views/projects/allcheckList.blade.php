@@ -25,7 +25,9 @@
                 <td>{{ $check->initialsChekId }}</td>
                 <td>{{ $check->name }}</td>
                 <td>{{ $check->type }}</td>
-                <td>{{ $check->location }}</td>
+                <td>{{ $check->location }}   @if($check->sub_location)
+        {{ ',' . $check->sub_location }}
+    @endif</td>
                 <td>{{ $check->equipment }} <br> {{ $check->component }} </td>
 
                 <td>{{ $hazmat->hazmat->name }}</td>
