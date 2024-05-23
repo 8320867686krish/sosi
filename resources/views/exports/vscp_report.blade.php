@@ -74,6 +74,7 @@
                         <td valign="middle" align="left" style="font-size: 14px;">{{$check->remarks}}</td>
                         <td valign="middle" align="left" style="font-size: 14px;">{{$check->recommendation}}</td>
                     </tr>
+                    @php $counter++; @endphp
                 @endif
                 @foreach ($check->check_hazmats as $checkHazmat)
                     <tr height="25">

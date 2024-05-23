@@ -62,242 +62,150 @@ class ReportContoller extends Controller
         return Excel::download(new MultiSheetExport($project, $hazmats, $checks), $filename, $exportFormat);
     }
 
-    public function genratePdf1()
-    {
-        $pdf = new Fpdi('L');
-
-        // Load the existing PDF file
-        $pdfFile = public_path('images/attachment/1/IAPP Cert.pdf');
-        $pdf->setSourceFile($pdfFile);
-
-        // Get the total number of pages in the PDF
-        $totalPages = $pdf->setSourceFile($pdfFile);
-        $pageCount = $pdf->setSourceFile($pdfFile);
-
-        // Iterate through each page and import them into the new PDF
-        for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-            // Add a new page to the PDF
-            $pdf->AddPage();
-
-            // Import the current page from the source PDF
-            $templateId = $pdf->importPage($pageNo);
-
-            // Use the imported page
-            $pdf->useTemplate($templateId, null, null, null, null, true);
-        }
-
-        $pdfFile = public_path('images/attachment/1/PDF-Home Decor1714742328.pdf');
-        $pdf->setSourceFile($pdfFile);
-
-        // Get the total number of pages in the PDF
-        $totalPages = $pdf->setSourceFile($pdfFile);
-        $pageCount = $pdf->setSourceFile($pdfFile);
-
-        // Iterate through each page and import them into the new PDF
-        for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-            // Add a new page to the PDF
-            $pdf->AddPage();
-
-            // Import the current page from the source PDF
-            $templateId = $pdf->importPage($pageNo);
-
-            // Use the imported page
-            $pdf->useTemplate($templateId, null, null, null, null, true);
-        }
-
-
-        // Output the merged PDF
-        $pdfFilePath = public_path('merged.pdf');
-        $pdf->Output('F', $pdfFilePath);
-        // Return a binary response with the merged PDF file as a download
-        return new BinaryFileResponse(public_path('merged.pdf'));
-    }
+  
     public function genratePdf($project_id)
     {
-        
-            // Initialize Dompdf
-            $pdfView=['cover','introduction','Inventory'];
-            $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
-                $query->where('project_id', $project_id);
-            }])->withCount(['checkHasHazmatsSample as sample_count' => function ($query) use ($project_id) {
-                $query->where('project_id', $project_id);
-            }])->withCount(['checkHasHazmatsVisual as visual_count' => function ($query) use ($project_id) {
-                $query->where('project_id', $project_id);
-            }])->get();
+        $pageNumbers = [];
+        $currentPageNumber = 1;
 
-            $lebResult = LabResult::with(['check','hazmat'])->where('project_id',$project_id)->where('type','Contained')->orwhere('type','PCHM')->get();
-         
-            $filteredResults1 = $lebResult->filter(function ($item) {
-                return $item->IHM_part == 'IHMPart1-1';
-            });
+        // Initialize Dompdf
+        $pdfView = ['cover', 'introduction', 'Inventory'];
+        $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
+            $query->where('project_id', $project_id);
+        }])->withCount(['checkHasHazmatsSample as sample_count' => function ($query) use ($project_id) {
+            $query->where('project_id', $project_id);
+        }])->withCount(['checkHasHazmatsVisual as visual_count' => function ($query) use ($project_id) {
+            $query->where('project_id', $project_id);
+        }])->get();
 
-            $filteredResults2 = $lebResult->filter(function ($item) {
-                return $item->IHM_part == 'IHMPart1-2';
-            });
-            $filteredResults3 = $lebResult->filter(function ($item) {
-                return $item->IHM_part == 'IHMPart1-3';
-            });
-          
-            $projectDetail = Projects::find($project_id);
-            $image = $projectDetail['image'];
-          
-            foreach($pdfView as $pdf){
-                $options = new Options();
-                $dompdf = new Dompdf($options);
-              
-                // Render and save PDF for cover page
-                if($pdf == 'introduction'){
-                    $dompdf->setPaper('A4', 'portrait');
-                    $coverHtml = view('report.'.$pdf,compact('hazmets','projectDetail'))->render();
-                }else if($pdf == 'Inventory'){
-                    $dompdf->setPaper('A4','landscape');
+        $lebResult = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
 
-                    $coverHtml = view('report.'.$pdf,compact('filteredResults1','filteredResults2','filteredResults3'))->render();
-                }else{
-                    $coverHtml = view('report.'.$pdf,compact('image'))->render();
+        $filteredResults1 = $lebResult->filter(function ($item) {
+            return $item->IHM_part == 'IHMPart1-1';
+        });
 
-                }
-                $dompdf->loadHtml($coverHtml);
-               
-                $dompdf->render();
-                $coverPdfContent = $dompdf->output();
-               
-                $this->savePdf($coverPdfContent, $pdf.'.pdf');
+        $filteredResults2 = $lebResult->filter(function ($item) {
+            return $item->IHM_part == 'IHMPart1-2';
+        });
+        $filteredResults3 = $lebResult->filter(function ($item) {
+            return $item->IHM_part == 'IHMPart1-3';
+        });
+
+        $projectDetail = Projects::find($project_id);
+        $image = $projectDetail['image'];
+
+        foreach ($pdfView as $pdf) {
+            $options = new Options();
+            $dompdf = new Dompdf($options);
+
+            // Render and save PDF for cover page
+            if ($pdf == 'introduction') {
+                $dompdf->setPaper('A4', 'portrait');
+                $coverHtml = view('report.' . $pdf, compact('hazmets', 'projectDetail'))->render();
+            } else if ($pdf == 'Inventory') {
+                $dompdf->setPaper('A4', 'landscape');
+
+                $coverHtml = view('report.' . $pdf, compact('filteredResults1', 'filteredResults2', 'filteredResults3'))->render();
+            } else {
+                $coverHtml = view('report.' . $pdf, compact('image'))->render();
             }
+            $dompdf->loadHtml($coverHtml);
+
+            $dompdf->render();
+            $coverPdfContent = $dompdf->output();
+
+            $this->savePdf($coverPdfContent, $pdf . '.pdf');
+            $tempPdf = new Fpdi();
+            $pageCount = $tempPdf->setSourceFile(storage_path('app/pdf/' . $pdf . '.pdf'));
+            $pageNumbers[$pdf] = $currentPageNumber;
+            $currentPageNumber += $pageCount;
+        }
+        $indexTableHtml = view('report.indexTable', compact('pageNumbers'))->render();
+        $options = new Options();
+        $dompdf = new Dompdf($options);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->loadHtml($indexTableHtml);
+        $dompdf->render();
+        $indexPdfContent = $dompdf->output();
+        $filePath = storage_path('app/pdf/indexTable.pdf');
+        file_put_contents($filePath, $indexPdfContent);
+
+        // Merge PDFs including the index table
+        $pdf = new Fpdi();
+        $pdfFolderPath = storage_path('app/pdf');
+        $inserted = array( 1 => 'indexTable' ); 
+
+        array_splice( $pdfView, 1, 0, $inserted );
        
-            $pdf = new Fpdi();
+        $pdf = new Fpdi();
 
-            // Specify the folder where PDF files are stored
-            $pdfFolderPath = storage_path('app/pdf');
-    
-            // Get the list of PDF files in the folder
-            $pdfFiles = glob($pdfFolderPath . '/*.pdf');
-            // Add each PDF file to the merged PDF
-            $pageCountno=0; 
-                
+        // Specify the folder where PDF files are stored
+        $pdfFolderPath = storage_path('app/pdf');
 
-            foreach ($pdfView as $pdfFile1) {
-                $pdfFile =  storage_path('app/pdf/'.$pdfFile1.'.pdf');
-                // Add a new page to the merged PDF
-                
-             
+        // Get the list of PDF files in the folder
+        $pdfFiles = glob($pdfFolderPath . '/*.pdf');
+        // Add each PDF file to the merged PDF
+        $pageCountno = 0;
+
+
+        foreach ($pdfView as $pdfFile1) {
+            $pdfFile =  storage_path('app/pdf/' . $pdfFile1 . '.pdf');
+            // Add a new page to the merged PDF
+
+
+            // Import the current page from the source PDF
+            $pageCount = $pdf->setSourceFile($pdfFile);
+
+            for ($pageNumber = 1; $pageNumber <= $pageCount; $pageNumber++) {
+                $pageCountno += 1;
+               
+
                 // Import the current page from the source PDF
-                $pageCount = $pdf->setSourceFile($pdfFile);
-              
-                for ($pageNumber = 1; $pageNumber <= $pageCount; $pageNumber++) {
-                    $pageCountno+= 1;
+                $templateId = $pdf->importPage($pageNumber);
+                $size = $pdf->getTemplateSize($templateId);
+                $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
+                if ($size['width'] > $size['height']) {
+                    $pdf->AddPage($orientation);
+                }else{
                     $pdf->AddPage();
-                    
-                    // Import the current page from the source PDF
-                    $templateId = $pdf->importPage($pageNumber);
-                    $size = $pdf->getTemplateSize($templateId);
-                    $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
-                    if( $size['width'] > $size['height']){
-                        $pdf->AddPage($orientation);
-
-                    }
-                    // Use the imported page
-                    $pdf->useTemplate($templateId);
-            
-                //     // Set the font for page number
-                //    $pdf->SetFont('Arial', 'B', 12);
-                //     // Set position for page number (adjust as needed)
-                //    $pdf->SetY(-40);
-                //    $pdf->Cell(0, 50, 'Page ' . $pageCountno, 0, 0, 'C');
                 }
-                unlink(storage_path('app/pdf/'.$pdfFile1.'.pdf'));
-              
-                
+                // Use the imported page
+                $pdf->useTemplate($templateId);
+
+                //     // Set the font for page number
+                    $pdf->SetFont('Arial', 'B', 12);
+                //     // Set position for page number (adjust as needed)
+                    $pdf->SetY(-40);
+                    $pdf->Cell(0, 50, 'Page ' . $pageCountno, 0, 0, 'C');
             }
-    
-            // Output the merged PDF
-            $mergedPdfFilePath = storage_path('app/pdf/merged.pdf');
-            $pdfOutput = $pdf->Output('F',$mergedPdfFilePath); // Capture the PDF content as a string
-
-            // return response($pdfOutput, 200)
-            //     ->header('Content-Type', 'application/pdf')
-            //     ->header('Content-Disposition', 'inline; filename="merged.pdf"');
-    
-           // return 'PDF files merged successfully!';
-    
+          
         }
-    
-        protected function savePdf($content, $filename)
-        {
-            // Specify the folder where PDF files will be stored
-            $pdfFolderPath = storage_path('app/pdf');
-    
-            // Ensure the folder exists, if not create it
-            if (!is_dir($pdfFolderPath)) {
-                mkdir($pdfFolderPath, 0777, true);
-            }
-    
-            // Save the PDF file to the folder
-            $filePath = $pdfFolderPath . '/' . $filename;
-            file_put_contents($filePath, $content);
+       
+        // Output the merged PDF
+        $mergedPdfFilePath = storage_path('app/pdf/merged.pdf');
+        $pdfOutput = $pdf->Output('F', $mergedPdfFilePath); // Capture the PDF content as a string
+
+        // return response($pdfOutput, 200)
+        //     ->header('Content-Type', 'application/pdf')
+        //     ->header('Content-Disposition', 'inline; filename="merged.pdf"');
+
+        // return 'PDF files merged successfully!';
+
+    }
+
+    protected function savePdf($content, $filename)
+    {
+        // Specify the folder where PDF files will be stored
+        $pdfFolderPath = storage_path('app/pdf');
+
+        // Ensure the folder exists, if not create it
+        if (!is_dir($pdfFolderPath)) {
+            mkdir($pdfFolderPath, 0777, true);
         }
-//         $pdf = new Fpdi('L');
 
-// $options = new Options();
-// $dompdf = new Dompdf($options);
-
-// // Load HTML content for the cover page
-// $htmlCover = view('pdf')->render();
-
-// // Load HTML content into Dompdf for the cover page
-// $dompdf->loadHtml($htmlCover);
-// $dompdf->setPaper('A4', 'portrait');
-// $dompdf->render();
-// $dompdfOutputCover = $dompdf->output();
-
-// // Import cover page into FPDI
-// $pdfDataCover = $dompdfOutputCover;
-// $pageCountCover = $pdf->setSourceFile(StreamReader::createByString($pdfDataCover));
-// $templateIdCover = $pdf->importPage(1);
-
-// // Add a new page for the cover page
-// $pdf->AddPage();
-// $pdf->useTemplate($templateIdCover, ['adjustPageSize' => true]);
-
-// // Load HTML content for the introduction page
-// $htmlIntroduction = view('introduction')->render();
-
-// // Load HTML content into Dompdf for the introduction page
-// $dompdf->loadHtml($htmlIntroduction);
-// $dompdf->setPaper('A4', 'portrait');
-// $dompdf->render();
-// $dompdfOutputIntroduction = $dompdf->output();
-
-// // Import introduction page into FPDI
-// $pdfDataIntroduction = $dompdfOutputIntroduction;
-// $pageCountIntroduction = $pdf->setSourceFile(StreamReader::createByString($pdfDataIntroduction));
-// $templateIdIntroduction = $pdf->importPage(1);
-// $pdf->AddPage();
-// $pdf->useTemplate($templateIdIntroduction, ['adjustPageSize' => true]);
-
-// // Output the merged PDF
-// $pdfFilePath = public_path('merged_with_cover_and_introduction.pdf');
-// $pdf->Output('F', $pdfFilePath);
-
-// echo 'PDF generated successfully!';
-        // Load PDF files from the folder and merge them with the FPDI instance
-        // $pdfFolder = public_path('images/attachment/'.$project_id."/");
-        // $pdfFiles = glob($pdfFolder . '*.pdf');
-        // foreach ($pdfFiles as $pdfFile) {
-        //     $pdf->setSourceFile($pdfFile);
-        //     $totalPages = $pdf->setSourceFile($pdfFile);
-        //     $pageCount = $pdf->setSourceFile($pdfFile);
-        //     for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-        //         $pdf->AddPage();
-        //         $templateId = $pdf->importPage($pageNo);
-        //         $pdf->useTemplate($templateId, ['adjustPageSize' => true]);
-        //     }
-        // }
-
-        // // Output the merged PDF
-        // $pdfFilePath = public_path('merged_with_cover_and_introduction.pdf');
-        // $pdf->Output('F', $pdfFilePath);
-
-        // echo 'PDF generated successfully!';
-    
+        // Save the PDF file to the folder
+        $filePath = $pdfFolderPath . '/' . $filename;
+        file_put_contents($filePath, $content);
+    }
+   
 }

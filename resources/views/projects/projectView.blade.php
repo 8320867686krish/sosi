@@ -425,6 +425,7 @@
                     <table class="table table-striped table-bordered first" width="100%">
                         <thead>
                             <tr>
+                                <th>Sr No</th>
                                 <th>Check</th>
                                 <th>Name</th>
                                 <th>Type</th>

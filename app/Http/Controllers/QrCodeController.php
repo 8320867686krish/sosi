@@ -185,21 +185,23 @@ class QrCodeController extends Controller
         $imagePath = asset('assets/images/logo.png');
         $imageData = file_get_contents($imagePath);
         $base64Image = base64_encode($imageData);
-  
+        $projectCount = 0;
         foreach ($checks as $key => $check) {
+            $projectCount++;
             // Open a new row if it's the start of a new row
             if ($counter % $colspan == 0) {
                 $html .= "<tr>";
             }
-
+            $explode = explode("#",$check->name);
+            $newName = $explode[0]."#". str_pad($projectCount, 3, 0, STR_PAD_LEFT) ;
             // Generate QR code
-            $qrCode = QrCode::size(75)->generate($check->name);
+            $qrCode = QrCode::size(75)->generate($newName);
             $qrCodeDataUri = 'data:image/png;base64,' . base64_encode($qrCode);
 
             // Add the QR code and related information to table cells
             
             $html .= '<td width="13.33%">';
-            $html .= '<div style="font-size: 15px;font-weight:bolder;padding-bootom:2px">' . $check->name . '</div>';
+            $html .= '<div style="font-size: 15px;font-weight:bolder;padding-bootom:2px">' . $newName . '</div>';
             $html .= '<img src=data:image/png;base64,"' . $base64Image . '" alt="QR Code for Check" width="110px;">';
             $html.='<center><div style="font-size: 12px;font-weight:bolder">www.sosindi.com</div>';
             $html .= '</td>';
@@ -240,13 +242,13 @@ class QrCodeController extends Controller
         $dompdf->setPaper('A4', 'portrait');
 
         // Render PDF
-        $dompdf->render();
+       $dompdf->render();
 
         // Output PDF
          return $dompdf->stream('qr_codes.pdf', ['Attachment' => false]);
-        // $pdfContent = $dompdf->output();
-        // return response($pdfContent, 200)
-        //     ->header('Content-Type', 'application/pdf')
-        //     ->header('Content-Disposition', 'attachment; filename="qr_codes_' . $deckId . '.pdf"');
+         $pdfContent = $dompdf->output();
+//   return response($pdfContent, 200)
+            // ->header('Content-Type', 'application/pdf')
+            // ->header('Content-Disposition', 'attachment; filename="qr_codes_' . $deckId . '.pdf"');
     }
 }
