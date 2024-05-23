@@ -22,15 +22,14 @@ class AssignProjectRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-            'user_id' => 'required',
-            'assign_date' => 'required',
-            'end_date' => 'required'
-            // 'project.leb1LaboratoryResult1' => ['file', new PDFPasswordProtected()]
-            // 'project.leb1LaboratoryResult2' => ['file', new PDFPasswordProtected()],
-            // 'project.leb2LaboratoryResult1' => ['file', new PDFPasswordProtected()],
-            // 'project.leb2LaboratoryResult2' => ['file', new PDFPasswordProtected()],
-        ];
+        $rules = [];
+
+        if (isset($this->type) && $this->type == "project") {
+            $rules['user_id'] = 'required';
+            $rules['assign_date'] = 'required';
+            $rules['end_date'] = 'required';
+        }
+
+        return $rules;
     }
 }

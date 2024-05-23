@@ -243,10 +243,11 @@ class ProjectsController extends Controller
     {
         try {
             $inputData = $request->input();
+            $inputData['id'] = $inputData['project_id'];
 
-            ProjectTeam::where('project_id', $inputData['project_id'])->delete();
 
             if (@$inputData['user_id']) {
+                ProjectTeam::where('project_id', $inputData['project_id'])->delete();
                 foreach ($inputData['user_id'] as $user_id) {
                     ProjectTeam::create([
                         'user_id' => $user_id,
@@ -697,7 +698,6 @@ class ProjectsController extends Controller
     public function saveImage(Request $request)
     {
         try {
-
             $request->validate([
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif',
                 'project_id' => 'required|exists:projects,id',
@@ -712,72 +712,70 @@ class ProjectsController extends Controller
                 throw new \Exception('Uploaded image is not valid.');
             }
 
-            $oldMainImgPath = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId . "/" . $project->deck_image);
-            if (@$project->deck_image) {
-                if (file_exists($oldMainImgPath)) {
-                    unlink($oldMainImgPath);
-                }
-            }
-
-            $mainFileName = "{$projectName}_" . time() . ".png";
-            $file->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId . "/"), $mainFileName);
+            $mainFileName = "{$projectName}_" . rand(10, 99) . "_" . time() . ".png";
+            $imagePath = public_path(env('IMAGE_COMMON_PATH', 'images/projects/') . $projectId . '/');
+            $file->move($imagePath, $mainFileName);
 
             $updateProjectData = ['deck_image' => $mainFileName, 'projectPercentage' => '15'];
 
             if ($request->hasFile('ga_plan') && $request->file('ga_plan')->isValid()) {
-                $pdfName = time() . "_gaplan" . '.' . $request->ga_plan->extension();
+                $pdfName = time() . "_gaplan." . $request->ga_plan->extension();
+                $request->ga_plan->move($imagePath, $pdfName);
 
-                // Move the GA plan file to desired location
-                $request->ga_plan->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId . "/"), $pdfName);
-
-                // Delete old GA plan file if it exists
-                $oldGaPlanPath = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId . "/" . $project->ga_plan);
-                if (@$project->ga_plan) {
-                    if (file_exists($oldGaPlanPath)) {
-                        unlink($oldGaPlanPath);
-                    }
+                $oldGaPlanPath = $imagePath . $project->ga_plan;
+                if (@$project->ga_plan && file_exists($oldGaPlanPath)) {
+                    unlink($oldGaPlanPath);
                 }
 
-                // Update project data with new GA plan file name
                 $updateProjectData['ga_plan'] = $pdfName;
             }
 
-            // Update the project record in the database
             Projects::where('id', $projectId)->update($updateProjectData);
-
 
             $areas = $request->input('areas');
             $areasArray = json_decode($areas, true);
 
-            $image = imagecreatefrompng(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId . '/' . $mainFileName));
             foreach ($areasArray as $area) {
                 $x = $area['x'];
                 $y = $area['y'];
                 $width = $area['width'];
                 $height = $area['height'];
-                $text = $area['text'] ?? " ";
+                $text = $area['text'] ?? ' ';
 
-                $withoutSpacesName = Str::slug($text);
-                $croppedImageName = "{$withoutSpacesName}_{$width}_{$height}_" . time() . ".png";
+                $croppedImageName = Str::slug($text) . "_{$width}_{$height}_" . time() . ".png";
+
+                // Reload the main image resource for each crop to avoid issues with multiple crops
+                $image = imagecreatefrompng($imagePath . $mainFileName);
+                if (!$image) {
+                    throw new \Exception("Failed to create image resource from {$mainFileName}");
+                }
 
                 $croppedImage = imagecrop($image, ['x' => $x, 'y' => $y, 'width' => $width, 'height' => $height]);
-
-                if ($croppedImage) {
-                    imagepng($croppedImage, public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId . "/" . $croppedImageName));
-
-                    Deck::create([
-                        'project_id' => $request->input('project_id'),
-                        'name' => $text,
-                        'image' => $croppedImageName
-                    ]);
+                if ($croppedImage === FALSE) {
+                    imagedestroy($image); // Clean up the image resource
+                    throw new \Exception("Failed to crop the image at [x: $x, y: $y, width: $width, height: $height]");
                 }
+
+                if (imagepng($croppedImage, $imagePath . $croppedImageName) === FALSE) {
+                    imagedestroy($croppedImage); // Clean up the cropped image resource
+                    throw new \Exception("Failed to save the cropped image as {$croppedImageName}");
+                }
+
+                Deck::create([
+                    'project_id' => $projectId,
+                    'name' => $text,
+                    'image' => $croppedImageName,
+                ]);
+
+                // Clean up the image resources
+                imagedestroy($croppedImage);
+                imagedestroy($image);
             }
 
-            $decks = Deck::where('project_id', $request->input('project_id'))->orderByDesc('id')->get();
-
+            $decks = Deck::where('project_id', $projectId)->orderByDesc('id')->get();
             $html = view('projects.list_vsp_ajax', compact('decks'))->render();
 
-            return response()->json(["status" => true, "message" => "Image saved successfully", 'html' => $html]);
+            return response()->json(['status' => true, 'message' => 'Image saved successfully', 'html' => $html]);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
         } catch (\Throwable $th) {
@@ -1020,6 +1018,56 @@ class ProjectsController extends Controller
             return response()->json(['error' => 'An error occurred while processing the image'], 500);
         }
     }
+
+    public function addCheckImage(Request  $request)
+    {
+        try {
+            $projectId = $request->input('project_id');
+            $checkId = $request->input('check_id');
+
+            $checkData = [];
+
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
+                    $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") .  $projectId), $imageName);
+                    $checkData['image'] = $imageName;
+                    $checkData['check_id'] = $checkId;
+                    $checkData['project_id'] = $projectId;
+                    CheckImage::create($checkData);
+                }
+            }
+
+            return response()->json(["isStatus" => true, 'message' => 'Check image saved successfully']);
+        } catch (Throwable $th) {
+            \Log::error('Check image add Error: ' . $th->getMessage());
+            return response()->json(['error' => 'An error occurred while processing the image'], 500);
+        }
+    }
+
+    public function deleteCheckImage($id)
+    {
+        try {
+            $checkImg = CheckImage::find($id);
+
+            if (!$checkImg) {
+                return response()->json(['isStatus' => false, 'message' => 'Check image not found.']);
+            }
+
+            $path = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $checkImg->project_id . "/" . basename($checkImg->getOriginal('image')));
+
+            if (file_exists($path)) {
+                unlink($path);
+            }
+
+            $checkImg->delete();
+
+            return response()->json(['isStatus' => true, 'message' => 'Check image deleted successfully.']);
+        } catch (Throwable $th) {
+            return response()->json(['isStatus' => false, 'error' => 'An error occurred while processing your request.']);
+        }
+    }
+
     public function reintialCheckIndex($projectId)
     {
         $checks = Checks::where('project_id', $projectId)->get();

@@ -1,43 +1,29 @@
 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-
-    <form method="post" action="#" class="needs-validation" novalidate id="SurveyForm">
-        @csrf
-
-        <div class="row">
-            <div class="form-group col-12 mt-3">
-                @can('projects.edit')
-                    <button class="btn btn-primary float-right" type="submit">Save</button>
-                @endcan
-            </div>
-        </div>
-        <div class="alert alert-success sucessSurveylMsg" role="alert" style="display: none" ;>
-            Save Successfully!!<a href="#" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">×</span>
-            </a>
-        </div>
-        <div class="accrodion-regular">
-            <div id="accordion3">
-                <div class="card">
-                    <div class="card-header" id="headingSeven">
-                        <h5 class="mb-0">
-                            <button type="button" class="btn btn-link" data-toggle="collapse"
-                                data-target="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven">
-                                <span class="fas fa-angle-down mr-3"></span>Assign Project
-                            </button>
-                        </h5>
-                    </div>
-                    <div id="collapseSeven" class="collapse show" aria-labelledby="headingSeven"
-                        data-parent="#accordion3">
-                        <div class="card-body">
+    @csrf
+    <div class="accrodion-regular">
+        <div id="accordion3">
+            <div class="card">
+                <div class="card-header" id="headingSeven">
+                    <h5 class="mb-0">
+                        <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#collapseSeven"
+                            aria-expanded="true" aria-controls="collapseSeven">
+                            <span class="fas fa-angle-down mr-3"></span>Assign Project
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseSeven" class="collapse show" aria-labelledby="headingSeven" data-parent="#accordion3">
+                    <div class="card-body">
+                        <form method="post" novalidate id="assignProjectForm">
+                            @csrf
                             <div class="row">
                                 <input type="hidden" name="project_id" value="{{ $project->id ?? '' }}"
                                     id="project_id">
+                                <input type="hidden" name="type" value="project">
                                 <div class="form-group col-12 mb-3">
                                     <label for="project_no">User <span class="text-danger">*</span></label>
-                                    <select
-                                        class="selectpicker show-tick form-control form-control-lg @error('user_id') is-invalid @enderror"
-                                        name="user_id[]" id="user_id" multiple data-live-search="true"
-                                        data-actions-box="true" {{ $readonly }} onchange="removeInvalidClass(this)">
+                                    <select class="selectpicker show-tick form-control form-control-lg" name="user_id[]"
+                                        id="user_id" multiple data-live-search="true" data-actions-box="true"
+                                        {{ $readonly }} onchange="removeInvalidClass(this)">
                                         @if ($users->count() > 0)
                                             @foreach ($users as $user)
                                                 @if (in_array($user->id, $project->user_id))
@@ -53,60 +39,63 @@
                                         @endif
                                     </select>
                                     <div class="invalid-feedback error" id="user_idError"></div>
-
                                 </div>
                                 <div class="form-group col-6">
                                     <label for="assign_date">Assign Date <span class="text-danger">*</span></label>
-                                    <input type="date"
-                                        class="form-control form-control-lg  @error('assign_date') is-invalid @enderror"
-                                        id="assign_date"
+                                    <input type="date" class="form-control form-control-lg" id="assign_date"
                                         value="{{ old('assign_date', $project->assign_date[0] ?? '') }}"
                                         name="assign_date" autocomplete="off" onchange="removeInvalidClass(this)"
                                         {{ $readonly }}>
                                     <div class="invalid-feedback error" id="assign_dateError"></div>
-
                                 </div>
                                 <div class="form-group col-6">
                                     <label for="assign_date">End Date <span class="text-danger">*</span></label>
-                                    <input type="date"
-                                        class="form-control form-control-lg @error('end_date') is-invalid @enderror"
-                                        id="end_date" value="{{ old('end_date', $project->end_date[0] ?? '') }}"
-                                        name="end_date" autocomplete="off" onchange="removeInvalidClass(this)"
-                                        {{ $readonly }}>
+                                    <input type="date" class="form-control form-control-lg" id="end_date"
+                                        value="{{ old('end_date', $project->end_date[0] ?? '') }}" name="end_date"
+                                        autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
                                     <div class="invalid-feedback error" id="end_dateError"></div>
-
                                 </div>
+                                @can('projects.edit')
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <button class="btn btn-primary float-right" type="submit">Save</button>
+                                        </div>
+                                    </div>
+                                @endcan
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
-                <div class="card mb-2">
-                    <div class="card-header" id="headingEight">
-                        <h5 class="mb-0">
-                            <button type="button" class="btn btn-link collapsed" data-toggle="collapse"
-                                data-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
-                                <span class="fas fa-angle-down mr-3"></span>Laboratory Assign
-                            </button>
-                        </h5>
-                    </div>
-                    <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordion3">
-                        <div class="card-body">
-                            <h4>Laboratory1</h4>
+            </div>
 
+            <div class="card mb-2">
+                <div class="card-header" id="headingEight">
+                    <h5 class="mb-0">
+                        <button type="button" class="btn btn-link collapsed" data-toggle="collapse"
+                            data-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                            <span class="fas fa-angle-down mr-3"></span>Laboratory Assign
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordion3">
+                    <div class="card-body">
+                        <form method="post" id="laboratoryAssignForm">
+                            @csrf
+                            <h4>Laboratory1</h4>
                             <div class="row">
+                                <input type="hidden" name="project_id" value="{{ $project->id }}">
                                 <div class="form-group col-6 mb-3">
                                     <label for="assign_date">Name</label>
-                                    <input type="text"
-                                        class="form-control form-control-lg  @error('laboratorie1') is-invalid @enderror"
+                                    <input type="text" class="form-control form-control-lg"
                                         value="{{ old('laboratorie1', $project->laboratorie1 ?? '') }}"
-                                        name="project[laboratorie1]" autocomplete="off"
-                                        onchange="removeInvalidClass(this)" {{ $readonly }}
+                                        name="project[laboratorie1]" autocomplete="off" {{ $readonly }}
                                         placeholder="Lab Name">
                                 </div>
                                 <div class="form-group col-6 mb-3">
                                     <label for="excelReport"></label>
                                     <a href="{{ route('excelReport', ['project_id' => $project->id, 'isSample' => true]) }}"
-                                        class="form-control btn btn-primary p-3" type="button">Genrate Lab List</a>
+                                        class="form-control btn btn-primary p-3" type="button">Genrate Lab
+                                        List</a>
                                 </div>
 
                                 <div class="form-group col-6 mb-4">
@@ -160,7 +149,6 @@
                                 <h4 class="mt-3">Laboratory2</h4>
                             </div>
                             <div class="row">
-
                                 <div class="form-group col-6 mb-1">
                                     <label for="assign_date">Name</label>
                                     <input type="text"
@@ -216,8 +204,6 @@
                                     @endif
                                     <div class="invalid-feedback error" id="leb2LaboratoryResult1Error"></div>
                                 </div>
-
-
                                 <div class="form-group col-6">
                                     <label for="assign_date">Result 2</label>
                                     <input type="file"
@@ -240,23 +226,35 @@
                                     @endif
                                     <div class="invalid-feedback error" id="leb2LaboratoryResult2Error"></div>
                                 </div>
+                                @can('projects.edit')
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <button class="btn btn-primary float-right" id="laboratoryAssignSubmitBtn"
+                                                type="submit">Save</button>
+                                        </div>
+                                    </div>
+                                @endcan
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
-                <div class="card mb-2">
-                    <div class="card-header" id="headingNine">
-                        <h5 class="mb-0">
-                            <button type="button" class="btn btn-link collapsed" data-toggle="collapse"
-                                data-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
-                                <span class="fas fa-angle-down mr-3"></span>OnBoard Survey
-                            </button>
-                        </h5>
-                    </div>
-                    <div id="collapseNine" class="collapse" aria-labelledby="headingNine" data-parent="#accordion3">
-                        <div class="card-body">
+            </div>
+
+            <div class="card mb-2">
+                <div class="card-header" id="headingNine">
+                    <h5 class="mb-0">
+                        <button type="button" class="btn btn-link collapsed" data-toggle="collapse"
+                            data-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+                            <span class="fas fa-angle-down mr-3"></span>OnBoard Survey
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseNine" class="collapse" aria-labelledby="headingNine" data-parent="#accordion3">
+                    <div class="card-body">
+                        <form method="post" id="onBoardSurveyForm">
+                            @csrf
                             <div class="row">
-                                <input type="hidden" name="id" value="{{ $project->id ?? '' }}">
+                                <input type="hidden" name="project_id" value="{{ $project->id }}">
                                 <div class="form-group col-6">
                                     <label for="project_no">Survey Location Name</label>
                                     <input type="text"
@@ -287,25 +285,29 @@
                                 </div>
                                 <div class="form-group col-6">
                                     <label for="survey_date">Survey Date</label>
-                                    <input type="date"
-                                        class="form-control form-control-lg @error('survey_date') is-invalid @enderror"
-                                        id="survey_date"
+                                    <input type="date" class="form-control form-control-lg" id="survey_date"
                                         value="{{ old('survey_date', $project->survey_date ?? '') }}"
                                         name="project[survey_date]" placeholder="Survey Date.." autocomplete="off"
                                         onchange="removeInvalidClass(this)" {{ $readonly }}>
                                 </div>
+                                @can('projects.edit')
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <button class="btn btn-primary float-right" id="onBoardSurveySubmitBtn"
+                                                type="submit">Save</button>
+                                        </div>
+                                    </div>
+                                @endcan
                             </div>
-
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
 </div>
 
 @push('js')
-
     <script>
         function uploadFileCheck(fileInputId, errorMsgId) {
             var fileInput = $(`#${fileInputId}`)[0];
@@ -341,6 +343,67 @@
                     $(`#${errorMsgId}`).empty().text(errorMessage).show();
 
                     fileInput.value = '';
+                }
+            });
+        }
+
+        function handleFormSubmission(e, url) {
+            e.preventDefault();
+
+            let form = $(this); // Get the form element
+            let submitButton = form.find(':submit');
+            let originalText = submitButton.html();
+
+            // Disable the submit button and change its text
+            submitButton.text('Wait...');
+            submitButton.prop('disabled', true);
+
+            let formData = new FormData(form[0]); // Create FormData object from the form
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(msg) {
+                    // $(".sucessSurveylMsg").show();
+                    if (msg.isStatus) {
+                        swal({
+                            title: "Success",
+                            text: "Save Successfully!!",
+                            timer: 4000
+                        });
+                    } else {
+                        swal({
+                            title: 'Error',
+                            text: 'An unexpected error occurred. Please try again later.',
+                            icon: 'error',
+                            timer: 10000
+                        });
+                    }
+                },
+                error: function(err) {
+                    if (err.responseJSON && err.responseJSON.errors) {
+                        let errors = err.responseJSON.errors;
+                        $.each(errors, function(field, messages) {
+                            $('#' + field + 'Error').text(messages[0]).show();
+                            $('[name="' + field + '"]').addClass('is-invalid');
+                        });
+                    } else {
+                        swal({
+                            title: 'Error',
+                            text: 'An unexpected error occurred. Please try again later.',
+                            icon: 'error',
+                            timer: 4000,
+                            showConfirmButton: false
+                        });
+                    }
+                },
+                complete: function() {
+                    // Re-enable the submit button and restore its original text
+                    submitButton.text(originalText);
+                    submitButton.prop('disabled', false);
                 }
             });
         }
@@ -384,33 +447,16 @@
                 });
         });
 
-        $('#SurveyForm').submit(function(e) {
-            e.preventDefault();
-            var form = $(this); // Get the form element
-            var formData = new FormData(form[0]); // Create FormData object from the form
-            $.ajax({
-                type: "POST",
-                url: "{{ url('detail/assignProject') }}",
-                data: formData,
-                contentType: false,
-                processData: false,
+        $('#assignProjectForm').submit(function(e) {
+            handleFormSubmission.call(this, e, "{{ url('detail/assignProject') }}");
+        });
 
-                success: function(msg) {
-                    $(".sucessSurveylMsg").show();
-                },
-                error: function(err) {
-                    var errors = err.responseJSON.errors;
-                    $("#collapseSeven").show();
-                    $.each(errors, function(field, messages) {
-                        $('#' + field + 'Error').text(messages[0]).show();
-                        $('[name="' + field + '"]').addClass('is-invalid');
+        $('#laboratoryAssignForm').submit(function(e) {
+            handleFormSubmission.call(this, e, "{{ url('detail/assignProject') }}");
+        });
 
-                    });
-                },
-                complete: function() {
-                    $(".formSubmitBtn").hide();
-                }
-            });
+        $('#onBoardSurveyForm').submit(function(e) {
+            handleFormSubmission.call(this, e, "{{ url('detail/assignProject') }}");
         });
 
         $('#leb1LaboratoryResult1').on('change', function() {
@@ -480,4 +526,4 @@
         //     return /\/Encrypt\s/.test(text);
         // }
     </script>
-@endpush('js')
+@endpush
