@@ -125,24 +125,39 @@ class ReportContoller extends Controller
                 $query->where('project_id', $project_id);
             }])->get();
 
-            $lebResult = LabResult::with(['check','hazmat'])->where('project_id',$project_id)->where('IHM_part','IHMPart1-1')->where('type','Contained')->orwhere('type','PCHM')->get();
-        
+            $lebResult = LabResult::with(['check','hazmat'])->where('project_id',$project_id)->where('type','Contained')->orwhere('type','PCHM')->get();
+         
+            $filteredResults1 = $lebResult->filter(function ($item) {
+                return $item->IHM_part == 'IHMPart1-1';
+            });
+
+            $filteredResults2 = $lebResult->filter(function ($item) {
+                return $item->IHM_part == 'IHMPart1-2';
+            });
+            $filteredResults3 = $lebResult->filter(function ($item) {
+                return $item->IHM_part == 'IHMPart1-3';
+            });
+          
             $projectDetail = Projects::find($project_id);
             foreach($pdfView as $pdf){
                 $options = new Options();
                 $dompdf = new Dompdf($options);
-            
+              
                 // Render and save PDF for cover page
                 if($pdf == 'introduction'){
+                    $dompdf->setPaper('A4', 'portrait');
                     $coverHtml = view('report.'.$pdf,compact('hazmets','projectDetail'))->render();
                 }else if($pdf == 'Inventory'){
-                    $coverHtml = view('report.'.$pdf,compact('lebResult'))->render();
+                    $dompdf->setPaper('A4','landscape');
+
+                    $coverHtml = view('report.'.$pdf,compact('filteredResults1','filteredResults2','filteredResults3'))->render();
                 }else{
+                    $dompdf->setPaper('A4', 'portrait');
                     $coverHtml = view('report.'.$pdf)->render();
 
                 }
                 $dompdf->loadHtml($coverHtml);
-                $dompdf->setPaper('A4', 'portrait');
+               
                 $dompdf->render();
                 $coverPdfContent = $dompdf->output();
                
@@ -171,9 +186,15 @@ class ReportContoller extends Controller
                 for ($pageNumber = 1; $pageNumber <= $pageCount; $pageNumber++) {
                     $pageCountno+= 1;
                     $pdf->AddPage();
+                    
                     // Import the current page from the source PDF
                     $templateId = $pdf->importPage($pageNumber);
-            
+                    $size = $pdf->getTemplateSize($templateId);
+                    $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
+                    if( $size['width'] > $size['height']){
+                        $pdf->AddPage($orientation);
+
+                    }
                     // Use the imported page
                     $pdf->useTemplate($templateId);
             
@@ -190,11 +211,11 @@ class ReportContoller extends Controller
     
             // Output the merged PDF
             $mergedPdfFilePath = storage_path('app/pdf/merged.pdf');
-            $pdfOutput = $pdf->Output('S'); // Capture the PDF content as a string
+            $pdfOutput = $pdf->Output('F',$mergedPdfFilePath); // Capture the PDF content as a string
 
-            return response($pdfOutput, 200)
-                ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', 'inline; filename="merged.pdf"');
+            // return response($pdfOutput, 200)
+            //     ->header('Content-Type', 'application/pdf')
+            //     ->header('Content-Disposition', 'inline; filename="merged.pdf"');
     
            // return 'PDF files merged successfully!';
     
