@@ -1067,4 +1067,18 @@ class ProjectsController extends Controller
             return response()->json(['isStatus' => false, 'error' => 'An error occurred while processing your request.']);
         }
     }
+
+    public function reintialCheckIndex($projectId)
+    {
+        $checks = Checks::where('project_id', $projectId)->get();
+        $projectCount = 0;
+        foreach ($checks as $key => $check) {
+            $projectCount++;
+            $explode = explode("#", $check->name);
+            $intial = str_pad($projectCount, 3, 0, STR_PAD_LEFT);
+            $newName = $explode[0] . "#" . $intial;
+            $update = Checks::where('id', $check['id'])->update(['name' => $newName, 'initialsChekId' =>  $intial]);
+        }
+        return response()->json(['success' => 'ReIntial successfully'], 200);
+    }
 }

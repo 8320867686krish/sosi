@@ -1,8 +1,10 @@
 @if (isset($project->checks) && $project->checks->count() > 0)
+@php $count = 1; @endphp
     @foreach ($project->checks as $check)
         @php $hazmatsCount = count($check->check_hazmats); @endphp
         @if ($hazmatsCount == 0)
             <tr id="checkListTr_{{ $check->id }}">
+                <td>{{ $count }}</td>
                 <td>{{ $check->initialsChekId }}</td>
                 <td>{{ $check->name }}</td>
                 <td>{{ $check->type }}</td>
@@ -22,13 +24,17 @@
                     </td>
                 @endcan
             </tr>
+            @php $count++; @endphp
         @endif
         @foreach ($check->check_hazmats as $index => $hazmat)
             <tr id="checkListTr_{{ $check->id }}">
+            <td>{{ $count }}</td>
                 <td>{{ $check->initialsChekId }}</td>
                 <td>{{ $check->name }}</td>
                 <td>{{ $check->type }}</td>
-                <td>{{ $check->location }}</td>
+                <td>{{ $check->location }}   @if($check->sub_location)
+        {{ ',' . $check->sub_location }}
+    @endif</td>
                 <td>{{ $check->equipment }} <br> {{ $check->component }} </td>
                 <td>{{ $hazmat->hazmat->name }}</td>
                 <td>{{ $hazmat->type }}</td>
@@ -46,6 +52,7 @@
                     </td>
                 @endcan
             </tr>
+            @php $count++; @endphp
         @endforeach
     @endforeach
 @endif

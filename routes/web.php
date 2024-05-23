@@ -118,8 +118,10 @@ Route::middleware('auth')->group(function () {
         Route::get('genratePdf/{project_id}', [ReportContoller::class, 'genratePdf'])->name('generateDocx');
 
         Route::get('excelReport/{project_id}/{isSample?}', [ReportContoller::class, 'exportDataInExcel'])->name('excelReport')->middleware('can:projects.edit');
+        Route::get('generatorProjectQRcode/{projectId}', [QrCodeController::class, 'generatorProjectQRcode'])->name('generatorProjectQRcode')->middleware('can:projects.edit');
 
         Route::get('generatorQRcode/{deckId}', [QrCodeController::class, 'show'])->name('generatorQRcode')->middleware('can:projects.edit');
+         Route::get('reintialCheckIndex/{projectId}',[ProjectsController::class,'reintialCheckIndex'])->name('reintialCheckIndex')->middleware('can:projects.edit');
     });
 
     Route::middleware('can:users')->group(function () {

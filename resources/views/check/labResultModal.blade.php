@@ -26,9 +26,9 @@
                 <div class="form-group">
                     <select class="form-control IHM_part" id="IHM_part_{{ $lab->hazmat_id }}" name="IHM_part[{{ $lab->hazmat_id }}]">
                         <option value="">Select IHM Part</option>
-                        <option value="IHMPart1" {{ $lab->IHM_part == 'IHMPart1' ? 'selected' : '' }}>IHM Part 1</option>
-                        <option value="IHMPart2" {{ $lab->IHM_part == 'IHMPart2' ? 'selected' : '' }}>IHM Part 2</option>
-                        <option value="IHMPart3" {{ $lab->IHM_part == 'IHMPart3' ? 'selected' : '' }}>IHM Part 3</option>
+                        <option value="IHMPart1-1" {{ $lab->IHM_part == 'IHMPart1-1' ? 'selected' : '' }}>IHM Part 1-1</option>
+                        <option value="IHMPart1-2" {{ $lab->IHM_part == 'IHMPart1-2' ? 'selected' : '' }}>IHM Part 1-2</option>
+                        <option value="IHMPart1-3" {{ $lab->IHM_part == 'IHMPart1-3' ? 'selected' : '' }}>IHM Part 1-3</option>
                     </select>
                 </div>
             </div>
