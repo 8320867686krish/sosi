@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Checks;
 use App\Models\Deck;
+use App\Models\Projects;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Dompdf\Dompdf;
@@ -132,8 +133,8 @@ class QrCodeController extends Controller
             ->header('Content-Disposition', 'attachment; filename="qr_codes_' . $deckDetail['name'] . '.pdf"');
     }
     public function generatorProjectQRcode($projectId){
-        $checks = Checks::select('id', 'name', \DB::raw('COALESCE(initialsChekId, "00000") as initialsChekId'))->where('project_id', $projectId)->orderByDesc('id')->get();
-      
+        $checks = Checks::select('id', 'name', \DB::raw('COALESCE(initialsChekId, "00000") as initialsChekId'))->where('project_id', $projectId)->orderByAsc('id')->get();
+        $deckDetail = Projects::select('ship_name')->find($projectId);
         if ($checks->count() <= 0) {
             return redirect()->back()->with('message', 'This deck check not found.');
         }
@@ -172,7 +173,7 @@ class QrCodeController extends Controller
                 </style>
             </head>
             <body>';
-          //  $html.= "<div><center><h3>Deck : $deckDetail[name]</h3></center></div>";
+            $html.= "<div><center><h3>Deck : $deckDetail[ship_name]</h3></center></div>";
 
         $html .= '<table>';
 
