@@ -243,10 +243,11 @@ class ProjectsController extends Controller
     {
         try {
             $inputData = $request->input();
+            $inputData['id'] = $inputData['project_id'];
 
-            ProjectTeam::where('project_id', $inputData['project_id'])->delete();
 
             if (@$inputData['user_id']) {
+                ProjectTeam::where('project_id', $inputData['project_id'])->delete();
                 foreach ($inputData['user_id'] as $user_id) {
                     ProjectTeam::create([
                         'user_id' => $user_id,
@@ -782,8 +783,6 @@ class ProjectsController extends Controller
         }
     }
 
-
-
     public function updateDeckTitle(Request $request)
     {
         try {
@@ -1017,6 +1016,55 @@ class ProjectsController extends Controller
         } catch (Throwable $e) {
             \Log::error('Error rotating image: ' . $e->getMessage());
             return response()->json(['error' => 'An error occurred while processing the image'], 500);
+        }
+    }
+
+    public function addCheckImage(Request  $request)
+    {
+        try {
+            $projectId = $request->input('project_id');
+            $checkId = $request->input('check_id');
+
+            $checkData = [];
+
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
+                    $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") .  $projectId), $imageName);
+                    $checkData['image'] = $imageName;
+                    $checkData['check_id'] = $checkId;
+                    $checkData['project_id'] = $projectId;
+                    CheckImage::create($checkData);
+                }
+            }
+
+            return response()->json(["isStatus" => true, 'message' => 'Check image saved successfully']);
+        } catch (Throwable $th) {
+            \Log::error('Check image add Error: ' . $th->getMessage());
+            return response()->json(['error' => 'An error occurred while processing the image'], 500);
+        }
+    }
+
+    public function deleteCheckImage($id)
+    {
+        try {
+            $checkImg = CheckImage::find($id);
+
+            if (!$checkImg) {
+                return response()->json(['isStatus' => false, 'message' => 'Check image not found.']);
+            }
+
+            $path = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $checkImg->project_id . "/" . basename($checkImg->getOriginal('image')));
+
+            if (file_exists($path)) {
+                unlink($path);
+            }
+
+            $checkImg->delete();
+
+            return response()->json(['isStatus' => true, 'message' => 'Check image deleted successfully.']);
+        } catch (Throwable $th) {
+            return response()->json(['isStatus' => false, 'error' => 'An error occurred while processing your request.']);
         }
     }
 }

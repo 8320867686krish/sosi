@@ -97,6 +97,28 @@
             cursor: pointer;
             z-index: 9999;
         }
+
+        .checkImagePreview {
+            display: inline-block;
+            margin: 10px;
+            position: relative;
+        }
+
+        .checkImagePreview img {
+            width: 160px;
+        }
+
+        .checkImagePreview a {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            text-decoration: none;
+            color: red;
+            cursor: pointer;
+            /* background: white; */
+            /* border-radius: 50%; */
+            padding: 2px;
+        }
     </style>
 @endsection
 
@@ -491,16 +513,21 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label for="images">Check Image</label>
-                                        <input type="file" name="images[]" id="checkImages" class="form-control">
+                                        <input type="file" name="images[]" id="checkImages" class="form-control"
+                                            multiple accept="image/*">
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <div id="checkimagePreviewContainer"></div>
+                                    <div class="row" id="checkimagePreviewContainer"></div>
+                                </div>
+                                <div class="col-12 mt-5">
+                                    <h3>Check Image List</h3>
+                                    <div class="row" id="checkImageListPreview"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" id="checkImageAddSubmitBtn">Save</button>
+                            <button type="submit" class="btn btn-primary" id="checkImageAddSubmitBtn">Save</button>
                         </div>
                     </form>
                 </div>
@@ -1382,9 +1409,10 @@
                     });
 
                     try {
-                        if(textareas.length > 0) {
+                        if (textareas.length > 0) {
                             allResponses.length = 0;
-                            let response = await saveImageWithAreas(image.src, index, projectId, pdfFile, textareas);
+                            let response = await saveImageWithAreas(image.src, index, projectId,
+                                pdfFile, textareas);
                             allResponses.push(response);
                         }
                     } catch (error) {
@@ -1521,12 +1549,163 @@
                 detailOfHazmats(checkId);
             });
 
+            //Check Image javascript code
+            let selectedFiles = [];
             $(document).on("click", ".modalAddCheckImage", function() {
                 let checkId = $(this).attr('data-id');
+                let projectId = $(this).attr('data-projectId');
                 $("#checkImageAddFromCheck_id").val(checkId);
-                console.log(checkId);
+                $("#checkImageAddForm").find("#project_id").val(projectId);
+                $('#checkImageListPreview').empty(); // Clear previous previews
+
+                $.ajax({
+                    type: 'GET',
+                    url: "{{ url('check') }}" + "/" + checkId + "/image",
+                    success: function(response) {
+                        $.each(response.checkImagesList, function(index, value) {
+                            $("<div class='checkImagePreview' id='checkImagePreview_" +
+                                value.id + "'>" +
+                                "<img src='" + value.image + "' width='160px'>" +
+                                "<a href='javascript:;' class='ml-2 deleteCheckImage' data-id='" +
+                                value.id + "'>" +
+                                "<i class='fas fa-trash-alt text-danger' style='font-size: 1rem;'></i>" +
+                                "</a>" +
+                                "</div>").appendTo("#checkImageListPreview");
+                        });
+                    },
+                });
                 $("#checkImageAddModal").modal('show');
             });
+
+            $('#checkImages').on('change', function(event) {
+                const files = Array.from(event.target.files);
+                $('#checkimagePreviewContainer').empty(); // Clear previous previews
+                selectedFiles = files; // Update selectedFiles array
+
+                files.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        $("<div class='checkImagePreview' data-index='" + index + "'>" +
+                            "<img src='" + e.target.result + "'>" +
+                            "<a href='javascript:;' class='ml-2 delete'>" +
+                            "<i class='fas fa-trash-alt text-danger' style='font-size: 1rem;'></i>" +
+                            "</a>" +
+                            "</div>").appendTo("#checkimagePreviewContainer");
+                    }
+                    reader.readAsDataURL(file);
+                });
+            });
+
+            $('#checkimagePreviewContainer').on('click', '.delete', function() {
+                const index = $(this).closest('.checkImagePreview').data('index');
+                selectedFiles.splice(index, 1); // Remove the file from selectedFiles array
+                $(this).closest('.checkImagePreview').remove();
+
+                // Update data-index attribute for the remaining previews
+                $('#checkimagePreviewContainer .checkImagePreview').each((i, el) => {
+                    $(el).attr('data-index', i);
+                });
+
+                if ($('#checkimagePreviewContainer').children().length === 0) {
+                    $('#checkImages').val(""); // Clear the input value
+                }
+            });
+
+            $('#checkImageAddForm').on('submit', function(event) {
+                event.preventDefault();
+
+                let checkId = $(this).find("#checkImageAddFromCheck_id").val();
+                let projectId = $(this).find("#project_id").val();
+
+                const formData = new FormData();
+                formData.append('check_id', checkId);
+                formData.append('project_id', projectId);
+
+                selectedFiles.forEach(file => {
+                    formData.append('images[]', file);
+                });
+
+                let formAction = $(this).attr('action');
+
+                let $submitButton = $(this);
+                let originalText = $submitButton.html();
+                $submitButton.text('Wait...');
+                $submitButton.prop('disabled', true);
+
+                $.ajax({
+                    url: formAction,
+                    type: 'POST',
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        swal({
+                            title: "Success",
+                            text: response.message,
+                            timer: 4000
+                        });
+
+                        $('#checkimagePreviewContainer').empty();
+                        $('#checkImageAddForm')[0].reset();
+                        $submitButton.html(originalText);
+                        $submitButton.prop('disabled', false);
+                        $("#checkImageAddModal").modal('hide');
+                    },
+                    error: function(error) {
+                        swal({
+                            title: "Error",
+                            text: error.error,
+                            timer: 4000
+                        });
+                        $submitButton.html(originalText);
+                        $submitButton.prop('disabled', false);
+                    }
+                });
+            });
+
+            $("#checkDataImageCloseBtn").click(function() {
+                $('#checkimagePreviewContainer').empty();
+                $('#checkImageAddForm')[0].reset();
+            });
+
+            $('#checkImageListPreview').on('click', '.deleteCheckImage', function() {
+                let imageId = $(this).attr('data-id');
+                let deleteUrl = "{{ route('deleteCheckImage', ':id') }}".replace(':id', imageId);
+
+                swal({
+                    title: "Are you sure?",
+                    text: "Are you sure you want to delete this check image?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            url: deleteUrl,
+                            method: 'GET',
+                            success: function(response) {
+                                if (response.isStatus) {
+                                    $(`#checkImagePreview_${imageId}`).remove();
+                                    swal("Deleted!", response.message, "success");
+                                } else {
+                                    swal("Unable to Delete!", response.message,
+                                        "error");
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                swal("Error", "Error deleting record: " + error,
+                                    "error");
+                            }
+                        });
+                    }
+                });
+            });
+
 
             $(document).on("click", ".modalCheckbtn", function() {
                 let checkId = $(this).attr('data-id');
