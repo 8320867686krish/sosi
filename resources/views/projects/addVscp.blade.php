@@ -4,7 +4,7 @@
             @can('projects.edit')
             <div style="float:right">
                 <button class="btn btn-primary" onclick="triggerFileInput('pdfFile')">Add</button>&nbsp;&nbsp;
-                <button class="btn btn-primary reindex" data-id="{{$project_id}}">Reindex</button>
+                <button class="btn btn-primary reindex" data-id="{{$project_id}}" type="button">Reindex</button>
                 <input type="file" id="pdfFile" name="pdfFile" accept=".pdf" style="display: none;">
             </div>
 
@@ -104,17 +104,19 @@
     $(".reindex").click(function() {
         var projectId = $(this).attr('data-id');
         let $submitButton = $(this);
+        console.log($submitButton);
         let originalText = $submitButton.html();
         $submitButton.text('Wait...');
         $submitButton.prop('disabled', true);
-        $submitButton.html(originalText);
-        $submitButton.prop('disabled', false);
+
         $.ajax({
             type: 'get',
             url: "{{ url('reintialCheckIndex')}}" + "/" + projectId,
 
             success: function(response) {
+                $submitButton.html(originalText);
                 $submitButton.prop('disabled', false);
+
 
                 swal({
                     title: "Success",
@@ -124,7 +126,9 @@
 
             },
             error: function(xhr, status, error) {
-                console.error(xhr.responseText);
+                $submitButton.html(originalText);
+                $submitButton.prop('disabled', false);
+
             }
         });
     });
