@@ -117,6 +117,7 @@ Route::middleware('auth')->group(function () {
         Route::get('generatorProjectQRcode/{projectId}', [QrCodeController::class, 'generatorProjectQRcode'])->name('generatorProjectQRcode')->middleware('can:projects.edit');
 
         Route::get('generatorQRcode/{deckId}', [QrCodeController::class, 'show'])->name('generatorQRcode')->middleware('can:projects.edit');
+         Route::get('reintialCheckIndex/{projectId}',[ProjectsController::class,'reintialCheckIndex'])->name('reintialCheckIndex')->middleware('can:projects.edit');
     });
 
     Route::middleware('can:users')->group(function () {
