@@ -133,7 +133,7 @@ class QrCodeController extends Controller
             ->header('Content-Disposition', 'attachment; filename="qr_codes_' . $deckDetail['name'] . '.pdf"');
     }
     public function generatorProjectQRcode($projectId){
-        $checks = Checks::select('id', 'name', \DB::raw('COALESCE(initialsChekId, "00000") as initialsChekId'))->where('project_id', $projectId)->orderByAsc('id')->get();
+        $checks = Checks::select('id', 'name', \DB::raw('COALESCE(initialsChekId, "00000") as initialsChekId'))->where('project_id', $projectId)->get();
         $deckDetail = Projects::select('ship_name')->find($projectId);
         if ($checks->count() <= 0) {
             return redirect()->back()->with('message', 'This deck check not found.');
