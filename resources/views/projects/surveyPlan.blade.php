@@ -369,18 +369,9 @@
                 success: function(msg) {
                     // $(".sucessSurveylMsg").show();
                     if (msg.isStatus) {
-                        swal({
-                            title: "Success",
-                            text: "Save Successfully!!",
-                            timer: 4000
-                        });
+                        successMsg("Save Successfully!!");
                     } else {
-                        swal({
-                            title: 'Error',
-                            text: 'An unexpected error occurred. Please try again later.',
-                            icon: 'error',
-                            timer: 10000
-                        });
+                        errorMsg("An unexpected error occurred. Please try again later.");
                     }
                 },
                 error: function(err) {
@@ -391,13 +382,7 @@
                             $('[name="' + field + '"]').addClass('is-invalid');
                         });
                     } else {
-                        swal({
-                            title: 'Error',
-                            text: 'An unexpected error occurred. Please try again later.',
-                            icon: 'error',
-                            timer: 4000,
-                            showConfirmButton: false
-                        });
+                        errorMsg("An unexpected error occurred. Please try again later.");
                     }
                 },
                 complete: function() {
@@ -408,19 +393,19 @@
             });
         }
 
-        $(document).on('click', '.removeHazmatDocument', function(e) {
-            e.preventDefault();
-            let deleteUrl = $(this).attr('href');
-            let parentDiv = $(this).closest('div');
-            let confirmMsg = "Are you sure you want to delete this document?";
+        // $(document).on('click', '.removeHazmatDocument', function(e) {
+        //     e.preventDefault();
+        //     let deleteUrl = $(this).attr('href');
+        //     let parentDiv = $(this).closest('div');
+        //     let confirmMsg = "Are you sure you want to delete this document?";
 
-            confirmDeleteWithElseIf(deleteUrl, confirmMsg, function(response) {
-                // Success callback
-                if (response.isStatus) {
-                    parentDiv.empty();
-                }
-            });
-        });
+        //     confirmDeleteWithElseIf(deleteUrl, confirmMsg, function(response) {
+        //         // Success callback
+        //         if (response.isStatus) {
+        //             parentDiv.empty();
+        //         }
+        //     });
+        // });
 
         $(".removeDoc").click(function(e) {
             var type = $(this).attr('data-filed');
