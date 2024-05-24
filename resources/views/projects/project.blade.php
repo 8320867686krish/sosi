@@ -21,8 +21,7 @@
             </div>
             <div class="col-12 mb-4">
                 @can('projects.add')
-                    <a href="{{ route('projects.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New
-                        Project</a>
+                    <a href="{{ route('projects.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New Project</a>
                 @endcan
             </div>
         </div>
@@ -42,11 +41,9 @@
                                         <h3 class="mb-1">{{ ucfirst($project->ship_name) }}</h3>
                                         <p class="mb-1 line-clamp">IMO Number:<span
                                                 class="text-dark font-medium ml-2">{{ $project->imo_number }}</span></p>
-                                        <p class="mb-1 line-clamp">Manager: <span
-                                                class="text-dark font-medium ml-2">{{ ucwords($project->client->manager_name ?? '') }}</span>
+                                        <p class="mb-1 line-clamp">Manager: <span class="text-dark font-medium ml-2">{{ ucwords($project->client->manager_name ?? '') }}</span>
                                         </p>
-                                        <p class="line-clamp">Project No.:<span
-                                                class="text-dark font-medium ml-2">{{ $project->project_no }}</span></p>
+                                        <p class="line-clamp">Project No.:<span class="text-dark font-medium ml-2">{{ $project->project_no }}</span></p>
 
                                         <div class="progress mt-2 mb-3">
                                             <div class="progress-bar" role="progressbar"

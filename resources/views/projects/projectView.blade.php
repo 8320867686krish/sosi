@@ -1177,7 +1177,11 @@
                     contentType: false,
                     processData: false,
                     success: function(response) {
-                        $(".sucessMsg").show();
+                        if (response.isStatus) {
+                            successMsg(response.message);
+                        } else {
+                            errorMsg(response.message);
+                        }
                     },
                     error: function(xhr, status, error) {
                         let errors = xhr.responseJSON.errors;
@@ -1496,26 +1500,36 @@
 
             $(document).on('click', '.deckImgDeleteBtn', function(event) {
                 event.preventDefault();
+                let deckId = $(this).data('id');
+                let deleteUrl = "{{ route('deleteDeckImg', ['id' => ':id']) }}".replace(':id', deckId);
+                let confirmMsg = "Are you sure you want to delete this deck?";
 
-                if (confirm("Are you sure you want to delete this deck?")) {
+                confirmDelete(deleteUrl, confirmMsg, function(response) {
+                    // Success callback
+                    $('.deckView').html();
+                    $('.deckView').html(response.html);
+                }, function(response) {
+                    // Error callback (optional)
+                    console.log("Failed to delete: " + response.message);
+                });
 
-                    let deckId = $(this).data('id');
+                // if (confirm("Are you sure you want to delete this deck?")) {
 
-                    $.ajax({
-                        type: 'GET',
-                        url: "{{ route('deleteDeckImg', ['id' => ':id']) }}".replace(':id',
-                            deckId),
-                        success: function(response) {
-                            if (response.status) {
-                                $('.deckView').html();
-                                $('.deckView').html(response.html);
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error deleting item:', error);
-                        }
-                    });
-                }
+
+                //     $.ajax({
+                //         type: 'GET',
+                //         url: ,
+                //         success: function(response) {
+                //             if (response.status) {
+                //                 $('.deckView').html();
+                //                 $('.deckView').html(response.html);
+                //             }
+                //         },
+                //         error: function(xhr, status, error) {
+                //             console.error('Error deleting item:', error);
+                //         }
+                //     });
+                // }
             });
 
             $('#deckEditForm').submit(function(event) {
@@ -1531,10 +1545,18 @@
                     data: formData,
                     success: function(response) {
                         let deckData = response.deck;
-                        if (response.status) {
+                        // if (response.status) {
+                        //     $(`#deckTitle_${deckData.id}`).text(deckData.name);
+                        //     form.trigger('reset');
+                        //     $("#deckEditFormModal").modal('hide');
+                        // }
+                        if (response.isStatus) {
+                            successMsg(response.message);
                             $(`#deckTitle_${deckData.id}`).text(deckData.name);
                             form.trigger('reset');
                             $("#deckEditFormModal").modal('hide');
+                        } else {
+                            errorMsg(response.message);
                         }
                     },
                     error: function(xhr, status, error) {
@@ -1675,34 +1697,12 @@
             $('#checkImageListPreview').on('click', '.deleteCheckImage', function() {
                 let imageId = $(this).attr('data-id');
                 let deleteUrl = "{{ route('deleteCheckImage', ':id') }}".replace(':id', imageId);
+                let confirmMsg = "Are you sure you want to delete this check image?";
 
-                swal({
-                    title: "Are you sure?",
-                    text: "Are you sure you want to delete this check image?",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Yes, delete it!",
-                    closeOnConfirm: false
-                }, function(isConfirm) {
-                    if (isConfirm) {
-                        $.ajax({
-                            url: deleteUrl,
-                            method: 'GET',
-                            success: function(response) {
-                                if (response.isStatus) {
-                                    $(`#checkImagePreview_${imageId}`).remove();
-                                    swal("Deleted!", response.message, "success");
-                                } else {
-                                    swal("Unable to Delete!", response.message,
-                                        "error");
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                swal("Error", "Error deleting record: " + error,
-                                    "error");
-                            }
-                        });
+                confirmDeleteWithElseIf(deleteUrl, confirmMsg, function(response) {
+                    // Success callback
+                    if (response.isStatus) {
+                        $(`#checkImagePreview_${imageId}`).remove();
                     }
                 });
             });
@@ -1792,22 +1792,17 @@
                                                     },
                                                     success: function(
                                                         response) {
-
-                                                        swal({
-                                                            title: "Success",
-                                                            text: response
-                                                                .success,
-                                                            timer: 4000
-                                                        });
+                                                        successMsg(
+                                                            response
+                                                            .success
+                                                            );
                                                     },
                                                     error: function(
                                                         error) {
-                                                        swal({
-                                                            title: "Error",
-                                                            text: error
-                                                                .error,
-                                                            timer: 4000
-                                                        });
+                                                        errorMsg(
+                                                            error
+                                                            .error
+                                                            );
                                                     }
                                                 });
                                             }
@@ -1815,12 +1810,9 @@
                                 }
                             });
                         } else {
-                            swal({
-                                title: "Image Not Found",
-                                text: "The check image is not available at the moment. Please try again later.",
-                                timer: 4000,
-                                icon: "error"
-                            });
+                            errorMsg(
+                                "The check image is not available at the moment. Please try again later.",
+                                "Image Not Found");
                         }
                     },
                 });
@@ -2073,22 +2065,38 @@
                 }
             });
 
+            $(document).on("click", ".deleteCheckbtn", function(e) {
+                e.preventDefault();
+                let recordId = $(this).data('id');
+                let deleteUrl = $(this).attr("href");
+                let $liToDelete = $(this).closest('li');
+                let confirmMsg = "Are you sure you want to delete this check?";
+
+                confirmDeleteWithElseIf(deleteUrl, confirmMsg, function(response) {
+                    // Success callback
+                    if (response.isStatus) {
+                        $liToDelete.remove();
+                        $(".dot").remove();
+                        $('#showDeckCheck').html();
+                        $('#checkListUl').html();
+                        $('#showDeckCheck').html(response.htmldot);
+                        $('#checkListUl').html(response.htmllist);
+                        makeDotsDraggable();
+                    }
+                });
+            });
+
             // Remove Hazmat Document Analysis Results Document
             $(document).on('click', '.removeHazmatDocument', function(e) {
                 e.preventDefault();
+                let deleteUrl = $(this).attr('href');
                 let parentDiv = $(this).closest('div');
+                let confirmMsg = "Are you sure you want to delete this document?";
 
-                $.ajax({
-                    type: 'GET',
-                    url: $(this).attr('href'),
-                    success: function(response) {
-                        console.log(response);
-                        if (response.isStatus) {
-                            parentDiv.empty();
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.log(error);
+                confirmDeleteWithElseIf(deleteUrl, confirmMsg, function(response) {
+                    // Success callback
+                    if (response.isStatus) {
+                        parentDiv.empty();
                     }
                 });
             });
@@ -2111,16 +2119,7 @@
                     success: function(response) {
                         if (response.isStatus) {
                             $("#checkListTable").html(response.trtd);
-
-                            let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
-                            ${response.message}
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>`;
-                            //    $(`#checkListTr_${response.id}`).replaceWith(response.trtd);
-                            $("#showCheckImgMsg").html(messages);
-                            $('#showCheckImgMsg').fadeIn().delay(20000).fadeOut();
+                            successMsg(response.message);
                             $("#checkDataAddForm")[0].reset();
                             $("#id").val("");
                             $submitButton.html(originalText);

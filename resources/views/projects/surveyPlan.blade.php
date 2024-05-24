@@ -408,6 +408,20 @@
             });
         }
 
+        $(document).on('click', '.removeHazmatDocument', function(e) {
+            e.preventDefault();
+            let deleteUrl = $(this).attr('href');
+            let parentDiv = $(this).closest('div');
+            let confirmMsg = "Are you sure you want to delete this document?";
+
+            confirmDeleteWithElseIf(deleteUrl, confirmMsg, function(response) {
+                // Success callback
+                if (response.isStatus) {
+                    parentDiv.empty();
+                }
+            });
+        });
+
         $(".removeDoc").click(function(e) {
             var type = $(this).attr('data-filed');
             var project_id = $("#project_id").val();

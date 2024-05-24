@@ -61,7 +61,7 @@ class ClientContoller extends Controller
             // return redirect('clients')->with('message', $message);
             return response()->json(['isStatus' => true, 'message' => $message]);
         } catch (\Throwable $th) {
-            return back()->withError($th->getMessage())->withInput();
+            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
     }
 
@@ -124,7 +124,7 @@ class ClientContoller extends Controller
             // return redirect('clients')->with('message', 'Client deleted successfully');
             return response()->json(['isStatus' => true, 'message' => 'Client deleted successfully']);
         } catch (\Throwable $th) {
-            dd($th->getMessage());
+            // dd($th->getMessage());
             // return back()->withError($th->getMessage());
             return response()->json(['isStatus' => false, 'message' => 'Client not deleted successfully']);
         }

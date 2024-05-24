@@ -31,19 +31,18 @@
                         <form method="POST" action="{{ route('password.update') }}">
                             @csrf
                             @method('PUT')
-
                             <div class="form-group">
-                                <x-input-label for="current_password" :value="__('Current Password')" />
-                                <input id="current_password" class="form-control @error('current_password') is-invalid @enderror" type="password" name="current_password" placeholder="Current Password" required onchange="removeInvalidClass(this)" aria-describedby="currentPasswordError" />
+                                <x-input-label for="current_password" :value="__('Current Password')" /><span class="text-danger">*</span>
+                                <input id="current_password" class="form-control @error('current_password') is-invalid @enderror" type="password" name="current_password" placeholder="Current Password" onchange="removeInvalidClass(this)" aria-describedby="currentPasswordError" />
                                 @error('current_password')
                                     <div id="currentPasswordError" class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="form-group">
-                                <x-input-label for="password" :value="__('Password')" />
+                                <x-input-label for="password" :value="__('Password')" /><span class="text-danger">*</span>
                                 <input class="form-control @error('password') is-invalid @enderror" id="password"
-                                    type="password" required="" placeholder="Password" name="password" minlength="8"
+                                    type="password" placeholder="Password" name="password" minlength="8"
                                     onchange="removeInvalidClass(this)" aria-describedby="passwordError" />
                                 @error('password')
                                     <div id="passwordError" class="invalid-feedback">{{ $message }}</div>
@@ -54,7 +53,7 @@
                                 <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
                                 <input type="password"
                                     class="form-control @error('password_confirmation') is-invalid @enderror"
-                                    name="password_confirmation" required="" placeholder="Confirm Password"
+                                    name="password_confirmation" placeholder="Confirm Password"
                                     onchange="removeInvalidClass(this)" aria-describedby="confirmPasswordError" />
                                 @error('password_confirmation')
                                     <div id="confirmPasswordError" class="invalid-feedback">{{ $message }}</div>
@@ -71,15 +70,3 @@
         </div>
     </div>
 @endsection
-
-@push('js')
-    <script>
-        function removeInvalidClass(input) {
-            // Check if the input value is empty or whitespace only
-            const isValid = input.value.trim() !== '';
-
-            // Toggle the 'is-invalid' class based on the validity
-            input.classList.toggle('is-invalid', !isValid);
-        }
-    </script>
-@endpush

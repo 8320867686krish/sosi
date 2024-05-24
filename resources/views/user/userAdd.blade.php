@@ -146,19 +146,6 @@
 
 @push('js')
     <script>
-        function removeInvalidClass(input) {
-
-            const isValid = input.value.trim() !== '';
-
-            input.classList.toggle('is-invalid', !isValid);
-
-            const errorMessageElement = input.parentElement.querySelector('.invalid-feedback');
-
-            if (errorMessageElement) {
-                errorMessageElement.style.display = isValid ? 'none' : 'block';
-            }
-        }
-
         $(document).ready(function() {
             $('#userForm').submit(function(event) {
                 event.preventDefault(); // Prevent default form submission
@@ -182,10 +169,11 @@
                     method: 'POST',
                     data: formData,
                     success: function(response) {
-                        if (response.message) {
-                            localStorage.setItem('message', response.message);
+                        if (response.isStatus) {
+                            successMsgWithRedirect(response.message, "{{ route('users') }}");
+                        } else {
+                            errorMsgWithRedirect(response.message, "{{ route('users') }}");
                         }
-                        window.location.href = "{{ route('users') }}";
                     },
                     error: function(xhr, status, error) {
                         // If there are errors, display them

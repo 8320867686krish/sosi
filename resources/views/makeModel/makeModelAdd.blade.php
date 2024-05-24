@@ -96,6 +96,9 @@
                                         <input type="file" class="form-control" id="document1" name="document1" onchange="removeInvalidClass(this)">
                                         <div class="invalid-feedback error" id="document1Error"></div>
                                     </div>
+                                    @if (isset($model) && !empty($model->document1['name']))
+                                        <a href="{{$model->document1['path']}}" target="_black">{{$model->document1['name']}}</a>
+                                    @endif
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group">
@@ -103,6 +106,9 @@
                                         <input type="file" class="form-control" id="document2" name="document2" onchange="removeInvalidClass(this)">
                                         <div class="invalid-feedback error" id="document2Error"></div>
                                     </div>
+                                    @if (isset($model) && !empty($model->document2['name']))
+                                        <a href="{{$model->document2['path']}}" target="_black">{{$model->document2['name']}}</a>
+                                    @endif
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -127,19 +133,6 @@
 
 @push('js')
     <script>
-        function removeInvalidClass(input) {
-
-            const isValid = input.value.trim() !== '';
-
-            input.classList.toggle('is-invalid', !isValid);
-
-            const errorMessageElement = input.parentElement.querySelector('.invalid-feedback');
-
-            if (errorMessageElement) {
-                errorMessageElement.style.display = isValid ? 'none' : 'block';
-            }
-        }
-
         $(document).ready(function() {
             $('#makeModelForm').submit(function(event) {
                 event.preventDefault(); // Prevent default form submission
@@ -169,9 +162,10 @@
                     processData: false,
                     success: function(response) {
                         if (response.isStatus) {
-                            localStorage.setItem('message', response.message);
+                            successMsgWithRedirect(response.message, "{{ route('documentdeclaration') }}");
+                        } else {
+                            errorMsgWithRedirect(response.message, "{{ route('documentdeclaration') }}");
                         }
-                        window.location.href = "{{ route('documentdeclaration') }}";
                     },
                     error: function(xhr, status, error) {
                         let errors = xhr.responseJSON.errors;

@@ -20,7 +20,8 @@
                 <div class="card">
                     <h5 class="card-header">{{ $head_title ?? '' }} Role</h5>
                     <div class="card-body">
-                        <form method="post" action="{{ route('roles.store') }}" class="needs-validation" novalidate id="rolesForm">
+                        <form method="post" action="{{ route('roles.store') }}" class="needs-validation" novalidate
+                            id="rolesForm">
                             @csrf
                             <input type="hidden" name="id" value="{{ $role->id ?? null }}">
                             <div class="row">
@@ -133,10 +134,11 @@
                 method: 'POST',
                 data: formData,
                 success: function(response) {
-                    if (response.message) {
-                        localStorage.setItem('message', response.message);
+                    if (response.isStatus) {
+                        successMsgWithRedirect(response.message, "{{ route('roles') }}");
+                    } else {
+                        errorMsgWithRedirect(response.message, "{{ route('roles') }}");
                     }
-                    window.location.href = "{{ route('roles') }}";
                 },
                 error: function(xhr, status, error) {
                     // If there are errors, display them
