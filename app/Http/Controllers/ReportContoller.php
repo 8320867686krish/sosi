@@ -21,6 +21,8 @@ use Imagick;
 use SebastianBergmann\CodeCoverage\Report\Xml\Project;
 use setasign\Fpdi\Fpdi;
 use setasign\Fpdi\PdfParser\StreamReader;
+use setasign\Fpdi\PdfReader;
+use Mpdf\Mpdf;
 
 class ReportContoller extends Controller
 {
@@ -62,14 +64,18 @@ class ReportContoller extends Controller
         return Excel::download(new MultiSheetExport($project, $hazmats, $checks), $filename, $exportFormat);
     }
 
-  
+
     public function genratePdf($project_id)
     {
-        $pageNumbers = [];
-        $currentPageNumber = 1;
-
-        // Initialize Dompdf
-        $pdfView = ['cover', 'introduction', 'Inventory'];
+  
+       
+        $projectDetail = Projects::find($project_id);
+        if (!$projectDetail) {
+            die('Project details not found');
+        }
+        
+        $imageData = file_get_contents($projectDetail['image']);
+        $logo = 'https://sosindi.com/IHM/public/assets/images/logo.png';
         $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
             $query->where('project_id', $project_id);
         }])->withCount(['checkHasHazmatsSample as sample_count' => function ($query) use ($project_id) {
@@ -77,7 +83,6 @@ class ReportContoller extends Controller
         }])->withCount(['checkHasHazmatsVisual as visual_count' => function ($query) use ($project_id) {
             $query->where('project_id', $project_id);
         }])->get();
-
         $lebResult = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
 
         $filteredResults1 = $lebResult->filter(function ($item) {
@@ -90,106 +95,80 @@ class ReportContoller extends Controller
         $filteredResults3 = $lebResult->filter(function ($item) {
             return $item->IHM_part == 'IHMPart1-3';
         });
+        try {
+            // Create an instance of mPDF with specified margins
+            $mpdf = new Mpdf([
+                'mode' => 'c',
+                'margin_left' => 32,
+                'margin_right' => 25,
+                'margin_top' => 27,
+                'margin_bottom' => 25,
+                'margin_header' => 16,
+                'margin_footer' => 13,
+            ]);
+        
+            $mpdf->mirrorMargins = 1;
+            $mpdf->defaultPageNumStyle = '1';
+            $mpdf->SetDisplayMode('fullpage');
+         
+            // Define header content with logo
+            $header = '
+            <table width="100%" style="border-bottom: 1px solid #000000; vertical-align: middle; font-family: serif; font-size: 9pt; color: #000088;">
+                <tr>
+                    <td width="10%"><img src="' . $logo . '" width="50" /></td>
+                    <td width="80%" align="center">Project Report</td>
+                    <td width="10%" style="text-align: right;">{DATE j-m-Y}</td>
+                </tr>
+            </table>';
+        
+            // Define footer content with page number
+            $footer = '
+            <table width="100%" style="vertical-align: bottom; font-family: serif; font-size: 8pt; color: #000000;">
+                <tr>
+                    <td width="33%">{DATE j-m-Y}</td>
+                    <td width="33%" align="center">{PAGENO}/{nbpg}</td>
+                    <td width="33%" style="text-align: right;">' . $projectDetail['ihm_table'] . '</td>
+                </tr>
+            </table>';
+            $mpdf->SetHTMLHeader($header);
+            $mpdf->SetHTMLFooter($footer);
 
-        $projectDetail = Projects::find($project_id);
-        $image = $projectDetail['image'];
-
-        foreach ($pdfView as $pdf) {
-            $options = new Options();
-            $dompdf = new Dompdf($options);
-
-            // Render and save PDF for cover page
-            if ($pdf == 'introduction') {
-                $dompdf->setPaper('A4', 'portrait');
-                $coverHtml = view('report.' . $pdf, compact('hazmets', 'projectDetail'))->render();
-            } else if ($pdf == 'Inventory') {
-                $dompdf->setPaper('A4', 'landscape');
-
-                $coverHtml = view('report.' . $pdf, compact('filteredResults1', 'filteredResults2', 'filteredResults3'))->render();
-            } else {
-                $coverHtml = view('report.' . $pdf, compact('image'))->render();
-            }
-            $dompdf->loadHtml($coverHtml);
-
-            $dompdf->render();
-            $coverPdfContent = $dompdf->output();
-
-            $this->savePdf($coverPdfContent, $pdf . '.pdf');
-            $tempPdf = new Fpdi();
-            $pageCount = $tempPdf->setSourceFile(storage_path('app/pdf/' . $pdf . '.pdf'));
-            $pageNumbers[$pdf] = $currentPageNumber;
-            $currentPageNumber += $pageCount;
-        }
-        $indexTableHtml = view('report.indexTable', compact('pageNumbers'))->render();
-        $options = new Options();
-        $dompdf = new Dompdf($options);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->loadHtml($indexTableHtml);
-        $dompdf->render();
-        $indexPdfContent = $dompdf->output();
-        $filePath = storage_path('app/pdf/indexTable.pdf');
-        file_put_contents($filePath, $indexPdfContent);
-
-        // Merge PDFs including the index table
-        $pdf = new Fpdi();
-        $pdfFolderPath = storage_path('app/pdf');
-        $inserted = array( 1 => 'indexTable' ); 
-
-        array_splice( $pdfView, 1, 0, $inserted );
-       
-        $pdf = new Fpdi();
-
-        // Specify the folder where PDF files are stored
-        $pdfFolderPath = storage_path('app/pdf');
-
-        // Get the list of PDF files in the folder
-        $pdfFiles = glob($pdfFolderPath . '/*.pdf');
-        // Add each PDF file to the merged PDF
-        $pageCountno = 0;
-
-
-        foreach ($pdfView as $pdfFile1) {
-            $pdfFile =  storage_path('app/pdf/' . $pdfFile1 . '.pdf');
-            // Add a new page to the merged PDF
-
-
-            // Import the current page from the source PDF
-            $pageCount = $pdf->setSourceFile($pdfFile);
-
-            for ($pageNumber = 1; $pageNumber <= $pageCount; $pageNumber++) {
-                $pageCountno += 1;
-               
-
-                // Import the current page from the source PDF
-                $templateId = $pdf->importPage($pageNumber);
-                $size = $pdf->getTemplateSize($templateId);
-                $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
-                if ($size['width'] > $size['height']) {
-                    $pdf->AddPage($orientation);
-                }else{
-                    $pdf->AddPage();
-                }
-                // Use the imported page
-                $pdf->useTemplate($templateId);
-
-                //     // Set the font for page number
-                    $pdf->SetFont('Arial', 'B', 12);
-                //     // Set position for page number (adjust as needed)
-                    $pdf->SetY(-40);
-                    $pdf->Cell(0, 50, 'Page ' . $pageCountno, 0, 0, 'C');
-            }
           
-        }
+        
+            // Load main HTML content
+         
+            $mpdf->h2toc = ['H2' => 0, 'H3' => 1];
+            $mpdf->h2bookmarks = ['H2' => 0, 'H3' => 1];
+            // Set header and footer
+        
+            // Add Table of Contents
+           
+            $stylesheet = file_get_contents('public/assets/mpdf.css');
+            $mpdf->WriteHTML($stylesheet, 1); // The parameter 1 tells that this is css/style only and no body/html/text
+            $mpdf->WriteHTML(view('report.cover',compact('projectDetail')));
+            $mpdf->TOCpagebreak();
        
-        // Output the merged PDF
-        $mergedPdfFilePath = storage_path('app/pdf/merged.pdf');
-        $pdfOutput = $pdf->Output('F', $mergedPdfFilePath); // Capture the PDF content as a string
+            $mpdf->TOCpagebreakByArray([
+                'links' => true,
+                'toc-preHTML' => 'Table of Contents',
+                'level'=>0,
+            ]);
 
-        // return response($pdfOutput, 200)
-        //     ->header('Content-Type', 'application/pdf')
-        //     ->header('Content-Disposition', 'inline; filename="merged.pdf"');
+          $mpdf->WriteHTML(view('report.introduction',compact('hazmets','projectDetail')));
+          $mpdf->AddPage('L'); // Set landscape mode for the inventory page
+          $totalPages = $mpdf->page;
 
-        // return 'PDF files merged successfully!';
+         
+          $mpdf->WriteHTML(view('report.inventory',compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
+          $mpdf->AddPage('p'); // Set landscape mode for the inventory page
+          $mpdf->WriteHTML(view('report.development',compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
+          
+            // Output the PDF
+            $mpdf->Output('project_report.pdf', 'I');
+        } catch (\Mpdf\MpdfException $e) {
+            // Handle mPDF exception
+            echo $e->getMessage();
+        }
 
     }
 
@@ -207,5 +186,4 @@ class ReportContoller extends Controller
         $filePath = $pdfFolderPath . '/' . $filename;
         file_put_contents($filePath, $content);
     }
-   
 }

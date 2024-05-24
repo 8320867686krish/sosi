@@ -14,10 +14,13 @@
         </thead>
         <tbody>
             @foreach ($pageNumbers as $section => $pageNumber)
+            @if( $section != 'cover')
                 <tr>
                     <td><a href="#page={{ $pageNumber }}">{{ ucfirst($section) }}</a></td>
                     <td>{{ $pageNumber }}</td>
+                    
                 </tr>
+            @endif
             @endforeach
         </tbody>
     </table>
