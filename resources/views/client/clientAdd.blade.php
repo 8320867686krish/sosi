@@ -384,19 +384,6 @@
 
 @push('js')
     <script>
-        function removeInvalidClass(input) {
-
-            const isValid = input.value.trim() !== '';
-
-            input.classList.toggle('is-invalid', !isValid);
-
-            const errorMessageElement = input.parentElement.querySelector('.invalid-feedback');
-
-            if (errorMessageElement) {
-                errorMessageElement.style.display = isValid ? 'none' : 'block';
-            }
-        }
-
         $(document).ready(function() {
             $('#isSameAsManager').click(function() {
                 if ($(this).is(':checked')) {
@@ -447,10 +434,11 @@
                     processData: false,
                     success: function(response) {
                         // Handle success response
-                        if (response.message) {
-                            localStorage.setItem('message', response.message);
+                        if (response.isStatus) {
+                            successMsgWithRedirect(response.message, "{{ route('clients') }}");
+                        } else {
+                            errorMsgWithRedirect(response.message, "{{ route('clients') }}");
                         }
-                        window.location.href = "{{ route('clients') }}";
                     },
                     error: function(xhr, status, error) {
                         // If there are errors, display them

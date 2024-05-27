@@ -77,7 +77,10 @@
                         form.trigger('reset');
 
                         $(".loadView").html(response.html)
+                        successMsg(response.message);
                         $("#attachmentModel").modal('hide');
+                    } else {
+                        errorMsg("An unexpected error occurred. Please try again later.");
                     }
                 },
                 error: function(xhr, status, error) {

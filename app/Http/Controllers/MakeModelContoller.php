@@ -58,7 +58,7 @@ class MakeModelContoller extends Controller
 
             return response()->json(['isStatus' => true, 'message' => $message]);
         } catch (\Throwable $th) {
-            throw $th;
+            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
     }
 

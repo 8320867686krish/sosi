@@ -112,61 +112,19 @@
 
     <script>
         $(document).ready(function() {
-
-            let message = localStorage.getItem('message');
-            if (message) {
-                // Display the message on the page
-                let successMessage = `
-                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                        ${message}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>`;
-
-                $('#showSuccessMsg').html(successMessage);
-                // Display the .showSuccessMsg element
-                $('#showSuccessMsg').fadeIn().delay(20000).fadeOut();
-                // Clear the message from localStorage
-                localStorage.removeItem('message');
-            }
-
             $('.delete-btn').on('click', function() {
                 let recordId = $(this).data('id');
                 let deleteUrl = "{{ route('documentdeclaration.delete', ':id') }}".replace(':id', recordId);
                 let $deleteButton = $(this);
+                let confirmMsg = "Are you sure you want to delete this document?";
 
-                // Show confirmation dialog
-                if (confirm("Are you sure you want to delete this make model?")) {
-                    // User confirmed, send AJAX request
-                    $.ajax({
-                        url: deleteUrl,
-                        method: 'GET',
-                        success: function(response) {
-
-                            if (response.isStatus) {
-                                $deleteButton.closest('.makeModelTrTag').remove();
-                            }
-
-                            let successMessage = `
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    ${response.message}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>`;
-
-                            $('#showSuccessMsg').html(successMessage);
-
-                            // Display the .showSuccessMsg element
-                            $('#showSuccessMsg').fadeIn().delay(20000).fadeOut();
-                        },
-                        error: function(xhr, status, error) {
-                            // Handle AJAX errors
-                            alert("Error deleting record: " + error);
-                        }
-                    });
-                }
+                confirmDelete(deleteUrl, confirmMsg, function(response) {
+                    // Success callback
+                    $deleteButton.closest('.makeModelTrTag').remove();
+                }, function(response) {
+                    // Error callback (optional)
+                    console.log("Failed to delete: " + response.message);
+                });
             });
         });
     </script>

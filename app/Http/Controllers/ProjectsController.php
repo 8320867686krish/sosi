@@ -165,37 +165,73 @@ class ProjectsController extends Controller
         }
     }
 
+    // public function saveDetail(ProjectDetailRequest $request)
+    // {
+    //     $inputData = $request->input();
+    //     unset($inputData['manager_name']);
+    //     unset($inputData['owner_name']);
+    //     if ($request->hasFile('image')) {
+    //         $image = $request->file('image');
+    //         $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
+
+    //         $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $inputData['id'] . "/"), $imageName);
+
+    //         $inputData['image'] = $imageName;
+
+    //         if (!empty($inputData['id'])) {
+
+    //             $exitsImg = Projects::select('id', 'image')->findOrFail($inputData['id']);
+    //             $imageFilename = basename($exitsImg->getOriginal('image'));
+    //             if (!empty($exitsImg->image)) {
+    //                 $path = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $inputData['id'] . '/' . $imageFilename);
+
+    //                 if (file_exists($path) && is_file($path)) {
+    //                     unlink($path);
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     $inputData['projectPercentage'] = "10";
+    //     unset($inputData['_token']);
+    //     Projects::where(['id' => $inputData['id']])->update($inputData);
+    //     return response()->json(['isStatus' => true, 'message' => 'Successfully save details !!']);
+    // }
+
     public function saveDetail(ProjectDetailRequest $request)
     {
-        $inputData = $request->input();
-        unset($inputData['manager_name']);
-        unset($inputData['owner_name']);
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
+        try {
+            $inputData = $request->only(['id']); // Only take necessary fields
+            $projectId = $inputData['id'];
 
-            $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $inputData['id'] . "/"), $imageName);
+            // Handle file upload if 'image' is present in the request
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
 
-            $inputData['image'] = $imageName;
+                $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId . "/"), $imageName);
 
-            if (!empty($inputData['id'])) {
+                $inputData['image'] = $imageName;
 
-                $exitsImg = Projects::select('id', 'image')->findOrFail($inputData['id']);
-                $imageFilename = basename($exitsImg->getOriginal('image'));
-                if (!empty($exitsImg->image)) {
-                    $path = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $inputData['id'] . '/' . $imageFilename);
+                // Delete previous image if it exists
+                $existingProject = Projects::find($projectId);
+                if (!is_null($existingProject) && !empty($existingProject->image)) {
+                    $existingImagePath = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId . '/' . basename($existingProject->image));
 
-                    if (file_exists($path) && is_file($path)) {
-                        unlink($path);
+                    if (file_exists($existingImagePath) && is_file($existingImagePath)) {
+                        unlink($existingImagePath);
                     }
                 }
             }
-        }
 
-        $inputData['projectPercentage'] = "10";
-        unset($inputData['_token']);
-        Projects::where(['id' => $inputData['id']])->update($inputData);
-        return response()->json(['isStatus' => true, 'message' => 'successfully save details !!']);
+            // Update project details
+            Projects::where(['id' => $projectId])->update($inputData);
+
+            // Return success response
+            return response()->json(['isStatus' => true, 'message' => 'Successfully save details !!']);
+        } catch (Throwable $e) {
+            return response()->json(['isStatus' => false, 'message' => $e->getMessage()]);
+        }
     }
 
     public function checkLaboratoryFile(Request $request)
@@ -657,7 +693,7 @@ class ProjectsController extends Controller
                 $htmllist = view('check.checkList', compact('checks'))->render();
             }
 
-            $message = empty($id) ? "Image check added successfully" : "Image check updated successfully";
+            $message = empty($id) ? "Check added successfully" : "Check updated successfully";
 
             return response()->json(['isStatus' => true, 'message' => $message, "id" => $data->id, 'name' => $name, 'htmllist' => $htmllist ?? " ", "trtd" => $trtd ?? " "]);
         } catch (ValidationException $e) {
@@ -786,21 +822,18 @@ class ProjectsController extends Controller
     public function updateDeckTitle(Request $request)
     {
         try {
-
             $updated = Deck::where('id', $request->input('id'))->update(['name' => $request->input('name')]);
             if ($updated) {
                 // Fetch the updated record
                 $deck = Deck::select('id', 'name')->find($request->input('id'));
 
-                // Your Eloquent query executed by using get()
-
                 if ($deck) {
-                    return response()->json(["status" => true, "message" => "Deck updated successfully", 'deck' => $deck]);
+                    return response()->json(["isStatus" => true, "message" => "Deck updated successfully", 'deck' => $deck]);
                 } else {
-                    return response()->json(["status" => false, "message" => "Deck not found"]);
+                    return response()->json(["isStatus" => false, "message" => "Deck not found"]);
                 }
             } else {
-                return response()->json(["status" => false, "message" => "Failed to update deck"]);
+                return response()->json(["isStatus" => false, "message" => "Failed to update deck"]);
             }
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
@@ -816,7 +849,7 @@ class ProjectsController extends Controller
 
             // Check if the deck exists
             if (!$deck) {
-                return response()->json(['error' => 'Deck not found'], 404);
+                return response()->json(["isStatus" => false, 'error' => 'Deck not found'], 404);
             }
 
             // Construct the image path
@@ -834,9 +867,9 @@ class ProjectsController extends Controller
 
             $html = view('projects.list_vsp_ajax', compact('decks'))->render();
 
-            return response()->json(["status" => true, "message" => "Deck deleted successfully", 'html' => $html]);
+            return response()->json(["isStatus" => true, "message" => "Deck deleted successfully", 'html' => $html]);
         } catch (\Throwable $th) {
-            return response()->json(['error' => $th->getMessage()], 500);
+            return response()->json(["isStatus" => false, 'error' => $th->getMessage()], 500);
         }
     }
 
@@ -873,13 +906,13 @@ class ProjectsController extends Controller
             $htmllist = view('check.checkList', compact('checks'))->render();
 
             return response()->json([
-                "status" => true,
+                "isStatus" => true,
                 "message" => "Check deleted successfully",
                 'htmldot' => $htmldot,
                 'htmllist' => $htmllist
             ]);
         } catch (\Throwable $th) {
-            return response()->json(['error' => $th->getMessage()], 500);
+            return response()->json(["isStatus" => true, 'error' => $th->getMessage()], 500);
         }
     }
 

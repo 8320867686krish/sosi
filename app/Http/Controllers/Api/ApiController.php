@@ -437,12 +437,12 @@ class ApiController extends Controller
             Checks::where('id', $id)->update($inputData);
 
             if ($request->filled('suspected_hazmat')) {
-              
+
                 $suspectedHazmat = explode(',', $request->input('suspected_hazmat'));
                 $logArray = array_map('trim', $suspectedHazmat);
 
                 $hazmatIds = Hazmat::whereIn('name',$logArray)->pluck('id')->toArray();
-              
+
                 CheckHasHazmat::where([
                     "project_id" => $inputData['project_id'],
                     "check_id" => $inputData['id'],
@@ -460,7 +460,7 @@ class ApiController extends Controller
                     if(!@$checkhasData){
                         CheckHasHazmat::create($hazmatData);
                     }
-                
+
                 }
             }
 
