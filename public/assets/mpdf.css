@@ -26,13 +26,15 @@
             font-size: 16px;
             color: #333;
         }
-        .section-1-2 ul {
+        .section-1-2 ul ,.section-1-1 ul{
             font-size: 14px;
             color: #555;
             line-height: 1.5;
+            padding-top: 10px;
             margin-bottom: 5px; /* Add some margin between list items */
+
         }
-        .section-1-2 li {
+        .section-1-2 li,.section-1-1 li {
             line-height: 20px;
             padding-top:5px;
         }
@@ -110,7 +112,4 @@
         .section-1-1 table th{
             background-color: #4C94D8;
         }
-        div.next {
-            page-break-inside: avoid;
-            page-break-after: always;
-        }
+    
