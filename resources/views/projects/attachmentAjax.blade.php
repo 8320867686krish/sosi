@@ -17,7 +17,7 @@
                     <tbody>
                         @foreach ($attachment as $value)
                         <tr>
-                            <td>{{ $value['id'] }}</td>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $value['heading'] }}</td>
                             <td>
                                 <a href="{{ asset('images/attachment/' . $value['project_id'] . '/' . $value['documents']) }}" target="_blank">

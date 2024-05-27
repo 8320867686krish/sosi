@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('heading')->nullable();
             $table->text('documents')->nullable();
             $table->string('attachment_type',20)->nullable();
-
             $table->timestamps();
         });
     }

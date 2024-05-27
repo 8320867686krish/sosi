@@ -1508,28 +1508,7 @@
                     // Success callback
                     $('.deckView').html();
                     $('.deckView').html(response.html);
-                }, function(response) {
-                    // Error callback (optional)
-                    console.log("Failed to delete: " + response.message);
                 });
-
-                // if (confirm("Are you sure you want to delete this deck?")) {
-
-
-                //     $.ajax({
-                //         type: 'GET',
-                //         url: ,
-                //         success: function(response) {
-                //             if (response.status) {
-                //                 $('.deckView').html();
-                //                 $('.deckView').html(response.html);
-                //             }
-                //         },
-                //         error: function(xhr, status, error) {
-                //             console.error('Error deleting item:', error);
-                //         }
-                //     });
-                // }
             });
 
             $('#deckEditForm').submit(function(event) {

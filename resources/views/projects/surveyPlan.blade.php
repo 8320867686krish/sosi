@@ -393,27 +393,14 @@
             });
         }
 
-        // $(document).on('click', '.removeHazmatDocument', function(e) {
-        //     e.preventDefault();
-        //     let deleteUrl = $(this).attr('href');
-        //     let parentDiv = $(this).closest('div');
-        //     let confirmMsg = "Are you sure you want to delete this document?";
-
-        //     confirmDeleteWithElseIf(deleteUrl, confirmMsg, function(response) {
-        //         // Success callback
-        //         if (response.isStatus) {
-        //             parentDiv.empty();
-        //         }
-        //     });
-        // });
-
         $(".removeDoc").click(function(e) {
+            e.preventDefault();
             var type = $(this).attr('data-filed');
             var project_id = $("#project_id").val();
-            e.preventDefault();
+
             swal({
                     title: "Are you sure?",
-                    text: "You will not be able to recover this imaginary file!",
+                    text: "Are you sure you want to delete this document?",
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
