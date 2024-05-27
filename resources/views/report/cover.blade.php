@@ -1,9 +1,10 @@
 <div  class="next">
     <div style="text-align: center;">
-    <div style="padding-top: 30px;">
+    <h1 style="padding-top: 20px;">{{$projectDetail['ihm_table']}} Report</h1><br />
+
+    <div style="padding-top: 20px;">
             <img src="{{  $projectDetail['image'] }}" alt="Your Image">
         </div>
-        <h1 style="padding-top: 30px;">{{$projectDetail['ihm_table']}} Report</h1><br />
         <h4 style="padding-top: 1px;">Report No: {{$projectDetail['project_no']}}</h4>
         <h4 style="padding-top: 1px;">SHIP NAME- {{$projectDetail['ship_name']}}</h4>
         <h4 style="padding-top: 1px;">IMO No: {{$projectDetail['imo_number']}}</h4>
