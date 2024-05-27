@@ -23,7 +23,7 @@ use setasign\Fpdi\Fpdi;
 use setasign\Fpdi\PdfParser\StreamReader;
 use setasign\Fpdi\PdfReader;
 use Mpdf\Mpdf;
-
+ini_set("pcre.backtrack_limit", "5000000");
 class ReportContoller extends Controller
 {
     public function exportDataInExcel(Request $request, $id, $isSample = null)
@@ -159,7 +159,7 @@ class ReportContoller extends Controller
           $totalPages = $mpdf->page;
 
          
-          $mpdf->WriteHTML(view('report.inventory',compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
+          $mpdf->WriteHTML(view('report.Inventory',compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
           $mpdf->AddPage('p'); // Set landscape mode for the inventory page
           $mpdf->WriteHTML(view('report.development',compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
           

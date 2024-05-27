@@ -5,11 +5,11 @@
         <h3 style="padding-top: 1px;">SHIP NAME- {{$projectDetail['ship_name']}}</h3>
         <h3 style="padding-top: 1px;">IMO No: {{$projectDetail['imo_number']}}</h3>
         @php
-        $imageData = file_get_contents($projectDetail['image']);
-        $base64EncodedImageData = base64_encode($imageData);
+        $imageData = $projectDetail['image'];
+      
         @endphp
         <div style="padding-top: 30px;">
-            <img src="data:image/jpeg;base64,{{ $base64EncodedImageData }}" alt="Your Image">
+            <img src="{{ $imageData }}" alt="Your Image">
         </div>
     </div>
     <div style="text-align: right;">
