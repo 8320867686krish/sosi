@@ -26,13 +26,17 @@
             font-size: 16px;
             color: #333;
         }
-        .section-1-2 ul ,.section-1-1 ul{
+        .section-1-2 ul ,.ulIteam{
             font-size: 14px;
             color: #555;
             line-height: 1.5;
             padding-top: 10px;
             margin-bottom: 5px; /* Add some margin between list items */
 
+        }
+        .ulIteam li{
+            line-height: 20px;
+            padding-top:5px;
         }
         .section-1-2 li,.section-1-1 li {
             line-height: 20px;
@@ -86,23 +90,23 @@
         }
         .section-1-3 table td,th {
             border: 1px solid black; /* Adds border to each cell */
-            padding: 8px; /* Adds padding to cells */
+            padding: 4px; /* Adds padding to cells */
             text-align: left; /* Aligns text to the left */
             font-size: 14px;
         }
         .section-1-4 table td {
             border: 1px solid black; /* Adds border to each cell */
-            padding: 8px; /* Adds padding to cells */
+            padding: 4px; /* Adds padding to cells */
             font-size: 14px;
         }
         .section-1-1 table td {
             border: 1px solid black; /* Adds border to each cell */
-            padding: 8px; /* Adds padding to cells */
+            padding: 4px; /* Adds padding to cells */
             font-size: 14px;
         }
         .section-1-1 table td,th {
             border: 1px solid black; /* Adds border to each cell */
-            padding: 8px; /* Adds padding to cells */
+            padding: 4px; /* Adds padding to cells */
             text-align: left; /* Aligns text to the left */
             font-size: 14px;
         }
