@@ -9,12 +9,15 @@ class MultiSheetExport implements WithMultipleSheets
     protected $coverData;
     protected $summaryData;
     protected $vscpData;
+    protected $isSample;
 
-    public function __construct($coverData, $summaryData, $vscpData)
+    public function __construct($coverData, $summaryData, $vscpData,$isSample)
     {
         $this->coverData = $coverData;
         $this->summaryData = $summaryData;
         $this->vscpData = $vscpData;
+        $this->isSample = $isSample;
+
     }
 
     public function sheets(): array
@@ -22,7 +25,7 @@ class MultiSheetExport implements WithMultipleSheets
         return [
             'COVER' => new CoverSheetExport($this->coverData, "Onboard IHM Survey Plan"),
             'SUMMARY' => new SummarySheetExport($this->summaryData),
-            'VSCP' => new VSCPSheetExport($this->vscpData)
+            'VSCP' => ($this->isSample ? new labResultExport($this->vscpData) : new VSCPSheetExport($this->vscpData))
         ];
     }
 }

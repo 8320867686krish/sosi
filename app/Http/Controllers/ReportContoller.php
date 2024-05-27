@@ -56,12 +56,17 @@ class ReportContoller extends Controller
 
         if ($isSample) {
             $checks = $checks->where('type', 'sample');
+            $ship_name = $project["ship_name"];
+            $filename = "labeResult-{$ship_name}-" . time() . "." . $fileExt;
+
+        }else{
+            $filename = "projects-{$id}-" . time() . "." . $fileExt;
+
         }
 
         $checks = $checks->get();
-
-        $filename = "projects-{$id}-" . time() . "." . $fileExt;
-        return Excel::download(new MultiSheetExport($project, $hazmats, $checks), $filename, $exportFormat);
+       
+        return Excel::download(new MultiSheetExport($project, $hazmats, $checks,$isSample), $filename, $exportFormat);
     }
 
 
