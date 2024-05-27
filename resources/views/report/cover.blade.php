@@ -14,7 +14,7 @@
     </div>
    
     <div style="pading-top:30px">
-        <h3>Prepared by SOS INDIA As Per:</h3>
+        <h4>Prepared by SOS INDIA As Per:</h4>
         <ul>
             <li>Hong Kong International Convention for the Safe and Environmentally Sound Recycling of
                 Ships (SR/CONF 45)</li>
