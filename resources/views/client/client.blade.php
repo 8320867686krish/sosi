@@ -16,13 +16,6 @@
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
                     <h2 class="pageheader-title">Client Management</h2>
-                    {{-- <div class="page-breadcrumb">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item active"><a href="#" class="breadcrumb-link">Client</a></li>
-                            </ol>
-                        </nav>
-                    </div> --}}
                 </div>
             </div>
         </div>
@@ -33,7 +26,6 @@
             <div class="col-12">
                 @include('layouts.message')
             </div>
-            <div class="showSuccessMsg col-12" style="display: none;"></div>
             <div class="col-12 mb-4">
                 @can('clients.add')
                     <a href="{{ route('clients.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New
@@ -115,57 +107,16 @@
             matchHeight();
             $(window).resize(matchHeight);
 
-            let message = localStorage.getItem('message');
-            if (message) {
-                // Display the message on the page
-                let successMessage = `
-                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                        ${message}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>`;
-
-                $('.showSuccessMsg').html(successMessage);
-                // Display the .showSuccessMsg element
-                $('.showSuccessMsg').fadeIn().delay(20000).fadeOut();
-                // Clear the message from localStorage
-                localStorage.removeItem('message');
-            }
-
             $('.delete-btn').on('click', function() {
                 let recordId = $(this).data('id');
                 let deleteUrl = "{{ route('clients.delete', ':id') }}".replace(':id', recordId);
                 var $deleteButton = $(this);
+                let confirmMsg = "Are you sure you want to delete this client?";
 
-                swal({
-                        title: "Are you sure?",
-                        text: "Are you sure you want to delete this client?",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Yes, delete it!",
-                        closeOnConfirm: false
-                    },
-                    function(isConfirm) {
-                        if (isConfirm) {
-                            $.ajax({
-                                url: deleteUrl,
-                                method: 'GET',
-                                success: function(response) {
-                                    if (response.isStatus) {
-                                        $deleteButton.closest('.clientShowCard').remove();
-                                        swal("Deleted!", `${response.message}`, "success");
-                                    } else {
-                                        swal("Unable to Delete!", `${response.message}`, "error");
-                                    }
-                                },
-                                error: function(xhr, status, error) {
-                                    alert("Error deleting record: " + error);
-                                }
-                            });
-                        }
-                    });
+                confirmDelete(deleteUrl, confirmMsg, function(response) {
+                    // Success callback
+                    $deleteButton.closest('.clientShowCard').remove();
+                });
             });
         });
     </script>

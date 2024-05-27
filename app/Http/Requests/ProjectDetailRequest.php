@@ -26,7 +26,7 @@ class ProjectDetailRequest extends FormRequest
             $rules['ship_name'] = 'required';
         }
         if ($this->has('imo_number')) {
-            $rules['imo_number'] = 'required';
+            $rules['imo_number'] = 'required|unique:projects,imo_number,' . $this->id;
         }
         // if ($this->has('ship_type')) {
         //     $rules['ship_type'] = 'required';

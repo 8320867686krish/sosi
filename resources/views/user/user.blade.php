@@ -36,7 +36,8 @@
                             </div>
                             <div class="col-6">
                                 @can('users.add')
-                                    <a href="{{ route('users.add') }}" class="btn btn-primary float-right btn-rounded addNewBtn">Add New User</a>
+                                    <a href="{{ route('users.add') }}"
+                                        class="btn btn-primary float-right btn-rounded addNewBtn">Add New User</a>
                                 @endcan
                             </div>
                         </div>
@@ -68,7 +69,6 @@
                                                 <td>{{ $user->phone }}</td>
                                                 <td>{{ $user->location ?? '' }}</td>
                                                 <td>
-                                                    {{-- <input type="checkbox" data-offstyle="danger" class="isVerified" name="isVerified" data-id="{{ $user->id }}" data-toggle="toggle" data-on="ON" data-off="OFF" {{ $user->isVerified ? 'checked' : '' }} data-style="ios"> --}}
                                                     <label class="switch">
                                                         <input class="switch-input" type="checkbox"
                                                             {{ $user->isVerified ? 'checked' : '' }}
@@ -107,54 +107,57 @@
     <script>
         $(document).ready(function() {
 
-            let message = localStorage.getItem('message');
-            if (message) {
-                // Display the message on the page
-                let successMessage = `
-                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                        ${message}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>`;
-
-                $('.showSucessMsg').html(successMessage);
-                // Display the .showSuccessMsg element
-                $('.showSucessMsg').fadeIn().delay(20000).fadeOut();
-                // Clear the message from localStorage
-                localStorage.removeItem('message');
-            }
-
             $('.switch-input').change(function() {
                 let isChecked = $(this).is(':checked');
                 let userId = $(this).data('id');
+                let initialState = !isChecked; // Capture the initial state
+                let $checkbox = $(this);
+                let message = isChecked ? "Are you sure you want to enable this user?" :
+                    "Are you sure you want to disable this user?";
 
-                $.ajax({
-                    url: "{{ route('change.isVerified') }}",
-                    method: "POST",
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        "id": userId,
-                        "isVerified": isChecked ? 1 : 0
-                    },
-                    success: function(response) {
-                        let successMessage = `
-                        <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                            ${response.message}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>`;
+                confirmChangeStatus(message, function() {
+                    $.ajax({
+                        url: "{{ route('change.isVerified') }}",
+                        method: "POST",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            "id": userId,
+                            "isVerified": isChecked ? 1 : 0
+                        },
+                        success: function(response) {
+                            swal("Success", response.message, "success");
+                        },
+                        error: function(xhr, status, error) {
+                            swal("Error", "An error occurred: " + error, "error");
+                            $checkbox.prop('checked',
+                            initialState); // Revert checkbox state
+                        }
+                    });
+                }, function() {
+                    $checkbox.prop('checked', initialState); // Revert checkbox state if cancelled
+                });
+            });
 
-                        $(".showSucessMsg").html(successMessage);
-                        $('.showSucessMsg').fadeIn().delay(20000).fadeOut();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error); // Log any errors
+            function confirmChangeStatus(message, confirmCallback, cancelCallback) {
+                swal({
+                    title: "Are you sure?",
+                    text: message,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, do it!",
+                    cancelButtonText: "No, cancel!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        confirmCallback();
+                    } else {
+                        cancelCallback();
+                        swal("Cancelled", "Your action has been cancelled.", "error");
                     }
                 });
-
-            });
+            }
         });
     </script>
 @endpush

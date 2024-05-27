@@ -133,7 +133,7 @@
                                         <label for="project_no">Ship Initials <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('ship_initials') is-invalid @enderror"
                                             id="ship_initials" name="ship_initials" placeholder="Ship Initials..."
-                                            value="{{ old('ship_initials', $project->ship_initials ?? '') }}"  onchange="removeInvalidClass(this)" {{ @$project->ship_initials ? 'readonly' : '' }}> 
+                                            value="{{ old('ship_initials', $project->ship_initials ?? '') }}"  onchange="removeInvalidClass(this)" {{ @$project->ship_initials ? 'readonly' : '' }}>
                                             @error('ship_initials')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -164,19 +164,6 @@
 
 @push('js')
     <script>
-        function removeInvalidClass(input) {
-
-            const isValid = input.value.trim() !== '';
-
-            input.classList.toggle('is-invalid', !isValid);
-
-            const errorMessageElement = input.parentElement.querySelector('.invalid-feedback');
-
-            if (errorMessageElement) {
-                errorMessageElement.style.display = isValid ? 'none' : 'block';
-            }
-        }
-
         $(document).ready(function() {
             var ship_identi = $("#client_id").find('option:selected').data('identi');
             var imo = $('#imo_number').val();

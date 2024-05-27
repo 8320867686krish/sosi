@@ -47,7 +47,6 @@
                                     <tr>
                                         <th width="10%">Sr.No</th>
                                         <th>Name</th>
-                                        <th width="10%">Guard Name</th>
                                         <th width="8%">Level</th>
                                         <th width="10%">Action</th>
                                     </tr>
@@ -58,7 +57,6 @@
                                             <tr class="rolesRowTr">
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ ucfirst($role->name) }}</td>
-                                                <td>{{ ucfirst($role->guard_name) }}</td>
                                                 <td>{{ $role->level }}</td>
                                                 <td>
                                                     @can('roles.edit')
@@ -93,58 +91,19 @@
 
     <script>
         $(document).ready(function() {
-            let message = localStorage.getItem('message');
-            if (message) {
-                // Display the message on the page
-                let successMessage = `
-                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                        ${message}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>`;
-
-                $('#showSucessMsg').html(successMessage);
-                // Display the .showSuccessMsg element
-                $('#showSucessMsg').fadeIn().delay(20000).fadeOut();
-                // Clear the message from localStorage
-                localStorage.removeItem('message');
-            }
-
             $('.delete-btn').on('click', function(e) {
                 e.preventDefault();
                 let deleteUrl = $(this).attr('href');
-                var $deleteButton = $(this);
+                let $deleteButton = $(this);
+                let confirmMsg = "Are you sure you want to delete this role?";
 
-                if (confirm("Are you sure you want to delete this role?")) {
-                    // User confirmed, send AJAX request
-                    $.ajax({
-                        url: deleteUrl,
-                        method: 'GET',
-                        success: function(response) {
-                            if (response.isStatus) {
-                                $deleteButton.closest('.rolesRowTr').remove();
-                            }
-
-                            let successMessage = `
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    ${response.message}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>`;
-
-                            $('#showSucessMsg').html(successMessage);
-
-                            // Display the .showSuccessMsg element
-                            $('#showSucessMsg').fadeIn().delay(20000).fadeOut();
-                        },
-                        error: function(xhr, status, error) {
-                            // Handle AJAX errors
-                            alert("Error deleting record: " + error);
-                        }
-                    });
-                }
+                confirmDelete(deleteUrl, confirmMsg, function(response) {
+                    // Success callback
+                    $deleteButton.closest('.rolesRowTr').remove();
+                }, function(response) {
+                    // Error callback (optional)
+                    console.log("Failed to delete: " + response.message);
+                });
             });
         });
     </script>

@@ -369,18 +369,9 @@
                 success: function(msg) {
                     // $(".sucessSurveylMsg").show();
                     if (msg.isStatus) {
-                        swal({
-                            title: "Success",
-                            text: "Save Successfully!!",
-                            timer: 4000
-                        });
+                        successMsg("Save Successfully!!");
                     } else {
-                        swal({
-                            title: 'Error',
-                            text: 'An unexpected error occurred. Please try again later.',
-                            icon: 'error',
-                            timer: 10000
-                        });
+                        errorMsg("An unexpected error occurred. Please try again later.");
                     }
                 },
                 error: function(err) {
@@ -391,13 +382,7 @@
                             $('[name="' + field + '"]').addClass('is-invalid');
                         });
                     } else {
-                        swal({
-                            title: 'Error',
-                            text: 'An unexpected error occurred. Please try again later.',
-                            icon: 'error',
-                            timer: 4000,
-                            showConfirmButton: false
-                        });
+                        errorMsg("An unexpected error occurred. Please try again later.");
                     }
                 },
                 complete: function() {
@@ -409,12 +394,13 @@
         }
 
         $(".removeDoc").click(function(e) {
+            e.preventDefault();
             var type = $(this).attr('data-filed');
             var project_id = $("#project_id").val();
-            e.preventDefault();
+
             swal({
                     title: "Are you sure?",
-                    text: "You will not be able to recover this imaginary file!",
+                    text: "Are you sure you want to delete this document?",
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",

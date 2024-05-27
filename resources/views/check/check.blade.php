@@ -821,15 +821,9 @@
                             let checkDataJson = JSON.stringify(checkData);
                             $(".dot.selected").attr('data-check', checkDataJson);
                             $('#checkListUl').html(response.htmllist);
-                            let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
-                            ${response.message}
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>`;
 
-                            $("#showSuccessMsg").html(messages);
-                            $('#showSuccessMsg').fadeIn().delay(20000).fadeOut();
+                            successMsg(response.message);
+
                             $("#checkDataAddForm").trigger('reset');
                             $("#id").val("");
                             $('#suspected_hazmat option').prop("selected", false).trigger(
@@ -1124,41 +1118,23 @@
 
             $(document).on("click", ".deleteCheckbtn", function(e) {
                 e.preventDefault();
+                let recordId = $(this).data('id');
+                let deleteUrl = $(this).attr("href");
+                let $liToDelete = $(this).closest('li');
+                let confirmMsg = "Are you sure you want to delete this check?";
 
-                let href = $(this).attr("href");
-                let checkId = $(this).data('id');
-                let $liToDelete = $(this).closest('li'); // Get the closest <li> element
-                // let $checkDiv = $(`div[data-checkid="${checkId}"]`);
-
-                if (confirm("Are you sure you want to delete this check?")) {
-                    $.ajax({
-                        type: 'GET',
-                        url: href,
-                        success: function(response) {
-                            if (response.status) {
-                                let messages = `<div class="alert alert-primary alert-dismissible fade show" role="alert">
-                                ${response.message}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>`;
-
-                                $("#showSuccessMsg").html(messages).fadeIn().delay(20000)
-                                    .fadeOut();
-                                $liToDelete.remove(); // Remove the <li> element
-                                $(".dot").remove();
-                                $('#showDeckCheck').html();
-                                $('#checkListUl').html();
-                                $('#showDeckCheck').html(response.htmldot);
-                                $('#checkListUl').html(response.htmllist);
-                                makeDotsDraggable();
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error deleting item:', error);
-                        }
-                    });
-                }
+                confirmDeleteWithElseIf(deleteUrl, confirmMsg, function(response) {
+                    // Success callback
+                    if (response.isStatus) {
+                        $liToDelete.remove();
+                        $(".dot").remove();
+                        $('#showDeckCheck').html();
+                        $('#checkListUl').html();
+                        $('#showDeckCheck').html(response.htmldot);
+                        $('#checkListUl').html(response.htmllist);
+                        makeDotsDraggable();
+                    }
+                });
             });
 
             // Remove Hazmat Document Analysis Results Document
