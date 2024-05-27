@@ -36,7 +36,7 @@
                 <th style="background-color: #DADADA;" valign="middle" align="center"><b>Name</b></th>
                 <th style="background-color: #DADADA;" valign="middle" align="center"><b>HM</b></th>
                 <th style="background-color: #DADADA;" valign="middle" align="center"><b>Table</b></th>
-                <th style="background-color: #DADADA;" valign="middle" align="center"><b>Deck</b></th>
+                <th style="background-color: #DADADA;" valign="middle" align="center"><b>Location Name</b></th>
                 {{-- <th style="background-color: #DADADA;" width="15" height="20" valign="middle" align="center"><b>Compartment</b></th> --}}
                 <th style="background-color: #DADADA;" valign="middle" align="center"><b>Equipment</b></th>
                 <th style="background-color: #DADADA;" valign="middle" align="center"><b>Component</b></th>
@@ -62,7 +62,8 @@
                         <td valign="middle" align="center" style="font-size: 14px;">{{ $check->name }}</td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
-                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->deck->name }}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->location }@if($check->sub_location)
+        {{ ',' . $check->sub_location }}}</td>
                         <td valign="middle" align="center" style="font-size: 14px;">{{ $check->equipment }}</td>
                         <td valign="middle" align="center" style="font-size: 14px;">{{ $check->component }}</td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
@@ -84,7 +85,8 @@
                             {{ $checkHazmat->hazmat->short_name }}</td>
                         <td valign="middle" align="center" style="font-size: 14px;">
                             {{ $checkHazmat->hazmat->table_type }}</td>
-                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->deck->name }}</td>
+                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->location }}@if($check->sub_location)
+        {{ ',' . $check->sub_location }}</td>
                         {{-- <td valign="middle" align="center" style="font-size: 14px;"></td> --}}
                         <td valign="middle" align="center" style="font-size: 14px;">{{ $check->equipment }}</td>
                         <td valign="middle" align="center" style="font-size: 14px;">{{ $check->component }}</td>

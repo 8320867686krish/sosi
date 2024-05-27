@@ -116,7 +116,7 @@ class ReportContoller extends Controller
             <table width="100%" style="border-bottom: 1px solid #000000; vertical-align: middle; font-family: serif; font-size: 9pt; color: #000088;">
                 <tr>
                     <td width="10%"><img src="' . $logo . '" width="50" /></td>
-                    <td width="80%" align="center">Project Report</td>
+                    <td width="80%" align="center">'. $projectDetail['ship_name'].'</td>
                     <td width="10%" style="text-align: right;">{DATE j-m-Y}</td>
                 </tr>
             </table>';
@@ -125,9 +125,8 @@ class ReportContoller extends Controller
             $footer = '
             <table width="100%" style="vertical-align: bottom; font-family: serif; font-size: 8pt; color: #000000;">
                 <tr>
-                    <td width="33%">{DATE j-m-Y}</td>
-                    <td width="33%" align="center">{PAGENO}/{nbpg}</td>
-                    <td width="33%" style="text-align: right;">' . $projectDetail['ihm_table'] . '</td>
+                    <td width="33%">' . $projectDetail['ihm_table'] . '</td>
+                    <td width="33%" style="text-align: right;">{PAGENO}/{nbpg}</td>
                 </tr>
             </table>';
             $mpdf->SetHTMLHeader($header);
