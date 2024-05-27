@@ -4,26 +4,15 @@ namespace App\Http\Controllers;
 
 
 use App\Exports\MultiSheetExport;
-use App\Models\CheckHasHazmat;
 use App\Models\Checks;
-use App\Models\User;
 use App\Models\Hazmat;
 use App\Models\LabResult;
 use App\Models\Projects;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use Exception;
-use Illuminate\Support\Facades\Response;
-use Dompdf\Dompdf;
-use Dompdf\Options;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Imagick;
-use SebastianBergmann\CodeCoverage\Report\Xml\Project;
-use setasign\Fpdi\Fpdi;
-use setasign\Fpdi\PdfParser\StreamReader;
-use setasign\Fpdi\PdfReader;
 use Mpdf\Mpdf;
 ini_set("pcre.backtrack_limit", "5000000");
+
 class ReportContoller extends Controller
 {
     public function exportDataInExcel(Request $request, $id, $isSample = null)
@@ -67,13 +56,13 @@ class ReportContoller extends Controller
 
     public function genratePdf($project_id)
     {
-  
-       
+
+
         $projectDetail = Projects::find($project_id);
         if (!$projectDetail) {
             die('Project details not found');
         }
-        
+
         $imageData = file_get_contents($projectDetail['image']);
         $logo = 'https://sosindi.com/IHM/public/assets/images/logo.png';
         $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
@@ -106,11 +95,11 @@ class ReportContoller extends Controller
                 'margin_header' => 16,
                 'margin_footer' => 13,
             ]);
-        
+
             $mpdf->mirrorMargins = 1;
             $mpdf->defaultPageNumStyle = '1';
             $mpdf->SetDisplayMode('fullpage');
-         
+
             // Define header content with logo
             $header = '
             <table width="100%" style="border-bottom: 1px solid #000000; vertical-align: middle; font-family: serif; font-size: 9pt; color: #000088;">
@@ -120,7 +109,7 @@ class ReportContoller extends Controller
                     <td width="10%" style="text-align: right;">{DATE j-m-Y}</td>
                 </tr>
             </table>';
-        
+
             // Define footer content with page number
             $footer = '
             <table width="100%" style="vertical-align: bottom; font-family: serif; font-size: 8pt; color: #000000;">
@@ -132,21 +121,21 @@ class ReportContoller extends Controller
             $mpdf->SetHTMLHeader($header);
             $mpdf->SetHTMLFooter($footer);
 
-          
-        
+
+
             // Load main HTML content
-         
+
             $mpdf->h2toc = ['H2' => 0, 'H3' => 1];
             $mpdf->h2bookmarks = ['H2' => 0, 'H3' => 1];
             // Set header and footer
-        
+
             // Add Table of Contents
-           
+
             $stylesheet = file_get_contents('public/assets/mpdf.css');
             $mpdf->WriteHTML($stylesheet, 1); // The parameter 1 tells that this is css/style only and no body/html/text
             $mpdf->WriteHTML(view('report.cover',compact('projectDetail')));
             $mpdf->TOCpagebreak();
-       
+
             $mpdf->TOCpagebreakByArray([
                 'links' => true,
                 'toc-preHTML' => 'Table of Contents',
@@ -157,11 +146,11 @@ class ReportContoller extends Controller
           $mpdf->AddPage('L'); // Set landscape mode for the inventory page
           $totalPages = $mpdf->page;
 
-         
+
           $mpdf->WriteHTML(view('report.Inventory',compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
           $mpdf->AddPage('p'); // Set landscape mode for the inventory page
           $mpdf->WriteHTML(view('report.development',compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
-          
+
             // Output the PDF
             $mpdf->Output('project_report.pdf', 'I');
         } catch (\Mpdf\MpdfException $e) {

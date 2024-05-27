@@ -113,6 +113,8 @@ Route::middleware('auth')->group(function () {
             // check image route
             Route::post('addCheckImage', 'addCheckImage')->name('addCheckImage');
             Route::get('deleteCheckImage/{id}', 'deleteCheckImage')->name('deleteCheckImage');
+
+            Route::post('addReportMaterial', 'addReportMaterial')->name('addReportMaterial');
         });
 
         Route::get('genratePdf/{project_id}', [ReportContoller::class, 'genratePdf'])->name('generateDocx');

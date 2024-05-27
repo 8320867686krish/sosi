@@ -1114,4 +1114,12 @@ class ProjectsController extends Controller
         }
         return response()->json(['success' => 'ReIntial successfully'], 200);
     }
+
+    public function addReportMaterial(Request  $request){
+        $post = $request->input();
+        foreach($post['material'] as $value){
+            print_r($value);
+        }
+
+    }
 }

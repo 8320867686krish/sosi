@@ -1,5 +1,4 @@
 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-    @csrf
     <div class="accrodion-regular">
         <div id="accordion3">
             <div class="card">
