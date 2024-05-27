@@ -62,7 +62,7 @@
                         <td valign="middle" align="center" style="font-size: 14px;">{{ $check->name }}</td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
                         <td valign="middle" align="center" style="font-size: 14px;"></td>
-                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->location }@if($check->sub_location)
+                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->location }}@if($check->sub_location)
         {{ ',' . $check->sub_location }}@endif</td>
                         <td valign="middle" align="center" style="font-size: 14px;">{{ $check->equipment }}</td>
                         <td valign="middle" align="center" style="font-size: 14px;">{{ $check->component }}</td>
