@@ -4,29 +4,18 @@ namespace App\Http\Controllers;
 
 
 use App\Exports\MultiSheetExport;
-use App\Models\CheckHasHazmat;
 use App\Models\Checks;
-use App\Models\User;
 use App\Models\Hazmat;
 use App\Models\LabResult;
 use App\Models\Projects;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use Exception;
-use Illuminate\Support\Facades\Response;
-use Dompdf\Dompdf;
-use Dompdf\Options;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Imagick;
-use SebastianBergmann\CodeCoverage\Report\Xml\Project;
-use setasign\Fpdi\Fpdi;
-use setasign\Fpdi\PdfParser\StreamReader;
-use setasign\Fpdi\PdfReader;
 use Mpdf\Mpdf;
 use App\Models\Attechments;
 use App\Models\Deck;
 
 ini_set("pcre.backtrack_limit", "5000000");
+
 class ReportContoller extends Controller
 {
     public function exportDataInExcel(Request $request, $id, $isSample = null)
@@ -125,6 +114,7 @@ class ReportContoller extends Controller
                 'margin_footer' => 13,
                 'defaultPagebreakType' => 'slice'
             ]);
+
             $mpdf->use_kwt = true;
             $mpdf->mirrorMargins = 1;
             $mpdf->defaultPageNumStyle = '1';
@@ -151,8 +141,6 @@ class ReportContoller extends Controller
             $mpdf->SetHTMLHeader($header);
             $mpdf->SetHTMLFooter($footer);
             $html = '';
-
-         
 
             // Load main HTML content
 
@@ -182,7 +170,7 @@ class ReportContoller extends Controller
             $mpdf->AddPage('p'); // Set landscape mode for the inventory page
             $mpdf->WriteHTML(view('report.development', compact('filteredResults1', 'filteredResults2', 'filteredResults3', 'projectDetail', 'attechments', 'ChecksList')));
             $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail')));
-
+          
             // Output the PDF
             $mpdf->Output('project_report.pdf', 'I');
         } catch (\Mpdf\MpdfException $e) {
