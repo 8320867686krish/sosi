@@ -11,6 +11,9 @@ use App\Models\Projects;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Mpdf\Mpdf;
+use App\Models\Attechments;
+use App\Models\Deck;
+
 ini_set("pcre.backtrack_limit", "5000000");
 
 class ReportContoller extends Controller
@@ -33,6 +36,8 @@ class ReportContoller extends Controller
 
         $project = Projects::with('client:id,manager_name,manager_email,manager_phone,manager_address,owner_name,owner_email,owner_phone,owner_address')->findOrFail($id);
 
+        //  $deck =  Deck::with('checks.hazmats')->find($id); 
+
         $hazmats = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($id) {
             $query->where('project_id', $id);
         }])->withCount(['checkHasHazmatsSample as sample_count' => function ($query) use ($id) {
@@ -42,15 +47,19 @@ class ReportContoller extends Controller
         }])->get();
 
         $checks = Checks::with('deck:id,name')->with('check_hazmats.hazmat')->where('project_id', $id);
+        $ship_name = $project["ship_name"];
+        $imo_number  = $project["imo_number"];
 
         if ($isSample) {
             $checks = $checks->where('type', 'sample');
+            $filename = "lab-test-list-{$ship_name}" . "." . $fileExt;
+        } else {
+            $filename = "vscp-projects-{$ship_name}-{$imo_number}" . "." . $fileExt;
         }
 
         $checks = $checks->get();
 
-        $filename = "projects-{$id}-" . time() . "." . $fileExt;
-        return Excel::download(new MultiSheetExport($project, $hazmats, $checks), $filename, $exportFormat);
+        return Excel::download(new MultiSheetExport($project, $hazmats, $checks, $isSample), $filename, $exportFormat);
     }
 
 
@@ -72,8 +81,17 @@ class ReportContoller extends Controller
         }])->withCount(['checkHasHazmatsVisual as visual_count' => function ($query) use ($project_id) {
             $query->where('project_id', $project_id);
         }])->get();
-        $lebResult = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
 
+        $decks = Deck::with(['checks' => function ($query) {
+            $query->whereHas('check_hazmats', function ($query) {
+                $query->where('type', 'PCHM')->orWhere('type', 'Contained');
+            });
+        }])->where('project_id', $project_id)->get();
+
+        $ChecksList = Deck::with(['checks.check_hazmats'])->where('project_id', $project_id)->get();
+
+        $lebResult = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
+        $attechments = Attechments::where('project_id', $project_id)->where('attachment_type', 'shipPlan')->get();
         $filteredResults1 = $lebResult->filter(function ($item) {
             return $item->IHM_part == 'IHMPart1-1';
         });
@@ -94,8 +112,10 @@ class ReportContoller extends Controller
                 'margin_bottom' => 25,
                 'margin_header' => 16,
                 'margin_footer' => 13,
+                'defaultPagebreakType' => 'slice'
             ]);
 
+            $mpdf->use_kwt = true;
             $mpdf->mirrorMargins = 1;
             $mpdf->defaultPageNumStyle = '1';
             $mpdf->SetDisplayMode('fullpage');
@@ -105,7 +125,7 @@ class ReportContoller extends Controller
             <table width="100%" style="border-bottom: 1px solid #000000; vertical-align: middle; font-family: serif; font-size: 9pt; color: #000088;">
                 <tr>
                     <td width="10%"><img src="' . $logo . '" width="50" /></td>
-                    <td width="80%" align="center">'. $projectDetail['ship_name'].'</td>
+                    <td width="80%" align="center">' . $projectDetail['ship_name'] . '</td>
                     <td width="10%" style="text-align: right;">{DATE j-m-Y}</td>
                 </tr>
             </table>';
@@ -120,8 +140,7 @@ class ReportContoller extends Controller
             </table>';
             $mpdf->SetHTMLHeader($header);
             $mpdf->SetHTMLFooter($footer);
-
-
+            $html = '';
 
             // Load main HTML content
 
@@ -133,31 +152,31 @@ class ReportContoller extends Controller
 
             $stylesheet = file_get_contents('public/assets/mpdf.css');
             $mpdf->WriteHTML($stylesheet, 1); // The parameter 1 tells that this is css/style only and no body/html/text
-            $mpdf->WriteHTML(view('report.cover',compact('projectDetail')));
+            $mpdf->WriteHTML(view('report.cover', compact('projectDetail')));
             $mpdf->TOCpagebreak();
 
             $mpdf->TOCpagebreakByArray([
                 'links' => true,
                 'toc-preHTML' => 'Table of Contents',
-                'level'=>0,
+                'level' => 0,
             ]);
 
-          $mpdf->WriteHTML(view('report.introduction',compact('hazmets','projectDetail')));
-          $mpdf->AddPage('L'); // Set landscape mode for the inventory page
-          $totalPages = $mpdf->page;
+            $mpdf->WriteHTML(view('report.introduction', compact('hazmets', 'projectDetail')));
+            $mpdf->AddPage('L'); // Set landscape mode for the inventory page
+            $totalPages = $mpdf->page;
 
 
-          $mpdf->WriteHTML(view('report.Inventory',compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
-          $mpdf->AddPage('p'); // Set landscape mode for the inventory page
-          $mpdf->WriteHTML(view('report.development',compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
-
+            $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3', 'decks')));
+            $mpdf->AddPage('p'); // Set landscape mode for the inventory page
+            $mpdf->WriteHTML(view('report.development', compact('filteredResults1', 'filteredResults2', 'filteredResults3', 'projectDetail', 'attechments', 'ChecksList')));
+            $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail')));
+          
             // Output the PDF
             $mpdf->Output('project_report.pdf', 'I');
         } catch (\Mpdf\MpdfException $e) {
             // Handle mPDF exception
             echo $e->getMessage();
         }
-
     }
 
     protected function savePdf($content, $filename)

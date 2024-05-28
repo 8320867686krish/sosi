@@ -3,7 +3,7 @@
         <h2>1. Introduction to Project</h2>
         <div class="section-1-1">
             <h3>1.1 Scope, Exemption and Exclusions</h3>
-            <p>The Scope of this document is to prepare an Inventory of Hazardous Materials as per IMO HKC- MEPC 379(80) and EUSRR-EMSA guidelines for the vessel (Ship name) on behalf of (Client Name).</p>
+            <p>The Scope of this document is to prepare an Inventory of Hazardous Materials as per IMO HKC- MEPC 379(80) and EUSRR-EMSA guidelines for the vessel ({{$projectDetail['ship_name']}}) on behalf of (Client Name).</p>
             <p>The scope of this IHM report is delimited by the availability of documentation, acknowledging that certain records may not be accessible. Additionally, due to operational constraints, there are limitations on inspecting all spaces and equipment aboard the vessel while it remains in operation.</p>
             <p>SOS India Pvt Ltd does not warrant or assume any kind of liability for the up-to-date nature, accuracy, completeness or quality of the HazMat weight calculation provided. Liability claims against any member of SOS India Pvt Ltd in relation to any loss or damage arising out of or in connection with the use or non-use of HazMat weight calculation provided, including the use of incorrect or incomplete HazMat weight calculation data, are excluded to the fullest extent permissible by law. All weight calculation data may be subject to alteration and are non-binding. Each SOS India Pvt Ltd member expressly reserves the right without notice to change, supplement or delete parts of the HazMat weight calculation data or to stop the publication and usage temporarily or definitively.</p>
         </div>
@@ -82,7 +82,7 @@
 
         <div class="section-1-4">
             <h3> 1.4 Executive Summary</h3>
-            <p style="padding-bottom:25px">2. The onboard visual/sampling check was carried out at (port name) by IHM expert (surveyor name) on (date) as per the visual/sampling check plan. Sampling points on ship were marked/labeled with check point numbers same as mentioned on sampling bag . The collected samples were appropriate bagged/packed and sent to the (lab) for the analysis. Following is details number of sampling & visual checks carried out for the vessel:</p>
+            <p style="padding-bottom:25px">2. The onboard visual/sampling check was carried out at ({{$projectDetail['port_of_registry']}}) by IHM expert ({{$projectDetail['survey_location_name']}}) on ({{$projectDetail['survey_date']}}) as per the visual/sampling check plan. Sampling points on ship were marked/labeled with check point numbers same as mentioned on sampling bag . The collected samples were appropriate bagged/packed and sent to the ({{$projectDetail['laboratorie1']}}) for the analysis. Following is details number of sampling & visual checks carried out for the vessel:</p>
 
             <table>
                 <thead>

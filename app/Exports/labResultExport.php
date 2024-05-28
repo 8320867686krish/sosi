@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class VSCPSheetExport implements FromView, WithTitle, WithStyles
+class labResultExport implements FromView, WithTitle, WithStyles
 {
     protected $collection;
 
@@ -24,7 +24,7 @@ class VSCPSheetExport implements FromView, WithTitle, WithStyles
      */
     public function view(): View
     {
-        return view('exports.vscp_report', [
+        return view('exports.leb_vscp_report', [
             'checks' => $this->collection,
         ]);
     }

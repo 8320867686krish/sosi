@@ -20,15 +20,9 @@
                 </th>
                 <th style="background-color: #DADADA;"></th>
                 <th style="background-color: #DADADA;"></th>
-                {{-- <th style="background-color: #DADADA;"></th> --}}
-                <th width="20" style="background-color: #DADADA;"></th>
-                <th style="font-size: 14px; background-color: #DADADA;" valign="middle" align="center">
-                    <b>Manufacture/<br>Brand Name</b></th>
-                <th style="font-size: 12px; background-color: #DADADA;" valign="middle" align="center">
-                    <b>Document<br>Analysis Result</b></th>
-                <th style="font-size: 14px; background-color: #DADADA;" colspan="3" valign="middle" align="center"><b>Check</b></th>
-                <th style="font-size: 14px; background-color: #DADADA;" valign="middle" align="center"><b>References/Remarks</b></th>
-                <th style="font-size: 14px; background-color: #DADADA;" valign="middle" align="center"><b>Recommendation</b></th>
+               
+               
+              
             </tr>
 
             <tr height="25">
@@ -37,17 +31,9 @@
                 <th style="background-color: #DADADA;" valign="middle" align="center"><b>HM</b></th>
                 <th style="background-color: #DADADA;" valign="middle" align="center"><b>Table</b></th>
                 <th style="background-color: #DADADA;" valign="middle" align="center"><b>Location Name</b></th>
-                {{-- <th style="background-color: #DADADA;" width="15" height="20" valign="middle" align="center"><b>Compartment</b></th> --}}
                 <th style="background-color: #DADADA;" valign="middle" align="center"><b>Equipment</b></th>
                 <th style="background-color: #DADADA;" valign="middle" align="center"><b>Component</b></th>
-                <th style="background-color: #DADADA;" valign="middle" align="center"><b>Approx Quantity</b></th>
-                <th style="background-color: #DADADA;" valign="middle" align="center"></th>
-                <th style="background-color: #DADADA;" valign="middle" align="center"></th>
-                <th style="background-color: #DADADA;" valign="middle" align="center"><b>Procedure</b></th>
-                <th style="background-color: #DADADA;" valign="middle" align="center"><b>Result</b></th>
-                <th style="background-color: #DADADA;" valign="middle" align="center"><b>Remarks</b></th>
-                <th style="background-color: #DADADA;" valign="middle" align="center"></th>
-                <th style="background-color: #DADADA;" valign="middle" align="center"></th>
+             
             </tr>
         </thead>
         <tbody>
@@ -66,14 +52,7 @@
         {{ ',' . $check->sub_location }}@endif</td>
                         <td valign="middle" align="center" style="font-size: 14px;">{{ $check->equipment }}</td>
                         <td valign="middle" align="center" style="font-size: 14px;">{{ $check->component }}</td>
-                        <td valign="middle" align="center" style="font-size: 14px;"></td>
-                        <td valign="middle" align="center" style="font-size: 14px;"></td>
-                        <td valign="middle" align="center" style="font-size: 14px;"></td>
-                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->type }}</td>
-                        <td valign="middle" align="center" style="font-size: 14px;"></td>
-                        <td valign="middle" align="center" style="font-size: 14px;"></td>
-                        <td valign="middle" align="left" style="font-size: 14px;">{{$check->remarks}}</td>
-                        <td valign="middle" align="left" style="font-size: 14px;">{{$check->recommendation}}</td>
+                      
                     </tr>
                     @php $counter++; @endphp
                 @endif
@@ -90,14 +69,7 @@
                         {{-- <td valign="middle" align="center" style="font-size: 14px;"></td> --}}
                         <td valign="middle" align="center" style="font-size: 14px;">{{ $check->equipment }}</td>
                         <td valign="middle" align="center" style="font-size: 14px;">{{ $check->component }}</td>
-                        <td valign="middle" align="center" style="font-size: 14px;"></td>
-                        <td valign="middle" align="center" style="font-size: 14px;"></td>
-                        <td valign="middle" align="center" style="font-size: 14px;">{{ $checkHazmat->type }}</td>
-                        <td valign="middle" align="center" style="font-size: 14px;">{{ $check->type }}</td>
-                        <td valign="middle" align="center" style="font-size: 14px;"></td>
-                        <td valign="middle" align="center" style="font-size: 14px;">{{ $checkHazmat->remarks }}</td>
-                        <td valign="middle" align="left" style="font-size: 14px;">{{$check->remarks}}</td>
-                        <td valign="middle" align="left" style="font-size: 14px;">{{$check->recommendation}}</td>
+                       
                     </tr>
                     @php
                         $counter++;
