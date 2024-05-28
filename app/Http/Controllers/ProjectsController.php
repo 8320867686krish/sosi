@@ -16,6 +16,7 @@ use App\Models\LabResult;
 use App\Models\MakeModel;
 use App\Models\Projects;
 use App\Models\ProjectTeam;
+use App\Models\ReportMaterial;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -1115,11 +1116,60 @@ class ProjectsController extends Controller
         return response()->json(['success' => 'ReIntial successfully'], 200);
     }
 
-    public function addReportMaterial(Request  $request){
-        $post = $request->input();
-        foreach($post['material'] as $value){
-            print_r($value);
-        }
+    public function addReportMaterial(Request  $request)
+    {
+        try {
+            $materialData = $request->input();
+            $projectId = $request->input('project_id');
+            $materialName = $request->input('material_name');
 
+            foreach ($materialData['material'] as $key => $value) {
+
+                $insertData = [
+                    "project_id" => $projectId,
+                    "material" => $materialName,
+                    "structure" => $key,
+                    "type" => isset($value["type"]) ? $value["type"] : null,
+                    "remark" => isset($value["remark"]) ? $value["remark"] : null
+                ];
+
+                if (isset($value["model"]) && isset($value["manufacturer"])) {
+                    $makeData = [];
+
+                    // Check if model and manufacturer are arrays
+                    if (is_array($value["model"]) && is_array($value["manufacturer"])) {
+                        // Iterate over the arrays to generate multiple make data
+                        foreach ($value["model"] as $index => $model) {
+                            $makeData[] = [
+                                "model" => $model,
+                                "manufacturer" => $value["manufacturer"][$index] ?? null
+                            ];
+                        }
+                    } else {
+                        // If model and manufacturer are not arrays, create a single make data
+                        $makeData[] = [
+                            "model" => $value["model"],
+                            "manufacturer" => $value["manufacturer"]
+                        ];
+                    }
+
+                    // Encode the make data to JSON
+                    $insertData["make"] = json_encode($makeData);
+                }
+
+                if(isset($value["component"])) {
+                    $componentData = implode(', ', $value["component"]);
+                    $insertData["component"] = $componentData;
+                }
+
+                ReportMaterial::create($insertData);
+                // ReportMaterial::updateOrCreate(["structure" => $key],$insertData);
+            }
+
+            return response()->json(['isStatus' => true, 'message' => 'Material report save successfully.']);
+        } catch (\Throwable $th) {
+            return response()->json(['isStatus' => false, 'error' => 'An error occurred while processing your request.']);
+            dd($th->getMessage());
+        }
     }
 }

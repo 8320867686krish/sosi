@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->string('material')->nullable();
             $table->string('structure')->nullable();
-            $table->string('make')->nullable();
-            $table->string('component')->nullable();
+            $table->text('make')->nullable();
+            $table->text('component')->nullable();
             $table->string('type')->nullable();
             $table->text('remark')->nullable();
             $table->timestamp('created_at')->useCurrent();

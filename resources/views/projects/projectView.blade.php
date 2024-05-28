@@ -484,12 +484,12 @@
         <div class="main-content container-fluid p-0" id="attachment_list">
             @include('projects.attachment')
         </div>
+
         <div class="main-content container-fluid p-0" id="report_list">
             <div class="email-head-subject">
                 <div class="title"><span>Report</span></div>
             </div>
             <div class="row">
-                {{-- @include('projects.surveyPlan') --}}
                 @include('projects.repoert')
             </div>
         </div>
