@@ -116,4 +116,36 @@
         .section-1-1 table th{
             background-color: #4C94D8;
         }
-    
+        .displayed {
+            display: block;
+            margin-left: auto;
+            margin-right: auto }
+.dot{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #000;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, .2);
+    line-height: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    transition: box-shadow .214s ease-in-out, transform .214s ease-in-out, background .214s ease-in-out;
+    text-align: center;
+    opacity: 0.7;
+}
+.outfit {
+    line-height: 0;
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: inline-block;
+    overflow: hidden;
+
+    img {
+        height: auto;
+        cursor: pointer;
+    }
+}

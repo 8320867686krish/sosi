@@ -23,6 +23,9 @@ use setasign\Fpdi\Fpdi;
 use setasign\Fpdi\PdfParser\StreamReader;
 use setasign\Fpdi\PdfReader;
 use Mpdf\Mpdf;
+use App\Models\Attechments;
+use App\Models\Deck;
+
 ini_set("pcre.backtrack_limit", "5000000");
 class ReportContoller extends Controller
 {
@@ -44,6 +47,8 @@ class ReportContoller extends Controller
 
         $project = Projects::with('client:id,manager_name,manager_email,manager_phone,manager_address,owner_name,owner_email,owner_phone,owner_address')->findOrFail($id);
 
+      //  $deck =  Deck::with('checks.hazmats')->find($id); 
+
         $hazmats = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($id) {
             $query->where('project_id', $id);
         }])->withCount(['checkHasHazmatsSample as sample_count' => function ($query) use ($id) {
@@ -53,14 +58,15 @@ class ReportContoller extends Controller
         }])->get();
 
         $checks = Checks::with('deck:id,name')->with('check_hazmats.hazmat')->where('project_id', $id);
+        $ship_name = $project["ship_name"];
+        $imo_number  = $project["imo_number"];
 
         if ($isSample) {
             $checks = $checks->where('type', 'sample');
-            $ship_name = $project["ship_name"];
-            $filename = "labeResult-{$ship_name}-" . time() . "." . $fileExt;
+            $filename = "lab-test-list-{$ship_name}".".".$fileExt;
 
         }else{
-            $filename = "projects-{$id}-" . time() . "." . $fileExt;
+            $filename = "vscp-projects-{$ship_name}-{$imo_number}" . "." . $fileExt;
 
         }
 
@@ -88,8 +94,17 @@ class ReportContoller extends Controller
         }])->withCount(['checkHasHazmatsVisual as visual_count' => function ($query) use ($project_id) {
             $query->where('project_id', $project_id);
         }])->get();
-        $lebResult = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
 
+        $decks = Deck::with(['checks' => function ($query) {
+            $query->whereHas('check_hazmats', function ($query) {
+                $query->where('type', 'PCHM')->orWhere('type', 'Contained');
+            });
+        }])->where('project_id', $project_id)->get();
+
+        $ChecksList = Deck::with(['checks.check_hazmats'])->where('project_id', $project_id)->get();
+       
+        $lebResult = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
+        $attechments = Attechments::where('project_id',$project_id)->where('attachment_type','shipPlan')->get();
         $filteredResults1 = $lebResult->filter(function ($item) {
             return $item->IHM_part == 'IHMPart1-1';
         });
@@ -110,8 +125,9 @@ class ReportContoller extends Controller
                 'margin_bottom' => 25,
                 'margin_header' => 16,
                 'margin_footer' => 13,
+                'defaultPagebreakType'=>'slice'
             ]);
-        
+            $mpdf->use_kwt = true;
             $mpdf->mirrorMargins = 1;
             $mpdf->defaultPageNumStyle = '1';
             $mpdf->SetDisplayMode('fullpage');
@@ -136,7 +152,9 @@ class ReportContoller extends Controller
             </table>';
             $mpdf->SetHTMLHeader($header);
             $mpdf->SetHTMLFooter($footer);
+            $html = '';
 
+        
           
         
             // Load main HTML content
@@ -163,9 +181,9 @@ class ReportContoller extends Controller
           $totalPages = $mpdf->page;
 
          
-          $mpdf->WriteHTML(view('report.Inventory',compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
+          $mpdf->WriteHTML(view('report.Inventory',compact('filteredResults1', 'filteredResults2', 'filteredResults3','decks')));
           $mpdf->AddPage('p'); // Set landscape mode for the inventory page
-          $mpdf->WriteHTML(view('report.development',compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
+          $mpdf->WriteHTML(view('report.development',compact('filteredResults1', 'filteredResults2', 'filteredResults3','projectDetail','attechments','ChecksList')));
           
             // Output the PDF
             $mpdf->Output('project_report.pdf', 'I');

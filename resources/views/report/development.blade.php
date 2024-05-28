@@ -1,14 +1,20 @@
 <!-- Section 1.1 -->
-<h2>3.Development of IHM of</h2>
+<h2>3.Development of IHM of({{$projectDetail['ship_name']}})</h2>
 <div class="section-1-1">
     <h3>3.1 Collection of Necessary Information</h3>
+    <p>After receiving the request from the (client name) team SOSI requested and receive the following documents & plans from the ship :</p>
     <ul>
-        <li>1 Ship's specification</li>
-        <li>2 Machinery Arrangement</li>
+        @if(count($attechments)>0)
+        @foreach($attechments as $value)
+        <li>{{$loop->iteration}}. {{$value->heading}}</li>
+        @endforeach
+        @else
+        <li>Not Found</li>
+        @endif
     </ul>
 
 
-    <h3>3.2 Indicative List</h3>
+    <h3 style="padding-top:20px;">3.2 Indicative List</h3>
 
     <h3>Materials to be listed from Table-A</h3>
     <p>Table A lists the following four materials</p>
@@ -30,7 +36,7 @@
                 </tr>
             </thead>
             <tbody>
-            <tr>
+                <tr>
                     <td style="border-bottom:none;border-top:none;">Propeller shafting</td>
                     <td>Packing with low pressure hydraulic piping flange</td>
                 </tr>
@@ -50,15 +56,15 @@
                     <td style="border-bottom:none;border-top:none;"></td>
                     <td>Synthetic stern tubes</td>
                 </tr>
-              
-              
+
+
 
 
 
 
             </tbody>
         </table>
-        <br/></br>
+        <br /></br>
         <table>
             <thead>
                 <tr>
@@ -67,7 +73,7 @@
                 </tr>
             </thead>
             <tbody>
-            <tr>
+                <tr>
                     <td style="border-bottom:none;border-top:none;">Diesel engine</td>
                     <td>Packing with piping flange</td>
                 </tr>
@@ -86,7 +92,7 @@
                 <tr>
                     <td style="border-bottom:none">Turbine engine</td>
                     <td>Urethane formed material</td>
-                 </tr>
+                </tr>
                 <tr>
                     <td style="border-bottom:none;border-top:none;"></td>
                     <td>Blowing agent for insulation of LNG carriers</td>
@@ -101,6 +107,291 @@
 
             </tbody>
         </table>
+        <br /><br />
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Structure and/or equipment</th>
+                    <th>Component</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">Boiler</td>
+                    <td>Insulation in combustion chamber</td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">#1</td>
+                    <td>Packing for casing door</td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">Make/Model:</td>
+                    <td>Lagging material for exhaust pipe</td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">Manufacturer:</td>
+                    <td>Gasket for manhole</td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">#2</td>
+                    <td>Gasket for hand hole</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">Make/Model:</td>
+                    <td>Gas shield packing for soot blower and other holer</td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">Manufacturer</td>
+                    <td>Packing with flange of piping and valve for steam line, exhaust line, fuel line and drain line</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Lagging material for piping and valve of steam line, exhaust line, fuel line and drain line</td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none">Exhaust gas economizer</td>
+                    <td>Packing for casing door</td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">Remarks</td>
+                    <td>Packing with manhole</td>
+                </tr>
+                <tr>
+                    <td style="border-top:none;border-bottom:none"></td>
+                    <td>Packing with hand hole</td>
+                </tr>
+                <tr>
+                    <td style="border-top:none;border-bottom:none"></td>
+                    <td>Gas shield packing for soot blower</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none">Incinerator</td>
+                    <td>Packing for casing door</td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">Make/Model:</td>
+                    <td>Packing with manhole</td>
+                </tr>
+                <tr>
+                    <td style="border-top:none;border-bottom:none">Manufacturer:</td>
+                    <td>Packing with hand hole</td>
+                </tr>
+                <tr>
+                    <td style="border-top:none"></td>
+                    <td>Lagging material for exhaust pipe</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;">Auxiliary machinery (pump, compressor, oil purifier, crane)</td>
+                    <td>Packing for casing door and valve</td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">Item: 1</td>
+                    <td>Gland packing</td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">Make/Model:</td>
+                    <td style="border-bottom:none;border-top:none;">Brake lining</td>
+                </tr>
+                <tr>
+                    <td style="border-top:none;border-bottom:none">Manufacturer:</td>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">Item: 2</td>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">Make/Model:</td>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                </tr>
+                <tr>
+                    <td style="border-top:none;border-bottom:none">Manufacturer:</td>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">Make/Model:</td>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                </tr>
+                <tr>
+                    <td style="border-top:none">Manufacturer</td>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                </tr>
+
+
+                <tr>
+                    <td style="border-bottom:none">Valve</td>
+                    <td>Gland packing with valve, sheet packing with piping flange</td>
+                </tr>
+                <tr>
+                    <td style="border-top:none;">Type:</td>
+                    <td>Gland packing with valve, sheet packing with piping flange</td>
+                </tr>
+                <tr>
+                    <td>Pipe, duct</td>
+                    <td>Lagging material and insulation</td>
+                </tr>
+                <tr>
+                    <td>Tank (fuel tank, hot water, tank, condenser), other equipment (fuel strainer, lubricant oil
+                        strainer)</td>
+                    <td>Lagging material and insulation</td>
+                </tr>
+                <tr>
+                    <td>Electric equipment</td>
+                    <td>Insulation material</td>
+                </tr>
+                <tr>
+                    <td>Airborne asbestos</td>
+                    <td>Wall, ceiling</td>
+                </tr>
+                <tr>
+                    <td>Ceiling, floor and wall in accommodation area</td>
+                    <td>Ceiling, floor, wall</td>
+                </tr>
+                <tr>
+                    <td>Fire door</td>
+                    <td>Packing, construction and insulation of the fire door</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none">Inert gas system</td>
+                    <td style="border-bottom:none;border-top:none;">Packing for casing, etc.</td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">Make/Model::</td>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">Manufacturer:</td>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none">Air conditioning system</td>
+                    <td style="border-bottom:none;">Sheet packing, lagging material for piping and flexible joint</td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">Make/Model::</td>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;">Manufacturer:</td>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                </tr>
+
+
+
+
+            </tbody>
+        </table>
+        <br /><br />
+        <table>
+            <thead>
+                <tr>
+                    <th>Structure and/or equipment</th>
+                    <th>Component</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border-bottom:none;">Miscellaneous</td>
+                    <td>Ropes</td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Thermal insulating materials</td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Fire shields/fire proofing</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Space/duct insulation</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Electrical cable materials</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Brake linings</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Floor tiles/deck underlay</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Steam/water/vent flange gaskets</td>
+                </tr>
+
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Adhesives/mastics/fillers</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Sound damping</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Moulded plastic products</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Sealing putty</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Shaft/valve packing</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Electrical bulkhead penetration packing</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Circuit breaker arc chutes</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Pipe hanger inserts</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Weld shop protectors/burn covers</td>
+                </tr>
+
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td>Fire-fighting blankets/clothing/equipment</td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none;border-top:none;"></td>
+                    <td> Concrete ballast</td>
+                </tr>
+
+            </tbody>
+        </table>
     </div>
     <div style="margin-top:20px;">
         <h4><b>2.Polychlorinated biphenyl (PCBs)</b></h4>
@@ -112,22 +403,22 @@
                 </tr>
             </thead>
             <tbody>
-               
+
                 <tr>
                     <td style="border-bottom:none;border-top:none;">Transformer</td>
-                    <td  style="border-bottom:none;border-top:none;">Insulating oil</td>
+                    <td style="border-bottom:none;border-top:none;">Insulating oil</td>
                 </tr>
                 <tr>
-                    <td style="border-bottom:none;border-top:none;">Make/Model:	</td>
-                    <td  style="border-bottom:none;border-top:none;"></td>
+                    <td style="border-bottom:none;border-top:none;">Make/Model: </td>
+                    <td style="border-bottom:none;border-top:none;"></td>
                 </tr>
                 <tr>
                     <td style="border-bottom:none;border-top:none;">Type</td>
-                    <td  style="border-bottom:none;border-top:none;"></td>
+                    <td style="border-bottom:none;border-top:none;"></td>
                 </tr>
                 <tr>
-                <td style="border-bottom:none;border-top:none;">Manufacturer:</td>
-                    <td  style="border-bottom:none;border-top:none;"></td>
+                    <td style="border-bottom:none;border-top:none;">Manufacturer:</td>
+                    <td style="border-bottom:none;border-top:none;"></td>
                 </tr>
                 <tr>
                     <td>Condenser</td>
@@ -420,5 +711,73 @@
         </div>
     </div>
 
+    <div style="margin-top:20px;">
+        <h3>3.4 VSCP Preparation</h3>
+        Upon receiving the documents from the <b>{{$projectDetail['ship_name']}}</b>, team SOSI started the document analysis. A Visual Sampling check plan was prepared taking reference from the indicative list flowchart mentioned above in figure-1.
+
+        <p>Following are the details of the checkpoints section wise:</p>
+        @foreach($ChecksList as $value)
+        
+            @if(@$value['checks'])
+            <div style="margin-top:20px">
+            <p><b>Deck : {{$value['name']}}</b></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Location</th>
+                        <th>Function, Equipment, Component</th>
+                        <th>Materials</th>
+                        <th>Document Analysis Result</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                @if(count($value['checks']) > 0)
+                @foreach ($value->checks as $check)
+                    @php $hazmatsCount = count($check->check_hazmats); @endphp
+                    @if ($hazmatsCount == 0)
+                    <tr>
+                    <td>{{$check['name']}}</td>
+                    <td>{{ $check->location }}   @if($check->sub_location){{ ',' . $check->sub_location }}
+                    @endif</td>
+                    <td>{{ $check->equipment }} , {{ $check->component }} </td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>{{ $check->remarks }}</td>
+                    </tr>
+                    @endif
+                    @foreach ($check->check_hazmats as $index => $hazmat)
+                    <tr>
+                    <td>{{$check['name']}}</td>
+                    <td>{{ $check->location }}   @if($check->sub_location){{ ',' . $check->sub_location }}
+                    @endif</td>
+                    <td>{{ $check->equipment }} , {{ $check->component }} </td>
+                    <td>{{ $hazmat->hazmat->short_name }}</td>
+                    <td>{{ $hazmat->type }}</td>
+                    <td>{{ $check->remarks }}</td>
+                    </tr>
+                    @endforeach
+                @endforeach
+                @else
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                @endif
+           
+            @endif
+            </table>
+            </div>
+            <div style="margin-top:20px">
+
+          <img src="{{$value['image']}}">
+            </div>
+
+        @endforeach
+
+    </div>
 
 </div>
