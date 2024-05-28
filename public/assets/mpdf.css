@@ -14,7 +14,7 @@
         }
         .section-1-1 p {
             font-size: 14px;
-            color: #555;
+            color: #000;
             line-height: 1.5;
         }
         /* Styles for section 1.2 */
@@ -44,7 +44,7 @@
         }
         .section-1-2 p {
             font-size: 14px;
-            color: #555;
+            color: #000;
             line-height: 1.5;
             margin-bottom: 10px; /* Add some margin after the paragraphs */
         }

@@ -210,7 +210,7 @@
                         $top = $value->position_top - ($value->isApp == 1 ? 20 : 0);
                         $left = $value->position_left - ($value->isApp == 1 ? 20 : 0);
 
-                        $html .= '<div class="dot" style="position: absolute; top: ' . $top . 'px; left: ' . $left . 'px; width: 20px; height: 20px; border: 2px solid red; border-radius: 50%; text-align: center; line-height: 20px;">';
+                        $html .= '<div class="dot" style="position: absolute; top: ' . $top . 'px; left: ' . $left . 'px; width: 20px; height: 20px; border: 2px solid red;background:red;color:#fff; border-radius: 50%; text-align: center; line-height: 20px;">';
                         $html .= $key + 1;
                         $html .= '</div>';
                     }
