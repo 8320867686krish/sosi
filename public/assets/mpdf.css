@@ -12,6 +12,9 @@
             font-size: 16px;
             color: #333;
         }
+        .next {
+            page-break-inside: avoid
+        }
         .section-1-1 p {
             font-size: 14px;
             color: #000;
@@ -35,7 +38,7 @@
 
         }
         .ulIteam li{
-            line-height: 20px;
+            line-height: 30px;
             padding-top:5px;
         }
         .section-1-2 li,.section-1-1 li {

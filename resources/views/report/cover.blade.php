@@ -15,7 +15,7 @@
    
     <div style="pading-top:30px">
         <h4>Prepared by SOS INDIA As Per:</h4>
-        <ul>
+        <ul class="ulIteam">
             <li>Hong Kong International Convention for the Safe and Environmentally Sound Recycling of
                 Ships (SR/CONF 45)</li>
             <li>EU Regulation on Ship Recycling (EU-SRR No. 1257/2013)</li>

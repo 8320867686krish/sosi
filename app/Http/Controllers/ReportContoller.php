@@ -63,9 +63,9 @@ class ReportContoller extends Controller
 
         if ($isSample) {
             $checks = $checks->where('type', 'sample');
-            $filename = "lab-test-list-{$ship_name}" . "." . $fileExt;
+            $filename = "Lab-Test-List-{$ship_name}" . "." . $fileExt;
         } else {
-            $filename = "vscp-projects-{$ship_name}-{$imo_number}" . "." . $fileExt;
+            $filename = "VSCP-{$ship_name}-{$imo_number}" . "." . $fileExt;
         }
 
         $checks = $checks->get();

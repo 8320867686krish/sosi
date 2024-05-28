@@ -201,8 +201,9 @@
     @php
     $html = '';
     foreach ($decks as $deck) {
-                $html .= '<div class="outfit" style="position: relative; margin-bottom: 20px;">';
-                $html .= '<img src="' . $deck['image'] . '" style="display: block;">';
+                $html .= '<div style="position: absolute; left:0; right: 0; top: 0; bottom: 0;" class="outfit">
+';
+                $html .= '<img src="' . $deck['image'] . '" style="width: 210mm; height: 297mm; margin: 0;">';
                 $html .= '<div id="showDeckCheck" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">';
             
                 if (!empty($deck['checks'])) {
