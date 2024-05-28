@@ -202,7 +202,7 @@ class QrCodeController extends Controller
             
             $html .= '<td width="13.33%">';
             $html .= '<div style="font-size: 15px;font-weight:bolder;padding-bootom:2px">' . $newName . '</div>';
-            $html .= '<img src=data:image/png;base64,"' . $base64Image . '" alt="QR Code for Check" width="110px;">';
+            $html .= '<img src=data:image/png;base64,"' . $base64Image . '" alt="QR Code for Check" width="90px;">';
             $html.='<center><div style="font-size: 12px;font-weight:bolder">www.sosindi.com</div>';
             $html .= '</td>';
             $html .= '<td class="qr-code" width="20%" style="border-right: 2px solid #ddd;">';
