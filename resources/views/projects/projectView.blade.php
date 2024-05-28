@@ -387,10 +387,8 @@
                         <div class="col-sm-12 col-md-4">
                             <div class="form-group">
                                 <label for="vessel_previous_name">Vessel Previous Name (If Any) </label>
-                                <input type="text"
-                                    class="form-control  @error('vessel_previous_name') is-invalid @enderror"
-                                    id="vessel_previous_name"
-                                    value="{{ old('vessel_previous_name', $project->vessel_previous_name ?? '') }}"
+                                <input type="text" class="form-control  @error('vessel_previous_name') is-invalid @enderror"
+                                    id="vessel_previous_name" value="{{ old('vessel_previous_name', $project->vessel_previous_name ?? '') }}"
                                     name="vessel_previous_name" placeholder="Vessel Previous Name" autocomplete="off"
                                     onchange="removeInvalidClass(this)" {{ $readonly }}>
                                 @error('vessel_previous_names')
@@ -486,8 +484,14 @@
         <div class="main-content container-fluid p-0" id="attachment_list">
             @include('projects.attachment')
         </div>
+
         <div class="main-content container-fluid p-0" id="report_list">
-            @include('projects.repoert')
+            <div class="email-head-subject">
+                <div class="title"><span>Report</span></div>
+            </div>
+            <div class="row">
+                @include('projects.repoert')
+            </div>
         </div>
 
         <div class="modal fade" data-backdrop="static" id="checkImageAddModal" tabindex="-1" role="dialog"
