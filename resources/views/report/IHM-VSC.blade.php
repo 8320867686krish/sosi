@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container next">
     <!-- Section 1.1 -->
     <h2>4.IHM-VSC Onboard Survey</h2>
     <div class="section-1-1">
@@ -61,25 +61,144 @@
         </div>
 
         <div style="margin-top:10px">
-        <h3>4.2	Safety general precautions against individual HazMat:</h3>
-        <p><b>1.Safety precautions for Asbestos (Asbestos-containing materials) sampling: </b></p>
-        <p>
-        The precautions required when working with ACMs are relatively easy to follow but must be strictly adhered to minimize the risk of releasing dangerous quantities of asbestos fibers. Anyone who samples asbestos-containing materials should have as much information as possible on the handling of asbestos before sampling and, at a minimum, should observe the following procedures: 
-        </p>
-        <ul>
-            <li>I.Carryout a full site audit first and before any work begins. Carry out a risk assessment and write a method statement to ensure that the risk is reduced to the minimum possible and that may cause any fiber release. </li>
-            <li>Make sure no one else is in the room, without proper precaution, when the sampling is done. 
-            </li>
-            <li>Provide all operators with appropriate disposable masks and overalls to dispose of after each shift. </li>
-            <li>Ensure that all operatives are informed that they are working with asbestos.</li>
-            <li>Segregate the working areas with warning signs.</li>
-            <li>Wear disposable gloves or wash your hands for sampling.</li>
-            <li>Shut down any heating or cooling systems to minimize the spread of any released fibres. </li>
-            <li>Do not disturb the material any more than is needed to take a small sample. </li>
-            <li>Place a plastic sheet on the floor below the area to be sampled. </li>
-            <li>IX.	Place a plastic sheet on the floor below the area to be sampled. </li>
-        </ul>
+            <h3>4.2 Safety general precautions against individual HazMat:</h3>
+            <p><b>1.Safety precautions for Asbestos (Asbestos-containing materials) sampling: </b></p>
+            <p>
+                The precautions required when working with ACMs are relatively easy to follow but must be strictly adhered to minimize the risk of releasing dangerous quantities of asbestos fibers. Anyone who samples asbestos-containing materials should have as much information as possible on the handling of asbestos before sampling and, at a minimum, should observe the following procedures:
+            </p>
+            <ul>
+                <li>I.Carryout a full site audit first and before any work begins. Carry out a risk assessment and write a method statement to ensure that the risk is reduced to the minimum possible and that may cause any fiber release. </li>
+                <li>Make sure no one else is in the room, without proper precaution, when the sampling is done.
+                </li>
+                <li>Provide all operators with appropriate disposable masks and overalls to dispose of after each shift. </li>
+                <li>Ensure that all operatives are informed that they are working with asbestos.</li>
+                <li>Segregate the working areas with warning signs.</li>
+                <li>Wear disposable gloves or wash your hands for sampling.</li>
+                <li>Shut down any heating or cooling systems to minimize the spread of any released fibres. </li>
+                <li>Do not disturb the material any more than is needed to take a small sample. </li>
+                <li>Place a plastic sheet on the floor below the area to be sampled.
+                    Removed delicately into one piece. Avoid breaking or using power tools unless necessary.</li>
+                <li>Wet the material using a fine mist of water containing a few drops of detergent before taking the sample. The water/detergent mist will reduce the release of asbestos fibres.</li>
+                <li>Carefully cut a piece from the entire depth of the material using a small knife or another sharp object. Place the small piece into a clean container (a35-mm film canister, small glass or plastic vial, or high-quality sealable plastic bag)</li>
+                <li>Tightly seal the container after the sample is in it. </li>
+                <li>Carefully dispose of the plastic sheet. Use a damp paper towel to clean up any material on the outside of the container or around the area sampled. Dispose of asbestos materials according to state and local procedures.</li>
+                <li>Label the container with an identification number and clearly state when and where the sample was taken.</li>
+                <li>Patch the sampled area with the smallest possible piece of duct tape to prevent fibre release.</li>
+                <li>Always keep the site clean and tidy and cleanup after work by dampening any dust and carefully placing it in a polythene bag.</li>
+                <li>Send the sample to an asbestos analysis in an NABL-approved laboratory.</li>
+
+            </ul>
+            <p><b>2.Safety Precautions for ODS Sampling:</b></p>
+            <p>Ozone-depleting substances cause no direct, but grave indirect harm to mankind; they can reduce the ozone layer and have a climate effect larger than that of carbon dioxide. Care should be taken to avoid the un-intended release of ODS into the atmosphere. </p>
+
+            <p><b>3.Safety precautions for PCB sampling:</b></p>
+            <p>People handling PCBs or people that can be potentially exposed to PCBs have to use adequate protective equipment. The level of protection and the choice of protective equipment depend highly on the tasks carried out.</p>
+            <p><b>Example: A sampling of Liquid PCB:</b>
+            <p></p>
+            <ul>
+                <li>Gloves Vinyl or latex (oil resistant)</li>
+                <li>Light respiratory Mask</li>
+            </ul>
+            <p><b>A sampling of capacitor containing PCB:</b></p>
+            <ul>
+                <li>Gloves Vinyl or latex</li>
+                <li>Light respiratory Mask</li>
+                <li>Safety goggles only while opening or drilling. </li>
+            </ul>
+
+
+            <p>When taking samples of PCB or suspected material containing PCB, it must be worked tidily without losing or spreading sample material. Use an oil-absorbing carpet as a foundation if needed. Special attention is needed during the dismantling and packing of leaking PCB-containing capacitors. The main aim shall be to avoid cross-contamination. Therefore, immediately after the phase-out of the capacitors, the devices need to be placed in a drip tray. The surface should be cleaned and if necessary, a leakage stop device can be used. When packing capacitors an appropriate part of the area shall be covered with e.g., a chemical absorbing industrial carpet, an oil absorbent sheet, or other suitable materials, to protect it from cross-contamination or incidents during the packing procedure.</p>
+
+            <p><b>4.Safety precautions for POPs sampling:</b></p>
+            <p>A sampling protocol is to be used and should contain the following information:</p>
+            <ul>
+                <li>Type of sample. </li>
+                <li>Location of sampling.</li>
+                <li>Type of sample.</li>
+            </ul>
+            <p>The sample should be wrapped in aluminium foil and transferred into an airtight bag or container (e.g., glass or another inert material) with a cap or screw top. The vessel should be labelled (readable, persistent against solvents and water, with unique information e.g., code related to sampling protocol, if the sample represents any hazard this should be noted, and the sample labelled respectively). The collected samples should be stored adequately (e.g., appropriate temperature; possibly exclusion of light). Collected samples in sealed containers. Keep the sample in a dedicated/separate storage area with proper labelling.</p>
+
+            <p><b>5.Precautions for Heavy Metal Sampling:</b></p>
+            <p>The following measures should be taken by researchers working with toxic metals:</p>
+            <ul>
+            <li>Read the safety data sheet (SDS) for each toxic metal or metal compound before use.</li>
+            <li> Eliminate, and substitute fewer toxic chemicals or reduce the quantities of toxic metals being used if possible. </li>
+            <li>Work with toxic metals in a chemical fume hood, glove box, or with other types of local exhaust ventilation.</li>
+            <li>Wear personal protective equipment as indicated by safety data sheets.</li>
+
+            <li>Ensure containers are clearly labelled and inspect containers for leaks or damage before use.</li>
+            <li>Store toxic metals in tightly sealed containers away from incompatible materials.</li>
+            <li>Corrosive, toxic metals (e.g., mercury) should be stored below eye level.</li>
+            <li>Do not return contaminated or unused material to the original container.</li>
+            <li>Ensure that emergency eye wash/shower stations are readily available.</li>
+            <li>Ensure that all waste containers are compatible with toxic metals and that the containers are properly labelled and stored.</li>
+            </ul>
+
+
+
         </div>
 
+    </div>
+    <div class="next section-1-1">
+        <h3>4.2 Sampling Strategy</h3>
+        <br/>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product Type</th>
+                    <th>Strategy</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Vinyl, composite floor covering, surface covering</td>
+                    <td>One sample per room, or one sample per 40m2per product type or colour. In this vessel, it has been visually observed that all the floor tiles and covering are the same. Thus, the frequency of the sampling is reduced.</td>
+                </tr>
+                <tr>
+                    <td>Texture Coating</td>
+                    <td>One composite sample per room or one sample per 9m2 dependent on the similarity of coating type. Where large expanses of the sample have been used throughout an area. The frequency of sampling may be decreased at the discretion of the surveyor</td>
+                </tr>
+                <tr>
+                    <td>Gasket, ropes, woven products,seals, mastics, Papers felt</td>
+                    <td>One sample per product type. For gasket samples to be collected from individual systems.</td>
+                </tr>
+                <tr>
+                    <td>Cement Product</td>
+                    <td>One sample per product type, or if appropriate, per area or location. The specific nature of the material has been determined on-site using the competence and experience of the surveyor.</td>
+                </tr>
+                <tr>
+                    <td>Paint</td>
+                    <td>One sample per product type or if appropriate, per area or location. The sample area will be determined by the survey or through document analysis.</td>
+                </tr>
+            </tbody>
+
+        </table>
+        <p><b>4.3 packing of IHM Samples:</b></p>
+        <p>Bulky material (e.g., paint, isolation, concrete) should be given into a plastic bag which is allowed to glue a label on it. Maybe the bags are pre-labelled (label with sample no. on it). Liquid samples should be put into a coloured glass (up to 10ml is enough) and the glass should be put into a plastic containment that is matching (not too big) Breakable containments (glass) should be packed properly. In case the package is damaged because of not proper packing, Courier accepts no responsibility all samples are packed into one or more parcels which can then be sent to the laboratory. Samples should be labelled & marked. The location of samples should also be marked with their respective numbering.</p>
+
+
+    </div>
+    <div class="next section-1-1">
+        <h3>4.4	 Laboratory Analysis</h3>
+        <p>Once the samples are collected & sorted, are to be sent to the ISO17025 or equally credited laboratory</p>
+        <h3><b>4.4.1 Threshold Values & Testing Standards</b></h3>
+        <p>The below cumulative list is its threshold values and test standard to follow:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Sr. No.</th>
+                    <th>Test Items</th>
+                    <th>Test Items</th>
+                    <th>Threshold</th>
+                    <th>Main Test Standards</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1.</td>
+                    <td>Asbestos</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>

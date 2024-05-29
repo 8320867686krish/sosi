@@ -13,6 +13,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Mpdf\Mpdf;
 use App\Models\Attechments;
 use App\Models\Deck;
+use App\Models\ReportMaterial;
 
 ini_set("pcre.backtrack_limit", "5000000");
 
@@ -73,6 +74,16 @@ class ReportContoller extends Controller
         }
 
         $imageData = file_get_contents($projectDetail['image']);
+        $report_materials = ReportMaterial::where('project_id',$project_id)->get()->toArray();
+        $foundItems = [];
+
+        foreach ($report_materials as $value) {
+            $index = array_search($value['structure'], array_column($report_materials, 'structure'));
+            if ($index !== false) {
+                $foundItems[$value['structure']] = $report_materials[$index];
+            }
+        }
+       
         $logo = 'https://sosindi.com/IHM/public/assets/images/logo.png';
         $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
             $query->where('project_id', $project_id);
@@ -112,11 +123,13 @@ class ReportContoller extends Controller
                 'margin_bottom' => 25,
                 'margin_header' => 16,
                 'margin_footer' => 13,
-                'defaultPagebreakType' => 'slice'
+                'defaultPagebreakType' => 'avoid'
             ]);
+            $mpdf->defaultPageNumStyle = '1';
+            $mpdf->SetDisplayMode('fullpage');
 
-            $mpdf->use_kwt = true;
-            $mpdf->mirrorMargins = 1;
+          //  $mpdf->use_kwt = true;
+         //   $mpdf->mirrorMargins = 1;
             $mpdf->defaultPageNumStyle = '1';
             $mpdf->SetDisplayMode('fullpage');
 
@@ -140,6 +153,7 @@ class ReportContoller extends Controller
             </table>';
             $mpdf->SetHTMLHeader($header);
             $mpdf->SetHTMLFooter($footer);
+            
             $html = '';
 
             // Load main HTML content
@@ -151,26 +165,36 @@ class ReportContoller extends Controller
             // Add Table of Contents
 
             $stylesheet = file_get_contents('public/assets/mpdf.css');
-            $mpdf->WriteHTML($stylesheet, 1); // The parameter 1 tells that this is css/style only and no body/html/text
+            $mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
+           
+
             $mpdf->WriteHTML(view('report.cover', compact('projectDetail')));
             $mpdf->TOCpagebreak();
-
+           
             $mpdf->TOCpagebreakByArray([
                 'links' => true,
-                'toc-preHTML' => 'Table of Contents',
+                'toc-preHTML' => '',
+                'toc-bookmarkText' => 'Table of Contents',
                 'level' => 0,
+                'page-break-inside' => 'avoid',
+                'suppress' => false, // This should prevent a new page from being created before and after TOC
+                'toc-resetpagenum' => 1
             ]);
 
             $mpdf->WriteHTML(view('report.introduction', compact('hazmets', 'projectDetail')));
             $mpdf->AddPage('L'); // Set landscape mode for the inventory page
             $totalPages = $mpdf->page;
-
-
+          
             $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3', 'decks')));
             $mpdf->AddPage('p'); // Set landscape mode for the inventory page
-            $mpdf->WriteHTML(view('report.development', compact('filteredResults1', 'filteredResults2', 'filteredResults3', 'projectDetail', 'attechments', 'ChecksList')));
+            $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechments', 'ChecksList','foundItems')));
             $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail')));
-          
+           
+            $mpdf->WriteHTML($html);
+            
+            // Output the PDF
+            $mpdf->Output('project_report.pdf', 'I');
+            exit();
             // Output the PDF
             $mpdf->Output('project_report.pdf', 'I');
         } catch (\Mpdf\MpdfException $e) {
