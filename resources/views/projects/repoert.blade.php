@@ -77,8 +77,8 @@
                                         <option value="Gasket for manhole" {{ isset($foundItems['Boiler']) && in_array("Gasket for manhole", $foundItems['Boiler']['component']) ? 'selected' : '' }}>Gasket for manhole</option>
                                         <option value="Gasket for hand hole" {{ isset($foundItems['Boiler']) && in_array("Gasket for hand hole", $foundItems['Boiler']['component']) ? 'selected' : '' }}>Gasket for hand hole</option>
                                         <option value="Gas shield packing for soot blower and other hole" {{ isset($foundItems['Boiler']) && in_array("Gas shield packing for soot blower and other hole", $foundItems['Boiler']['component']) ? 'selected' : '' }}>Gas shield packing for soot blower and other hole</option>
-                                        <option value="Packing with flange of piping and valve for steam line, exhaust line, fuel line and drain line" {{ isset($foundItems['Boiler']) && in_array("Packing with flange of piping and valve for steam line, exhaust line, fuel line and drain line", $foundItems['Boiler']['component']) ? 'selected' : '' }}>Packing with flange of piping and valve for steam line, exhaust line, fuel line and drain line</option>
-                                        <option value="Lagging material for piping and valve of steam line, exhaust line, fuel line and drain line" {{ isset($foundItems['Boiler']) && in_array("Lagging material for piping and valve of steam line, exhaust line, fuel line and drain line", $foundItems['Boiler']['component']) ? 'selected' : '' }}>Lagging material for piping and valve of steam line, exhaust line, fuel line and drain line</option>
+                                        <option value="Packing with flange of piping and valve for steam line exhaust line fuel line and drain line" {{ isset($foundItems['Boiler']) && in_array("Packing with flange of piping and valve for steam line exhaust line fuel line and drain line", $foundItems['Boiler']['component']) ? 'selected' : '' }}>Packing with flange of piping and valve for steam line, exhaust line, fuel line and drain line</option>
+                                        <option value="Lagging material for piping and valve of steam line exhaust line fuel line and drain line" {{ isset($foundItems['Boiler']) && in_array("Lagging material for piping and valve of steam line exhaust line fuel line and drain line", $foundItems['Boiler']['component']) ? 'selected' : '' }}>Lagging material for piping and valve of steam line, exhaust line, fuel line and drain line</option>
                                     </select>
                                 </div>
 
@@ -131,8 +131,8 @@
                                         <option value="Packing with manhole" {{ isset($foundItems['Exhaust gas economizer']) && in_array("Packing with manhole", $foundItems['Exhaust gas economizer']['component']) ? 'selected' : '' }}>Packing with manhole</option>
                                         <option value="Packing with hand hole" {{ isset($foundItems['Exhaust gas economizer']) && in_array("Packing with hand hole", $foundItems['Exhaust gas economizer']['component']) ? 'selected' : '' }}>Packing with hand hole</option>
                                         <option value="Gas shield packing for soot blower" {{ isset($foundItems['Exhaust gas economizer']) && in_array("Gas shield packing for soot blower", $foundItems['Exhaust gas economizer']['component']) ? 'selected' : '' }}>Gas shield packing for soot blower</option>
-                                        <option value="Packing with flange of piping and valve for steam line, exhaust line, fuel line and drain line" {{ isset($foundItems['Exhaust gas economizer']) && in_array("Packing with flange of piping and valve for steam line, exhaust line, fuel line and drain line", $foundItems['Exhaust gas economizer']['component']) ? 'selected' : '' }}>Packing with flange of piping and valve for steam line, exhaust line, fuel line and drain line</option>
-                                        <option value="Lagging material for piping and valve of steam line, exhaust line, fuel line and drain line" {{ isset($foundItems['Exhaust gas economizer']) && in_array("Lagging material for piping and valve of steam line, exhaust line, fuel line and drain line", $foundItems['Exhaust gas economizer']['component']) ? 'selected' : '' }}>Lagging material for piping and valve of steam line, exhaust line, fuel line and drain line</option>
+                                        <option value="Packing with flange of piping and valve for steam line exhaust line fuel line and drain line" {{ isset($foundItems['Exhaust gas economizer']) && in_array("Packing with flange of piping and valve for steam line exhaust line fuel line and drain line", $foundItems['Exhaust gas economizer']['component']) ? 'selected' : '' }}>Packing with flange of piping and valve for steam line, exhaust line, fuel line and drain line</option>
+                                        <option value="Lagging material for piping and valve of steam line exhaust line fuel line and drain line" {{ isset($foundItems['Exhaust gas economizer']) && in_array("Lagging material for piping and valve of steam line exhaust line fuel line and drain line", $foundItems['Exhaust gas economizer']['component']) ? 'selected' : '' }}>Lagging material for piping and valve of steam line, exhaust line, fuel line and drain line</option>
                                     </select>
                                 </div>
 
@@ -178,7 +178,7 @@
                                         <option value="Brake lining" {{ isset($foundItems['Auxiliary machinery']) && in_array("Brake lining", $foundItems['Auxiliary machinery']['component']) ? 'selected' : '' }}>Brake lining</option>
                                     </select>
                                 </div>
-                                @if (isset($foundItems['Boiler']['make']))
+                                @if (isset($foundItems['Auxiliary machinery']['make']))
                                     @php
                                         $machineryIndex = 1;
                                     @endphp
@@ -285,7 +285,7 @@
                                 <div class="form-group col-12 mb-3">
                                     <label>Component</label>
                                     <select class="selectpicker show-tick form-control form-control-lg" name="material[Air conditioning system][component][]" multiple data-actions-box="true" {{ $readonly }}>
-                                        <option value="Sheet packing, lagging material for piping and flexible joint." {{ isset($foundItems['Air conditioning system']) && in_array("Sheet packing, lagging material for piping and flexible joint.", $foundItems['Air conditioning system']['component']) ? 'selected' : '' }}>Sheet packing, lagging material for piping and flexible joint.</option>
+                                        <option value="Sheet packing lagging material for piping and flexible joint." {{ isset($foundItems['Air conditioning system']) && in_array("Sheet packing lagging material for piping and flexible joint.", $foundItems['Air conditioning system']['component']) ? 'selected' : '' }}>Sheet packing, lagging material for piping and flexible joint.</option>
                                     </select>
                                 </div>
 
@@ -330,20 +330,21 @@
                                 <div class="form-group col-6 mb-3">
                                     <label for="component">Component</label>
                                     <select class="selectpicker show-tick form-control form-control-lg" name="material[Transformer][component][]" multiple data-actions-box="true" {{ $readonly }}>
-                                        <option value="Insulating oil">Insulating oil</option>
+                                        <option value="Insulating oil" {{ isset($foundItems['Transformer']) && in_array("Insulating oil", $foundItems['Transformer']['component']) ? 'selected' : '' }}>Insulating oil</option>
                                     </select>
                                 </div>
+
                                 <div class="form-group col-6">
                                     <label>Type</label>
-                                    <input type="text" class="form-control form-control-lg" name="material[Transformer][type]" autocomplete="off" {{ $readonly }}>
+                                    <input type="text" class="form-control form-control-lg" name="material[Transformer][type]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Transformer']['type'] ?? ''}}">
                                 </div>
                                 <div class="form-group col-6">
                                     <label for="make">Make/Model</label>
-                                    <input type="text" class="form-control form-control-lg" name="material[Transformer][model]" autocomplete="off" {{ $readonly }}>
+                                    <input type="text" class="form-control form-control-lg" name="material[Transformer][model]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Transformer']['make'][0]['model'] ?? ''}}">
                                 </div>
                                 <div class="form-group col-6 mb-4">
-                                    <label for="assign_date">Manufacturer</label>
-                                    <input type="text" class="form-control form-control-lg" name="material[Transformer][manufacturer]" autocomplete="off" {{ $readonly }}>
+                                    <label>Manufacturer</label>
+                                    <input type="text" class="form-control form-control-lg" name="material[Transformer][manufacturer]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Transformer']['make'][0]['manufacturer'] ?? ''}}">
                                 </div>
                                 @can('projects.edit')
                                     <div class="col-12">
