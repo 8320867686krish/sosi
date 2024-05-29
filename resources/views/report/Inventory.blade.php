@@ -196,32 +196,3 @@
 
 
 </div>
-<div class="container">
-    <h3>Location Diagram of Contained HazMat & PCHM</h3>
-    @php
-    $html = '';
-    foreach ($decks as $deck) {
-                $html .= '<div style="position: relative; left:0; right: 0; top: 0; bottom: 0;" class="outfit">
-';
-                $html .= '<img src="' . $deck['image'] . '" >';
-                $html .= '<div id="showDeckCheck">';
-            
-                if (!empty($deck['checks'])) {
-                    foreach ($deck['checks'] as $key => $value) {
-                        $top = $value->position_top - ($value->isApp == 1 ? 20 : 0);
-                        $left = $value->position_left - ($value->isApp == 1 ? 20 : 0);
-
-                        $html .= '<div class="dot" style="position: fixed; top: ' . $top . '%; left: ' . $left . '%; width:3%; height: 2%; border: 2px solid red;background:red;color:#fff; border-radius: 50%; text-align: center; line-height: 20px;">';
-                        $html .= $key + 1;
-                        $html .= '</div>';
-
-                     
-                    }
-                }
-            
-                $html .= '</div>';
-                $html .= '</div>';
-            }
-            echo $html;
-        @endphp
-</div>

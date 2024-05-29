@@ -14,7 +14,8 @@ use Mpdf\Mpdf;
 use App\Models\Attechments;
 use App\Models\Deck;
 use App\Models\ReportMaterial;
-
+use Dompdf\Dompdf;
+use Dompdf\Options;
 ini_set("pcre.backtrack_limit", "5000000");
 
 class ReportContoller extends Controller
@@ -83,7 +84,56 @@ class ReportContoller extends Controller
                 $foundItems[$value['structure']] = $report_materials[$index];
             }
         }
-       
+        $options = new Options();
+        $dompdf = new Dompdf($options);
+        $html = '';
+        $decks = Deck::with(['checks' => function ($query) {
+            $query->whereHas('check_hazmats', function ($query) {
+                $query->where('type', 'PCHM')->orWhere('type', 'Contained');
+            });
+        }])->where('project_id', $project_id)->get();
+        $html = '';
+        foreach ($decks as $deck) {
+            // Convert the image to base64
+            $imagePath = $deck['image'];
+            $imageData = base64_encode(file_get_contents($imagePath));
+            $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
+    
+            // Main container
+            $html .= '<div style="position: relative;">';
+    
+            // Background image using base64
+            $html .= '<img src="' . $imageBase64 . '" />';
+    
+            // Container for checks
+            $html .= '<div id="showDeckCheck" style="">';
+    
+            if (!empty($deck['checks'])) {
+                foreach ($deck['checks'] as $key => $value) {
+                    $top = $value->position_top - ($value->isApp == 1 ? 20 : 0);
+                    $left = $value->position_left - ($value->isApp == 1 ? 20 : 0);
+    
+                    // Position the dot using fixed units
+                    $html .= '<div class="dot" style="position: absolute; top: ' . $top . 'px; left: ' . $left . 'px; width: 15px; height: 15px; border: 2px solid red; background: red;  text-align: center; line-height: 5mm;">';
+                    $html .= '<div class="tooltip" style="display: block; position: absolute; top: -20px; left: 20px; background-color: #fff; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">' . $value['name'] . '</div>';
+
+                    $html .= '</div>';
+                }
+            }
+    
+            // Close containers
+            $html .= '</div>';
+            $html .= '</div>';
+        }
+     
+        $dompdf->loadHtml($html);
+
+        $dompdf->render();
+        $coverPdfContent = $dompdf->output();
+        $filePath = storage_path('app/pdf/rr.pdf');
+        file_put_contents($filePath, $coverPdfContent);
+        $this->savePdf($html, 'hh.pdf');
+        
         $logo = 'https://sosindi.com/IHM/public/assets/images/logo.png';
         $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
             $query->where('project_id', $project_id);
@@ -93,11 +143,7 @@ class ReportContoller extends Controller
             $query->where('project_id', $project_id);
         }])->get();
 
-        $decks = Deck::with(['checks' => function ($query) {
-            $query->whereHas('check_hazmats', function ($query) {
-                $query->where('type', 'PCHM')->orWhere('type', 'Contained');
-            });
-        }])->where('project_id', $project_id)->get();
+
 
         $ChecksList = Deck::with(['checks.check_hazmats'])->where('project_id', $project_id)->get();
 
@@ -127,7 +173,10 @@ class ReportContoller extends Controller
             ]);
             $mpdf->defaultPageNumStyle = '1';
             $mpdf->SetDisplayMode('fullpage');
+            $pageCount = $mpdf->setSourceFile(storage_path('app/pdf/rr.pdf'));
 
+            // Add each page of the Dompdf-generated PDF to the mPDF document
+          
           //  $mpdf->use_kwt = true;
          //   $mpdf->mirrorMargins = 1;
             $mpdf->defaultPageNumStyle = '1';
@@ -187,6 +236,12 @@ class ReportContoller extends Controller
           
             $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3', 'decks')));
             $mpdf->AddPage('p'); // Set landscape mode for the inventory page
+            for ($i = 1; $i <= $pageCount; $i++) {
+                $mpdf->AddPage();
+                $templateId = $mpdf->importPage($i);
+                $mpdf->useTemplate($templateId);
+            }
+            $mpdf->AddPage('p');
             $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechments', 'ChecksList','foundItems')));
             $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail')));
            

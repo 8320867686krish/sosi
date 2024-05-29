@@ -188,16 +188,87 @@
                 <tr>
                     <th>Sr. No.</th>
                     <th>Test Items</th>
-                    <th>Test Items</th>
                     <th>Threshold</th>
                     <th>Main Test Standards</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>1.</td>
-                    <td>Asbestos</td>
+                    <td rowspan="3">1.</td>
+                    <td  rowspan="3">Asbestos</td>
+                    <td  rowspan="3">0.10%</td>
+                    <td>MEPC. 379(80) 2023  Guidelines for the development of the Inventory of Hazardous Materials.</td>
                 </tr>
+                <tr>
+                   
+                    <td>NIOSH 9000:1994, asbestos, chrysotile by XRD</td>
+                </tr>
+                <tr>
+                   
+                   <td>ISO 22262-1:2012 Air quality -Bulk materials -Part 1: Sampling & qualitative determination of asbestos in commercial bulk materials..</td>
+               </tr>
+
+               <tr>
+                    <td rowspan="2">2.</td>
+                    <td  rowspan="2">Polychlorinated Biphenyls (PCBs)*</td>
+                    <td  rowspan="2">50mg/Kg</td>
+                    <td>MEPC. 379(80) 2023 Guidelines for the development of the IHM</td>
+                </tr>
+                <tr>
+                   
+                    <td>EPA8082A Polychlorinated biphenyls (PCBs) by Gas Chromatography</td>
+                </tr>
+
+                <tr>
+                    <td rowspan="2">3.</td>
+                    <td  rowspan="2">Ozone Depleting substances (ODS)</td>
+                    <td  rowspan="2">No threshold value</td>
+                    <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
+                </tr>
+                <tr>
+                   
+                    <td>EPA 8260C Volatile Organic Compounds by Gas chromatography/Mass Spectrometer (GC-MS)</td>
+                </tr>
+
+                <tr>
+                    <td rowspan="6">4.</td>
+                    <td  rowspan="6">Anti-Fouling systems containing Organotin compounds as a biocide (TBT, TPT, TBTO)</td>
+                    <td  rowspan="6">2500 mg Total TIN /Kg</td>
+                    <td>The International Convention on control of the harmful anti-fouling system on ships, 2001(AFS convention)</td>
+                </tr>
+                <tr>
+                   
+                    <td>MEPC. 104(49) Guidelines of brief sampling of anti-fouling systems</td>
+                </tr>
+                <tr>
+                   
+                   <td>MEPC. 379(80) 2023 Guidelines for the development of the IHM</td>
+               </tr>
+               <tr>
+                   
+                   <td>ISO17353:2004 water quality determination of selected organotin compound gas chromatographic method</td>
+               </tr>
+               <tr>
+                   
+                   <td>ISO11885:2007 Water quality-determination of selected elements by inductively coupled plasma optical emission spectrometry (ICP-OES)</td>
+               </tr>
+               <tr>
+                   
+                   <td>GB/T 26085-2010 Test method & determination of total tin in anti-fouling paints of the ships.</td>
+               </tr>
+               <tr>
+                <td>5.</td>
+                <td>Cybutryne</td>
+                <td>1,000 mg/kg</td>
+                <td>As per resolution MEPC.356(78) (2022 Guidelines for brief sampling of anti-fouling systems on ships), adopted on 10 June 2022, using GC-MS.</td>
+               </tr>
+               <tr>
+                <td>6.</td>
+                <td>Cybutryne</td>
+                <td>1,000 mg/kg</td>
+                <td>As per resolution MEPC.356(78) (2022 Guidelines for brief sampling of anti-fouling systems on ships), adopted on 10 June 2022, using GC-MS.</td>
+               </tr>
+              
             </tbody>
         </table>
     </div>
