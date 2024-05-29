@@ -31,7 +31,7 @@
             </ul>
         </div>
 
-        <div class="section-1-3">
+        <div class="section-1-3 next">
             <h3> 1.3 Project Particular </h3>
             <table>
 
@@ -80,7 +80,7 @@
             </table>
         </div>
 
-        <div class="section-1-4">
+        <div class="section-1-4 next">
             <h3> 1.4 Executive Summary</h3>
             <p style="padding-bottom:25px">2. The onboard visual/sampling check was carried out at ({{$projectDetail['port_of_registry']}}) by IHM expert ({{$projectDetail['survey_location_name']}}) on ({{$projectDetail['survey_date']}}) as per the visual/sampling check plan. Sampling points on ship were marked/labeled with check point numbers same as mentioned on sampling bag . The collected samples were appropriate bagged/packed and sent to the ({{$projectDetail['laboratorie1']}}) for the analysis. Following is details number of sampling & visual checks carried out for the vessel:</p>
 

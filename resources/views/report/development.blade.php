@@ -36,29 +36,23 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Propeller shafting</td>
-                    <td>Packing with low pressure hydraulic piping flange</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Make/Model:</td>
-                    <td>Packing with casing</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Manufacturer</td>
-                    <td>Clutch</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Brake lining</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Synthetic stern tubes</td>
-                </tr>
 
 
-
+                @php
+                $ex = explode(',',$foundItems['Propeller shafting']['component']);
+                $json = $foundItems['Propeller shafting']['make'];
+                @endphp
+                <tr>
+                    <td rowspan="{{count($ex)}}">Propeller shafting<br />
+                        Make/Model : {{$json[0]['model']}}<br />
+                        Manufacturer: {{$json[0]['manufacturer']}}
+                    </td>
+                    <td>{{$ex[0]}}</td>
+                </tr>
+                @for($i = 1; $i < count($ex); $i++) <tr>
+                    <td>{{ $ex[$i] }}</td>
+                    </tr>
+                    @endfor
 
 
 
@@ -73,34 +67,33 @@
                 </tr>
             </thead>
             <tbody>
+                @php
+                $ex = explode(',',$foundItems['Diesel engine']['component']);
+                $json = $foundItems['Diesel engine']['make'];
+                @endphp
                 <tr>
-                    <td style="border-bottom:none;border-top:none;">Diesel engine</td>
-                    <td>Packing with piping flange</td>
+                    <td rowspan="{{count($ex)}}">Diesel engine<br />
+                        Make/Model : {{@$json[0]['model'] ?? ""}}<br />
+                        Manufacturer: {{@$json[0]['manufacturer'] ?? ""    }}
+                    </td>
+                    <td>{{$ex[0]}}</td>
                 </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Make/Model:</td>
-                    <td>Lagging material for fuel pipe</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Manufacturer</td>
-                    <td>Lagging material for fuel pipe</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Lagging material turbocharger</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none">Turbine engine</td>
-                    <td>Urethane formed material</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Blowing agent for insulation of LNG carriers</td>
-                </tr>
-                <tr>
-                    <td style="border-top:none"></td>
-                    <td>Blowing agent for insulation of LNG carriers</td>
-                </tr>
+                @for($i = 1; $i < count($ex); $i++) <tr>
+                    <td>{{ $ex[$i] }}</td>
+                    </tr>
+                    @endfor
+                    <tr>
+                        <td style="border-bottom:none">Turbine engine</td>
+                        <td>Urethane formed material</td>
+                    </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Blowing agent for insulation of LNG carriers</td>
+                    </tr>
+                    <tr>
+                        <td style="border-top:none"></td>
+                        <td>Blowing agent for insulation of LNG carriers</td>
+                    </tr>
 
 
 
@@ -117,171 +110,147 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Boiler</td>
-                    <td>Insulation in combustion chamber</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">#1</td>
-                    <td>Packing for casing door</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Make/Model:</td>
-                    <td>Lagging material for exhaust pipe</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Manufacturer:</td>
-                    <td>Gasket for manhole</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">#2</td>
-                    <td>Gasket for hand hole</td>
-                </tr>
+                @php
+                $ex_boiler = explode(',',$foundItems['Boiler']['component']);
+                $json_boiler = $foundItems['Boiler']['make'];
 
+                @endphp
                 <tr>
-                    <td style="border-bottom:none;border-top:none;">Make/Model:</td>
-                    <td>Gas shield packing for soot blower and other holer</td>
+                    <td rowspan="{{count($ex_boiler)}}">Boiler<br />
+                        @foreach($json_boiler as $value)
+                        Make/Model : {{@$value['model'] ?? ""}}<br />
+                        Manufacturer: {{@$value['manufacturer'] ?? ""}}<br />
+                        @endforeach
+                    </td>
+                    <td>{{$ex_boiler[0]}}</td>
                 </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Manufacturer</td>
-                    <td>Packing with flange of piping and valve for steam line, exhaust line, fuel line and drain line</td>
-                </tr>
+                @for($i = 1; $i < count($ex_boiler); $i++) <tr>
+                    <td>{{ $ex_boiler[$i] }}</td>
+                    </tr>
+                    @endfor
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Lagging material for piping and valve of steam line, exhaust line, fuel line and drain line</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none">Exhaust gas economizer</td>
-                    <td>Packing for casing door</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Remarks</td>
-                    <td>Packing with manhole</td>
-                </tr>
-                <tr>
-                    <td style="border-top:none;border-bottom:none"></td>
-                    <td>Packing with hand hole</td>
-                </tr>
-                <tr>
-                    <td style="border-top:none;border-bottom:none"></td>
-                    <td>Gas shield packing for soot blower</td>
-                </tr>
+                    @php
+                    $ex_boiler = explode(',',$foundItems['Exhaust gas economizer']['component']);
 
-                <tr>
-                    <td style="border-bottom:none">Incinerator</td>
-                    <td>Packing for casing door</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Make/Model:</td>
-                    <td>Packing with manhole</td>
-                </tr>
-                <tr>
-                    <td style="border-top:none;border-bottom:none">Manufacturer:</td>
-                    <td>Packing with hand hole</td>
-                </tr>
-                <tr>
-                    <td style="border-top:none"></td>
-                    <td>Lagging material for exhaust pipe</td>
-                </tr>
+                    @endphp
+                    <tr>
+                        <td rowspan="{{count($ex_boiler)}}">Exhaust gas economizer<br />
+                            remarks:{{$foundItems['Exhaust gas economizer']['remark']}}
 
-                <tr>
-                    <td style="border-bottom:none;">Auxiliary machinery (pump, compressor, oil purifier, crane)</td>
-                    <td>Packing for casing door and valve</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Item: 1</td>
-                    <td>Gland packing</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Make/Model:</td>
-                    <td style="border-bottom:none;border-top:none;">Brake lining</td>
-                </tr>
-                <tr>
-                    <td style="border-top:none;border-bottom:none">Manufacturer:</td>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Item: 2</td>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Make/Model:</td>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                </tr>
-                <tr>
-                    <td style="border-top:none;border-bottom:none">Manufacturer:</td>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                </tr>
+                        <td>{{$ex_boiler[0]}}</td>
+                    </tr>
+                    @for($i = 1; $i < count($ex_boiler); $i++) <tr>
+                        <td>{{ $ex_boiler[$i] }}</td>
+                        </tr>
+                        @endfor
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Make/Model:</td>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                </tr>
-                <tr>
-                    <td style="border-top:none">Manufacturer</td>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                </tr>
+                        @php
+                        $ex_boiler = explode(',',$foundItems['Incinerator']['component']);
+                        $json_boiler = $foundItems['Incinerator']['make'];
+
+                        @endphp
+                        <tr>
+                            <td rowspan="{{count($ex_boiler)}}">Incinerator<br />
+                                Make/Model : {{@$json[0]['model'] ?? ""}}<br />
+                                Manufacturer: {{@$json[0]['manufacturer'] ?? ""    }}
+
+                            <td>{{$ex_boiler[0]}}</td>
+                        </tr>
+                        @for($i = 1; $i < count($ex_boiler); $i++) <tr>
+                            <td>{{ $ex_boiler[$i] }}</td>
+                            </tr>
+                            @endfor
+
+                            @php
+                            $ex_boiler = explode(',',$foundItems['Auxiliary machinery']['component']);
+                            $json_boiler = $foundItems['Auxiliary machinery']['make'];
+
+                            @endphp
+                            <tr>
+                                <td rowspan="{{count($ex_boiler)}}">Auxiliary machinery<br />
+                                    @foreach($json_boiler as $value)
+                                    Make/Model : {{@$value['model'] ?? ""}}<br />
+                                    Manufacturer: {{@$value['manufacturer'] ?? ""}}<br />
+                                    @endforeach
+
+                                <td>{{$ex_boiler[0]}}</td>
+                            </tr>
+                            @for($i = 1; $i < count($ex_boiler); $i++) <tr>
+                                <td>{{ $ex_boiler[$i] }}</td>
+                                </tr>
+                                @endfor
+                                <tr>
+                                    <td style="border-bottom:none">Valve</td>
+                                    <td>Gland packing with valve, sheet packing with piping flange</td>
+                                </tr>
+                                <tr>
+                                    <td style="border-top:none;"></td>
+                                    <td>Gland packing with valve, sheet packing with piping flange</td>
+                                </tr>
 
 
-                <tr>
-                    <td style="border-bottom:none">Valve</td>
-                    <td>Gland packing with valve, sheet packing with piping flange</td>
-                </tr>
-                <tr>
-                    <td style="border-top:none;">Type:</td>
-                    <td>Gland packing with valve, sheet packing with piping flange</td>
-                </tr>
-                <tr>
-                    <td>Pipe, duct</td>
-                    <td>Lagging material and insulation</td>
-                </tr>
-                <tr>
-                    <td>Tank (fuel tank, hot water, tank, condenser), other equipment (fuel strainer, lubricant oil
-                        strainer)</td>
-                    <td>Lagging material and insulation</td>
-                </tr>
-                <tr>
-                    <td>Electric equipment</td>
-                    <td>Insulation material</td>
-                </tr>
-                <tr>
-                    <td>Airborne asbestos</td>
-                    <td>Wall, ceiling</td>
-                </tr>
-                <tr>
-                    <td>Ceiling, floor and wall in accommodation area</td>
-                    <td>Ceiling, floor, wall</td>
-                </tr>
-                <tr>
-                    <td>Fire door</td>
-                    <td>Packing, construction and insulation of the fire door</td>
-                </tr>
+                                <tr>
+                                    <td>Pipe, duct</td>
+                                    <td>Lagging material and insulation</td>
+                                </tr>
+                                <tr>
+                                    <td>Tank (fuel tank, hot water, tank, condenser), other equipment (fuel strainer, lubricant oil
+                                        strainer)</td>
+                                    <td>Lagging material and insulation</td>
+                                </tr>
+                                <tr>
+                                    <td>Electric equipment</td>
+                                    <td>Insulation material</td>
+                                </tr>
+                                <tr>
+                                    <td>Airborne asbestos</td>
+                                    <td>Wall, ceiling</td>
+                                </tr>
+                                <tr>
+                                    <td>Ceiling, floor and wall in accommodation area</td>
+                                    <td>Ceiling, floor, wall</td>
+                                </tr>
+                                <tr>
+                                    <td>Fire door</td>
+                                    <td>Packing, construction and insulation of the fire door</td>
+                                </tr>
+                                @for($i = 1; $i < count($ex_boiler); $i++) <tr>
+                                    <td>{{ $ex_boiler[$i] }}</td>
+                                    </tr>
+                                    @endfor
+                                    @php
+                                    $ex_boiler = explode(',',$foundItems['Inert gas system']['component']);
+                                    $json_boiler = $foundItems['Inert gas system']['make'];
+                                    @endphp
+                                    <tr>
+                                        <td rowspan="{{count($ex_boiler)}}">Inert gas system<br />
+                                            Make/Model : {{@$json[0]['model'] ?? ""}}<br />
+                                            Manufacturer: {{@$json[0]['manufacturer'] ?? ""    }}
 
-                <tr>
-                    <td style="border-bottom:none">Inert gas system</td>
-                    <td style="border-bottom:none;border-top:none;">Packing for casing, etc.</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Make/Model::</td>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Manufacturer:</td>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none">Air conditioning system</td>
-                    <td style="border-bottom:none;">Sheet packing, lagging material for piping and flexible joint</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Make/Model::</td>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Manufacturer:</td>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                </tr>
+                                        <td>{{$ex_boiler[0]}}</td>
+                                    </tr>
+                                    @for($i = 1; $i < count($ex_boiler); $i++) <tr>
+                                        <td>{{ $ex_boiler[$i] }}</td>
+                                        </tr>
+                                        @endfor
+                                        @php
+                                        $ex_boiler = explode(',',$foundItems['Air conditioning system']['component']);
+                                        $json_boiler = $foundItems['Air conditioning system']['make'];
+                                        @endphp
+                                        <tr>
+                                            <td rowspan="{{count($ex_boiler)}}">Air conditioning system<br />
+                                                Make/Model : {{@$json[0]['model'] ?? ""}}<br />
+                                                Manufacturer: {{@$json[0]['manufacturer'] ?? ""    }}
+
+                                            <td>{{$ex_boiler[0]}}</td>
+                                        </tr>
+                                        @for($i = 1; $i < count($ex_boiler); $i++) <tr>
+                                            <td>{{ $ex_boiler[$i] }}</td>
+                                            </tr>
+                                            @endfor
+
+
+
 
 
 
@@ -612,7 +581,7 @@
             <li>Adhesives</li>
         </ul>
     </div>
-    <div style="margin-top:20px;">
+    <div style="margin-top:20px;" class="next">
         <h3>Materials listed from Table-B</h3>
         <table>
             <thead>
@@ -691,7 +660,7 @@
 
         </table>
     </div>
-    <div style="margin-top:20px;">
+    <div class="next" style="margin-top:20px;">
         <h3>3.3 Working Procedure </h3>
         <p>In order to create checks for the Visual Sampling Check Plan (VSCP) the following flow chart is referenced which is provided in MEPC 379(80) guidelines for preparation of the IHM.</p>
 
@@ -711,15 +680,15 @@
         </div>
     </div>
 
-    <div style="margin-top:20px;">
+    <div style="margin-top:20px;" class="next">
         <h3>3.4 VSCP Preparation</h3>
         Upon receiving the documents from the <b>{{$projectDetail['ship_name']}}</b>, team SOSI started the document analysis. A Visual Sampling check plan was prepared taking reference from the indicative list flowchart mentioned above in figure-1.
 
         <p>Following are the details of the checkpoints section wise:</p>
         @foreach($ChecksList as $value)
-        
-            @if(@$value['checks'])
-            <div style="margin-top:20px">
+
+        @if(@$value['checks'])
+        <div style="margin-top:20px">
             <p><b>Deck : {{$value['name']}}</b></p>
             <table>
                 <thead>
@@ -734,29 +703,29 @@
                 </thead>
                 @if(count($value['checks']) > 0)
                 @foreach ($value->checks as $check)
-                    @php $hazmatsCount = count($check->check_hazmats); @endphp
-                    @if ($hazmatsCount == 0)
-                    <tr>
+                @php $hazmatsCount = count($check->check_hazmats); @endphp
+                @if ($hazmatsCount == 0)
+                <tr>
                     <td>{{$check['name']}}</td>
-                    <td>{{ $check->location }}   @if($check->sub_location){{ ',' . $check->sub_location }}
-                    @endif</td>
+                    <td>{{ $check->location }} @if($check->sub_location){{ ',' . $check->sub_location }}
+                        @endif</td>
                     <td>{{ $check->equipment }} , {{ $check->component }} </td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>{{ $check->remarks }}</td>
-                    </tr>
-                    @endif
-                    @foreach ($check->check_hazmats as $index => $hazmat)
-                    <tr>
+                </tr>
+                @endif
+                @foreach ($check->check_hazmats as $index => $hazmat)
+                <tr>
                     <td>{{$check['name']}}</td>
-                    <td>{{ $check->location }}   @if($check->sub_location){{ ',' . $check->sub_location }}
-                    @endif</td>
+                    <td>{{ $check->location }} @if($check->sub_location){{ ',' . $check->sub_location }}
+                        @endif</td>
                     <td>{{ $check->equipment }} , {{ $check->component }} </td>
                     <td>{{ $hazmat->hazmat->short_name }}</td>
                     <td>{{ $hazmat->type }}</td>
                     <td>{{ $check->remarks }}</td>
-                    </tr>
-                    @endforeach
+                </tr>
+                @endforeach
                 @endforeach
                 @else
                 <tr>
@@ -767,14 +736,14 @@
                     <td>&nbsp;</td>
                 </tr>
                 @endif
-           
-            @endif
-            </table>
-            </div>
-            <div style="margin-top:20px">
 
-          <img src="{{$value['image']}}">
-            </div>
+                @endif
+            </table>
+        </div>
+        <div style="margin-top:20px">
+
+            <img src="{{$value['image']}}">
+        </div>
 
         @endforeach
 
