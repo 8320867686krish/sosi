@@ -44,4 +44,8 @@ class Projects extends Model
     {
         return $this->hasMany(Checks::class, 'project_id', 'id');
     }
+
+    public function materials() {
+        return $this->hasMany(ReportMaterial::class, 'project_id');
+    }
 }
