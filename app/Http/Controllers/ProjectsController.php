@@ -1175,7 +1175,7 @@ class ProjectsController extends Controller
                 }
 
                 // ReportMaterial::create($insertData);
-                ReportMaterial::updateOrCreate(["structure" => $key],$insertData);
+                ReportMaterial::updateOrCreate(['project_id'=>$projectId,"structure" => $key],$insertData);
             }
 
             return response()->json(['isStatus' => true, 'message' => 'Material report save successfully.']);
