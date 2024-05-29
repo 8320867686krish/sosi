@@ -39,7 +39,7 @@
 
 
                 @php
-                $ex = explode(',',$foundItems['Propeller shafting']['component']);
+                $ex = $foundItems['Propeller shafting']['component'];
                 $json = $foundItems['Propeller shafting']['make'];
                 @endphp
                 <tr>
@@ -68,7 +68,7 @@
             </thead>
             <tbody>
                 @php
-                $ex = explode(',',$foundItems['Diesel engine']['component']);
+                $ex = $foundItems['Diesel engine']['component'];
                 $json = $foundItems['Diesel engine']['make'];
                 @endphp
                 <tr>
@@ -111,7 +111,7 @@
             </thead>
             <tbody>
                 @php
-                $ex_boiler = explode(',',$foundItems['Boiler']['component']);
+                $ex_boiler = $foundItems['Boiler']['component'];
                 $json_boiler = $foundItems['Boiler']['make'];
 
                 @endphp
@@ -130,7 +130,7 @@
                     @endfor
 
                     @php
-                    $ex_boiler = explode(',',$foundItems['Exhaust gas economizer']['component']);
+                    $ex_boiler = $foundItems['Exhaust gas economizer']['component'];
 
                     @endphp
                     <tr>
@@ -145,7 +145,7 @@
                         @endfor
 
                         @php
-                        $ex_boiler = explode(',',$foundItems['Incinerator']['component']);
+                        $ex_boiler = $foundItems['Incinerator']['component'];
                         $json_boiler = $foundItems['Incinerator']['make'];
 
                         @endphp
@@ -162,7 +162,7 @@
                             @endfor
 
                             @php
-                            $ex_boiler = explode(',',$foundItems['Auxiliary machinery']['component']);
+                            $ex_boiler = $foundItems['Auxiliary machinery']['component'];
                             $json_boiler = $foundItems['Auxiliary machinery']['make'];
 
                             @endphp
@@ -219,7 +219,7 @@
                                     </tr>
                                     @endfor
                                     @php
-                                    $ex_boiler = explode(',',$foundItems['Inert gas system']['component']);
+                                    $ex_boiler =$foundItems['Inert gas system']['component'];
                                     $json_boiler = $foundItems['Inert gas system']['make'];
                                     @endphp
                                     <tr>
@@ -234,7 +234,7 @@
                                         </tr>
                                         @endfor
                                         @php
-                                        $ex_boiler = explode(',',$foundItems['Air conditioning system']['component']);
+                                        $ex_boiler = $foundItems['Air conditioning system']['component'];
                                         $json_boiler = $foundItems['Air conditioning system']['make'];
                                         @endphp
                                         <tr>
