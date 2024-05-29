@@ -81,7 +81,8 @@ class ProjectsController extends Controller
 
         $project = Projects::with([
             'project_teams',
-            'client:id,manager_name,owner_name'
+            'client:id,manager_name,owner_name',
+            'materials'
         ])->find($project_id);
 
         if ($project) {
@@ -112,7 +113,18 @@ class ProjectsController extends Controller
             $hazmats[$type] = Hazmat::where('table_type', $type)->get(['id', 'name', 'table_type']);
         }
 
-        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id, 'isBack' =>  $isBack, "hazmats" => $hazmats, 'attachment' => $attachment]);
+        $foundItems = [];
+
+        $collection4 = $project->materials->toArray();
+
+        foreach ($collection4 as $value) {
+            $index = array_search($value['structure'], array_column($collection4, 'structure'));
+            if ($index !== false) {
+                $foundItems[$value['structure']] = $collection4[$index];
+            }
+        }
+
+        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id, 'isBack' =>  $isBack, "hazmats" => $hazmats, 'attachment' => $attachment, 'foundItems' => $foundItems]);
     }
 
     public function projectInfo($project_id)
@@ -1157,13 +1169,13 @@ class ProjectsController extends Controller
                     $insertData["make"] = json_encode($makeData);
                 }
 
-                if(isset($value["component"])) {
+                if (isset($value["component"])) {
                     $componentData = implode(', ', $value["component"]);
                     $insertData["component"] = $componentData;
                 }
 
-                ReportMaterial::create($insertData);
-                // ReportMaterial::updateOrCreate(["structure" => $key],$insertData);
+                // ReportMaterial::create($insertData);
+                ReportMaterial::updateOrCreate(["structure" => $key],$insertData);
             }
 
             return response()->json(['isStatus' => true, 'message' => 'Material report save successfully.']);
