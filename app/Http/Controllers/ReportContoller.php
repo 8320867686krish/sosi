@@ -16,6 +16,7 @@ use App\Models\Deck;
 use App\Models\ReportMaterial;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+
 ini_set("pcre.backtrack_limit", "5000000");
 
 class ReportContoller extends Controller
@@ -75,7 +76,7 @@ class ReportContoller extends Controller
         }
 
         $imageData = file_get_contents($projectDetail['image']);
-        $report_materials = ReportMaterial::where('project_id',$project_id)->get()->toArray();
+        $report_materials = ReportMaterial::where('project_id', $project_id)->get()->toArray();
         $foundItems = [];
 
         foreach ($report_materials as $value) {
@@ -93,39 +94,41 @@ class ReportContoller extends Controller
             });
         }])->where('project_id', $project_id)->get();
         $html = '';
+        $html .= "<h3>Location Diagram</h3>";
         foreach ($decks as $deck) {
             // Convert the image to base64
             $imagePath = $deck['image'];
             $imageData = base64_encode(file_get_contents($imagePath));
             $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
-    
+
             // Main container
             $html .= '<div style="position: relative;">';
-    
-            // Background image using base64
-            $html .= '<img src="' . $imageBase64 . '" />';
-    
-            // Container for checks
-            $html .= '<div id="showDeckCheck" style="">';
-    
-            if (!empty($deck['checks'])) {
-                foreach ($deck['checks'] as $key => $value) {
-                    $top = $value->position_top - ($value->isApp == 1 ? 20 : 0);
-                    $left = $value->position_left - ($value->isApp == 1 ? 20 : 0);
-    
-                    // Position the dot using fixed units
-                    $html .= '<div class="dot" style="position: absolute; top: ' . $top . 'px; left: ' . $left . 'px; width: 15px; height: 15px; border: 2px solid red; background: red;  text-align: center; line-height: 5mm;">';
-                    $html .= '<div class="tooltip" style="display: block; position: absolute; top: -20px; left: 20px; background-color: #fff; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">' . $value['name'] . '</div>';
+            if (count($deck['checks']) > 0) {
+                // Background image using base64
+                $html .= '<img src="' . $imageBase64 . '" />';
 
-                    $html .= '</div>';
+                // Container for checks
+                $html .= '<div id="showDeckCheck" style="">';
+
+                if (!empty($deck['checks'])) {
+                    foreach ($deck['checks'] as $key => $value) {
+                        $top = $value->position_top - ($value->isApp == 1 ? 20 : 0);
+                        $left = $value->position_left - ($value->isApp == 1 ? 20 : 0);
+
+                        // Position the dot using fixed units
+                        $html .= '<div class="dot" style="position: absolute; top: ' . $top . 'px; left: ' . $left . 'px; width: 20px; height: 20px; border: 2px solid red; background: red;border-radious:50;  text-align: center; line-height: 5mm;">';
+                        $html .= '<div class="tooltip" style="display: block; position: absolute; top: -20px; left: 20px; background-color: #fff; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">' . $value['name'] . '</div>';
+
+                        $html .= '</div>';
+                    }
                 }
+
+                // Close containers
+                $html .= '</div>';
+                $html .= '</div>';
             }
-    
-            // Close containers
-            $html .= '</div>';
-            $html .= '</div>';
         }
-     
+
         $dompdf->loadHtml($html);
 
         $dompdf->render();
@@ -133,7 +136,7 @@ class ReportContoller extends Controller
         $filePath = storage_path('app/pdf/rr.pdf');
         file_put_contents($filePath, $coverPdfContent);
         $this->savePdf($html, 'hh.pdf');
-        
+
         $logo = 'https://sosindi.com/IHM/public/assets/images/logo.png';
         $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
             $query->where('project_id', $project_id);
@@ -176,9 +179,8 @@ class ReportContoller extends Controller
             $pageCount = $mpdf->setSourceFile(storage_path('app/pdf/rr.pdf'));
 
             // Add each page of the Dompdf-generated PDF to the mPDF document
-          
-          //  $mpdf->use_kwt = true;
-         //   $mpdf->mirrorMargins = 1;
+
+            $mpdf->use_kwt = true;
             $mpdf->defaultPageNumStyle = '1';
             $mpdf->SetDisplayMode('fullpage');
 
@@ -202,8 +204,7 @@ class ReportContoller extends Controller
             </table>';
             $mpdf->SetHTMLHeader($header);
             $mpdf->SetHTMLFooter($footer);
-            
-            $html = '';
+
 
             // Load main HTML content
 
@@ -214,12 +215,12 @@ class ReportContoller extends Controller
             // Add Table of Contents
 
             $stylesheet = file_get_contents('public/assets/mpdf.css');
-            $mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
-           
+            $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
+
 
             $mpdf->WriteHTML(view('report.cover', compact('projectDetail')));
             $mpdf->TOCpagebreak();
-           
+
             $mpdf->TOCpagebreakByArray([
                 'links' => true,
                 'toc-preHTML' => '',
@@ -233,23 +234,46 @@ class ReportContoller extends Controller
             $mpdf->WriteHTML(view('report.introduction', compact('hazmets', 'projectDetail')));
             $mpdf->AddPage('L'); // Set landscape mode for the inventory page
             $totalPages = $mpdf->page;
-          
+
             $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3', 'decks')));
-            $mpdf->AddPage('p'); // Set landscape mode for the inventory page
+
             for ($i = 1; $i <= $pageCount; $i++) {
                 $mpdf->AddPage();
                 $templateId = $mpdf->importPage($i);
                 $mpdf->useTemplate($templateId);
             }
             $mpdf->AddPage('p');
-            $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechments', 'ChecksList','foundItems')));
+            $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechments', 'ChecksList', 'foundItems')));
             $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail')));
-           
-            $mpdf->WriteHTML($html);
-            
-            // Output the PDF
+
+
+            $titleHtml = '<h2 style="text-align:center">Leb Result</h2>';
+
+            $filePath =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult1'];
+            if (file_exists($filePath) && @$projectDetail['leb1LaboratoryResult1']) {
+                $this->mergePdf($filePath,$titleHtml,$mpdf);
+               
+            }
+            $filePath1 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult2'];
+            if (file_exists($filePath1) && @$projectDetail['leb1LaboratoryResult2']) {
+                $this->mergePdf($filePath1,null,$mpdf);
+               
+            }
+            $filePath2 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult1'];
+            if (file_exists($filePath2) && @$projectDetail['leb2LaboratoryResult1']) {
+                $this->mergePdf($filePath2,null,$mpdf);
+               
+            }
+            $filePath3 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult2'];
+            if (file_exists($filePath) && @$projectDetail['leb2LaboratoryResult2']) {
+                $this->mergePdf($filePath3,null,$mpdf);
+               
+            }
+
+
+
+
             $mpdf->Output('project_report.pdf', 'I');
-            exit();
             // Output the PDF
             $mpdf->Output('project_report.pdf', 'I');
         } catch (\Mpdf\MpdfException $e) {
@@ -257,7 +281,23 @@ class ReportContoller extends Controller
             echo $e->getMessage();
         }
     }
+    protected function mergePdf($filePath,$title,$mpdf){
+        $mpdf->setSourceFile($filePath);
 
+        $pageCount = $mpdf->setSourceFile($filePath);
+        for ($i = 1; $i <= $pageCount; $i++) {
+
+            $mpdf->AddPage();
+
+            $templateId = $mpdf->importPage($i);
+            if ($i === 1 && @$title) {
+                $mpdf->WriteHTML($title);
+                $mpdf->useTemplate($templateId, null, 40, null, null);
+            } else {
+                $mpdf->useTemplate($templateId);
+            }
+        }
+    }
     protected function savePdf($content, $filename)
     {
         // Specify the folder where PDF files will be stored

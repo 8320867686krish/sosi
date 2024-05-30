@@ -310,7 +310,8 @@
                             <h4>Transformer</h4>
                             <div class="row">
                                 @php
-                                    $extraFieldData = json_decode($foundItems['Transformer']['extraField'], true);
+
+                                    $extraFieldData = json_decode(@$foundItems['Transformer']['extraField'], true);
                                 @endphp
                                 <div class="form-group col-6 mb-3">
                                     <label for="component">Component</label>
