@@ -127,11 +127,9 @@
         <aside class="page-aside" id="page-aside">
             <div class="aside-content">
                 <div class="aside-header">
-                    <button class="navbar-toggle" type="button"><span class="icon"
-                            style="cursor: pointer; font-size: 16px !important;"><i class="fas fa-bars"
-                                id="pageNavbarToggleBtn"></i></span></button><span class="title"
-                        style="font-size: 20px;">Project Information</span>
+                    <span class="title" style="font-size: 20px;">Project Information</span>
                     <p class="description">{{ $project->ship_name ?? '' }}</p>
+                    {{-- <button class="navbar-toggle" type="button"><span class="icon" style="cursor: pointer; font-size: 16px !important;"><i class="fas fa-bars" id="pageNavbarToggleBtn"></i></span></button> --}}
                 </div>
                 <div class="aside-nav collapse">
                     <ul class="nav">
@@ -387,8 +385,10 @@
                         <div class="col-sm-12 col-md-4">
                             <div class="form-group">
                                 <label for="vessel_previous_name">Vessel Previous Name (If Any) </label>
-                                <input type="text" class="form-control  @error('vessel_previous_name') is-invalid @enderror"
-                                    id="vessel_previous_name" value="{{ old('vessel_previous_name', $project->vessel_previous_name ?? '') }}"
+                                <input type="text"
+                                    class="form-control  @error('vessel_previous_name') is-invalid @enderror"
+                                    id="vessel_previous_name"
+                                    value="{{ old('vessel_previous_name', $project->vessel_previous_name ?? '') }}"
                                     name="vessel_previous_name" placeholder="Vessel Previous Name" autocomplete="off"
                                     onchange="removeInvalidClass(this)" {{ $readonly }}>
                                 @error('vessel_previous_names')
@@ -1084,12 +1084,22 @@
             let sidebar = $("#mainSidebar");
             let isSidebarVisible = true;
 
-            $(document).on("click", "#pageNavbarToggleBtn", function() {
+            if ($(window).width() >= 768) {
+                $("#sidebarCollapse").show();
+                $("#sidebarCollapse").find('span').css({
+                    "height": "1em",
+                    "width": "1em"
+                });
+            } else {
+                $("#sidebarCollapse").hide();
+            }
+
+            $(document).on("click", "#sidebarCollapse", function() {
                 if ($(window).width() >= 768) {
                     if (isSidebarVisible) {
-                        sidebar.css("left", "-250px");
-                        $('#page-aside').css("left", "8px");
-                        $('.dashboard-wrapper').css("margin-left", "8px");
+                        sidebar.css("left", "-188px"); //250
+                        $('#page-aside').css("left", "78px"); //8
+                        $('.dashboard-wrapper').css("margin-left", "78px"); //8
                     } else {
                         sidebar.css("left", "0");
                         $('#page-aside').css("left", "265px");
@@ -1778,14 +1788,14 @@
                                                         successMsg(
                                                             response
                                                             .success
-                                                            );
+                                                        );
                                                     },
                                                     error: function(
                                                         error) {
                                                         errorMsg(
                                                             error
                                                             .error
-                                                            );
+                                                        );
                                                     }
                                                 });
                                             }

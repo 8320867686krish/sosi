@@ -9,16 +9,17 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav flex-column">
                     <li class="nav-divider">
-                        Menu
-                        {{-- <div class="row">
+                        <div class="row">
                             <div class="col-6">
+                                Menu
                             </div>
-                            <div class="col-6">
-                                <button class="navbar-toggler" style="display: block !important;" type="button" id="sidebarCollapse">
-                                    <span class="navbar-toggler-icon"></span>
+                            <div class="col-6 pr-0">
+                                <button class="navbar-toggler float-right" type="button" id="sidebarCollapse">
+                                    <span class="navbar-toggler-icon" width: 1em; height: 1em;></span>
+                                    {{-- style="display: block !important;" --}}
                                 </button>
                             </div>
-                        </div> --}}
+                        </div>
                     </li>
                     @foreach ($allPermissions as $permission)
                         @if ($permission['group_type'] === 'main' && $permission['is_show'] == 1)

@@ -241,24 +241,6 @@
                                 </div>
                             </div>
                             <div class="border-top">
-                                <h4 class="mt-3">Valve</h4>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-6 mb-4">
-                                    <label>Component</label>
-                                    <select class="selectpicker show-tick form-control form-control-lg" name="material[Valve][component][]" multiple data-actions-box="true" {{ $readonly }}>
-                                        <option value="Gland packing with valve, sheet packing with piping flange" {{ isset($foundItems['Valve']) && in_array("Gland packing with valve, sheet packing with piping flange", $foundItems['Valve']['component']) ? 'selected' : '' }}>Gland packing with valve, sheet packing with piping flange</option>
-                                        <option value="Gasket with flange of high pressure and/or high temperature" {{ isset($foundItems['Valve']) && in_array("Gasket with flange of high pressure and/or high temperature", $foundItems['Valve']['component']) ? 'selected' : '' }}>Gasket with flange of high pressure and/or high temperature</option>
-                                        <option value="Lagging material and insulation" {{ isset($foundItems['Valve']) && in_array("Lagging material and insulation", $foundItems['Valve']['component']) ? 'selected' : '' }}>Lagging material and insulation</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group col-6 mb-4">
-                                    <label>Type</label>
-                                    <input type="text" class="form-control form-control-lg" name="material[Valve][type]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Valve']['type'] ?? ''}}">
-                                </div>
-                            </div>
-                            <div class="border-top">
                                 <h4 class="mt-3">Inert gas system</h4>
                             </div>
                             <div class="row">
@@ -327,6 +309,9 @@
                             <input type="hidden" name="material_name" value="Polychlorinated biphenyl (PCBs)">
                             <h4>Transformer</h4>
                             <div class="row">
+                                @php
+                                    $extraFieldData = json_decode($foundItems['Transformer']['extraField'], true);
+                                @endphp
                                 <div class="form-group col-6 mb-3">
                                     <label for="component">Component</label>
                                     <select class="selectpicker show-tick form-control form-control-lg" name="material[Transformer][component][]" multiple data-actions-box="true" {{ $readonly }}>
@@ -345,6 +330,107 @@
                                 <div class="form-group col-6 mb-4">
                                     <label>Manufacturer</label>
                                     <input type="text" class="form-control form-control-lg" name="material[Transformer][manufacturer]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Transformer']['make'][0]['manufacturer'] ?? ''}}">
+                                </div>
+                            </div>
+                            <div class="border-top">
+                                <h4 class="mt-3"></h4>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="rubberFelt">Rubber/felt gaskets</label>
+                                        <input type="text" name="extraField[Rubber/felt gaskets]" id="rubberFelt" class="form-control form-control-lg" value="{{$extraFieldData['Rubber/felt gaskets'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="rubberHose">Rubber hose</label>
+                                        <input type="text" name="extraField[Rubber hose]" id="rubberHose" class="form-control form-control-lg" value="{{$extraFieldData['Rubber hose'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="plasticFoam">Plastic foam insulation</label>
+                                        <input type="text" name="extraField[Plastic foam insulation]" id="plasticFoam" class="form-control form-control-lg" value="{{$extraFieldData['Plastic foam insulation'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="thermal">Thermal insulating materials</label>
+                                        <input type="text" name="extraField[Thermal insulating materials]" id="thermal" class="form-control form-control-lg" value="{{$extraFieldData['Thermal insulating materials'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="voltage">Voltage regulators</label>
+                                        <input type="text" name="extraField[Voltage regulators]" id="voltage" class="form-control form-control-lg" value="{{$extraFieldData['Voltage regulators'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="switches">Switches/reclosers/bushings</label>
+                                        <input type="text" name="extraField[Switches/reclosers/bushings]" id="switches" class="form-control form-control-lg" value="{{$extraFieldData['Switches/reclosers/bushings'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="electromagnets">Electromagnets</label>
+                                        <input type="text" name="extraField[Electromagnets]" id="electromagnets" class="form-control form-control-lg" value="{{$extraFieldData['Electromagnets'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="adhesives">Adhesives/tapes</label>
+                                        <input type="text" name="extraField[Adhesives/tapes]" id="adhesives" class="form-control form-control-lg" value="{{$extraFieldData['Adhesives/tapes'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="surfaceContamination">Surface contamination of machinery</label>
+                                        <input type="text" name="extraField[Surface contamination of machinery]" id="adhesives" class="form-control form-control-lg" value="{{$extraFieldData['Surface contamination of machinery'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="oilBasedPaint">Oil-based paint</label>
+                                        <input type="text" name="extraField[Oil-based paint]" id="oilBasedPaint" class="form-control form-control-lg" value="{{$extraFieldData['Oil-based paint'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="caulking">Caulking</label>
+                                        <input type="text" name="extraField[Caulking]" id="caulking" class="form-control form-control-lg" value="{{$extraFieldData['Caulking'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="rubberIsolation">Rubber isolation mounts</label>
+                                        <input type="text" name="extraField[Rubber isolation mounts]" id="rubberIsolation" class="form-control form-control-lg" value="{{$extraFieldData['Rubber isolation mounts'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="pipeHangers">Pipe hangers</label>
+                                        <input type="text" name="extraField[Pipe hangers]" id="rubberIsolation" class="form-control form-control-lg" value="{{$extraFieldData['Pipe hangers'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="lightBallasts">Light ballasts (component within fluorescent light fixtures)</label>
+                                        <input type="text" name="extraField[Light ballasts (component within fluorescent light fixtures)]" id="rubberIsolation" class="form-control form-control-lg" value="{{$extraFieldData['Light ballasts (component within fluorescent light fixtures)'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="plasticizers">Plasticizers</label>
+                                        <input type="text" name="extraField[plasticizers]" id="plasticizers" class="form-control form-control-lg" value="{{$extraFieldData['plasticizers'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="feltUnderSeptum">Felt under septum plates on top of hull bottom</label>
+                                        <input type="text" name="extraField[Felt under septum plates on top of hull bottom]" id="feltUnderSeptum" class="form-control form-control-lg" value="{{$extraFieldData['Felt under septum plates on top of hull bottom'] ?? ''}}">
+                                    </div>
                                 </div>
                                 @can('projects.edit')
                                     <div class="col-12">
