@@ -180,7 +180,7 @@
     </div>
     <div class="next section-1-1">
         <h3>4.4	 Laboratory Analysis</h3>
-        <p>Once the samples are collected & sorted, are to be sent to the ISO17025 or equally credited laboratory</p>
+        <p>Once the samples are collected & sorted, are to be sent to the ISO17025 or equally credited laboratory.laboratory name Certificate : see attachment . the test results are recorded see: <a href="#lebResult" style="cursor:pointer">attachment lab test results</a> </p>
         <h3><b>4.4.1 Threshold Values & Testing Standards</b></h3>
         <p>The below cumulative list is its threshold values and test standard to follow:</p>
         <table>

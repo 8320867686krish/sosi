@@ -472,7 +472,7 @@
                                 </div>
                                 <div class="form-group col-6 mb-4">
                                     <label>Make/Model/Manufacturer</label>
-                                    <input type="text" class="form-control form-control-lg" name="ozoneDepleting[Refrigeration System][Make/Model]" autocomplete="off" {{ $readonly }} value="{{$refrigerationData['Make/Model'] ?? ''}}">
+                                    <input type="text" class="form-control form-control-lg" name="ozoneDepleting[Refrigeration System][model]" autocomplete="off" {{ $readonly }} value="{{$refrigerationData['model'] ?? ''}}">
                                 </div>
                             </div>
                             <div class="border-top">

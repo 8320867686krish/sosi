@@ -2,7 +2,7 @@
 <h2>3.Development of IHM of({{$projectDetail['ship_name']}})</h2>
 <div class="section-1-1">
     <h3>3.1 Collection of Necessary Information</h3>
-    <p>After receiving the request from the (client name) team SOSI requested and receive the following documents & plans from the ship :</p>
+    <p>After receiving the request from the <b>{{$projectDetail['client']['name']}}</b> team SOSI requested and receive the following documents & plans from the ship :</p>
     <ul>
         @if(count($attechments)>0)
         @foreach($attechments as $value)
@@ -39,20 +39,23 @@
 
 
                 @php
-                $ex = $foundItems['Propeller shafting']['component'];
-                $json = $foundItems['Propeller shafting']['make'];
+                $ex = @$foundItems['Propeller shafting']['component'] ?? 0;
+
+                $json = @$foundItems['Propeller shafting']['make'] ?? 0;
                 @endphp
                 <tr>
-                    <td rowspan="{{count($ex)}}">Propeller shafting<br />
-                        Make/Model : {{$json[0]['model']}}<br />
-                        Manufacturer: {{$json[0]['manufacturer']}}
+                    <td rowspan="{{(@$ex)?count($ex):1}}">Propeller shafting<br />
+                        Make/Model : {{@$json[0]['model']}}<br />
+                        Manufacturer: {{@$json[0]['manufacturer']}}
                     </td>
-                    <td>{{$ex[0]}}</td>
+                    <td>{{@$ex[0]}}</td>
                 </tr>
+                @if(@$ex)
                 @for($i = 1; $i < count($ex); $i++) <tr>
                     <td>{{ $ex[$i] }}</td>
                     </tr>
                     @endfor
+                    @endif
 
 
 
@@ -68,20 +71,24 @@
             </thead>
             <tbody>
                 @php
-                $ex = $foundItems['Diesel engine']['component'];
-                $json = $foundItems['Diesel engine']['make'];
+                $ex = @$foundItems['Diesel engine']['component'];
+                $json = @$foundItems['Diesel engine']['make'];
+
                 @endphp
                 <tr>
-                    <td rowspan="{{count($ex)}}">Diesel engine<br />
+                    <td rowspan="{{(@$ex)?count($ex):1}}">Diesel engine<br />
                         Make/Model : {{@$json[0]['model'] ?? ""}}<br />
                         Manufacturer: {{@$json[0]['manufacturer'] ?? ""    }}
                     </td>
-                    <td>{{$ex[0]}}</td>
+                    <td>{{@$ex[0]}}</td>
                 </tr>
+                @if (!empty($ex))
+
                 @for($i = 1; $i < count($ex); $i++) <tr>
                     <td>{{ $ex[$i] }}</td>
                     </tr>
                     @endfor
+                    @endif
                     <tr>
                         <td style="border-bottom:none">Turbine engine</td>
                         <td>Urethane formed material</td>
@@ -111,42 +118,47 @@
             </thead>
             <tbody>
                 @php
-                $ex_boiler = $foundItems['Boiler']['component'];
-                $json_boiler = $foundItems['Boiler']['make'];
+                $ex_boiler = @$foundItems['Boiler']['component'] ?? [];
+                $json_boiler = @$foundItems['Boiler']['make'] ?? [];
+              
 
                 @endphp
                 <tr>
                     <td rowspan="{{count($ex_boiler)}}">Boiler<br />
                         @foreach($json_boiler as $value)
-                        Make/Model : {{@$value['model'] ?? ""}}<br />
-                        Manufacturer: {{@$value['manufacturer'] ?? ""}}<br />
+                        #{{$loop->iteration}}<br />
+                        Make/Model : {{@$value->model ?? ""}}<br />
+                        Manufacturer: {{@$value->manufacturer ?? ""}}<br />
                         @endforeach
                     </td>
-                    <td>{{$ex_boiler[0]}}</td>
+                    <td>{{@$ex_boiler[0]}}</td>
                 </tr>
+                @if(@$ex_boiler)
                 @for($i = 1; $i < count($ex_boiler); $i++) <tr>
                     <td>{{ $ex_boiler[$i] }}</td>
                     </tr>
                     @endfor
-
+                    @endif
                     @php
-                    $ex_boiler = $foundItems['Exhaust gas economizer']['component'];
+                    $ex_boiler = @$foundItems['Exhaust gas economizer']['component'] ?? [];
 
                     @endphp
                     <tr>
                         <td rowspan="{{count($ex_boiler)}}">Exhaust gas economizer<br />
-                            remarks:{{$foundItems['Exhaust gas economizer']['remark']}}
+                            remarks:{{@$foundItems['Exhaust gas economizer']['remark']}}
 
-                        <td>{{$ex_boiler[0]}}</td>
+                        <td>{{@$ex_boiler[0]}}</td>
                     </tr>
+                    @if(@$ex_boiler)
                     @for($i = 1; $i < count($ex_boiler); $i++) <tr>
                         <td>{{ $ex_boiler[$i] }}</td>
                         </tr>
                         @endfor
+                        @endif
 
                         @php
-                        $ex_boiler = $foundItems['Incinerator']['component'];
-                        $json_boiler = $foundItems['Incinerator']['make'];
+                        $ex_boiler = @$foundItems['Incinerator']['component'] ?? [];
+                        $json_boiler = @$foundItems['Incinerator']['make'];
 
                         @endphp
                         <tr>
@@ -154,31 +166,36 @@
                                 Make/Model : {{@$json[0]['model'] ?? ""}}<br />
                                 Manufacturer: {{@$json[0]['manufacturer'] ?? ""    }}
 
-                            <td>{{$ex_boiler[0]}}</td>
+                            <td>{{@$ex_boiler[0]}}</td>
                         </tr>
+                        @if(@$ex_boiler)
                         @for($i = 1; $i < count($ex_boiler); $i++) <tr>
                             <td>{{ $ex_boiler[$i] }}</td>
                             </tr>
                             @endfor
+                            @endif
 
                             @php
-                            $ex_boiler = $foundItems['Auxiliary machinery']['component'];
-                            $json_boiler = $foundItems['Auxiliary machinery']['make'];
+                            $ex_boiler = @$foundItems['Auxiliary machinery']['component']??[];
+                            $json_boiler = @$foundItems['Auxiliary machinery']['make']?? [];
 
                             @endphp
                             <tr>
                                 <td rowspan="{{count($ex_boiler)}}">Auxiliary machinery<br />
                                     @foreach($json_boiler as $value)
-                                    Make/Model : {{@$value['model'] ?? ""}}<br />
-                                    Manufacturer: {{@$value['manufacturer'] ?? ""}}<br />
+                                    #{{$loop->iteration}}<br />
+                                    Make/Model : {{@$value->model ?? ""}}<br />
+                                    Manufacturer: {{@$value->manufacturer ?? ""}}<br />
                                     @endforeach
 
-                                <td>{{$ex_boiler[0]}}</td>
+                                <td>{{@$ex_boiler[0]}}</td>
                             </tr>
+                            @if(@$ex_boiler)
                             @for($i = 1; $i < count($ex_boiler); $i++) <tr>
                                 <td>{{ $ex_boiler[$i] }}</td>
                                 </tr>
                                 @endfor
+                                @endif
                                 <tr>
                                     <td style="border-bottom:none">Valve</td>
                                     <td>Gland packing with valve, sheet packing with piping flange</td>
@@ -214,40 +231,41 @@
                                     <td>Fire door</td>
                                     <td>Packing, construction and insulation of the fire door</td>
                                 </tr>
+
+                                @php
+                                $ex_boiler =@$foundItems['Inert gas system']['component'] ?? [];
+                                $json_boiler = @$foundItems['Inert gas system']['make'] ?? [];
+                                @endphp
+                                <tr>
+                                    <td rowspan="{{count($ex_boiler)}}">Inert gas system<br />
+                                        Make/Model : {{@$json[0]['model'] ?? ""}}<br />
+                                        Manufacturer: {{@$json[0]['manufacturer'] ?? ""    }}
+
+                                    <td>{{@$ex_boiler[0]}}</td>
+                                </tr>
+                                @if(@$ex_boiler)
                                 @for($i = 1; $i < count($ex_boiler); $i++) <tr>
                                     <td>{{ $ex_boiler[$i] }}</td>
                                     </tr>
                                     @endfor
+                                    @endif
                                     @php
-                                    $ex_boiler =$foundItems['Inert gas system']['component'];
-                                    $json_boiler = $foundItems['Inert gas system']['make'];
+                                    $ex_boiler = @$foundItems['Air conditioning system']['component'] ?? [];
+                                    $json_boiler = @$foundItems['Air conditioning system']['make'] ?? [];
                                     @endphp
                                     <tr>
-                                        <td rowspan="{{count($ex_boiler)}}">Inert gas system<br />
+                                        <td rowspan="{{count($ex_boiler)}}">Air conditioning system<br />
                                             Make/Model : {{@$json[0]['model'] ?? ""}}<br />
                                             Manufacturer: {{@$json[0]['manufacturer'] ?? ""    }}
 
-                                        <td>{{$ex_boiler[0]}}</td>
+                                        <td>{{@$ex_boiler[0]}}</td>
                                     </tr>
+                                    @if(@$ex_boiler)
                                     @for($i = 1; $i < count($ex_boiler); $i++) <tr>
                                         <td>{{ $ex_boiler[$i] }}</td>
                                         </tr>
                                         @endfor
-                                        @php
-                                        $ex_boiler = $foundItems['Air conditioning system']['component'];
-                                        $json_boiler = $foundItems['Air conditioning system']['make'];
-                                        @endphp
-                                        <tr>
-                                            <td rowspan="{{count($ex_boiler)}}">Air conditioning system<br />
-                                                Make/Model : {{@$json[0]['model'] ?? ""}}<br />
-                                                Manufacturer: {{@$json[0]['manufacturer'] ?? ""    }}
-
-                                            <td>{{$ex_boiler[0]}}</td>
-                                        </tr>
-                                        @for($i = 1; $i < count($ex_boiler); $i++) <tr>
-                                            <td>{{ $ex_boiler[$i] }}</td>
-                                            </tr>
-                                            @endfor
+                                        @endif
 
 
 
@@ -362,7 +380,7 @@
             </tbody>
         </table>
     </div>
-    <div style="margin-top:20px;">
+    <div style="margin-top:20px;" class="next">
         <h4><b>2.Polychlorinated biphenyl (PCBs)</b></h4>
         <table>
             <thead>
@@ -373,124 +391,112 @@
             </thead>
             <tbody>
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Transformer</td>
-                    <td style="border-bottom:none;border-top:none;">Insulating oil</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Make/Model: </td>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Type</td>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;">Manufacturer:</td>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                </tr>
-                <tr>
-                    <td>Condenser</td>
-                    <td>Insulating oil</td>
-                </tr>
-                <tr>
-                    <td>Fuel heater</td>
-                    <td>Heating medium</td>
-                </tr>
+                @php
+                $ex_boiler = @$foundItems['Transformer']['component']??[];
+                $json_boiler = @$foundItems['Transformer']['make']?? [];
 
+                @endphp
                 <tr>
-                    <td>Electric cable</td>
-                    <td>Covering, insulating tape</td>
-                </tr>
+                    <td rowspan="{{count($ex_boiler)}}">Transformer<br />
+                        Make/Model : {{@$json[0]['model'] ?? ""}}<br />
+                        Type : {{@$foundItems['Transformer']['type'] ?? ""}}<br />
+                        Manufacturer: {{@$json[0]['manufacturer'] ?? ""    }}
 
-                <tr>
-                    <td>Lubricating oil</td>
-                    <td>&nbsp;</td>
+                    <td>{{@$ex_boiler[0]}}</td>
                 </tr>
+                @if(@$ex_boiler)
+                @for($i = 1; $i < count($ex_boiler); $i++) <tr>
+                    <td>{{ $ex_boiler[$i] }}</td>
+                    </tr>
+                    @endfor
+                    @endif
 
-                <tr>
-                    <td>Heat oil</td>
-                    <td>Thermometers, sensors, indicators</td>
-                </tr>
+                    <tr>
+                        <td>Condenser</td>
+                        <td>Insulating oil</td>
+                    </tr>
+                    <tr>
+                        <td>Fuel heater</td>
+                        <td>Heating medium</td>
+                    </tr>
 
-                <tr>
-                    <td>Rubber/felt gaskets</td>
-                    <td>&nbsp;</td>
-                </tr>
+                    <tr>
+                        <td>Electric cable</td>
+                        <td>Covering, insulating tape</td>
+                    </tr>
 
-                <tr>
-                    <td>Rubber hose</td>
-                    <td>&nbsp;</td>
-                </tr>
+                    <tr>
+                        <td>Lubricating oil</td>
+                        <td>&nbsp;</td>
+                    </tr>
 
-                <tr>
-                    <td>Plastic foam insulation</td>
-                    <td>&nbsp;</td>
-                </tr>
+                    <tr>
+                        <td>Heat oil</td>
+                        <td>Thermometers, sensors, indicators</td>
+                    </tr>
+                    @php
+                    $extraField = json_decode($foundItems['Transformer']['extraField'], true);
+                    @endphp
+
+                    @if(is_array($extraField))
+                    @foreach($extraField as $key => $value)
+                    @if(!empty($value))
+                    <tr>
+                        <td>{{ $key }}</td>
+                        <td>{{ $value }}</td>
+                    </tr>
+                    @endif
+                    @endforeach
+                    @endif
 
 
-                <tr>
-                    <td>Thermal insulating materials</td>
-                    <td>&nbsp;</td>
-                </tr>
-
-                <tr>
-                    <td>Voltage regulators</td>
-                    <td>&nbsp;</td>
-                </tr>
-
-                <tr>
-                    <td>Voltage regulators</td>
-                    <td>&nbsp;</td>
-                </tr>
-
-                <tr>
-                    <td>Switches/reclosers/bushings</td>
-                    <td>&nbsp;</td>
-                </tr>
-
-                <tr>
-                    <td>Electromagnets</td>
-                    <td>&nbsp;</td>
-                </tr>
-
-                <tr>
-                    <td>Adhesives/tapes</td>
-                    <td>&nbsp;</td>
-                </tr>
-
-                <tr>
-                    <td>Surface contamination of machinerys</td>
-                    <td>&nbsp;</td>
-                </tr>
-
-                <tr>
-                    <td>Oil-based paint</td>
-                    <td>&nbsp;</td>
-                </tr>
-
-                <tr>
-                    <td>Caulking</td>
-                    <td>&nbsp;</td>
-                </tr>
-
-                <tr>
-                    <td>Rubber isolation mounts</td>
-                    <td>&nbsp;</td>
-                </tr>
-
-                <tr>
-                    <td>Pipe hangers</td>
-                    <td>&nbsp;</td>
-                </tr>
+                   
 
 
 
             </tbody>
         </table>
     </div>
-    <div style="margin-top:20px;">
+    <div style="margin-top:20px;" class="next">
         <h4><b>3.Ozone-depleting substances</b></h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Materials</th>
+                    <th>Name</th>
+                    <th>Make/Model</th>
+                    <th>Cold Room</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                $dtaa=json_decode(@$foundItems['Refrigeration System']['extraField'],true);
+             
+                @endphp
+                @if(@$dtaa)
+                <tr>
+                    <td>Refrigeration System</td>
+                   
+                        <td>{{ $dtaa['name'] }}</td>
+                        <td>{{ $dtaa['model'] }}</td>
+                        <td>&nbsp;</td>
+                 
+                </tr>
+                @endif
+                @php
+                $dtaa=json_decode(@$foundItems['Ac System']['extraField'],true)
+                @endphp
+                @if(@$dtaa)
+                <tr>
+                    <td>Ac System</td>
+                    <td>{{ $dtaa['name'] }}</td>
+                    <td>{{ $dtaa['model'] }}</td>
+                    <td>{{ $dtaa['coldroom'] }}</td>
+                </tr>
+                @endif
+            </tbody>
+        </table>
+</br></br>
         <table>
             <thead>
                 <tr>

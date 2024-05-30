@@ -70,7 +70,7 @@ class ReportContoller extends Controller
     {
 
 
-        $projectDetail = Projects::find($project_id);
+        $projectDetail = Projects::with('client')->find($project_id);
         if (!$projectDetail) {
             die('Project details not found');
         }
@@ -247,7 +247,7 @@ class ReportContoller extends Controller
             $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail')));
 
 
-            $titleHtml = '<h2 style="text-align:center">Leb Result</h2>';
+            $titleHtml = '<h2 style="text-align:center" id="lebResult">Leb Result</h2>';
 
             $filePath =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult1'];
             if (file_exists($filePath) && @$projectDetail['leb1LaboratoryResult1']) {
@@ -269,10 +269,6 @@ class ReportContoller extends Controller
                 $this->mergePdf($filePath3,null,$mpdf);
                
             }
-
-
-
-
             $mpdf->Output('project_report.pdf', 'I');
             // Output the PDF
             $mpdf->Output('project_report.pdf', 'I');
