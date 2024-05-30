@@ -444,6 +444,71 @@
                     </div>
                 </div>
             </div>
+
+            <div class="card mb-2">
+                <div class="card-header" id="headingThree">
+                    <h5 class="mb-0">
+                        <button type="button" class="btn btn-link collapsed" data-toggle="collapse"
+                            data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            <span class="fas fa-angle-down mr-3"></span>Ozone-depleting substances
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion4">
+                    <div class="card-body">
+                        <form method="post" id="ozoneDepletingForm">
+                            @csrf
+                            <input type="hidden" name="project_id" value="{{ $project->id ?? '' }}">
+                            <input type="hidden" name="material_name" value="Ozone depleting substances">
+                            <h4>Refrigeration System</h4>
+                            <div class="row">
+                                @php
+                                    $refrigerationData = json_decode(@$foundItems['Refrigeration System']['extraField'], true);
+                                    $acData = json_decode(@$foundItems['Ac System']['extraField'], true);
+                                @endphp
+                                <div class="form-group col-6 mb-4">
+                                    <label>Name</label>
+                                    <input type="text" class="form-control form-control-lg" name="ozoneDepleting[Refrigeration System][name]" autocomplete="off" {{ $readonly }} value="{{$refrigerationData['name'] ?? ''}}">
+                                </div>
+                                <div class="form-group col-6 mb-4">
+                                    <label>Make/Model/Manufacturer</label>
+                                    <input type="text" class="form-control form-control-lg" name="ozoneDepleting[Refrigeration System][Make/Model]" autocomplete="off" {{ $readonly }} value="{{$refrigerationData['Make/Model'] ?? ''}}">
+                                </div>
+                            </div>
+                            <div class="border-top">
+                                <h4 class="mt-3">Ac System</h4>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-lg-12">
+                                    <div class="form-group">
+                                        <label>Name</label>
+                                        <input type="text" name="ozoneDepleting[Ac System][name]" class="form-control form-control-lg" value="{{$acData['name'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label>Make/Model</label>
+                                        <input type="text" name="ozoneDepleting[Ac System][model]" class="form-control form-control-lg" value="{{$acData['model'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label for="coldRoom">Cold Room</label>
+                                        <input type="text" name="ozoneDepleting[Ac System][coldroom]" class="form-control form-control-lg" value="{{$acData['coldroom'] ?? ''}}">
+                                    </div>
+                                </div>
+                                @can('projects.edit')
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <button class="btn btn-primary float-right" type="submit">Save</button>
+                                        </div>
+                                    </div>
+                                @endcan
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -500,6 +565,10 @@
         });
 
         $('#PolychlorinatedForm').submit(function(e) {
+            handleFormSubmission.call(this, e, "{{route('addReportMaterial')}}");
+        });
+
+        $('#ozoneDepletingForm').submit(function(e) {
             handleFormSubmission.call(this, e, "{{route('addReportMaterial')}}");
         });
     </script>
