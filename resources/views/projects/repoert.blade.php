@@ -12,6 +12,9 @@
                 </div>
                 <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion4">
                     <div class="card-body">
+                        @php
+                            $minCount = 10;
+                        @endphp
                         <form method="post" novalidate id="addReportMaterialForm">
                             @csrf
                             <input type="hidden" name="project_id" value="{{ $project->id ?? '' }}" id="project_id">
@@ -31,21 +34,47 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group col-6">
-                                    <label for="make">Make/Model</label>
-                                    <input type="text" class="form-control form-control-lg" id="make_shafting" name="material[Propeller shafting][model]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Propeller shafting']['make'][0]['model'] ?? ''}}">
-                                </div>
-                                <div class="form-group col-6 mb-4">
-                                    <label>Manufacturer</label>
-                                    <input type="text" class="form-control form-control-lg" name="material[Propeller shafting][manufacturer]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Propeller shafting']['make'][0]['manufacturer'] ?? ''}}">
-                                </div>
+                                @php
+                                    $shaftingIndex = 1;
+                                    $shaftingMakes = isset($foundItems['Propeller shafting']['make']) && is_array($foundItems['Propeller shafting']['make']) ? $foundItems['Propeller shafting']['make'] : [];
+                                @endphp
+
+                                @foreach ($shaftingMakes as $shaftingMake)
+                                    @if($shaftingIndex > $minCount)
+                                        @break
+                                    @endif
+
+                                    <div class="form-group col-6">
+                                        <label for="make">Make/Model {{$shaftingIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Propeller shafting][model][]" autocomplete="off" {{ $readonly }} value="{{ $shaftingMake['model'] ?? '' }}">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="manufacturer">Manufacturer {{$shaftingIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Propeller shafting][manufacturer][]" autocomplete="off" {{ $readonly }} value="{{ $shaftingMake['manufacturer'] ?? '' }}">
+                                    </div>
+
+                                    @php
+                                        $shaftingIndex++;
+                                    @endphp
+                                @endforeach
+
+                                @for($i = $shaftingIndex; $i <= $minCount; $i++)
+                                    <div class="form-group col-6">
+                                        <label for="make">Make/Model {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Propeller shafting][model][]" autocomplete="off" {{ $readonly }} value="">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="manufacturer">Manufacturer {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Propeller shafting][manufacturer][]" autocomplete="off" {{ $readonly }} value="">
+                                    </div>
+                                @endfor
                             </div>
                             <div class="border-top">
                                 <h4 class="mt-3">Diesel engine</h4>
                             </div>
                             <div class="row">
                                 <div class="form-group col-12 mb-3">
-                                    <label for="component_diesel">Component</label>
+                                    <label>Component</label>
                                     <select class="selectpicker show-tick form-control form-control-lg" name="material[Diesel engine][component][]" id="component_diesel" multiple data-live-search="true" data-actions-box="true" {{ $readonly }}>
                                         <option value="Packing with piping flange" {{ isset($foundItems['Diesel engine']) && in_array("Packing with piping flange", $foundItems['Diesel engine']['component']) ? 'selected' : '' }}>Packing with piping flange</option>
                                         <option value="Lagging material for fuel pipe" {{ isset($foundItems['Diesel engine']) && in_array("Lagging material for fuel pipe", $foundItems['Diesel engine']['component']) ? 'selected' : '' }}>Lagging material for fuel pipe</option>
@@ -54,15 +83,40 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group col-6">
-                                    <label>Make/Model</label>
-                                    <input type="text" class="form-control form-control-lg" id="make_diesel" name="material[Diesel engine][model]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Diesel engine']['make'][0]['model'] ?? ''}}">
-                                </div>
-                                <div class="form-group col-6 mb-4">
-                                    <label for="manufacturer_engine">Manufacturer</label>
-                                    <input type="text" class="form-control form-control-lg" id="manufacturer_engine"
-                                        name="material[Diesel engine][manufacturer]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Diesel engine']['make'][0]['manufacturer'] ?? ''}}">
-                                </div>
+                                @php
+                                    $engineIndex = 1;
+                                    $engineMakes = isset($foundItems['Diesel engine']['make']) && is_array($foundItems['Diesel engine']['make']) ? $foundItems['Diesel engine']['make'] : [];
+                                @endphp
+
+                                @foreach ($engineMakes as $engineMake)
+                                    @if($engineIndex > $minCount)
+                                        @break
+                                    @endif
+
+                                    <div class="form-group col-12 col-lg-6">
+                                        <label for="make">Make/Model {{$engineIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Diesel engine][model][]" autocomplete="off" {{ $readonly }} value="{{ $engineMake['model'] ?? '' }}">
+                                    </div>
+                                    <div class="form-group col-12 col-lg-6">
+                                        <label for="manufacturer">Manufacturer {{$engineIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Diesel engine][manufacturer][]" autocomplete="off" {{ $readonly }} value="{{ $engineMake['manufacturer'] ?? '' }}">
+                                    </div>
+
+                                    @php
+                                        $engineIndex++;
+                                    @endphp
+                                @endforeach
+
+                                @for($i = $engineIndex; $i <= $minCount; $i++)
+                                    <div class="form-group col-12 col-lg-6">
+                                        <label for="make">Make/Model {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Diesel engine][model][]" autocomplete="off" {{ $readonly }} value="">
+                                    </div>
+                                    <div class="form-group col-12 col-lg-6">
+                                        <label for="manufacturer">Manufacturer {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Diesel engine][manufacturer][]" autocomplete="off" {{ $readonly }} value="">
+                                    </div>
+                                @endfor
                             </div>
                             <div class="border-top">
                                 <h4 class="mt-3">Boiler</h4>
@@ -82,43 +136,40 @@
                                     </select>
                                 </div>
 
-                                @if (isset($foundItems['Boiler']['make']))
+                                @php
+                                    $boilerIndex = 1;
+                                    $boilerMakes = isset($foundItems['Boiler']['make']) && is_array($foundItems['Boiler']['make']) ? $foundItems['Boiler']['make'] : [];
+                                @endphp
+
+                                @foreach ($boilerMakes as $boilerMake)
+                                    @if($boilerIndex > $minCount)
+                                        @break
+                                    @endif
+
+                                    <div class="form-group col-6">
+                                        <label for="make">Make/Model {{$boilerIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Boiler][model][]" autocomplete="off" {{ $readonly }} value="{{ $boilerMake['model'] ?? '' }}">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="">Manufacturer {{$boilerIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Boiler][manufacturer][]" autocomplete="off" {{ $readonly }} value="{{ $boilerMake['manufacturer'] ?? '' }}">
+                                    </div>
+
                                     @php
-                                        $boilerIndex = 1;
+                                        $boilerIndex++;
                                     @endphp
-                                    @foreach ($foundItems['Boiler']['make'] as $make)
-                                        <div class="form-group col-6">
-                                            <label>Make/Model {{$boilerIndex}}</label>
-                                            <input type="text" class="form-control form-control-lg" name="material[Boiler][model][]" autocomplete="off" {{ $readonly }} value="{{$make['model']}}">
-                                        </div>
-                                        <div class="form-group col-6 mb-4">
-                                            <label>Manufacturer {{$boilerIndex}}</label>
-                                            <input type="text" class="form-control form-control-lg" name="material[Boiler][manufacturer][]" autocomplete="off" {{ $readonly }} value="{{$make['manufacturer']}}">
-                                        </div>
-                                        @php
-                                            $boilerIndex++;
-                                        @endphp
-                                    @endforeach
-                                @else
-                                    <div class="form-group col-6 mb-4">
-                                        <label for="make">Make/Model 1</label>
-                                        <input type="text" class="form-control form-control-lg"
-                                            name="material[Boiler][model][]" autocomplete="off" {{ $readonly }}>
+                                @endforeach
+
+                                @for($i = $boilerIndex; $i <= $minCount; $i++)
+                                    <div class="form-group col-6">
+                                        <label for="make">Make/Model {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Boiler][model][]" autocomplete="off" {{ $readonly }} value="">
                                     </div>
-                                    <div class="form-group col-6 mb-4">
-                                        <label for="">Manufacturer 1</label>
-                                        <input type="text" class="form-control form-control-lg" name="material[Boiler][manufacturer][]" autocomplete="off" {{ $readonly }}>
+                                    <div class="form-group col-6">
+                                        <label for="">Manufacturer {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Boiler][manufacturer][]" autocomplete="off" {{ $readonly }} value="">
                                     </div>
-                                    <div class="form-group col-6 mb-4">
-                                        <label for="make">Make/Model 2</label>
-                                        <input type="text" class="form-control form-control-lg"
-                                            name="material[Boiler][model][]" autocomplete="off" {{ $readonly }}>
-                                    </div>
-                                    <div class="form-group col-6 mb-4">
-                                        <label for="">Manufacturer 2</label>
-                                        <input type="text" class="form-control form-control-lg" name="material[Boiler][manufacturer][]" autocomplete="off" {{ $readonly }}>
-                                    </div>
-                                @endif
+                                @endfor
                             </div>
                             <div class="border-top">
                                 <h4 class="mt-3">Exhaust gas economizer</h4>
@@ -156,15 +207,40 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group col-6">
-                                    <label>Make/Model</label>
-                                    <input type="text" class="form-control form-control-lg"
-                                        name="material[Incinerator][model]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Incinerator']['make'][0]['model'] ?? ''}}">
-                                </div>
-                                <div class="form-group col-6 mb-4">
-                                    <label>Manufacturer</label>
-                                    <input type="text" class="form-control form-control-lg" name="material[Incinerator][manufacturer]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Incinerator']['make'][0]['manufacturer'] ?? ''}}">
-                                </div>
+                                @php
+                                    $incineratorIndex = 1;
+                                    $incineratorMakes = isset($foundItems['Incinerator']['make']) && is_array($foundItems['Incinerator']['make']) ? $foundItems['Incinerator']['make'] : [];
+                                @endphp
+
+                                @foreach ($incineratorMakes as $incineratorMake)
+                                    @if($incineratorIndex > $minCount)
+                                        @break
+                                    @endif
+
+                                    <div class="form-group col-12 col-lg-6">
+                                        <label>Make/Model {{$incineratorIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Incinerator][model][]" autocomplete="off" {{ $readonly }} value="{{ $incineratorMake['model'] ?? '' }}">
+                                    </div>
+                                    <div class="form-group col-12 col-lg-6">
+                                        <label>Manufacturer {{$incineratorIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Incinerator][manufacturer][]" autocomplete="off" {{ $readonly }} value="{{ $incineratorMake['manufacturer'] ?? '' }}">
+                                    </div>
+
+                                    @php
+                                        $incineratorIndex++;
+                                    @endphp
+                                @endforeach
+
+                                @for($i = $incineratorIndex; $i <= $minCount; $i++)
+                                    <div class="form-group col-12 col-lg-6">
+                                        <label>Make/Model {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Incinerator][model][]" autocomplete="off" {{ $readonly }} value="">
+                                    </div>
+                                    <div class="form-group col-12 col-lg-6">
+                                        <label>Manufacturer {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Incinerator][manufacturer][]" autocomplete="off" {{ $readonly }} value="">
+                                    </div>
+                                @endfor
                             </div>
                             <div class="border-top">
                                 <h4 class="mt-3">Auxiliary machinery (pump, compressor, oil purifier, crane)</h4>
@@ -178,41 +254,42 @@
                                         <option value="Brake lining" {{ isset($foundItems['Auxiliary machinery']) && in_array("Brake lining", $foundItems['Auxiliary machinery']['component']) ? 'selected' : '' }}>Brake lining</option>
                                     </select>
                                 </div>
-                                @if (isset($foundItems['Auxiliary machinery']['make']))
+
+                                @php
+                                    $machineryIndex = 1;
+                                    $machineryMakes = isset($foundItems['Auxiliary machinery']['make']) && is_array($foundItems['Auxiliary machinery']['make']) ? $foundItems['Auxiliary machinery']['make'] : [];
+
+                                @endphp
+
+                                @foreach ($machineryMakes as $machineryMake)
+                                    @if($machineryIndex > $minCount)
+                                        @break
+                                    @endif
+
+                                    <div class="form-group col-6">
+                                        <label for="make">Make/Model {{$machineryIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Auxiliary machinery][model][]" autocomplete="off" {{ $readonly }} value="{{ $machineryMake['model'] ?? '' }}">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label>Manufacturer {{$machineryIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Auxiliary machinery][manufacturer][]" autocomplete="off" {{ $readonly }} value="{{ $machineryMake['manufacturer'] ?? '' }}">
+                                    </div>
+
                                     @php
-                                        $machineryIndex = 1;
+                                        $machineryIndex++;
                                     @endphp
-                                    @foreach ($foundItems['Auxiliary machinery']['make'] as $make)
-                                        <div class="form-group col-6">
-                                            <label for="make">Make/Model {{$machineryIndex}}</label>
-                                            <input type="text" class="form-control form-control-lg" name="material[Auxiliary machinery][model][]" autocomplete="off" {{ $readonly }} value="{{$make['model'] ?? ''}}">
-                                        </div>
-                                        <div class="form-group col-6 mb-4">
-                                            <label>Manufacturer {{$machineryIndex}}</label>
-                                            <input type="text" class="form-control form-control-lg" name="material[Auxiliary machinery][manufacturer][]" autocomplete="off" {{ $readonly }} value="{{$make['manufacturer'] ?? ''}}">
-                                        </div>
-                                        @php
-                                            $machineryIndex++;
-                                        @endphp
-                                    @endforeach
-                                @else
-                                    <div class="form-group col-6 mb-4">
-                                        <label for="make">Make/Model 1</label>
-                                        <input type="text" class="form-control form-control-lg" name="material[Auxiliary machinery][model][]" autocomplete="off" {{ $readonly }}>
+                                @endforeach
+
+                                @for($i = $machineryIndex; $i <= $minCount; $i++)
+                                    <div class="form-group col-6">
+                                        <label for="make">Make/Model {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Auxiliary machinery][model][]" autocomplete="off" {{ $readonly }} value="">
                                     </div>
-                                    <div class="form-group col-6 mb-4">
-                                        <label>Manufacturer 1</label>
-                                        <input type="text" class="form-control form-control-lg" name="material[Auxiliary machinery][manufacturer][]" autocomplete="off" {{ $readonly }}>
+                                    <div class="form-group col-6">
+                                        <label>Manufacturer {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Auxiliary machinery][manufacturer][]" autocomplete="off" {{ $readonly }} value="">
                                     </div>
-                                    <div class="form-group col-6 mb-4">
-                                        <label for="make">Make/Model 2</label>
-                                        <input type="text" class="form-control form-control-lg" name="material[Auxiliary machinery][model][]" autocomplete="off" {{ $readonly }}>
-                                    </div>
-                                    <div class="form-group col-6 mb-4">
-                                        <label>Manufacturer 2</label>
-                                        <input type="text" class="form-control form-control-lg" name="material[Auxiliary machinery][manufacturer][]" autocomplete="off" {{ $readonly }}>
-                                    </div>
-                                @endif
+                                @endfor
                             </div>
                             <div class="border-top">
                                 <h4 class="mt-3">Heat exchanger</h4>
@@ -231,14 +308,41 @@
                                     <label>Type</label>
                                     <input type="text" class="form-control form-control-lg" name="material[Heat exchanger][type]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Heat exchanger']['type'] ?? ''}}">
                                 </div>
-                                <div class="form-group col-6">
-                                    <label>Make/Model</label>
-                                    <input type="text" class="form-control form-control-lg" name="material[Heat exchanger][model]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Heat exchanger']['make'][0]['model'] ?? ''}}">
-                                </div>
-                                <div class="form-group col-6 mb-4">
-                                    <label>Manufacturer</label>
-                                    <input type="text" class="form-control form-control-lg" name="material[Heat exchanger][manufacturer]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Heat exchanger']['make'][0]['manufacturer'] ?? ''}}">
-                                </div>
+
+                                @php
+                                    $exchangerIndex = 1;
+                                    $exchangerMakes = isset($foundItems['Heat exchanger']['make']) && is_array($foundItems['Heat exchanger']['make']) ? $foundItems['Heat exchanger']['make'] : [];
+                                @endphp
+
+                                @foreach ($exchangerMakes as $exchangerMake)
+                                    @if($exchangerIndex > $minCount)
+                                        @break
+                                    @endif
+
+                                    <div class="form-group col-6">
+                                        <label for="make">Make/Model {{$exchangerIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Heat exchanger][model][]" autocomplete="off" {{ $readonly }} value="{{ $exchangerMake['model'] ?? '' }}">
+                                    </div>
+                                    <div class="form-group col-6 mb-4">
+                                        <label for="manufacturer">Manufacturer {{$exchangerIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Heat exchanger][manufacturer][]" autocomplete="off" {{ $readonly }} value="{{ $exchangerMake['manufacturer'] ?? '' }}">
+                                    </div>
+
+                                    @php
+                                        $exchangerIndex++;
+                                    @endphp
+                                @endforeach
+
+                                @for($i = $exchangerIndex; $i <= $minCount; $i++)
+                                    <div class="form-group col-6">
+                                        <label for="make">Make/Model {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Heat exchanger][model][]" autocomplete="off" {{ $readonly }} value="">
+                                    </div>
+                                    <div class="form-group col-6 mb-4">
+                                        <label for="manufacturer">Manufacturer {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Heat exchanger][manufacturer][]" autocomplete="off" {{ $readonly }} value="">
+                                    </div>
+                                @endfor
                             </div>
                             <div class="border-top">
                                 <h4 class="mt-3">Inert gas system</h4>
@@ -251,14 +355,40 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group col-6">
-                                    <label>Make/Model</label>
-                                    <input type="text" class="form-control form-control-lg" name="material[Inert gas system][model]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Inert gas system']['make'][0]['model'] ?? ''}}">
-                                </div>
-                                <div class="form-group col-6 mb-4">
-                                    <label>Manufacturer</label>
-                                    <input type="text" class="form-control form-control-lg" name="material[Inert gas system][manufacturer]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Inert gas system']['make'][0]['manufacturer'] ?? ''}}">
-                                </div>
+                                @php
+                                    $inertGasSystemIndex = 1;
+                                    $inertGasSystemMakes = isset($foundItems['Inert gas system']['make']) && is_array($foundItems['Inert gas system']['make']) ? $foundItems['Inert gas system']['make'] : [];
+                                @endphp
+
+                                @foreach ($inertGasSystemMakes as $inertGasSystemMake)
+                                    @if($inertGasSystemIndex > $minCount)
+                                        @break
+                                    @endif
+
+                                    <div class="form-group col-6">
+                                        <label for="make">Make/Model {{$inertGasSystemIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Inert gas system][model][]" autocomplete="off" {{ $readonly }} value="{{ $inertGasSystemMake['model'] ?? '' }}">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="manufacturer">Manufacturer {{$inertGasSystemIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Inert gas system][manufacturer][]" autocomplete="off" {{ $readonly }} value="{{ $inertGasSystemMake['manufacturer'] ?? '' }}">
+                                    </div>
+
+                                    @php
+                                        $inertGasSystemIndex++;
+                                    @endphp
+                                @endforeach
+
+                                @for($i = $inertGasSystemIndex; $i <= $minCount; $i++)
+                                    <div class="form-group col-6">
+                                        <label for="make">Make/Model {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Inert gas system][model][]" autocomplete="off" {{ $readonly }} value="">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="manufacturer">Manufacturer {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Inert gas system][manufacturer][]" autocomplete="off" {{ $readonly }} value="">
+                                    </div>
+                                @endfor
                             </div>
                             <div class="border-top">
                                 <h4 class="mt-3">Air conditioning system</h4>
@@ -271,14 +401,41 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group col-6">
-                                    <label>Make/Model</label>
-                                    <input type="text" class="form-control form-control-lg" name="material[Air conditioning system][model]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Air conditioning system']['make'][0]['model'] ?? ''}}">
-                                </div>
-                                <div class="form-group col-6 mb-4">
-                                    <label>Manufacturer</label>
-                                    <input type="text" class="form-control form-control-lg" name="material[Air conditioning system][manufacturer]" autocomplete="off" {{ $readonly }} value="{{$foundItems['Air conditioning system']['make'][0]['manufacturer'] ?? ''}}">
-                                </div>
+                                @php
+                                    $acSystemIndex = 1;
+                                    $acSystemMakes = isset($foundItems['Air conditioning system']['make']) && is_array($foundItems['Air conditioning system']['make']) ? $foundItems['Air conditioning system']['make'] : [];
+                                @endphp
+
+                                @foreach ($acSystemMakes as $acSystemMake)
+                                    @if($acSystemIndex > $minCount)
+                                        @break
+                                    @endif
+
+                                    <div class="form-group col-6">
+                                        <label for="make">Make/Model {{$acSystemIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Air conditioning system][model][]" autocomplete="off" {{ $readonly }} value="{{ $acSystemMake['model'] ?? '' }}">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="manufacturer">Manufacturer {{$acSystemIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Air conditioning system][manufacturer][]" autocomplete="off" {{ $readonly }} value="{{ $acSystemMake['manufacturer'] ?? '' }}">
+                                    </div>
+
+                                    @php
+                                        $acSystemIndex++;
+                                    @endphp
+                                @endforeach
+
+                                @for($i = $acSystemIndex; $i <= $minCount; $i++)
+                                    <div class="form-group col-6">
+                                        <label for="make">Make/Model {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Air conditioning system][model][]" autocomplete="off" {{ $readonly }} value="">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="manufacturer">Manufacturer {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Air conditioning system][manufacturer][]" autocomplete="off" {{ $readonly }} value="">
+                                    </div>
+                                @endfor
+
                                 @can('projects.edit')
                                     <div class="col-12">
                                         <div class="form-group">

@@ -255,15 +255,19 @@
                             <div class="row">
                                 <input type="hidden" name="project_id" value="{{ $project->id }}">
                                 <div class="form-group col-6">
+                                    <label for="project_no">Surveyor Name</label>
+                                    <input type="text" class="form-control  form-control-lg" id="surveyorName" value="{{ old('surveyorName', $project->surveyorName ?? '') }}" name="project[surveyorName]" placeholder="Surveyor Name" autocomplete="off" {{ $readonly }}>
+                                </div>
+                                <div class="form-group col-6">
                                     <label for="project_no">Survey Location Name</label>
                                     <input type="text"
-                                        class="form-control  form-control-lg @error('survey_location_name') is-invalid @enderror"
+                                        class="form-control  form-control-lg"
                                         id="survey_location_name"
                                         value="{{ old('survey_location_name', $project->survey_location_name ?? '') }}"
                                         name="project[survey_location_name]" placeholder="Survey Location Name"
-                                        autocomplete="off" onchange="removeInvalidClass(this)" {{ $readonly }}>
+                                        autocomplete="off" {{ $readonly }}>
                                 </div>
-                                <div class="form-group col-6 mb-3">
+                                <div class="form-group col-12 mb-3">
                                     <label for="additional_hazmats">Survey Location Address</label>
                                     <input type="text"
                                         class="form-control form-control-lg @error('survey_location_address') is-invalid @enderror"
