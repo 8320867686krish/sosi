@@ -1136,58 +1136,72 @@ class ProjectsController extends Controller
     {
         try {
             $materialData = $request->input();
+            $ozoneData = $request->input('ozoneDepleting');
             $projectId = $request->input('project_id');
             $materialName = $request->input('material_name');
 
-            foreach ($materialData['material'] as $key => $value) {
+            if (isset($materialData['material'])) {
+                foreach ($materialData['material'] as $key => $value) {
 
-                $insertData = [
-                    "project_id" => $projectId,
-                    "material" => $materialName,
-                    "structure" => $key,
-                    "type" => isset($value["type"]) ? $value["type"] : null,
-                    "remark" => isset($value["remark"]) ? $value["remark"] : null
-                ];
+                    $insertData = [
+                        "project_id" => $projectId,
+                        "material" => $materialName,
+                        "structure" => $key,
+                        "type" => isset($value["type"]) ? $value["type"] : null,
+                        "remark" => isset($value["remark"]) ? $value["remark"] : null
+                    ];
 
-                if (isset($value["model"]) && isset($value["manufacturer"])) {
-                    $makeData = [];
+                    if (isset($value["model"]) && isset($value["manufacturer"])) {
+                        $makeData = [];
 
-                    // Check if model and manufacturer are arrays
-                    if (is_array($value["model"]) && is_array($value["manufacturer"])) {
-                        // Iterate over the arrays to generate multiple make data
-                        foreach ($value["model"] as $index => $model) {
+                        // Check if model and manufacturer are arrays
+                        if (is_array($value["model"]) && is_array($value["manufacturer"])) {
+                            // Iterate over the arrays to generate multiple make data
+                            foreach ($value["model"] as $index => $model) {
+                                $makeData[] = [
+                                    "model" => $model,
+                                    "manufacturer" => $value["manufacturer"][$index] ?? null
+                                ];
+                            }
+                        } else {
+                            // If model and manufacturer are not arrays, create a single make data
                             $makeData[] = [
-                                "model" => $model,
-                                "manufacturer" => $value["manufacturer"][$index] ?? null
+                                "model" => $value["model"],
+                                "manufacturer" => $value["manufacturer"]
                             ];
                         }
-                    } else {
-                        // If model and manufacturer are not arrays, create a single make data
-                        $makeData[] = [
-                            "model" => $value["model"],
-                            "manufacturer" => $value["manufacturer"]
-                        ];
+
+                        // Encode the make data to JSON
+                        $insertData["make"] = json_encode($makeData);
                     }
 
-                    // Encode the make data to JSON
-                    $insertData["make"] = json_encode($makeData);
-                }
+                    if (isset($value["component"])) {
+                        $componentData = implode(', ', $value["component"]);
+                        $insertData["component"] = $componentData;
+                    }
 
-                if (isset($value["component"])) {
-                    $componentData = implode(', ', $value["component"]);
-                    $insertData["component"] = $componentData;
-                }
+                    if (isset($materialData['extraField']) && $key == "Transformer") {
+                        $insertData['extraField'] = json_encode($materialData['extraField'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                    }
 
-                // $materialObjects = [];
-
-                // foreach ($materialData as $key => $value) {
-                //     $materialObjects[] = [$key => $value];
-                // }
-                if(isset($materialData['extraField']) && $key == "Transformer"){
-                    $insertData['extraField'] = json_encode($materialData['extraField'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                    // ReportMaterial::create($insertData);
+                    ReportMaterial::updateOrCreate(['project_id' => $projectId, "structure" => $key], $insertData);
                 }
-                // ReportMaterial::create($insertData);
-                ReportMaterial::updateOrCreate(['project_id'=>$projectId,"structure" => $key],$insertData);
+            }
+
+            unset($materialData['ozoneDepleting']);
+            if (isset($ozoneData) && empty($materialData['extraField'])) {
+
+                foreach ($ozoneData as $keys => $ozone) {
+                    $insertOzoneData = [
+                        "project_id" => $projectId,
+                        "material" => $materialName,
+                        "structure" => $keys,
+                        "extraField" => json_encode($ozone),
+                    ];
+
+                    ReportMaterial::updateOrCreate(['project_id' => $projectId, "structure" => $keys], $insertOzoneData);
+                }
             }
 
             return response()->json(['isStatus' => true, 'message' => 'Material report save successfully.']);
