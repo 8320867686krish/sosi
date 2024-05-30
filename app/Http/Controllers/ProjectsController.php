@@ -27,7 +27,6 @@ use Throwable;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use setasign\Fpdi\Fpdi;
-use Intervention\Image\Facades\Image as ImageIntervention;
 
 class ProjectsController extends Controller
 {
@@ -123,6 +122,11 @@ class ProjectsController extends Controller
                 $foundItems[$value['structure']] = $collection4[$index];
             }
         }
+        unset($project->materials);
+        // foreach($foundItems['Transformer']['extraField'] as $field1){
+        //     dd($field1);
+        // }
+        // dd($foundItems['Transformer']['extraField']);
 
         return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id, 'isBack' =>  $isBack, "hazmats" => $hazmats, 'attachment' => $attachment, 'foundItems' => $foundItems]);
     }
@@ -1174,6 +1178,14 @@ class ProjectsController extends Controller
                     $insertData["component"] = $componentData;
                 }
 
+                // $materialObjects = [];
+
+                // foreach ($materialData as $key => $value) {
+                //     $materialObjects[] = [$key => $value];
+                // }
+                if(isset($materialData['extraField']) && $key == "Transformer"){
+                    $insertData['extraField'] = json_encode($materialData['extraField'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                }
                 // ReportMaterial::create($insertData);
                 ReportMaterial::updateOrCreate(['project_id'=>$projectId,"structure" => $key],$insertData);
             }
@@ -1181,7 +1193,7 @@ class ProjectsController extends Controller
             return response()->json(['isStatus' => true, 'message' => 'Material report save successfully.']);
         } catch (\Throwable $th) {
             return response()->json(['isStatus' => false, 'error' => 'An error occurred while processing your request.']);
-            dd($th->getMessage());
+            // dd($th->getMessage());
         }
     }
 }
