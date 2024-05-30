@@ -1,7 +1,8 @@
-<div  class="next">
+<div>
     <div style="text-align: center;">
     <h1 style="padding-top: 20px;">{{$projectDetail['ihm_table']}} Report</h1><br />
-
+    
+  
     <div style="padding-top: 20px;">
             <img src="{{  $projectDetail['image'] }}" alt="Your Image">
         </div>
@@ -9,13 +10,11 @@
         <h4 style="padding-top: 1px;">SHIP NAME- {{$projectDetail['ship_name']}}</h4>
         <h4 style="padding-top: 1px;">IMO No: {{$projectDetail['imo_number']}}</h4>
         <h4 style="padding-top: 1px;">Revision: 1</h4>
-      
-       
     </div>
    
     <div style="pading-top:30px">
         <h4>Prepared by SOS INDIA As Per:</h4>
-        <ul>
+        <ul class="ulIteam">
             <li>Hong Kong International Convention for the Safe and Environmentally Sound Recycling of
                 Ships (SR/CONF 45)</li>
             <li>EU Regulation on Ship Recycling (EU-SRR No. 1257/2013)</li>

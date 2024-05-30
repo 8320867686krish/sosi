@@ -13,7 +13,7 @@
         @if(@$filteredResults1)
         <h5>I-1 – Paints and coating systems containing materials listed in table A and table B of appendix 1 of these guidelines</h4>
 
-            <table>
+            <table  style="page-break-inside:avoid">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -71,7 +71,7 @@
             <div style="padding-top: 20px;">
                 <h4>I-2 Equipment and machinery containing materials listed in table A and table B of appendix 1 of these guidelines</h4>
 
-                <table>
+                <table  style="page-break-inside:avoid">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -131,7 +131,7 @@
             <div style="padding-top: 20px;">
                 <h4>I-3 Structure and hull containing materials listed in table A and table B of appendix 1 of these guidelines</h4>
 
-                <table>
+                <table  style="page-break-inside:avoid">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -195,30 +195,4 @@
     <!-- Section 1.2 -->
 
 
-</div>
-<div class="container">
-    <h3>Location Diagram of Contained HazMat & PCHM</h3>
-    @php
-    $html = '';
-    foreach ($decks as $deck) {
-                $html .= '<div class="outfit" style="position: relative; margin-bottom: 20px;">';
-                $html .= '<img src="' . $deck['image'] . '" style="display: block;">';
-                $html .= '<div id="showDeckCheck" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">';
-            
-                if (!empty($deck['checks'])) {
-                    foreach ($deck['checks'] as $key => $value) {
-                        $top = $value->position_top - ($value->isApp == 1 ? 20 : 0);
-                        $left = $value->position_left - ($value->isApp == 1 ? 20 : 0);
-
-                        $html .= '<div class="dot" style="position: absolute; top: ' . $top . 'px; left: ' . $left . 'px; width: 20px; height: 20px; border: 2px solid red;background:red;color:#fff; border-radius: 50%; text-align: center; line-height: 20px;">';
-                        $html .= $key + 1;
-                        $html .= '</div>';
-                    }
-                }
-            
-                $html .= '</div>';
-                $html .= '</div>';
-            }
-            echo $html;
-        @endphp
 </div>
