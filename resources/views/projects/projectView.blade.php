@@ -492,6 +492,27 @@
             <div class="row">
                 @include('projects.repoert')
             </div>
+            <div class="row mt-2">
+                <div class="col-12">
+                    <form method="post" action="{{ url('genratePdf') }}">
+                        @csrf
+                        <input type="hidden" name="project_id" value="{{ $project->id }}" />
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-5">
+                                    <input type="number" name="version" placeholder="Version Number..." class="form-control form-control-lg">
+                                </div>
+                                <div class="col-5">
+                                    <input type="date" name="date" class="form-control form-control-lg">
+                                </div>
+                                <div class="col-2">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <div class="modal fade" data-backdrop="static" id="checkImageAddModal" tabindex="-1" role="dialog"
@@ -642,7 +663,8 @@
                                     <div class="col-12 col-md-12 mb-3"
                                         style="background: #efeff6;border: 1px solid #efeff6;">
                                         <div class="pt-4">
-                                            <h5 class="text-center" style="background: #efeff6;border: 1px solid #efeff6;">Lab Result</h5>
+                                            <h5 class="text-center"
+                                                style="background: #efeff6;border: 1px solid #efeff6;">Lab Result</h5>
                                             <div class="mb-4 col-12" id="showLabResult">
 
                                             </div>
@@ -1084,11 +1106,13 @@
                             }));
                         });
 
-                        const cloneTableTypeDiv = $(".cloneTableTypeDiv select.table_type").closest(".cloneTableTypeDiv");
+                        const cloneTableTypeDiv = $(".cloneTableTypeDiv select.table_type").closest(
+                            ".cloneTableTypeDiv");
 
                         cloneTableTypeDiv.find(`#equipmentDiv_${hazmat_id}`).closest('.equipment').show();
                         cloneTableTypeDiv.find(`#manufacturerDiv_${hazmat_id}`).closest('.manufacturer').show();
-                        cloneTableTypeDiv.find(`#modelMakePartDiv_${hazmat_id}`).closest('.modelMakePart').show();
+                        cloneTableTypeDiv.find(`#modelMakePartDiv_${hazmat_id}`).closest('.modelMakePart')
+                            .show();
                     }
                 },
             });
