@@ -103,6 +103,11 @@
             </tr>
             <tr>
                 <td>&nbsp;</td>
+                <td colspan="3" style="border: 2px solid #000000">Ship Image</td>
+                <td colspan="4" style="border: 2px solid #000000"><a href="{{$project->image}}">Click Here</a></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
                 <td colspan="7" align="center" style="border: 2px solid #000000"><b>&nbsp;</b></td>
             </tr>
             <tr>
