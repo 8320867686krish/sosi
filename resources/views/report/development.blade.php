@@ -465,7 +465,6 @@
                     <th>Materials</th>
                     <th>Name</th>
                     <th>Make/Model</th>
-                    <th>Cold Room</th>
                 </tr>
             </thead>
             <tbody>
@@ -479,8 +478,13 @@
                    
                         <td>{{ $dtaa['name'] }}</td>
                         <td>{{ $dtaa['model'] }}</td>
-                        <td>&nbsp;</td>
                  
+                </tr>
+                @else
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
                 </tr>
                 @endif
                 @php
@@ -491,12 +495,17 @@
                     <td>Ac System</td>
                     <td>{{ $dtaa['name'] }}</td>
                     <td>{{ $dtaa['model'] }}</td>
-                    <td>{{ $dtaa['coldroom'] }}</td>
+                </tr>
+                @else
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
                 </tr>
                 @endif
             </tbody>
         </table>
-</br></br>
+<br/><br/><br/>
         <table>
             <thead>
                 <tr>

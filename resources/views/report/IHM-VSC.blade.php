@@ -178,7 +178,7 @@
 
 
     </div>
-    <div class="next section-1-1">
+    <div class=" section-1-1">
         <h3>4.4	 Laboratory Analysis</h3>
         <p>Once the samples are collected & sorted, are to be sent to the ISO17025 or equally credited laboratory.laboratory name Certificate : see attachment . the test results are recorded see: <a href="#lebResult" style="cursor:pointer">attachment lab test results</a> </p>
         <h3><b>4.4.1 Threshold Values & Testing Standards</b></h3>
@@ -263,13 +263,150 @@
                 <td>As per resolution MEPC.356(78) (2022 Guidelines for brief sampling of anti-fouling systems on ships), adopted on 10 June 2022, using GC-MS.</td>
                </tr>
                <tr>
-                <td>6.</td>
-                <td>Cybutryne</td>
-                <td>1,000 mg/kg</td>
-                <td>As per resolution MEPC.356(78) (2022 Guidelines for brief sampling of anti-fouling systems on ships), adopted on 10 June 2022, using GC-MS.</td>
+                <td rowspan="3">6.</td>
+                <td rowspan="3">Cadmium & Cadmium compounds</td>
+                <td rowspan="3">100mg/Kg</td>
+                <td>MEPC. 379(80) 2023 Guidelines for the development of the IHM</td>
+               </tr>
+               <tr>
+                <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
+               </tr>
+               <tr>
+                <td>IEC62321-5:2013 Determination of certain substances in electro technical products- Part 5: Cadmium Lead & chromium in polymers & electronics and cadmium & lead in metals by AAS, AFS, ICP-OES, and ICP-MS</td>
+               </tr>
+
+               <tr>
+                <td rowspan="4">7.</td>
+                <td rowspan="4">Hexavalent Chromium & Hexavalent Chromium compounds</td>
+                <td rowspan="4">1000mg/Kg</td>
+                <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
+               </tr>
+               <tr>
+                <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
+               </tr>
+               <tr>
+                <td>IEC62321-7-1:2015 Electro technical products- Determination of levels of six regulated chromium-Presence of hexavalent chromium (Cr (IV)) in colour less and coloured corrosion-protected coatings on metals colorimetric methods</td>
+               </tr>
+               <tr>
+                <td>IEC62321-7-2:2017 Determination of certain substances in electro-chemical products- part 7-2: hexavalent chromium-determination of hexavalent chromium in polymers and electronics by colorimetric method</td>
+               </tr>
+
+               <tr>
+                <td rowspan="3">8.</td>
+                <td rowspan="3">Lead and Lead compounds</td>
+                <td rowspan="3">1000mg/Kg</td>
+                <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
+               </tr>
+               <tr>
+                <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
+               </tr>
+               <tr>
+                <td>IEC62321-5:2013 Determination of certain substances in electro technical products-Part 5: Cadmium, Lead & chromium in polymers & electronics and cadmium & lead in metals by AAS, AFS, ICP-OES, and ICP-MS</td>
+               </tr>
+              
+
+               <tr>
+                <td rowspan="3">9.</td>
+                <td rowspan="3">Mercury and Mercury compounds</td>
+                <td rowspan="3">1000mg/Kg</td>
+                <td>MEPC. 379(80) 2023  Guidelines for the development of the Inventory of Hazardous Materials.</td>
+               </tr>
+               <tr>
+                <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
+               </tr>
+               <tr>
+                <td>IEC62321-4:2013 Determination of certain substances in electro technical products-part-4: Mercury in polymers, metals & electronics by CV-AAS, CV-AFS, ICP-OES, and ICP-MS</td>
+               </tr>
+
+               
+
+
+               <tr>
+                <td rowspan="3">10.</td>
+                <td rowspan="3">Per Fluoro Octane Sulfonic acid (PFOS) & its derivatives**</td>
+                <td rowspan="3">10mg/Kg</td>
+                <td>Per Fluoro Octane Sulfonic acid (PFOS) & its derivatives**.</td>
+               </tr>
+               <tr>
+                <td>ISO 25101 water Quality –Determination of Per Flouro Octane Sulfonic acid (PFOS) & Per Fluoro Octanoate (PFOA) - Methods of unfiltered samples using solid-phase extraction & liquid chromatography/Mass spectrometry</td>
+               </tr>
+               <tr>
+                <td>ICEN/TS15968 Determination of extractable Perflorooctane sulfonic acid (PFOS)in coat& impregnated solid articles, liquids& firefighting foam. Methods of sampling, extraction & analysis by LC-q M SorLC-tandem/MS</td>
+               </tr>
+
+               <tr>
+                <td rowspan="3">11.</td>
+                <td rowspan="3">Poly Brominated Biphenyl (PBBs)*</td>
+                <td rowspan="3">50mg/Kg</td>
+                <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
+               </tr>
+               <tr>
+                <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
+               </tr>
+               <tr>
+                <td>IEC62321-6:2015 Determination of certain substances in electro technical products- part-6: Poly Brominated biphenyl and Poly Brominated Diphenyl Ethers in polymers by gas chromatography-mass spectrometry</td>
+               </tr>
+
+               <tr>
+                <td rowspan="3">12.</td>
+                <td rowspan="3">Poly Brominated Diphenyl Ethers (PBDEs)*</td>
+                <td rowspan="3">1000mg/Kg</td>
+                <td>MEPC. 379(80) 2023  Guidelines for the development of the Inventory of Hazardous Materials.</td>
+               </tr>
+               <tr>
+                <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
+               </tr>
+               <tr>
+                <td>IEC62321-6:2015 Determination of certain substances in electro technical products- part-6: Poly Brominated biphenyl and Poly Brominated Diphenyl Ethers in polymers by gas chromatography-mass spectrometry</td>
+               </tr>
+
+               <tr>
+                <td rowspan="2">13.</td>
+                <td rowspan="2">Polychlorinated Naphthalenes (>3clatoms) (PCNs)*</td>
+                <td rowspan="2">50mg/Kg</td>
+                <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
+               </tr>
+               <tr>
+                <td>EPA8270D Semi volatile Organic Compounds by Gas chromatography/Mass Spectrometer (GC-MS)</td>
+               </tr>
+
+               <tr>
+                <td rowspan="2">14.</td>
+                <td rowspan="2">Certain short-chain chlorinated paraffin (Alkanes, C10-C13, chloro) (SCCP)*</td>
+                <td rowspan="2">1%</td>
+                <td>MEPC. 379(80) 2023  Guidelines for the development of the Inventory of Hazardous Materials.</td>
+               </tr>
+               <tr>
+                <td>EPA8270D Semi volatile Organic Compounds by Gas chromatography/Mass Spectrometer (GC-MS)</td>
+               </tr>
+
+               <tr>
+                <td rowspan="2">15.</td>
+                <td rowspan="2">Brominated flame retardant (HBCDD)**</td>
+                <td rowspan="2">100mg/Kg</td>
+                <td>Regulation (EU)No.1257/2013</td>
+               </tr>
+               <tr>
+                <td>EPA8270D Semi volatile Organic Compounds by Gas chromatography/Mass Spectrometer (GC-MS)</td>
+               </tr>
+
+               <tr>
+                <td rowspan="3">16.</td>
+                <td rowspan="3">Radioactive substances</td>
+                <td rowspan="3">NO Threshold value</td>
+                <td>MEPC. 379(80) 2023  Guidelines for the development of the Inventory of Hazardous Materials.</td>
+               </tr>
+               <tr>
+                <td>Radiation protection and safety of radiation sources: International Basic Safety Standards (INTERIMEDITION)-General Safety Requirements Part-3</td>
+               </tr>
+               <tr>
+                <td>GB18871-2002 Basic Standards for protection against ionizing radiation and the safety of radiation sources</td>
                </tr>
               
             </tbody>
         </table>
+        <p>*Persistent organic compounds (POPs) which come under the purview of IHM are: Polychlorinated Naphthalenes (PCN), Polychlorinated biphenyls (PCB), Hexa Bromo Cyclodo Decane (HBCDD), Certain short-chain chlorinated paraffin (Alkanes, C10-C13, chloro) (SCCP), Poly Brominated Diphenyl Ethers (PBDEs), Poly Brominated Biphenyl (PBBs), Per Fluoro octane Sulfonic acid (PFOS) & its derivatives (PFOS)</p>
+
+        <p>**HBCDD & PFOS are listed in EUSRR, but not listed in HKC.</p>
     </div>
 </div>

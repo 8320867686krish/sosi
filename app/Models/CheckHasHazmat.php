@@ -12,7 +12,13 @@ class CheckHasHazmat extends Model
     protected $fillable = ["project_id", "check_id", "hazmat_id", "image", "type", "check_type","doc","remarks"];
 
     public function getImageAttribute($value){
-        return asset('images/hazmat/' . $this->project_id . "/" . $value);
+        if($value){
+            return asset('images/hazmat/' . $this->project_id . "/" . $value);
+
+        }else{
+            return false;
+        }
+        
     }
 
     public function getDocAttribute($value){

@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Mpdf\Mpdf;
 use App\Models\Attechments;
+use App\Models\CheckHasHazmat;
 use App\Models\Deck;
 use App\Models\ReportMaterial;
 use Dompdf\Dompdf;
@@ -152,6 +153,8 @@ class ReportContoller extends Controller
 
         $lebResult = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
         $attechments = Attechments::where('project_id', $project_id)->where('attachment_type', 'shipPlan')->get();
+        $genralattechments = Attechments::where('project_id', $project_id)->where('attachment_type', 'genral')->get();
+        $check_has_hazmats = CheckHasHazmat::where('project_id', $project_id)->get();
         $filteredResults1 = $lebResult->filter(function ($item) {
             return $item->IHM_part == 'IHMPart1-1';
         });
@@ -247,27 +250,92 @@ class ReportContoller extends Controller
             $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail')));
 
 
-            $titleHtml = '<h2 style="text-align:center" id="lebResult">Leb Result</h2>';
+            $titleHtml = '<h2 style="text-align:center" id="lebResult">Appendix-4 Leb Result</h2>';
 
             $filePath =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult1'];
             if (file_exists($filePath) && @$projectDetail['leb1LaboratoryResult1']) {
-                $this->mergePdf($filePath,$titleHtml,$mpdf);
-               
+                $this->mergePdf($filePath, $titleHtml, $mpdf);
             }
             $filePath1 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult2'];
             if (file_exists($filePath1) && @$projectDetail['leb1LaboratoryResult2']) {
-                $this->mergePdf($filePath1,null,$mpdf);
-               
+                $this->mergePdf($filePath1, null, $mpdf);
             }
             $filePath2 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult1'];
             if (file_exists($filePath2) && @$projectDetail['leb2LaboratoryResult1']) {
-                $this->mergePdf($filePath2,null,$mpdf);
-               
+                $this->mergePdf($filePath2, null, $mpdf);
             }
             $filePath3 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult2'];
             if (file_exists($filePath) && @$projectDetail['leb2LaboratoryResult2']) {
-                $this->mergePdf($filePath3,null,$mpdf);
-               
+                $this->mergePdf($filePath3, null, $mpdf);
+            }
+            $titleattach = '<h2 style="text-align:center">Appendix-5 Supporting Documents/plans from Ship</h2>';
+            $gaPlan =  public_path('images/projects') . "/" . $projectDetail['id'] . "/" . $projectDetail['ga_plan'];
+            if (file_exists($gaPlan) && @$projectDetail['ga_plan']) {
+
+                $this->mergePdf($gaPlan, $titleattach, $mpdf);
+            }
+            foreach ($attechments as $value) {
+                $filePath =  public_path('images/attachment') . "/" . $projectDetail['id'] . "/" . $value['documents'];
+                if (file_exists($filePath) && @$value['documents']) {
+                    $fileExtension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+
+                    if ($fileExtension === 'pdf') {
+                        // If it's a PDF, merge it
+                        $this->mergePdf($filePath, null, $mpdf);
+                    } elseif (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
+                        // If it's an image, convert to PDF and merge
+                        $this->mergeImageToPdf($filePath, $mpdf);
+                    }
+                }
+            }
+            $i = 0;
+            foreach ($check_has_hazmats as $checkvalue) {
+                $image = $checkvalue->image;
+                $titleHtml = '<h2 style="text-align:center">Appendix-6 Record of Document Analysis (MD & SDoc)</h2>';
+
+                if (@$image) {
+                    $i++;
+                    $imageValue = basename($checkvalue->image);
+                    $filePath =  public_path('images/hazmat') . "/" . $projectDetail['id'] . "/" . $imageValue;
+                   
+                    if (file_exists($filePath)) {
+                        if($i == 1){
+                            $this->mergePdf($filePath, $titleHtml, $mpdf);
+
+                        }else{
+                            $this->mergePdf($filePath,null, $mpdf);
+
+                        }
+                    }
+                }
+
+                $imageDoc = $checkvalue->doc;
+
+                if (@$imageDoc) {
+                    $imageDocValue = basename($checkvalue->imadocge);
+                    $filePathDoc =  public_path('images/hazmat') . "/" . $projectDetail['id'] . "/" . $imageDocValue;
+                    if (file_exists($filePathDoc)) {
+                        $this->mergePdf($filePath, null, $mpdf);
+                    }
+                }
+            }
+          
+
+            foreach($genralattechments as $value ){
+                $filePath=  public_path('images/attachment') . "/" . $projectDetail['id'] . "/" . $value['documents'];
+                if (file_exists($filePath)&& @$value['documents']){
+                    $fileExtension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+                    $titleHtml = '<h2 style="text-align:center">Appendix-7 '.$value['heading'].'</h2>';
+
+                    if ($fileExtension === 'pdf') {
+                        // If it's a PDF, merge it
+                        $this->mergePdf($filePath, $titleHtml, $mpdf);
+                    } elseif (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
+                        // If it's an image, convert to PDF and merge
+                        $this->mergeImageToPdf($filePath, $titleHtml,$mpdf);
+                    }
+
+                }
             }
             $mpdf->Output('project_report.pdf', 'I');
             // Output the PDF
@@ -277,7 +345,17 @@ class ReportContoller extends Controller
             echo $e->getMessage();
         }
     }
-    protected function mergePdf($filePath,$title,$mpdf){
+    protected function mergeImageToPdf($imagePath, $mpdf)
+    {
+        // Get the image dimensions
+        list($width, $height) = getimagesize($imagePath);
+
+        // Create a new PDF page and add the image
+        $mpdf->AddPage();
+        $mpdf->Image($imagePath, 0, 30, null, null, 'jpg', '', true, false);
+    }
+    protected function mergePdf($filePath, $title, $mpdf)
+    {
         $mpdf->setSourceFile($filePath);
 
         $pageCount = $mpdf->setSourceFile($filePath);
