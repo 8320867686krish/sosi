@@ -71,16 +71,49 @@
             </thead>
             <tbody>
                 @php
+                $ex = @$foundItems['Main engine']['component'];
+                $json_boiler = @$foundItems['Main engine']['make'];
+
+                @endphp
+                <tr>
+                    <td rowspan="{{(@$ex)?count($ex):1}}">Main engine<br />
+                        @foreach($json_boiler as $value)
+                        
+                        @if(@$value['model'])
+                        #{{$loop->iteration}}<br/>
+                        Make/Model : {{@$value['model']}}<br />
+                        @endif
+                        @if(@$value['model'])
+                        Manufacturer: {{@$value['manufacturer']}}<br />
+                        @endif
+                        @endforeach
+                    </td>
+                    <td>{{@$ex[0]}}</td>
+                </tr>
+                @if (!empty($ex))
+
+                @for($i = 1; $i < count($ex); $i++) <tr>
+                    <td>{{ $ex[$i] }}</td>
+                    </tr>
+                    @endfor
+                    @endif
+
+                    @php
                 $ex = @$foundItems['Diesel engine']['component'];
                 $json_boiler = @$foundItems['Diesel engine']['make'];
 
                 @endphp
                 <tr>
                     <td rowspan="{{(@$ex)?count($ex):1}}">Diesel engine<br />
-                        @foreach($json_boiler as $value)
-                        #{{$loop->iteration}}<br />
-                        Make/Model : {{@$value->model ?? ""}}<br />
-                        Manufacturer: {{@$value->manufacturer ?? ""}}<br />
+                    @foreach($json_boiler as $value)
+                        
+                        @if(@$value['model'])
+                        #{{$loop->iteration}}<br/>
+                        Make/Model : {{@$value['model']}}<br />
+                        @endif
+                        @if(@$value['model'])
+                        Manufacturer: {{@$value['manufacturer']}}<br />
+                        @endif
                         @endforeach
                     </td>
                     <td>{{@$ex[0]}}</td>
@@ -128,10 +161,15 @@
                 @endphp
                 <tr>
                     <td rowspan="{{count($ex_boiler)}}">Boiler<br />
-                        @foreach($json_boiler as $value)
-                        #{{$loop->iteration}}<br />
-                        Make/Model : {{@$value->model ?? ""}}<br />
-                        Manufacturer: {{@$value->manufacturer ?? ""}}<br />
+                    @foreach($json_boiler as $value)
+                        
+                        @if(@$value['model'])
+                        #{{$loop->iteration}}<br/>
+                        Make/Model : {{@$value['model']}}<br />
+                        @endif
+                        @if(@$value['model'])
+                        Manufacturer: {{@$value['manufacturer']}}<br />
+                        @endif
                         @endforeach
                     </td>
                     <td>{{@$ex_boiler[0]}}</td>
@@ -166,12 +204,16 @@
                         @endphp
                         <tr>
                             <td rowspan="{{count($ex_boiler)}}">Incinerator<br />
-                                @foreach($json_boiler as $value)
-                                #{{$loop->iteration}}<br />
-                                Make/Model : {{@$value->model ?? ""}}<br />
-                                Manufacturer: {{@$value->manufacturer ?? ""}}<br />
-                                @endforeach
-
+                            @foreach($json_boiler as $value)
+                        
+                        @if(@$value['model'])
+                        #{{$loop->iteration}}<br/>
+                        Make/Model : {{@$value['model']}}<br />
+                        @endif
+                        @if(@$value['model'])
+                        Manufacturer: {{@$value['manufacturer']}}<br />
+                        @endif
+                        @endforeach
                             <td>{{@$ex_boiler[0]}}</td>
                         </tr>
                         @if(@$ex_boiler)
@@ -188,11 +230,16 @@
                             @endphp
                             <tr>
                                 <td rowspan="{{count($ex_boiler)}}">Auxiliary machinery<br />
-                                    @foreach($json_boiler as $value)
-                                    #{{$loop->iteration}}<br />
-                                    Make/Model : {{@$value->model ?? ""}}<br />
-                                    Manufacturer: {{@$value->manufacturer ?? ""}}<br />
-                                    @endforeach
+                                @foreach($json_boiler as $value)
+                        
+                        @if(@$value['model'])
+                        #{{$loop->iteration}}<br/>
+                        Make/Model : {{@$value['model']}}<br />
+                        @endif
+                        @if(@$value['model'])
+                        Manufacturer: {{@$value['manufacturer']}}<br />
+                        @endif
+                        @endforeach
 
                                 <td>{{@$ex_boiler[0]}}</td>
                             </tr>
@@ -244,11 +291,16 @@
                                 @endphp
                                 <tr>
                                     <td rowspan="{{count($ex_boiler)}}">Inert gas system<br />
-                                        @foreach($json_boiler as $value)
-                                        #{{$loop->iteration}}<br />
-                                        Make/Model : {{@$value->model ?? ""}}<br />
-                                        Manufacturer: {{@$value->manufacturer ?? ""}}<br />
-                                        @endforeach
+                                    @foreach($json_boiler as $value)
+                        
+                        @if(@$value['model'])
+                        #{{$loop->iteration}}<br/>
+                        Make/Model : {{@$value['model']}}<br />
+                        @endif
+                        @if(@$value['model'])
+                        Manufacturer: {{@$value['manufacturer']}}<br />
+                        @endif
+                        @endforeach
 
                                     <td>{{@$ex_boiler[0]}}</td>
                                 </tr>
@@ -265,9 +317,14 @@
                                     <tr>
                                         <td rowspan="{{count($ex_boiler)}}">Air conditioning system<br />
                                         @foreach($json_boiler as $value)
-                        #{{$loop->iteration}}<br />
-                        Make/Model : {{@$value->model ?? ""}}<br />
-                        Manufacturer: {{@$value->manufacturer ?? ""}}<br />
+                        
+                        @if(@$value['model'])
+                        #{{$loop->iteration}}<br/>
+                        Make/Model : {{@$value['model']}}<br />
+                        @endif
+                        @if(@$value['model'])
+                        Manufacturer: {{@$value['manufacturer']}}<br />
+                        @endif
                         @endforeach
                                         <td>{{@$ex_boiler[0]}}</td>
                                     </tr>
@@ -410,9 +467,14 @@
                 <tr>
                     <td rowspan="{{count($ex_boiler)}}">Transformer<br />
                     @foreach($json_boiler as $value)
-                        #{{$loop->iteration}}<br />
-                        Make/Model : {{@$value->model ?? ""}}<br />
-                        Manufacturer: {{@$value->manufacturer ?? ""}}<br />
+                        
+                        @if(@$value['model'])
+                        #{{$loop->iteration}}<br/>
+                        Make/Model : {{@$value['model']}}<br />
+                        @endif
+                        @if(@$value['model'])
+                        Manufacturer: {{@$value['manufacturer']}}<br />
+                        @endif
                         @endforeach
                         Type : {{@$foundItems['Transformer']['type'] ?? ""}}<br />
 

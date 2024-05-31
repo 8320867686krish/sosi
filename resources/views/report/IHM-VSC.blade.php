@@ -121,17 +121,17 @@
             <p><b>5.Precautions for Heavy Metal Sampling:</b></p>
             <p>The following measures should be taken by researchers working with toxic metals:</p>
             <ul>
-            <li>Read the safety data sheet (SDS) for each toxic metal or metal compound before use.</li>
-            <li> Eliminate, and substitute fewer toxic chemicals or reduce the quantities of toxic metals being used if possible. </li>
-            <li>Work with toxic metals in a chemical fume hood, glove box, or with other types of local exhaust ventilation.</li>
-            <li>Wear personal protective equipment as indicated by safety data sheets.</li>
+                <li>Read the safety data sheet (SDS) for each toxic metal or metal compound before use.</li>
+                <li> Eliminate, and substitute fewer toxic chemicals or reduce the quantities of toxic metals being used if possible. </li>
+                <li>Work with toxic metals in a chemical fume hood, glove box, or with other types of local exhaust ventilation.</li>
+                <li>Wear personal protective equipment as indicated by safety data sheets.</li>
 
-            <li>Ensure containers are clearly labelled and inspect containers for leaks or damage before use.</li>
-            <li>Store toxic metals in tightly sealed containers away from incompatible materials.</li>
-            <li>Corrosive, toxic metals (e.g., mercury) should be stored below eye level.</li>
-            <li>Do not return contaminated or unused material to the original container.</li>
-            <li>Ensure that emergency eye wash/shower stations are readily available.</li>
-            <li>Ensure that all waste containers are compatible with toxic metals and that the containers are properly labelled and stored.</li>
+                <li>Ensure containers are clearly labelled and inspect containers for leaks or damage before use.</li>
+                <li>Store toxic metals in tightly sealed containers away from incompatible materials.</li>
+                <li>Corrosive, toxic metals (e.g., mercury) should be stored below eye level.</li>
+                <li>Do not return contaminated or unused material to the original container.</li>
+                <li>Ensure that emergency eye wash/shower stations are readily available.</li>
+                <li>Ensure that all waste containers are compatible with toxic metals and that the containers are properly labelled and stored.</li>
             </ul>
 
 
@@ -141,7 +141,7 @@
     </div>
     <div class="next section-1-1">
         <h3>4.2 Sampling Strategy</h3>
-        <br/>
+        <br />
         <table>
             <thead>
                 <tr>
@@ -152,11 +152,11 @@
             <tbody>
                 <tr>
                     <td>Vinyl, composite floor covering, surface covering</td>
-                    <td>One sample per room, or one sample per 40m2per product type or colour. In this vessel, it has been visually observed that all the floor tiles and covering are the same. Thus, the frequency of the sampling is reduced.</td>
+                    <td>One sample per room, or one sample per 40m2per product type or colour.</td>
                 </tr>
                 <tr>
                     <td>Texture Coating</td>
-                    <td>One composite sample per room or one sample per 9m2 dependent on the similarity of coating type. Where large expanses of the sample have been used throughout an area. The frequency of sampling may be decreased at the discretion of the surveyor</td>
+                    <td>Texture Coating One composite sample per room or one sample per 9m2 dependent on the similarity of coating type. Where large expanses of the sample have been used throughout an area. </td>
                 </tr>
                 <tr>
                     <td>Gasket, ropes, woven products,seals, mastics, Papers felt</td>
@@ -179,7 +179,7 @@
 
     </div>
     <div class=" section-1-1">
-        <h3>4.4	 Laboratory Analysis</h3>
+        <h3>4.4 Laboratory Analysis</h3>
         <p>Once the samples are collected & sorted, are to be sent to the ISO17025 or equally credited laboratory.laboratory name Certificate : see attachment . the test results are recorded see: <a href="#lebResult" style="cursor:pointer">attachment lab test results</a> </p>
         <h3><b>4.4.1 Threshold Values & Testing Standards</b></h3>
         <p>The below cumulative list is its threshold values and test standard to follow:</p>
@@ -195,218 +195,295 @@
             <tbody>
                 <tr>
                     <td rowspan="3">1.</td>
-                    <td  rowspan="3">Asbestos</td>
-                    <td  rowspan="3">0.10%</td>
-                    <td>MEPC. 379(80) 2023  Guidelines for the development of the Inventory of Hazardous Materials.</td>
+                    <td rowspan="3">Asbestos</td>
+                    <td rowspan="3">0.10%</td>
+                    <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
                 </tr>
                 <tr>
-                   
+
                     <td>NIOSH 9000:1994, asbestos, chrysotile by XRD</td>
                 </tr>
                 <tr>
-                   
-                   <td>ISO 22262-1:2012 Air quality -Bulk materials -Part 1: Sampling & qualitative determination of asbestos in commercial bulk materials..</td>
-               </tr>
 
-               <tr>
+                    <td>ISO 22262-1:2012 Air quality -Bulk materials -Part 1: Sampling & qualitative determination of asbestos in commercial bulk materials..</td>
+                </tr>
+
+                <tr>
                     <td rowspan="2">2.</td>
-                    <td  rowspan="2">Polychlorinated Biphenyls (PCBs)*</td>
-                    <td  rowspan="2">50mg/Kg</td>
+                    <td rowspan="2">Polychlorinated Biphenyls (PCBs)*</td>
+                    <td rowspan="2">50mg/Kg</td>
                     <td>MEPC. 379(80) 2023 Guidelines for the development of the IHM</td>
                 </tr>
                 <tr>
-                   
+
                     <td>EPA8082A Polychlorinated biphenyls (PCBs) by Gas Chromatography</td>
                 </tr>
 
                 <tr>
                     <td rowspan="2">3.</td>
-                    <td  rowspan="2">Ozone Depleting substances (ODS)</td>
-                    <td  rowspan="2">No threshold value</td>
+                    <td rowspan="2">Ozone Depleting substances (ODS)</td>
+                    <td rowspan="2">No threshold value</td>
                     <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
                 </tr>
                 <tr>
-                   
+
                     <td>EPA 8260C Volatile Organic Compounds by Gas chromatography/Mass Spectrometer (GC-MS)</td>
                 </tr>
 
                 <tr>
                     <td rowspan="6">4.</td>
-                    <td  rowspan="6">Anti-Fouling systems containing Organotin compounds as a biocide (TBT, TPT, TBTO)</td>
-                    <td  rowspan="6">2500 mg Total TIN /Kg</td>
+                    <td rowspan="6">Anti-Fouling systems containing Organotin compounds as a biocide (TBT, TPT, TBTO)</td>
+                    <td rowspan="6">2500 mg Total TIN /Kg</td>
                     <td>The International Convention on control of the harmful anti-fouling system on ships, 2001(AFS convention)</td>
                 </tr>
                 <tr>
-                   
+
                     <td>MEPC. 104(49) Guidelines of brief sampling of anti-fouling systems</td>
                 </tr>
                 <tr>
-                   
-                   <td>MEPC. 379(80) 2023 Guidelines for the development of the IHM</td>
-               </tr>
-               <tr>
-                   
-                   <td>ISO17353:2004 water quality determination of selected organotin compound gas chromatographic method</td>
-               </tr>
-               <tr>
-                   
-                   <td>ISO11885:2007 Water quality-determination of selected elements by inductively coupled plasma optical emission spectrometry (ICP-OES)</td>
-               </tr>
-               <tr>
-                   
-                   <td>GB/T 26085-2010 Test method & determination of total tin in anti-fouling paints of the ships.</td>
-               </tr>
-               <tr>
-                <td>5.</td>
-                <td>Cybutryne</td>
-                <td>1,000 mg/kg</td>
-                <td>As per resolution MEPC.356(78) (2022 Guidelines for brief sampling of anti-fouling systems on ships), adopted on 10 June 2022, using GC-MS.</td>
-               </tr>
-               <tr>
-                <td rowspan="3">6.</td>
-                <td rowspan="3">Cadmium & Cadmium compounds</td>
-                <td rowspan="3">100mg/Kg</td>
-                <td>MEPC. 379(80) 2023 Guidelines for the development of the IHM</td>
-               </tr>
-               <tr>
-                <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
-               </tr>
-               <tr>
-                <td>IEC62321-5:2013 Determination of certain substances in electro technical products- Part 5: Cadmium Lead & chromium in polymers & electronics and cadmium & lead in metals by AAS, AFS, ICP-OES, and ICP-MS</td>
-               </tr>
 
-               <tr>
-                <td rowspan="4">7.</td>
-                <td rowspan="4">Hexavalent Chromium & Hexavalent Chromium compounds</td>
-                <td rowspan="4">1000mg/Kg</td>
-                <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
-               </tr>
-               <tr>
-                <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
-               </tr>
-               <tr>
-                <td>IEC62321-7-1:2015 Electro technical products- Determination of levels of six regulated chromium-Presence of hexavalent chromium (Cr (IV)) in colour less and coloured corrosion-protected coatings on metals colorimetric methods</td>
-               </tr>
-               <tr>
-                <td>IEC62321-7-2:2017 Determination of certain substances in electro-chemical products- part 7-2: hexavalent chromium-determination of hexavalent chromium in polymers and electronics by colorimetric method</td>
-               </tr>
+                    <td>MEPC. 379(80) 2023 Guidelines for the development of the IHM</td>
+                </tr>
+                <tr>
 
-               <tr>
-                <td rowspan="3">8.</td>
-                <td rowspan="3">Lead and Lead compounds</td>
-                <td rowspan="3">1000mg/Kg</td>
-                <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
-               </tr>
-               <tr>
-                <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
-               </tr>
-               <tr>
-                <td>IEC62321-5:2013 Determination of certain substances in electro technical products-Part 5: Cadmium, Lead & chromium in polymers & electronics and cadmium & lead in metals by AAS, AFS, ICP-OES, and ICP-MS</td>
-               </tr>
-              
+                    <td>ISO17353:2004 water quality determination of selected organotin compound gas chromatographic method</td>
+                </tr>
+                <tr>
 
-               <tr>
-                <td rowspan="3">9.</td>
-                <td rowspan="3">Mercury and Mercury compounds</td>
-                <td rowspan="3">1000mg/Kg</td>
-                <td>MEPC. 379(80) 2023  Guidelines for the development of the Inventory of Hazardous Materials.</td>
-               </tr>
-               <tr>
-                <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
-               </tr>
-               <tr>
-                <td>IEC62321-4:2013 Determination of certain substances in electro technical products-part-4: Mercury in polymers, metals & electronics by CV-AAS, CV-AFS, ICP-OES, and ICP-MS</td>
-               </tr>
+                    <td>ISO11885:2007 Water quality-determination of selected elements by inductively coupled plasma optical emission spectrometry (ICP-OES)</td>
+                </tr>
+                <tr>
 
-               
+                    <td>GB/T 26085-2010 Test method & determination of total tin in anti-fouling paints of the ships.</td>
+                </tr>
+                <tr>
+                    <td>5.</td>
+                    <td>Cybutryne</td>
+                    <td>1,000 mg/kg</td>
+                    <td>As per resolution MEPC.356(78) (2022 Guidelines for brief sampling of anti-fouling systems on ships), adopted on 10 June 2022, using GC-MS.</td>
+                </tr>
+                <tr>
+                    <td rowspan="3">6.</td>
+                    <td rowspan="3">Cadmium & Cadmium compounds</td>
+                    <td rowspan="3">100mg/Kg</td>
+                    <td>MEPC. 379(80) 2023 Guidelines for the development of the IHM</td>
+                </tr>
+                <tr>
+                    <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
+                </tr>
+                <tr>
+                    <td>IEC62321-5:2013 Determination of certain substances in electro technical products- Part 5: Cadmium Lead & chromium in polymers & electronics and cadmium & lead in metals by AAS, AFS, ICP-OES, and ICP-MS</td>
+                </tr>
+
+                <tr>
+                    <td rowspan="4">7.</td>
+                    <td rowspan="4">Hexavalent Chromium & Hexavalent Chromium compounds</td>
+                    <td rowspan="4">1000mg/Kg</td>
+                    <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
+                </tr>
+                <tr>
+                    <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
+                </tr>
+                <tr>
+                    <td>IEC62321-7-1:2015 Electro technical products- Determination of levels of six regulated chromium-Presence of hexavalent chromium (Cr (IV)) in colour less and coloured corrosion-protected coatings on metals colorimetric methods</td>
+                </tr>
+                <tr>
+                    <td>IEC62321-7-2:2017 Determination of certain substances in electro-chemical products- part 7-2: hexavalent chromium-determination of hexavalent chromium in polymers and electronics by colorimetric method</td>
+                </tr>
+
+                <tr>
+                    <td rowspan="3">8.</td>
+                    <td rowspan="3">Lead and Lead compounds</td>
+                    <td rowspan="3">1000mg/Kg</td>
+                    <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
+                </tr>
+                <tr>
+                    <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
+                </tr>
+                <tr>
+                    <td>IEC62321-5:2013 Determination of certain substances in electro technical products-Part 5: Cadmium, Lead & chromium in polymers & electronics and cadmium & lead in metals by AAS, AFS, ICP-OES, and ICP-MS</td>
+                </tr>
 
 
-               <tr>
-                <td rowspan="3">10.</td>
-                <td rowspan="3">Per Fluoro Octane Sulfonic acid (PFOS) & its derivatives**</td>
-                <td rowspan="3">10mg/Kg</td>
-                <td>Per Fluoro Octane Sulfonic acid (PFOS) & its derivatives**.</td>
-               </tr>
-               <tr>
-                <td>ISO 25101 water Quality –Determination of Per Flouro Octane Sulfonic acid (PFOS) & Per Fluoro Octanoate (PFOA) - Methods of unfiltered samples using solid-phase extraction & liquid chromatography/Mass spectrometry</td>
-               </tr>
-               <tr>
-                <td>ICEN/TS15968 Determination of extractable Perflorooctane sulfonic acid (PFOS)in coat& impregnated solid articles, liquids& firefighting foam. Methods of sampling, extraction & analysis by LC-q M SorLC-tandem/MS</td>
-               </tr>
+                <tr>
+                    <td rowspan="3">9.</td>
+                    <td rowspan="3">Mercury and Mercury compounds</td>
+                    <td rowspan="3">1000mg/Kg</td>
+                    <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
+                </tr>
+                <tr>
+                    <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
+                </tr>
+                <tr>
+                    <td>IEC62321-4:2013 Determination of certain substances in electro technical products-part-4: Mercury in polymers, metals & electronics by CV-AAS, CV-AFS, ICP-OES, and ICP-MS</td>
+                </tr>
 
-               <tr>
-                <td rowspan="3">11.</td>
-                <td rowspan="3">Poly Brominated Biphenyl (PBBs)*</td>
-                <td rowspan="3">50mg/Kg</td>
-                <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
-               </tr>
-               <tr>
-                <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
-               </tr>
-               <tr>
-                <td>IEC62321-6:2015 Determination of certain substances in electro technical products- part-6: Poly Brominated biphenyl and Poly Brominated Diphenyl Ethers in polymers by gas chromatography-mass spectrometry</td>
-               </tr>
 
-               <tr>
-                <td rowspan="3">12.</td>
-                <td rowspan="3">Poly Brominated Diphenyl Ethers (PBDEs)*</td>
-                <td rowspan="3">1000mg/Kg</td>
-                <td>MEPC. 379(80) 2023  Guidelines for the development of the Inventory of Hazardous Materials.</td>
-               </tr>
-               <tr>
-                <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
-               </tr>
-               <tr>
-                <td>IEC62321-6:2015 Determination of certain substances in electro technical products- part-6: Poly Brominated biphenyl and Poly Brominated Diphenyl Ethers in polymers by gas chromatography-mass spectrometry</td>
-               </tr>
 
-               <tr>
-                <td rowspan="2">13.</td>
-                <td rowspan="2">Polychlorinated Naphthalenes (>3clatoms) (PCNs)*</td>
-                <td rowspan="2">50mg/Kg</td>
-                <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
-               </tr>
-               <tr>
-                <td>EPA8270D Semi volatile Organic Compounds by Gas chromatography/Mass Spectrometer (GC-MS)</td>
-               </tr>
 
-               <tr>
-                <td rowspan="2">14.</td>
-                <td rowspan="2">Certain short-chain chlorinated paraffin (Alkanes, C10-C13, chloro) (SCCP)*</td>
-                <td rowspan="2">1%</td>
-                <td>MEPC. 379(80) 2023  Guidelines for the development of the Inventory of Hazardous Materials.</td>
-               </tr>
-               <tr>
-                <td>EPA8270D Semi volatile Organic Compounds by Gas chromatography/Mass Spectrometer (GC-MS)</td>
-               </tr>
+                <tr>
+                    <td rowspan="3">10.</td>
+                    <td rowspan="3">Per Fluoro Octane Sulfonic acid (PFOS) & its derivatives**</td>
+                    <td rowspan="3">10mg/Kg</td>
+                    <td>Per Fluoro Octane Sulfonic acid (PFOS) & its derivatives**.</td>
+                </tr>
+                <tr>
+                    <td>ISO 25101 water Quality –Determination of Per Flouro Octane Sulfonic acid (PFOS) & Per Fluoro Octanoate (PFOA) - Methods of unfiltered samples using solid-phase extraction & liquid chromatography/Mass spectrometry</td>
+                </tr>
+                <tr>
+                    <td>ICEN/TS15968 Determination of extractable Perflorooctane sulfonic acid (PFOS)in coat& impregnated solid articles, liquids& firefighting foam. Methods of sampling, extraction & analysis by LC-q M SorLC-tandem/MS</td>
+                </tr>
 
-               <tr>
-                <td rowspan="2">15.</td>
-                <td rowspan="2">Brominated flame retardant (HBCDD)**</td>
-                <td rowspan="2">100mg/Kg</td>
-                <td>Regulation (EU)No.1257/2013</td>
-               </tr>
-               <tr>
-                <td>EPA8270D Semi volatile Organic Compounds by Gas chromatography/Mass Spectrometer (GC-MS)</td>
-               </tr>
+                <tr>
+                    <td rowspan="3">11.</td>
+                    <td rowspan="3">Poly Brominated Biphenyl (PBBs)*</td>
+                    <td rowspan="3">50mg/Kg</td>
+                    <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
+                </tr>
+                <tr>
+                    <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
+                </tr>
+                <tr>
+                    <td>IEC62321-6:2015 Determination of certain substances in electro technical products- part-6: Poly Brominated biphenyl and Poly Brominated Diphenyl Ethers in polymers by gas chromatography-mass spectrometry</td>
+                </tr>
 
-               <tr>
-                <td rowspan="3">16.</td>
-                <td rowspan="3">Radioactive substances</td>
-                <td rowspan="3">NO Threshold value</td>
-                <td>MEPC. 379(80) 2023  Guidelines for the development of the Inventory of Hazardous Materials.</td>
-               </tr>
-               <tr>
-                <td>Radiation protection and safety of radiation sources: International Basic Safety Standards (INTERIMEDITION)-General Safety Requirements Part-3</td>
-               </tr>
-               <tr>
-                <td>GB18871-2002 Basic Standards for protection against ionizing radiation and the safety of radiation sources</td>
-               </tr>
-              
+                <tr>
+                    <td rowspan="3">12.</td>
+                    <td rowspan="3">Poly Brominated Diphenyl Ethers (PBDEs)*</td>
+                    <td rowspan="3">1000mg/Kg</td>
+                    <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
+                </tr>
+                <tr>
+                    <td>IEC62321-3-1:2013 Screening-Lead, Mercury, Cadmium, total chromium & total Bromine by X-Ray fluorescence spectrometry</td>
+                </tr>
+                <tr>
+                    <td>IEC62321-6:2015 Determination of certain substances in electro technical products- part-6: Poly Brominated biphenyl and Poly Brominated Diphenyl Ethers in polymers by gas chromatography-mass spectrometry</td>
+                </tr>
+
+                <tr>
+                    <td rowspan="2">13.</td>
+                    <td rowspan="2">Polychlorinated Naphthalenes (>3clatoms) (PCNs)*</td>
+                    <td rowspan="2">50mg/Kg</td>
+                    <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
+                </tr>
+                <tr>
+                    <td>EPA8270D Semi volatile Organic Compounds by Gas chromatography/Mass Spectrometer (GC-MS)</td>
+                </tr>
+
+                <tr>
+                    <td rowspan="2">14.</td>
+                    <td rowspan="2">Certain short-chain chlorinated paraffin (Alkanes, C10-C13, chloro) (SCCP)*</td>
+                    <td rowspan="2">1%</td>
+                    <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
+                </tr>
+                <tr>
+                    <td>EPA8270D Semi volatile Organic Compounds by Gas chromatography/Mass Spectrometer (GC-MS)</td>
+                </tr>
+
+                <tr>
+                    <td rowspan="2">15.</td>
+                    <td rowspan="2">Brominated flame retardant (HBCDD)**</td>
+                    <td rowspan="2">100mg/Kg</td>
+                    <td>Regulation (EU)No.1257/2013</td>
+                </tr>
+                <tr>
+                    <td>EPA8270D Semi volatile Organic Compounds by Gas chromatography/Mass Spectrometer (GC-MS)</td>
+                </tr>
+
+                <tr>
+                    <td rowspan="3">16.</td>
+                    <td rowspan="3">Radioactive substances</td>
+                    <td rowspan="3">NO Threshold value</td>
+                    <td>MEPC. 379(80) 2023 Guidelines for the development of the Inventory of Hazardous Materials.</td>
+                </tr>
+                <tr>
+                    <td>Radiation protection and safety of radiation sources: International Basic Safety Standards (INTERIMEDITION)-General Safety Requirements Part-3</td>
+                </tr>
+                <tr>
+                    <td>GB18871-2002 Basic Standards for protection against ionizing radiation and the safety of radiation sources</td>
+                </tr>
+
             </tbody>
         </table>
         <p>*Persistent organic compounds (POPs) which come under the purview of IHM are: Polychlorinated Naphthalenes (PCN), Polychlorinated biphenyls (PCB), Hexa Bromo Cyclodo Decane (HBCDD), Certain short-chain chlorinated paraffin (Alkanes, C10-C13, chloro) (SCCP), Poly Brominated Diphenyl Ethers (PBDEs), Poly Brominated Biphenyl (PBBs), Per Fluoro octane Sulfonic acid (PFOS) & its derivatives (PFOS)</p>
 
         <p>**HBCDD & PFOS are listed in EUSRR, but not listed in HKC.</p>
+    </div>
+</div>
+<div class="next">
+    <h2>6.IHM Part-1 Maintenance and Record of Changes </h2>
+    <div class="section-1-1">
+        <p>ENVIRONMENTALLY SOUND RECYCLING OF SHIPS, 2009, SR/CONF/45 dated 19th May 2009, Regulation 5- inventory of Hazardous Materials, paragraph 3:</p>
+        <p>
+            Part I of the Inventory of Hazardous Materials shall be properly maintained and updated
+            throughout the operational life of the ship, reflecting new installations containing Hazardous Materials listed in Appendix 2 and relevant changes in ship structure and equipment, taking into account the guidelines developed by the Organization
+
+        </p>
+        <p>
+            Also, as per REGULATION (EU) No 1257/2013 OF THE EUROPEAN PARLIAMENT AND THE COUNCIL of 20 November 2013, Article 5 Inventory of hazardous materials, Paragraph 6:
+
+        </p>
+        <p>
+            "Part I of the inventory of hazardous materials shall be properly maintained and updated throughout the operational life of the ship, reflecting new installations containing any hazardous materials referred to in Annex II and relevant changes in the structure and equipment of the ship."
+
+        </p>
+        <p>
+            Once the IHM is prepared & certified, it should be maintained throughout the operation life of the ship. As per the guidelines to MEPC 379(80) & EMSA Guidelines:
+
+
+        </p>
+        <p>
+            Shipowners should implement the following measures in order to ensure the conformity of
+            part I of the Inventory:
+
+        </p>
+        <ul>
+            <li>to designate a person as responsible for maintaining and updating the Inventory (the designated person may be employed ashore or on board); </li>
+            <li>the designated person, should establish and supervise a system to ensure the necessary updating of the Inventory in the event of a new installation; </li>
+            <li>to maintain the Inventory including dates of changes or new deleted entries and the signature of the designated person; and </li>
+            <li>to provide related documents as required for the survey or sale of the ship.  </li>
+        </ul>
+        <p>
+        Note: Materials listed in Table A of Appendix-1 to the annex of MEPC.379.(80) & EMSA Guidelines, Asbestos being one of the materials, should be prohibited and shall not be used in any part of the machinery of the ship.
+        </p>
+        <p>Ship Owners/Managers are responsible for making sure to collect the Material Declaration (MD) and supplier’s Declaration of Conformity (SDoC) for respective particular HAZMAT  before any part/spare/item/machinery arrives onboard. </p>
+        <p>The Shipowner/managers shall do the record keeping of the same. For the purpose of identification of suspected HAMZATs, an Indicative list has been provided in the guidelines. </p>
+        <p>After the amendment of IHM Part-1 with this record, Ship owner/managers are advised to maintain a record of amendments& revision of the IHM part-1.</p>
+        <p>Below are the samples/examples of the MD & SDoC provided in the MEPC.379.(80) guidelines:</p>
+        <img src="{{asset('assets/images/materialDeclaration.jpg')}}"/>
+        <img src="{{asset('assets/images/supplaymentDeclaration.jpg')}}"/>
+    </div>
+</div>
+<div class="next">
+    <h4>Record of Changes:</h4>
+    <div class=" section-1-1">
+        <table>
+            <thead>
+                <tr>
+                    <th>Sr No.</th>
+                    <th>Date of Update</th>
+                    <th>Revision No.</th>
+                    <th>Location & Equipment details</th>
+                    <th>HazMat Key</th>
+                    <th>Changes Made by</th>
+                    <th>Document/Record Details</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for($i=1;$i<=19;$i++)
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                @endfor
+            </tbody>
+        </table>
     </div>
 </div>

@@ -82,7 +82,7 @@
 
         <div class="section-1-4 next">
             <h3> 1.4 Executive Summary</h3>
-            <p style="padding-bottom:25px">2. The onboard visual/sampling check was carried out at <b>{{$projectDetail['survey_location_name']}}</b> by IHM expert ({{$projectDetail['survey_location_name']}}) on <b>{{$projectDetail['survey_date']}}</b> as per the visual/sampling check plan. Sampling points on ship were marked/labeled with check point numbers same as mentioned on sampling bag . The collected samples were appropriate bagged/packed and sent to the <b>{{$projectDetail['laboratorie1']}}</b> for the analysis. Following is details number of sampling & visual checks carried out for the vessel:</p>
+            <p style="padding-bottom:25px">2. The onboard visual/sampling check was carried out at <b>{{$projectDetail['survey_location_name']}}</b> by IHM expert {{$projectDetail['surveyorName']}} on <b>{{$projectDetail['survey_date']}}</b> as per the visual/sampling check plan. Sampling points on ship were marked/labeled with check point numbers same as mentioned on sampling bag . The collected samples were appropriate bagged/packed and sent to the <b>{{$projectDetail['laboratorie1']}}</b> for the analysis. Following is details number of sampling & visual checks carried out for the vessel:</p>
 
             <table>
                 <thead>

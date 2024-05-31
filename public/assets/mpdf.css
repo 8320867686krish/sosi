@@ -197,4 +197,32 @@ th {
     text-align: center;
     opacity: 0.7;
 }
+.light-green {
+    background-color: #00F16C;
+    color:#fff;
+    line-height: 20px;
 
+}
+.highRisk{
+    background-color: #FFC000;
+    color: #000;
+    line-height: 20px;
+
+}
+.veryHigh{
+    background-color: #CC3300;
+    color:#fff;
+    line-height: 20px;
+
+}
+.modirateRisk{
+    background-color: #FFFF00;
+    color:#000;
+    line-height: 20px;
+
+}
+.critical{
+    background-color: #FF0000;
+    color: #fff;
+    line-height: 20px;
+}

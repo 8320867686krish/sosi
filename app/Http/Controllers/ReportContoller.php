@@ -248,6 +248,9 @@ class ReportContoller extends Controller
             $mpdf->AddPage('p');
             $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechments', 'ChecksList', 'foundItems')));
             $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail')));
+            $mpdf->AddPage('L');
+
+            $mpdf->WriteHTML(view('report.riskAssessments'));
 
 
             $titleHtml = '<h2 style="text-align:center" id="lebResult">Appendix-4 Leb Result</h2>';
