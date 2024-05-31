@@ -70,6 +70,55 @@
                                 @endfor
                             </div>
                             <div class="border-top">
+                                <h4 class="mt-3">Main engine</h4>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-12 mb-3">
+                                    <label>Component</label>
+                                    <select class="selectpicker show-tick form-control form-control-lg" name="material[Main engine][component][]" multiple data-actions-box="true" {{ $readonly }}>
+                                        <option value="Packing with piping flange" {{ isset($foundItems['Main engine']) && in_array("Packing with piping flange", $foundItems['Main engine']['component']) ? 'selected' : '' }}>Packing with piping flange</option>
+                                        <option value="Lagging material for fuel pipe" {{ isset($foundItems['Main engine']) && in_array("Lagging material for fuel pipe", $foundItems['Main engine']['component']) ? 'selected' : '' }}>Lagging material for fuel pipe</option>
+                                        <option value="Lagging material for exhaust pipe" {{ isset($foundItems['Main engine']) && in_array("Lagging material for exhaust pipe", $foundItems['Main engine']['component']) ? 'selected' : '' }}>Lagging material for exhaust pipe</option>
+                                        <option value="Lagging material turbocharger" {{ isset($foundItems['Main engine']) && in_array("Lagging material turbocharger", $foundItems['Main engine']['component']) ? 'selected' : '' }}>Lagging material turbocharger</option>
+                                    </select>
+                                </div>
+
+                                @php
+                                    $mainEngineIndex = 1;
+                                    $mainEngineMakes = isset($foundItems['Main engine']['make']) && is_array($foundItems['Main engine']['make']) ? $foundItems['Main engine']['make'] : [];
+                                @endphp
+
+                                @foreach ($mainEngineMakes as $mainEngineMake)
+                                    @if($mainEngineIndex > $minCount)
+                                        @break
+                                    @endif
+
+                                    <div class="form-group col-12 col-lg-6">
+                                        <label for="make">Make/Model {{$mainEngineIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Main engine][model][]" autocomplete="off" {{ $readonly }} value="{{ $mainEngineMake['model'] ?? '' }}">
+                                    </div>
+                                    <div class="form-group col-12 col-lg-6">
+                                        <label for="manufacturer">Manufacturer {{$mainEngineIndex}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Main engine][manufacturer][]" autocomplete="off" {{ $readonly }} value="{{ $mainEngineMake['manufacturer'] ?? '' }}">
+                                    </div>
+
+                                    @php
+                                        $mainEngineIndex++;
+                                    @endphp
+                                @endforeach
+
+                                @for($i = $mainEngineIndex; $i <= $minCount; $i++)
+                                    <div class="form-group col-12 col-lg-6">
+                                        <label for="make">Make/Model {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Main engine][model][]" autocomplete="off" {{ $readonly }} value="">
+                                    </div>
+                                    <div class="form-group col-12 col-lg-6">
+                                        <label for="manufacturer">Manufacturer {{$i}}</label>
+                                        <input type="text" class="form-control form-control-lg" name="material[Main engine][manufacturer][]" autocomplete="off" {{ $readonly }} value="">
+                                    </div>
+                                @endfor
+                            </div>
+                            <div class="border-top">
                                 <h4 class="mt-3">Diesel engine</h4>
                             </div>
                             <div class="row">
@@ -622,6 +671,7 @@
                                 @php
                                     $refrigerationData = json_decode(@$foundItems['Refrigeration System']['extraField'], true);
                                     $acData = json_decode(@$foundItems['Ac System']['extraField'], true);
+                                    $coldRoomData = json_decode(@$foundItems['Cold Room']['extraField'], true);
                                 @endphp
                                 <div class="form-group col-6 mb-4">
                                     <label>Name</label>
@@ -636,7 +686,7 @@
                                 <h4 class="mt-3">Ac System</h4>
                             </div>
                             <div class="row">
-                                <div class="col-12 col-lg-12">
+                                <div class="col-12 col-lg-6">
                                     <div class="form-group">
                                         <label>Name</label>
                                         <input type="text" name="ozoneDepleting[Ac System][name]" class="form-control form-control-lg" value="{{$acData['name'] ?? ''}}">
@@ -648,10 +698,21 @@
                                         <input type="text" name="ozoneDepleting[Ac System][model]" class="form-control form-control-lg" value="{{$acData['model'] ?? ''}}">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="border-top">
+                                <h4 class="mt-3">Cold Room</h4>
+                            </div>
+                            <div class="row">
                                 <div class="col-12 col-lg-6">
                                     <div class="form-group">
-                                        <label for="coldRoom">Cold Room</label>
-                                        <input type="text" name="ozoneDepleting[Ac System][coldroom]" class="form-control form-control-lg" value="{{$acData['coldroom'] ?? ''}}">
+                                        <label>Equipment/Location</label>
+                                        <input type="text" name="ozoneDepleting[Cold Room][equipment]" class="form-control form-control-lg" value="{{$coldRoomData['equipment'] ?? ''}}">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label>Material</label>
+                                        <input type="text" name="ozoneDepleting[Cold Room][material]" class="form-control form-control-lg" value="{{$coldRoomData['material'] ?? ''}}">
                                     </div>
                                 </div>
                                 @can('projects.edit')
