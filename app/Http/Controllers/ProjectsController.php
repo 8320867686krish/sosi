@@ -551,6 +551,10 @@ class ProjectsController extends Controller
             $unit = $request->input('unit');
             $number = $request->input('number');
             $total = $request->input('total');
+            $sampleWeight = $request->input('sample_weight');
+            $sampleArea = $request->input('sample_area');
+            $density = $request->input('density');
+            $affectedArea = $request->input('affected_area');
             $lab_remarks = $request->input('lab_remarks');
             $labid = $request->input('labid');
 
@@ -667,15 +671,19 @@ class ProjectsController extends Controller
                             "project_id" => $inputData['project_id'],
                             "check_id" => $data->id,
                             "hazmat_id" => $value,
-                            "type" => $IHM_type[$value],
-                            "unit" => $unit[$value],
-                            "number" => $number[$value],
-                            "total" => $total[$value],
-                            "lab_remarks" => $lab_remarks[$value]
+                            "type" => isset($IHM_type[$value]) ? $IHM_type[$value] : null,
+                            "unit" => isset($unit[$value]) ? $unit[$value] : null,
+                            "number" => isset($number[$value]) ? $number[$value] : null,
+                            "total" => isset($total[$value]) ? $total[$value] : null,
+                            "sample_weight" => isset($sampleWeight[$value]) ? $sampleWeight[$value] : null,
+                            "sample_area" => isset($sampleArea[$value]) ? $sampleArea[$value] : null,
+                            "density" => isset($density[$value]) ? $density[$value] : null,
+                            "affected_area" => isset($affectedArea[$value]) ? $affectedArea[$value] : null,
+                            "lab_remarks" => isset($lab_remarks[$value]) ? $lab_remarks[$value] : null,
                         ];
 
                         if ($IHM_type[$value] === "Contained" || $IHM_type[$value] === "PCHM") {
-                            $labResultData["IHM_part"] = $IHM_part[$value];
+                            $labResultData["IHM_part"] = isset($IHM_part[$value]) ? $IHM_part[$value] : null;
                         }
 
                         if (!empty($labid[$value])) {

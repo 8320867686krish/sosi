@@ -41,16 +41,38 @@
             </div>
             <div class="col-4">
                 <div class="form-group mb-3">
-                    <input type="text" class="form-control number" placeholder="Number..."
+                    <input type="number" class="form-control number" placeholder="Number..."
                            id="number_{{ $lab->hazmat_id }}" name="number[{{ $lab->hazmat_id }}]"
                            value="{{ $lab->number ?? '' }}">
                 </div>
             </div>
             <div class="col-4">
                 <div class="form-group mb-3">
-                    <input type="text" class="form-control total" placeholder="Total (KG.)"
-                           id="total_{{ $lab->hazmat_id }}" name="total[{{ $lab->hazmat_id }}]"
-                           value="{{ $lab->total ?? '' }}">
+                    <input type="text" class="form-control total" placeholder="Total (KG.)" id="total_{{ $lab->hazmat_id }}" name="total[{{ $lab->hazmat_id }}]" value="{{ $lab->total ?? '' }}">
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    {{-- <label for="total">Total (KG.)</label> --}}
+                    <input type="text" class="form-control weight" placeholder="Sample Weight" id="sample_weight_{{$lab->hazmat_id}}" name="sample_weight[{{$lab->hazmat_id}}]" value="{{ $lab->sample_weight ?? '' }}">
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    {{-- <label for="total">Total (KG.)</label> --}}
+                    <input type="text" class="form-control sarea" placeholder="Sampling Area" id="sample_area_{{$lab->hazmat_id}}" name="sample_area[{{$lab->hazmat_id}}]" value="{{ $lab->sample_area ?? '' }}">
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    {{-- <label for="total">Total (KG.)</label> --}}
+                    <input type="text" class="form-control density" placeholder="Density" id="density_{{$lab->hazmat_id}}" name="density[{{$lab->hazmat_id}}]" value="{{ $lab->density ?? '' }}">
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    {{-- <label for="total">Total (KG.)</label> --}}
+                    <input type="text" class="form-control affected" placeholder="Affected Area" id="affected_{{$lab->hazmat_id}}" name="affected_area[{{$lab->hazmat_id}}]" value="{{ $lab->affected_area ?? '' }}">
                 </div>
             </div>
             <div class="col-12 lab_remarks">

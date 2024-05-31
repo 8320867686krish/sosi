@@ -236,13 +236,37 @@
                     <div class="col-4">
                         <div class="form-group">
                             {{-- <label for="number">Number</label> --}}
-                            <input type="text" class="form-control number" placeholder="Number...">
+                            <input type="number" class="form-control number" placeholder="Number...">
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group mb-3">
                             {{-- <label for="total"> (KG.)</label> --}}
                             <input type="text" class="form-control total" placeholder="Total (KG.)">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            {{-- <label for="total">Total (KG.)</label> --}}
+                            <input type="text" class="form-control weight" placeholder="Sample Weight">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            {{-- <label for="total">Total (KG.)</label> --}}
+                            <input type="text" class="form-control sarea" placeholder="Sampling Area">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            {{-- <label for="total">Total (KG.)</label> --}}
+                            <input type="text" class="form-control density" placeholder="Density">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            {{-- <label for="total">Total (KG.)</label> --}}
+                            <input type="text" class="form-control affected" placeholder="Affected Area">
                         </div>
                     </div>
                     <div class="col-12 lab_remarks">
@@ -622,7 +646,7 @@
                 name: `unit[${selectedValue}]`
             });
 
-            clonedElement.find('input[type="text"].number').prop({
+            clonedElement.find('input[type="number"].number').prop({
                 id: `number_${selectedValue}`,
                 name: `number[${selectedValue}]`
             });
@@ -630,6 +654,26 @@
             clonedElement.find('input[type="text"].total').prop({
                 id: `total_${selectedValue}`,
                 name: `total[${selectedValue}]`
+            });
+
+            clonedElement.find('input[type="text"].weight').prop({
+                id: `sample_weight_${selectedValue}`,
+                name: `sample_weight[${selectedValue}]`
+            });
+
+            clonedElement.find('input[type="text"].sarea').prop({
+                id: `sample_area_${selectedValue}`,
+                name: `sample_area[${selectedValue}]`
+            });
+
+            clonedElement.find('input[type="text"].density').prop({
+                id: `density_${selectedValue}`,
+                name: `density[${selectedValue}]`
+            });
+
+            clonedElement.find('input[type="text"].affected').prop({
+                id: `affected_${selectedValue}`,
+                name: `affected_area[${selectedValue}]`
             });
 
             clonedElement.find('textarea.labRemarksTextarea').prop({

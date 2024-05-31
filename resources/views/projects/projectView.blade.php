@@ -642,8 +642,7 @@
                                     <div class="col-12 col-md-12 mb-3"
                                         style="background: #efeff6;border: 1px solid #efeff6;">
                                         <div class="pt-4">
-                                            <h5 class="text-center" background: #efeff6;border: 1px solid #efeff6;>Lab
-                                                Result</h5>
+                                            <h5 class="text-center" style="background: #efeff6;border: 1px solid #efeff6;">Lab Result</h5>
                                             <div class="mb-4 col-12" id="showLabResult">
 
                                             </div>
@@ -674,9 +673,9 @@
         </div>
 
         <div class="col-12" style="display: none;">
-            <div class="col-12 col-md-12 col-lg-12 cloneTableTypeDiv" id="cloneTableTypeDiv">
-                <label for="table_type" id="tableTypeLable" class="mr-5 tableTypeLable"></label>
-                <div class="row">
+            <div class="col-12 col-md-12 col-lg-12 cloneTableTypeDiv card" id="cloneTableTypeDiv">
+                <label for="table_type" id="tableTypeLable" class="mr-5 tableTypeLable mt-3 card-header"></label>
+                <div class="row card-body">
                     <div class="col-12 table_typecol">
                         <div class="form-group">
                             <select class="form-control table_type" id="table_type" name="table_type">
@@ -768,13 +767,37 @@
                     <div class="col-4">
                         <div class="form-group">
                             {{-- <label for="number">Number</label> --}}
-                            <input type="text" class="form-control number" placeholder="Number...">
+                            <input type="number" class="form-control number" placeholder="Number...">
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group">
                             {{-- <label for="total">Total (KG.)</label> --}}
                             <input type="text" class="form-control total" placeholder="Total (KG.)">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            {{-- <label for="total">Total (KG.)</label> --}}
+                            <input type="text" class="form-control weight" placeholder="Sample Weight">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            {{-- <label for="total">Total (KG.)</label> --}}
+                            <input type="text" class="form-control sarea" placeholder="Sampling Area">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            {{-- <label for="total">Total (KG.)</label> --}}
+                            <input type="text" class="form-control density" placeholder="Density">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            {{-- <label for="total">Total (KG.)</label> --}}
+                            <input type="text" class="form-control affected" placeholder="Affected Area">
                         </div>
                     </div>
                     <div class="col-12 lab_remarks">
@@ -876,9 +899,29 @@
                 name: `unit[${selectedValue}]`
             });
 
-            clonedElement.find('input[type="text"].number').prop({
+            clonedElement.find('input[type="number"].number').prop({
                 id: `number_${selectedValue}`,
                 name: `number[${selectedValue}]`
+            });
+
+            clonedElement.find('input[type="text"].weight').prop({
+                id: `sample_weight_${selectedValue}`,
+                name: `sample_weight[${selectedValue}]`
+            });
+
+            clonedElement.find('input[type="text"].sarea').prop({
+                id: `sample_area_${selectedValue}`,
+                name: `sample_area[${selectedValue}]`
+            });
+
+            clonedElement.find('input[type="text"].density').prop({
+                id: `density_${selectedValue}`,
+                name: `density[${selectedValue}]`
+            });
+
+            clonedElement.find('input[type="text"].affected').prop({
+                id: `affected_${selectedValue}`,
+                name: `affected_area[${selectedValue}]`
             });
 
             clonedElement.find('input[type="text"].total').prop({
@@ -1041,13 +1084,11 @@
                             }));
                         });
 
-                        const cloneTableTypeDiv = $(".cloneTableTypeDiv select.table_type").closest(
-                            ".cloneTableTypeDiv");
+                        const cloneTableTypeDiv = $(".cloneTableTypeDiv select.table_type").closest(".cloneTableTypeDiv");
 
                         cloneTableTypeDiv.find(`#equipmentDiv_${hazmat_id}`).closest('.equipment').show();
                         cloneTableTypeDiv.find(`#manufacturerDiv_${hazmat_id}`).closest('.manufacturer').show();
-                        cloneTableTypeDiv.find(`#modelMakePartDiv_${hazmat_id}`).closest('.modelMakePart')
-                            .show();
+                        cloneTableTypeDiv.find(`#modelMakePartDiv_${hazmat_id}`).closest('.modelMakePart').show();
                     }
                 },
             });
