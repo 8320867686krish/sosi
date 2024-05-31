@@ -21,6 +21,12 @@
         .invalid-feedback {
             font-size: 14px;
         }
+
+        .sa-button-container .cancel {
+            background-color: #004f47 !important; /* Green color for cancel button */
+            color: white !important;
+            border: none !important;
+        }
     </style>
     <link rel="icon" href="{{ asset('assets/images/favicon.png') }}" type="image/x-icon" />
 
