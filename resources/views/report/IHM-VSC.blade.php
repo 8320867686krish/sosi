@@ -3,7 +3,11 @@
     <h2>4.IHM-VSC Onboard Survey</h2>
     <div class="section-1-1">
         <p>After arrival onboard the vessel {{$projectDetail['ship_name']}} , a safety briefing was carried out with ship staff to explain the purpose and scope of the IHM survey explaining the various check points & location from where the visuals/samples must be taken along with safety precaution measures taken while taking samples and marking places as Potentially hazardous materials.</p>
-
+        @if(@$brifimage)
+        <div style="margin-top:20px">
+        <img src="{{$brifimage}}">
+        </div>
+        @endif
         <p>Our experts are trained and certified see attachment: IHM expert Certificate.</p>
 
         <p>Adequate safety measures were taken to prevent the spreading of materials, cross-contamination, or the spreading of fibres. At all times these measures are designed to prevent exposure to hazardous materials of workers, our team members, and/or others onboard. The onboard sampling was carried out as per the visual and sampling plan, the equipment, system, and the area selected for sampling were marked in the ship's plan and photographs are recorded.</p>
@@ -411,6 +415,39 @@
     </div>
 </div>
 <div class="next">
+    <div class="section-1-1">
+        <h2>5.Conclusion & Further Recommendations</h2>
+        <p>With the Document Analysis and Laboratory of the samples taken from the vessel, following is the summary of the final contained items:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Sr No</th>
+                    <th>Check Point Name</th>
+                    <th>Sample/Visal</th>
+                    <th>HazMat</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                @foreach( $lebResultAll as $value)
+                    <tr>
+                        <td>{{$loop->iteration}}</td>
+                        <td>{{$value['check']['name']}}</td>
+                        <td>{{$value['type']}}</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">Quantity calculation</td>
+                       
+                    </tr>
+                    
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="next">
     <h2>6.IHM Part-1 Maintenance and Record of Changes </h2>
     <div class="section-1-1">
         <p>ENVIRONMENTALLY SOUND RECYCLING OF SHIPS, 2009, SR/CONF/45 dated 19th May 2009, Regulation 5- inventory of Hazardous Materials, paragraph 3:</p>
@@ -444,7 +481,7 @@
             <li>to provide related documents as required for the survey or sale of the ship.  </li>
         </ul>
         <p>
-        Note: Materials listed in Table A of Appendix-1 to the annex of MEPC.379.(80) & EMSA Guidelines, Asbestos being one of the materials, should be prohibited and shall not be used in any part of the machinery of the ship.
+        Note: Materials listed in Table A of Appendix-1 to the annex of MEPC.379.(80) & EMSA Guidelines.
         </p>
         <p>Ship Owners/Managers are responsible for making sure to collect the Material Declaration (MD) and supplier’s Declaration of Conformity (SDoC) for respective particular HAZMAT  before any part/spare/item/machinery arrives onboard. </p>
         <p>The Shipowner/managers shall do the record keeping of the same. For the purpose of identification of suspected HAMZATs, an Indicative list has been provided in the guidelines. </p>

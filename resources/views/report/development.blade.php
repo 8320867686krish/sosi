@@ -4,8 +4,8 @@
     <h3>3.1 Collection of Necessary Information</h3>
     <p>After receiving the request from the <b>{{$projectDetail['client']['name']}}</b> team SOSI requested and receive the following documents & plans from the ship :</p>
     <ul>
-        @if(count($attechments)>0)
-        @foreach($attechments as $value)
+        @if(count($attechmentsResult)>0)
+        @foreach($attechmentsResult as $value)
         <li>{{$loop->iteration}}. {{$value->heading}}</li>
         @endforeach
         @else
