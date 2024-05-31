@@ -23,7 +23,7 @@
                     <td>Catastrophic (5)</td>
                 </tr>
                 <tr>
-                    <td colspan="5">Effect @ Community</td>
+                    <td colspan="5">Effect @ Community </td>
                 </tr>
                 <tr>
                     <td>Slight <br />damage(1)</td>
@@ -68,7 +68,7 @@
                     <td rowspan="2">Ship @Risk</td>
                     <td>Likely (4)</td>
                     <td class="modirateRisk">MODERATE RISK (4)</td>
-                    <td class="modirateRisk">MODERATERISK (8)</td>
+                    <td class="modirateRisk">MODERATE RISK (8)</td>
                     <td class="highRisk">HIGHRISK (12)</td>
                     <td class="veryHigh">VERY HIGH RISK (16)</td>
                     <td class="critical">CRITICAL RISK(20)</td>
@@ -86,8 +86,8 @@
                     <td rowspan="2">People @Risk</td>
                     <td>Unlikely (2)</td>
                     <td class="light-green">LOWRISK (2)</td>
-                    <td class="modirateRisk">MODERATERISK (4)</td>
-                    <td class="modirateRisk">MODERATERISK (6)</td>
+                    <td class="modirateRisk">MODERATE RISK (4)</td>
+                    <td class="modirateRisk">MODERATE RISK (6)</td>
                     <td class="highRisk">HIGHRISK (8)</td>
                     <td class="highRisk">HIGHRISK (10)</td>
                 </tr>
@@ -95,8 +95,8 @@
                     <td>Rare(1)</td>
                     <td class="light-green">LOWRISK (1)</td>
                     <td class="light-green">LOWRISK (2)</td>
-                    <td class="modirateRisk">MODERATERISK (3)</td>
-                    <td class="modirateRisk">MODERATERISK (4)</td>
+                    <td class="modirateRisk">MODERATE RISK (3)</td>
+                    <td class="modirateRisk">MODERATE RISK (4)</td>
                     <td class="highRisk">HIGHRISK (5)</td>
                 </tr>
 
