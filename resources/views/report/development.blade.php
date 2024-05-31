@@ -72,13 +72,16 @@
             <tbody>
                 @php
                 $ex = @$foundItems['Diesel engine']['component'];
-                $json = @$foundItems['Diesel engine']['make'];
+                $json_boiler = @$foundItems['Diesel engine']['make'];
 
                 @endphp
                 <tr>
                     <td rowspan="{{(@$ex)?count($ex):1}}">Diesel engine<br />
-                        Make/Model : {{@$json[0]['model'] ?? ""}}<br />
-                        Manufacturer: {{@$json[0]['manufacturer'] ?? ""    }}
+                        @foreach($json_boiler as $value)
+                        #{{$loop->iteration}}<br />
+                        Make/Model : {{@$value->model ?? ""}}<br />
+                        Manufacturer: {{@$value->manufacturer ?? ""}}<br />
+                        @endforeach
                     </td>
                     <td>{{@$ex[0]}}</td>
                 </tr>
@@ -120,7 +123,7 @@
                 @php
                 $ex_boiler = @$foundItems['Boiler']['component'] ?? [];
                 $json_boiler = @$foundItems['Boiler']['make'] ?? [];
-              
+
 
                 @endphp
                 <tr>
@@ -163,8 +166,11 @@
                         @endphp
                         <tr>
                             <td rowspan="{{count($ex_boiler)}}">Incinerator<br />
-                                Make/Model : {{@$json[0]['model'] ?? ""}}<br />
-                                Manufacturer: {{@$json[0]['manufacturer'] ?? ""    }}
+                                @foreach($json_boiler as $value)
+                                #{{$loop->iteration}}<br />
+                                Make/Model : {{@$value->model ?? ""}}<br />
+                                Manufacturer: {{@$value->manufacturer ?? ""}}<br />
+                                @endforeach
 
                             <td>{{@$ex_boiler[0]}}</td>
                         </tr>
@@ -238,8 +244,11 @@
                                 @endphp
                                 <tr>
                                     <td rowspan="{{count($ex_boiler)}}">Inert gas system<br />
-                                        Make/Model : {{@$json[0]['model'] ?? ""}}<br />
-                                        Manufacturer: {{@$json[0]['manufacturer'] ?? ""    }}
+                                        @foreach($json_boiler as $value)
+                                        #{{$loop->iteration}}<br />
+                                        Make/Model : {{@$value->model ?? ""}}<br />
+                                        Manufacturer: {{@$value->manufacturer ?? ""}}<br />
+                                        @endforeach
 
                                     <td>{{@$ex_boiler[0]}}</td>
                                 </tr>
@@ -255,9 +264,11 @@
                                     @endphp
                                     <tr>
                                         <td rowspan="{{count($ex_boiler)}}">Air conditioning system<br />
-                                            Make/Model : {{@$json[0]['model'] ?? ""}}<br />
-                                            Manufacturer: {{@$json[0]['manufacturer'] ?? ""    }}
-
+                                        @foreach($json_boiler as $value)
+                        #{{$loop->iteration}}<br />
+                        Make/Model : {{@$value->model ?? ""}}<br />
+                        Manufacturer: {{@$value->manufacturer ?? ""}}<br />
+                        @endforeach
                                         <td>{{@$ex_boiler[0]}}</td>
                                     </tr>
                                     @if(@$ex_boiler)
@@ -398,9 +409,12 @@
                 @endphp
                 <tr>
                     <td rowspan="{{count($ex_boiler)}}">Transformer<br />
-                        Make/Model : {{@$json[0]['model'] ?? ""}}<br />
+                    @foreach($json_boiler as $value)
+                        #{{$loop->iteration}}<br />
+                        Make/Model : {{@$value->model ?? ""}}<br />
+                        Manufacturer: {{@$value->manufacturer ?? ""}}<br />
+                        @endforeach
                         Type : {{@$foundItems['Transformer']['type'] ?? ""}}<br />
-                        Manufacturer: {{@$json[0]['manufacturer'] ?? ""    }}
 
                     <td>{{@$ex_boiler[0]}}</td>
                 </tr>
@@ -450,7 +464,7 @@
                     @endif
 
 
-                   
+
 
 
 
@@ -470,15 +484,15 @@
             <tbody>
                 @php
                 $dtaa=json_decode(@$foundItems['Refrigeration System']['extraField'],true);
-             
+
                 @endphp
                 @if(@$dtaa)
                 <tr>
                     <td>Refrigeration System</td>
-                   
-                        <td>{{ $dtaa['name'] }}</td>
-                        <td>{{ $dtaa['model'] }}</td>
-                 
+
+                    <td>{{ $dtaa['name'] }}</td>
+                    <td>{{ $dtaa['model'] }}</td>
+
                 </tr>
                 @else
                 <tr>
@@ -505,7 +519,39 @@
                 @endif
             </tbody>
         </table>
-<br/><br/><br/>
+        <br/>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Equipment/Location</th>
+                    <th>Material</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                $dtaa=json_decode(@$foundItems['Cold Room']['extraField'],true);
+
+                @endphp
+                @if(@$dtaa)
+                <tr>
+                    <td>Cold Room</td>
+
+                    <td>{{ $dtaa['equipment'] }}</td>
+                    <td>{{ $dtaa['material'] }}</td>
+
+                </tr>
+                @else
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                @endif
+              
+            </tbody>
+        </table>
+        <br /><br /><br />
         <table>
             <thead>
                 <tr>
