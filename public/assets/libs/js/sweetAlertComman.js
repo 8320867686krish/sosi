@@ -3,6 +3,7 @@ function successMsgWithRedirect(message, redirectURL) {
         title: "Success",
         text: message,
         type: "success",
+        confirmButtonColor: '#3085d6',
         timer: 5000
     }, function () {
         redirectPage(redirectURL);
@@ -14,6 +15,7 @@ function errorMsgWithRedirect(message, redirectURL) {
         title: "Error",
         text: message,
         type: "error",
+        confirmButtonColor: '#3085d6',
         timer: 5000
     }, function () {
         redirectPage(redirectURL);
@@ -29,6 +31,7 @@ function successMsg(message) {
         title: "Success",
         text: message,
         type: "success",
+        confirmButtonColor: '#3085d6',
         timer: 5000
     });
 }
@@ -38,18 +41,21 @@ function errorMsg(message, title = "Error") {
         title: title,
         text: message,
         type: "error",
+        confirmButtonColor: '#3085d6',
         timer: 5000
     });
 }
-
+// 004f47
 function confirmDelete(deleteUrl, confirmMsg, successCallback, errorCallback) {
     swal({
         title: "Are you sure?",
         text: confirmMsg,
         type: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
+        confirmButtonColor: "#FD2900",
+        cancelButtonColor: "#004f47",
         confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Cancel",
         closeOnConfirm: false
     }, function (isConfirm) {
         if (isConfirm) {
@@ -86,8 +92,10 @@ function confirmDeleteWithElseIf(deleteUrl, confirmMsg, successCallback, errorCa
         text: confirmMsg,
         type: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
+        confirmButtonColor: "#FD2900",
+        cancelButtonColor: "#004f47",
         confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Cancel",
         closeOnConfirm: false
     }, function (isConfirm) {
         if (isConfirm) {
