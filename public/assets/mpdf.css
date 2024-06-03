@@ -120,7 +120,6 @@ body {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
-
 }
 
 .section-1-3 table td,
@@ -143,14 +142,7 @@ th {
     padding: 5px;
 }
 
-.section-1-1 table td {
-    border: 1px solid black;
-    /* Adds border to each cell */
-    padding: 4px;
-    /* Adds padding to cells */
-    font-size: 14px;
-    padding: 5px;
-}
+
 
 
 }
@@ -164,6 +156,7 @@ th {
     text-align: left;
     /* Aligns text to the left */
     font-size: 14px;
+    /* page-break-inside: avoid; */
 }
 
 .section-1-4 table th {
