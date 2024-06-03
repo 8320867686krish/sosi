@@ -269,6 +269,8 @@ class SyncProjectController extends Controller
             $projectUpdateData['survey_location_address'] = $projectData['survey_location_address'];
             $projectUpdateData['survey_type'] = $projectData['survey_type'];
             $projectUpdateData['survey_date'] = $projectData['survey_date'];
+            $projectUpdateData['surveyorName'] = $projectData['surveyorName'];
+
             Projects::where('id', $projectId)->update($projectUpdateData);
         }
 
