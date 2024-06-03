@@ -225,7 +225,7 @@ class ReportContoller extends Controller
 
 
             // Load main HTML content
-
+            $mpdf->shrink_tables_to_fit = 1;
             $mpdf->h2toc = ['H2' => 0, 'H3' => 1];
             $mpdf->h2bookmarks = ['H2' => 0, 'H3' => 1];
             // Set header and footer
@@ -341,7 +341,7 @@ class ReportContoller extends Controller
                 }
             }
             else if($reportType == 'IHM Gap Analysis'){
-                $mpdf->WriteHTML(view('report.gapAnaylisis', compact('projectDetail')));
+                $mpdf->WriteHTML(view('report.gapAnaylisis', compact('projectDetail','hazmets')));
             }
 
 
