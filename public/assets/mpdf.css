@@ -226,3 +226,12 @@ th {
     color: #fff;
     line-height: 20px;
 }
+.unit-column {
+    width: 20%;
+}
+.value-column {
+    width: 60%;
+}
+.density-column {
+    width: 40%;
+}

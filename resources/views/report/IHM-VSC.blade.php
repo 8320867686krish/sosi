@@ -5,7 +5,7 @@
         <p>After arrival onboard the vessel {{$projectDetail['ship_name']}} , a safety briefing was carried out with ship staff to explain the purpose and scope of the IHM survey explaining the various check points & location from where the visuals/samples must be taken along with safety precaution measures taken while taking samples and marking places as Potentially hazardous materials.</p>
         @if(@$brifimage)
         <div style="margin-top:20px">
-        <img src="{{$brifimage}}">
+            <img src="{{$brifimage}}">
         </div>
         @endif
         <p>Our experts are trained and certified see attachment: IHM expert Certificate.</p>
@@ -418,33 +418,73 @@
     <div class="section-1-1">
         <h2>5.Conclusion & Further Recommendations</h2>
         <p>With the Document Analysis and Laboratory of the samples taken from the vessel, following is the summary of the final contained items:</p>
+        @foreach( $lebResultAll as $value)
 
         <table>
             <thead>
                 <tr>
-                    <th>Sr No</th>
+                    <th width="25%">Sr No</th>
                     <th>Check Point Name</th>
                     <th>Sample/Visal</th>
                     <th>HazMat</th>
-                    
                 </tr>
             </thead>
             <tbody>
-                @foreach( $lebResultAll as $value)
-                    <tr>
-                        <td>{{$loop->iteration}}</td>
-                        <td>{{$value['check']['name']}}</td>
-                        <td>{{$value['type']}}</td>
-                        <td>1</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4">Quantity calculation</td>
-                       
-                    </tr>
+                <tr>
+                    <td>{{$loop->iteration}}</td>
+                    <td>{{$value['check']['name']}}</td>
+                    <td>{{$value['check']['type']}}</td>
+                    <td>{{$value['hazmat']['short_name']}}</td>
+                </tr>
+                <tr>
+                    <td colspan="4" align="center"><b>Quantity Estimations</b></td>
+                </tr>
+                <tr>
+                    <td><b>Unit</b></td>
+                    <td colspan="3">{{$value['unit']}}</td>
+                
+                </tr>
+                <tr>
+                    <td><b>Number</b></td>
+                    <td colspan="3">{{$value['number']}}</td>
                     
-                @endforeach
+                </tr>
+                <tr>
+                    <td><b>Total</b></td>
+                    <td colspan="3">{{$value['Total']}}</td>
+                   
+        
+                </tr>
+                <tr>
+                    <td><b>Sample Weight</b></td>
+                    <td colspan="3">{{$value['sample_weight']}}</td>
+                    
+                </tr>
+                <tr>
+                    <td><b>Sample Area</b></td>
+                    <td colspan="3">{{$value['sample_area']}}</td>
+              
+                </tr>
+                <tr>
+                    <td><b>Density</b></td>
+                    <td colspan="3">{{$value['density']}}</td>
+                   
+                </tr>
+                <tr>
+                    <td><b>Affected Area</b></td>
+                    <td colspan="3">{{$value['affected_area']}}</td>
+                   
+                </tr>
+              
+                <tr>
+                    <td><b>Remarks:</b></td>
+
+                    <td colspan="3">{{$value['lab_remarks']}}</td>
+                </tr>
             </tbody>
         </table>
+        <br />
+        @endforeach
     </div>
 </div>
 <div class="next">
@@ -478,17 +518,17 @@
             <li>to designate a person as responsible for maintaining and updating the Inventory (the designated person may be employed ashore or on board); </li>
             <li>the designated person, should establish and supervise a system to ensure the necessary updating of the Inventory in the event of a new installation; </li>
             <li>to maintain the Inventory including dates of changes or new deleted entries and the signature of the designated person; and </li>
-            <li>to provide related documents as required for the survey or sale of the ship.  </li>
+            <li>to provide related documents as required for the survey or sale of the ship. </li>
         </ul>
         <p>
-        Note: Materials listed in Table A of Appendix-1 to the annex of MEPC.379.(80) & EMSA Guidelines.
+            Note: Materials listed in Table A of Appendix-1 to the annex of MEPC.379.(80) & EMSA Guidelines.
         </p>
-        <p>Ship Owners/Managers are responsible for making sure to collect the Material Declaration (MD) and supplier’s Declaration of Conformity (SDoC) for respective particular HAZMAT  before any part/spare/item/machinery arrives onboard. </p>
+        <p>Ship Owners/Managers are responsible for making sure to collect the Material Declaration (MD) and supplier’s Declaration of Conformity (SDoC) for respective particular HAZMAT before any part/spare/item/machinery arrives onboard. </p>
         <p>The Shipowner/managers shall do the record keeping of the same. For the purpose of identification of suspected HAMZATs, an Indicative list has been provided in the guidelines. </p>
         <p>After the amendment of IHM Part-1 with this record, Ship owner/managers are advised to maintain a record of amendments& revision of the IHM part-1.</p>
         <p>Below are the samples/examples of the MD & SDoC provided in the MEPC.379.(80) guidelines:</p>
-        <img src="{{asset('assets/images/materialDeclaration.jpg')}}"/>
-        <img src="{{asset('assets/images/supplaymentDeclaration.jpg')}}"/>
+        <img src="{{asset('assets/images/materialDeclaration.jpg')}}" />
+        <img src="{{asset('assets/images/supplaymentDeclaration.jpg')}}" />
     </div>
 </div>
 <div class="next">
@@ -508,8 +548,7 @@
                 </tr>
             </thead>
             <tbody>
-                @for($i=1;$i<=19;$i++)
-                <tr>
+                @for($i=1;$i<=19;$i++) <tr>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -518,8 +557,8 @@
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                </tr>
-                @endfor
+                    </tr>
+                    @endfor
             </tbody>
         </table>
     </div>

@@ -70,16 +70,16 @@ class ReportContoller extends Controller
     public function genratePdf(Request $request)
     {
 
-        $post =$request->input();
+        $post = $request->input();
         $project_id = $post['project_id'];
         $version = $post['version'];
-        $date = date('d-m-Y',strtotime($post['date']));
+        $date = date('d-m-Y', strtotime($post['date']));
 
         $projectDetail = Projects::with('client')->find($project_id);
         if (!$projectDetail) {
             die('Project details not found');
         }
-
+        $reportType =  $projectDetail['ihm_table'];
         $imageData = file_get_contents($projectDetail['image']);
         $report_materials = ReportMaterial::where('project_id', $project_id)->get()->toArray();
         $foundItems = [];
@@ -98,49 +98,50 @@ class ReportContoller extends Controller
                 $query->where('type', 'PCHM')->orWhere('type', 'Contained');
             });
         }])->where('project_id', $project_id)->get();
-        $html = '';
-        $html .= "<h3>Location Diagram</h3>";
-        foreach ($decks as $deck) {
-            // Convert the image to base64
-            $imagePath = $deck['image'];
-            $imageData = base64_encode(file_get_contents($imagePath));
-            $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
+        if ($reportType == 'IHM Part 1') {
+            $html = '';
+            $html .= "<h3>Location Diagram</h3>";
+            foreach ($decks as $deck) {
+                // Convert the image to base64
+                $imagePath = $deck['image'];
+                $imageData = base64_encode(file_get_contents($imagePath));
+                $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
 
-            // Main container
-            $html .= '<div style="position: relative;">';
-            if (count($deck['checks']) > 0) {
-                // Background image using base64
-                $html .= '<img src="' . $imageBase64 . '" />';
+                // Main container
+                $html .= '<div style="position: relative;">';
+                if (count($deck['checks']) > 0) {
+                    // Background image using base64
+                    $html .= '<img src="' . $imageBase64 . '" />';
 
-                // Container for checks
-                $html .= '<div id="showDeckCheck" style="">';
+                    // Container for checks
+                    $html .= '<div id="showDeckCheck" style="">';
 
-                if (!empty($deck['checks'])) {
-                    foreach ($deck['checks'] as $key => $value) {
-                        $top = $value->position_top - ($value->isApp == 1 ? 20 : 0);
-                        $left = $value->position_left - ($value->isApp == 1 ? 20 : 0);
+                    if (!empty($deck['checks'])) {
+                        foreach ($deck['checks'] as $key => $value) {
+                            $top = $value->position_top - ($value->isApp == 1 ? 20 : 0);
+                            $left = $value->position_left - ($value->isApp == 1 ? 20 : 0);
 
-                        // Position the dot using fixed units
-                        $html .= '<div class="dot" style="position: absolute; top: ' . $top . 'px; left: ' . $left . 'px; width: 20px; height: 20px; border: 2px solid red; background: red;border-radious:50;  text-align: center; line-height: 5mm;">';
-                        $html .= '<div class="tooltip" style="display: block; position: absolute; top: -20px; left: 20px; background-color: #fff; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">' . $value['name'] . '</div>';
+                            // Position the dot using fixed units
+                            $html .= '<div class="dot" style="position: absolute; top: ' . $top . 'px; left: ' . $left . 'px; width: 20px; height: 20px; border: 2px solid red; background: red;border-radious:50;  text-align: center; line-height: 5mm;">';
+                            $html .= '<div class="tooltip" style="display: block; position: absolute; top: -20px; left: 20px; background-color: #fff; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">' . $value['name'] . '</div>';
 
-                        $html .= '</div>';
+                            $html .= '</div>';
+                        }
                     }
+
+                    // Close containers
+                    $html .= '</div>';
+                    $html .= '</div>';
                 }
-
-                // Close containers
-                $html .= '</div>';
-                $html .= '</div>';
             }
+
+            $dompdf->loadHtml($html);
+
+            $dompdf->render();
+            $coverPdfContent = $dompdf->output();
+            $filePath = storage_path('app/pdf/rr.pdf');
+            file_put_contents($filePath, $coverPdfContent);
         }
-
-        $dompdf->loadHtml($html);
-
-        $dompdf->render();
-        $coverPdfContent = $dompdf->output();
-        $filePath = storage_path('app/pdf/rr.pdf');
-        file_put_contents($filePath, $coverPdfContent);
-        $this->savePdf($html, 'hh.pdf');
 
         $logo = 'https://sosindi.com/IHM/public/assets/images/logo.png';
         $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
@@ -157,15 +158,13 @@ class ReportContoller extends Controller
 
         $lebResult = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
         $lebResultAll = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->get();
-        $attechments = Attechments::where('project_id', $project_id)->where('attachment_type','!=','shipBrifPlan')->get();
-        $brifPlan = Attechments::where('project_id', $project_id)->where('attachment_type','=','shipBrifPlan')->first();
-        if(@$brifPlan['documents']){
-            $brifimage = public_path('images/attachment')."/".$projectDetail['id']."/".$brifPlan['documents'];
-
-        }else{
+        $attechments = Attechments::where('project_id', $project_id)->where('attachment_type', '!=', 'shipBrifPlan')->get();
+        $brifPlan = Attechments::where('project_id', $project_id)->where('attachment_type', '=', 'shipBrifPlan')->first();
+        if (@$brifPlan['documents']) {
+            $brifimage = public_path('images/attachment') . "/" . $projectDetail['id'] . "/" . $brifPlan['documents'];
+        } else {
             $brifimage = '';
-        }
-   ;
+        };
         $attechmentsResult = $attechments->filter(function ($item) {
             return $item->attachment_type == 'shipPlan';
         });
@@ -208,7 +207,7 @@ class ReportContoller extends Controller
                 <tr>
                     <td width="10%"><img src="' . $logo . '" width="50" /></td>
                     <td width="80%" align="center">' . $projectDetail['ship_name'] . '</td>
-                    <td width="10%" style="text-align: right;">'.$date.'</td>
+                    <td width="10%" style="text-align: right;">' . $projectDetail['project_no'] . '<br/>' . $date . '</td>
                 </tr>
             </table>';
 
@@ -216,7 +215,8 @@ class ReportContoller extends Controller
             $footer = '
             <table width="100%" style="vertical-align: bottom; font-family: serif; font-size: 8pt; color: #000000;">
                 <tr>
-                    <td width="33%">' . $projectDetail['ihm_table'] . '</td>
+                    <td width="33%" style="text-align: left;">' . $projectDetail['ihm_table'] . '</td>
+                    <td width="33%" style="text-align: center;">Revision:' . $version . '</td>
                     <td width="33%" style="text-align: right;">{PAGENO}/{nbpg}</td>
                 </tr>
             </table>';
@@ -248,114 +248,110 @@ class ReportContoller extends Controller
                 'suppress' => false, // This should prevent a new page from being created before and after TOC
                 'toc-resetpagenum' => 1
             ]);
+            if ($reportType == 'IHM Part 1') {
+                $mpdf->WriteHTML(view('report.introduction', compact('hazmets', 'projectDetail')));
+                $mpdf->AddPage('L'); // Set landscape mode for the inventory page
 
-            $mpdf->WriteHTML(view('report.introduction', compact('hazmets', 'projectDetail')));
-            $mpdf->AddPage('L'); // Set landscape mode for the inventory page
-            $totalPages = $mpdf->page;
+                $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3', 'decks')));
 
-            $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3', 'decks')));
+                for ($i = 1; $i <= $pageCount; $i++) {
+                    $mpdf->AddPage();
+                    $templateId = $mpdf->importPage($i);
+                    $mpdf->useTemplate($templateId);
+                }
+                $mpdf->AddPage('p');
+                $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechmentsResult', 'ChecksList', 'foundItems')));
+                $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
+                $mpdf->AddPage('L');
 
-            for ($i = 1; $i <= $pageCount; $i++) {
-                $mpdf->AddPage();
-                $templateId = $mpdf->importPage($i);
-                $mpdf->useTemplate($templateId);
-            }
-            $mpdf->AddPage('p');
-            $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechmentsResult', 'ChecksList', 'foundItems')));
-            $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail','brifimage','lebResultAll')));
-            $mpdf->AddPage('L');
-
-            $mpdf->WriteHTML(view('report.riskAssessments'));
+                $mpdf->WriteHTML(view('report.riskAssessments'));
 
 
-            $titleHtml = '<h2 style="text-align:center" id="lebResult">Appendix-4 Leb Result</h2>';
+                $titleHtml = '<h2 style="text-align:center" id="lebResult">Appendix-4 Leb Result</h2>';
 
-            // $filePath =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult1'];
-            // if (@$projectDetail['leb1LaboratoryResult1']) {
-            //     if (file_exists($filePath)){
-            //         $this->mergePdf($filePath, $titleHtml, $mpdf);
+                $filePath =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult1'];
+                if (file_exists($filePath) && @$projectDetail['leb1LaboratoryResult1']) {
+                    $this->mergePdf($filePath, $titleHtml, $mpdf);
+                }
+                $filePath1 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult2'];
+                if (file_exists($filePath1) && @$projectDetail['leb1LaboratoryResult2']) {
+                    $this->mergePdf($filePath1, null, $mpdf);
+                }
+                $filePath2 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult1'];
+                if (file_exists($filePath2) && @$projectDetail['leb2LaboratoryResult1']) {
+                    $this->mergePdf($filePath2, null, $mpdf);
+                }
+                $filePath3 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult2'];
+                if (file_exists($filePath) && @$projectDetail['leb2LaboratoryResult2']) {
+                    $this->mergePdf($filePath3, null, $mpdf);
+                }
+                $titleattach = '<h2 style="text-align:center">Appendix-5 Supporting Documents/plans from Ship</h2>';
 
-            //     }
-            // }
-            // $filePath1 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult2'];
-            // if (file_exists($filePath1) && @$projectDetail['leb1LaboratoryResult2']) {
-            //     $this->mergePdf($filePath1, null, $mpdf);
-            // }
-            // $filePath2 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult1'];
-            // if (file_exists($filePath2) && @$projectDetail['leb2LaboratoryResult1']) {
-            //     $this->mergePdf($filePath2, null, $mpdf);
-            // }
-            // $filePath3 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult2'];
-            // if (file_exists($filePath) && @$projectDetail['leb2LaboratoryResult2']) {
-            //     $this->mergePdf($filePath3, null, $mpdf);
-            // }
-            $titleattach = '<h2 style="text-align:center">Appendix-5 Supporting Documents/plans from Ship</h2>';
+                $i = 0;
+                foreach ($check_has_hazmats as $checkvalue) {
+                    $image = $checkvalue->image;
 
-            $i = 0;
-            foreach ($check_has_hazmats as $checkvalue) {
-                $image = $checkvalue->image;
+                    if (@$image) {
+                        $i++;
+                        $imageValue = basename($checkvalue->image);
+                        $filePath =  public_path('images/hazmat') . "/" . $projectDetail['id'] . "/" . $imageValue;
 
-                if (@$image) {
-                    $i++;
-                    $imageValue = basename($checkvalue->image);
-                    $filePath =  public_path('images/hazmat') . "/" . $projectDetail['id'] . "/" . $imageValue;
+                        if (file_exists($filePath)) {
+                            if ($i == 1) {
+                                $this->mergePdf($filePath, $titleattach, $mpdf);
+                            } else {
+                                $this->mergePdf($filePath, null, $mpdf);
+                            }
+                        }
+                    }
 
-                    if (file_exists($filePath)) {
-                        if($i == 1){
-                            $this->mergePdf($filePath, $titleattach, $mpdf);
+                    $imageDoc = $checkvalue->doc;
 
-                        }else{
-                            $this->mergePdf($filePath,null, $mpdf);
-
+                    if (@$imageDoc) {
+                        $imageDocValue = basename($checkvalue->imadocge);
+                        $filePathDoc =  public_path('images/hazmat') . "/" . $projectDetail['id'] . "/" . $imageDocValue;
+                        if (file_exists($filePathDoc)) {
+                            $this->mergePdf($filePath, null, $mpdf);
                         }
                     }
                 }
+                $gaPlan =  public_path('images/projects') . "/" . $projectDetail['id'] . "/" . $projectDetail['ga_plan'];
+                $attachmentCount = 1;
+                if (file_exists($gaPlan) && @$projectDetail['ga_plan']) {
+                    $titleattach = '<h2 style="text-align:center">AttachMent ' . $attachmentCount . ' Ga Plan </h2>';
 
-                $imageDoc = $checkvalue->doc;
+                    $this->mergePdf($gaPlan, $titleattach, $mpdf, $page = 'L');
+                }
+                foreach ($attechments as $value) {
+                    $attachmentCount++;
+                    $titleattach = '<h2 style="text-align:center">AttachMent ' . $attachmentCount . " " . $value['heading'] . '</h2>';
 
-                if (@$imageDoc) {
-                    $imageDocValue = basename($checkvalue->imadocge);
-                    $filePathDoc =  public_path('images/hazmat') . "/" . $projectDetail['id'] . "/" . $imageDocValue;
-                    if (file_exists($filePathDoc)) {
-                        $this->mergePdf($filePath, null, $mpdf);
+                    $filePath =  public_path('images/attachment') . "/" . $projectDetail['id'] . "/" . $value['documents'];
+                    if (file_exists($filePath) && @$value['documents']) {
+                        $fileExtension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+
+                        if ($fileExtension === 'pdf') {
+                            // If it's a PDF, merge it
+                            $this->mergePdf($filePath,  $titleattach, $mpdf);
+                        } elseif (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
+                            // If it's an image, convert to PDF and merge
+                            $this->mergeImageToPdf($filePath, $titleattach, $mpdf);
+                        }
                     }
                 }
             }
-            $gaPlan =  public_path('images/projects') . "/" . $projectDetail['id'] . "/" . $projectDetail['ga_plan'];
-            $attachmentCount = 1;
-            if (file_exists($gaPlan) && @$projectDetail['ga_plan']) {
-                $titleattach = '<h2 style="text-align:center">AttachMent '.$attachmentCount.' Ga Plan </h2>';
-
-                $this->mergePdf($gaPlan, $titleattach, $mpdf,$page='L');
-            }
-            foreach ($attechments as $value) {
-                $attachmentCount++;
-                $titleattach = '<h2 style="text-align:center">AttachMent '.$attachmentCount." ".$value['heading'].'</h2>';
-
-                $filePath =  public_path('images/attachment') . "/" . $projectDetail['id'] . "/" . $value['documents'];
-                if (file_exists($filePath) && @$value['documents']) {
-                    $fileExtension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-
-                    if ($fileExtension === 'pdf') {
-                        // If it's a PDF, merge it
-                        $this->mergePdf($filePath,  $titleattach, $mpdf);
-                    } elseif (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
-                        // If it's an image, convert to PDF and merge
-                        $this->mergeImageToPdf($filePath, $titleattach,$mpdf);
-                    }
-                }
+            else if($reportType == 'IHM Gap Analysis'){
+                $mpdf->WriteHTML(view('report.gapAnaylisis', compact('projectDetail')));
             }
 
 
-            $mpdf->Output('project_report.pdf', 'I');
-            // Output the PDF
             $mpdf->Output('project_report.pdf', 'I');
         } catch (\Mpdf\MpdfException $e) {
             // Handle mPDF exception
             echo $e->getMessage();
         }
     }
-    protected function mergeImageToPdf($imagePath, $title,$mpdf)
+    protected function mergeImageToPdf($imagePath, $title, $mpdf)
     {
         // Get the image dimensions
         list($width, $height) = getimagesize($imagePath);
@@ -366,7 +362,7 @@ class ReportContoller extends Controller
 
         $mpdf->Image($imagePath, 0, 30, null, null, 'jpg', '', true, false);
     }
-    protected function mergePdf($filePath, $title, $mpdf,$page=null)
+    protected function mergePdf($filePath, $title, $mpdf, $page = null)
     {
         $mpdf->setSourceFile($filePath);
 
