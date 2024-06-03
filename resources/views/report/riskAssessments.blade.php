@@ -10,7 +10,7 @@
 
                 </tr>
 
-                
+
                 <tr>
                     <td rowspan="8">Increasing Likelihood</td>
                     <td colspan="5">Effect @ Environments</td>
@@ -112,5 +112,392 @@
         <p><span class="modirateRisk">Moderate Risk: Monitor (48)</span></p>
         <p><span class="light-green">Low Risk: No Action (1-3)</span></p>
 
+    </div>
+    <div class="section-1-1">
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="11">Risk Assessment: Hazmat specific Risk assessment</th>
+                </tr>
+                <tr>
+                    <th>Task:</th>
+                    <th colspan="10">IHM Sampling</th>
+                </tr>
+                <tr>
+                    <th rowspan="4">Haz-Mats</th>
+                    <th colspan="2">Risk Scenario and Harm</th>
+                    <th colspan="3">Initial Risk</th>
+                    <th colspan="5">Control Measures</th>
+                </tr>
+                <tr>
+                    <th rowspan="3">Risk Description</th>
+                    <th rowspan="3">Category @ Risk</th>
+                    <th rowspan="3">Likelihood</th>
+                    <th rowspan="3">Severity</th>
+                    <th rowspan="3">Risk Level</th>
+                    <th colspan="2">Prevention and mitigation specific to yard and ship</th>
+                    <th rowspan="3">Likelihood</th>
+                    <th rowspan="3">Severity</th>
+                    <th rowspan="3">Risk Level</th>
+                </tr>
+                <tr>
+                    <th colspan="2">Current & Planned Measures to reduce</th>
+                </tr>
+                <tr>
+                    <th>Prevention Likelihood</th>
+                    <th>Mitigation Severity</th>
+                </tr>
+                <tr>
+                    <th colspan="11">Hazmat specific Risk assessment</th>
+                </tr>
+
+
+
+            </thead>
+            <thboy>
+                <tr>
+                    <td>ACM</td>
+                    <td>Long-term danger to <br />health: Asbestos has<br /> proven to cause-<br />
+                        <p>a) Asbestosis (lung scarring)</p>
+                        <p>b) Lung cancer</p>
+                        <p>c) Mesothelioma (cancer of pleura)</p>
+                        <p>d) Pleural changes(thickening)</p>
+                        <p>e) Carcinogenic</p>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Person exposed.</li>
+                            <li>Environment.</li>
+                            <li>Community</li>
+                            <li>Assets</li>
+                        </ul>
+                    </td>
+                    <td>4</td>
+                    <td>3</td>
+                    <td>12</td>
+                    <td>
+                        <p>a) Marking and labelling are to be done as per the IHM.</p>
+                        <p>b) Work & abatement are planned in the ship recycling plan.</p>
+                        <p>c) Standard operation procedures as per SRFP Removal on-site or in themobile unit.</p>
+                        <p>d) Barricade the area and stop surrounding the work.</p>
+                       <p>e) Wetting method to be used.</p><p>
+
+                    </td>
+                    <td>
+                        <p>a) Medical-evacuation team /Ambulance always on standby</p><p>
+                        <p>b) Medical check-ups of the workers in regular intervals are involved in the ACM removal process.</p><p>
+                        <p>c) In the case of dispersion, water sprays the area to decontaminate it from any air-borne particles.</p><p>
+                        <p>d) Barricade the area for any further entry to an unauthorized person</p><p>
+
+
+                    </td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>PCB</td>
+                    <td>Acute toxicity:
+                        <p>a)Enlargement of the liver</p>
+                        <p>b) Motor dysfunction</p>
+                        <p>c) Damage to the immune system</p>
+                        <p>d) Chlordane</p>
+                        <p>e) PCBs in large concentrations in food cause intoxication.</p>
+                    </td>
+                    <td>
+                        <p>Person exposed</p>
+                        <p>Environment</p>
+                        <p>Community</p>
+                        <p>Assets</p>
+                    </td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>
+                        <p>a) Marking labelling to be in place using the IHM for identification,</p>
+                        <p>b) No direct contact with the skin of body parts</p>
+                        <p>c) The surrounding area is to be barricaded and work stopped in the vicinity.</p>
+                        <p>d) Opening of the hazmat with minimum disturbance to contain any leakages and to be packed in suitable bags or containers.</p>
+                        <p>e) Dedicated storage on the plot for PCB- containing materials.</p>
+                        <p>f) Handling, storage, and transportation standards operating as per SRFP</p>
+                    </td>
+                    <td>
+                        <p>a)Medical-evacuation team /Ambulance always on standby</p>
+                        <p>b)Eyewash and first aid kit always on standby
+                        The absorbent material is always to be kept near the site to control any kind of spillage in case of liquids</p>
+                    </td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                </tr>
+                <tr>
+                    <td>PFOS</td>
+                    <td><p>In humans,</p>
+                        <p>a)Occupational exposures have been linked to Bladder and kidney cancers.</p>
+                        <p>b) Diabetesn</p>
+                        <p>c) Utero exposures have been linked to reduced weight and size at birth.</p>
+                        <p>d) Chronically toxic, injurious to reproduction, carcinogenic</p>
+                        <p>In animal studies</p>
+                        <p>a)The appearance of various cancers,</p>
+                        <p>Alterations in reproductive and thyroid hormones</p>
+                    </td>
+                    <td>
+                        <p>Person exposed</p>
+                        <p>Environment</p>
+                        <p>Community</p>
+                        <p>Assets</p>
+                    </td>
+                    <td>2</td>
+                    <td>4</td>
+                    <td>8</td>
+                    <td>
+                        <p>a) Marking labelling to be in place using the IHM for identification,</p>
+                        <p>b) No direct contact with the skin of body parts</p>
+                        <p>c) The surrounding area is to be barricaded and work stopped in the vicinity.</p>
+                        <p>d) Opening of the hazmat with minimum disturbance to contain any leakages and to be packed in suitable bags or containers.</p>
+                        <p>e) Dedicated storage on the plot for PCB- containing materials.</p>
+                        <p>f) Handling, storage, and transportation standards operating as per SRFP</p>
+                    </td>
+                    <td>
+                        <p>a)Medical-evacuation team /Ambulance always on standby</p>
+                        <p>b)Eyewash and first aid kit always on standby
+                        The absorbent material is always to be kept near the site to control any kind of spillage in case of liquids</p>
+                    </td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>ODS</td>
+                    <td>
+                        <p>a)Frostbite.</p>
+                        <p>b) Ozone layer depletion</p>
+                        <p>c)Greenhouse gas effect Indirectly skin cancer</p>
+                     
+                    </td>
+                    <td>
+                        <p>Person exposed</p>
+                        <p>Environment</p>
+                        <p>Community</p>
+                        <p>Assets</p>
+                    </td>
+                    <td>1</td>
+                    <td>3</td>
+                    <td>3</td>
+                    <td>
+                        <p>a) Removal is to be done by an authorized subcontractor only.</p>
+                        <p>b) Abatement removal is to be planned in the Ship recycling plan.</p>
+                        <p>c) List of equipment to be provided by the subcontractor and approved by the HSE team.</p>
+                        <p>d) An initial survey is to be done to check the quantity and meter readings.
+The surrounding area is to be barricaded and work stopped in the vicinity</p>
+                      
+                    </td>
+                    <td>
+                        <p>a)Shut down all the HVAC systems.</p>
+                        <p>Only approved licensed personnel are allowed to handle the equipment.</p>
+                    </td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>Radioactive</td>
+                    <td>
+                        <p>a)Any living tissue in the human body can be uniquely damaged by ionizing radiation.</p>
+                       <p>radiation.Genetically changes</p>
+                    </td>
+                    <td>
+                        <p>• Person exposed.</p>
+                        <p>• Environment</p>
+                        <p>• Community</p>
+                        <p>Assets</p>
+                    </td>
+                    <td>2</td>
+                    <td>4</td>
+                    <td>8</td>
+                    <td>
+                        <p>a) Removal is to be done by an authorized subcontractor only.</p>
+                        <p>b) Abatement removal is to be planned in the Ship recycling plan.</p>
+                        <p>c) List of equipment to be provided by the subcontractor and approved by the HSE team.</p>
+                        <p>d)An initial survey is to be done to check the quantity.</p>
+                    </td>
+                    <td>
+                    <p>Only approved licensed personnel are allowed to handle the equipment.</p>
+                    </td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>HBCDD</td>
+                    <td>
+                        <p>a)Persistent, Bio-accumulative, and Toxic (PBT) properties, relating to its effects on aquatic organisms, and its presence in the environment.</p>
+                       <p>Neurotoxicity in adult mice</p>
+                    </td>
+                    <td>
+                        <p>• Person exposed.</p>
+                        <p>• Environment</p>
+                        <p>• Community</p>
+                        <p>Assets</p>
+                    </td>
+                    <td>3</td>
+                    <td>3</td>
+                    <td>9</td>
+                    <td>
+                        <p>a) Marking and labelling are to be done as per the IHM.</p>
+                        <p>b) Work and abatement are planned in the ship recycling plan.<br/></p>
+                        <p>c) Standard operation procedures as per SRFP Removal on-site or in the mobile unit.
+                        Barricade the area and stop surrounding work,</p>
+                    </td>
+                    <td>
+                    <p>a) The sample should be wrapped in aluminium foil and transferred into a vessel or container (e.g., glass or another inert material) with a cap or screw top. The vessel should be labelled.</p>
+                    <p>b) Collected samples in sealed containers.</p>
+                    <p>c) Keep the sample in a dedicated/separate storage area with proper labelling.Barricade the area for any further entry to an unauthorized person</p>
+                    </td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>Certain SCCP</td>
+                    <td>
+                        <p>a) Ecological Impacts -when CPs are released in water & sediments because of their low solubility in water, they are transported in water by adherence to particles and are strongly adsorbed to sediment.</p>
+                        <p>b) Suspected of causing certain cancers.</p>
+                        <p>c)Classified as persistent organic pollutants.</p>
+                        <p>d) Repeated exposure may cause skin dryness or cracks.</p>
+                        <p>e)Accumulate in human breast milk,</p>
+                        <p>Can kill small aquatic creatures</p>
+                    </td>
+                    <td>
+                        <p>• Person exposed.</p>
+                        <p>• Environment</p>
+                        <p>• Community</p>
+                        <p>Assets</p>
+                    </td>
+                    <td>3</td>
+                    <td>3</td>
+                    <td>9</td>
+                    <td>
+                        <p>a) Marking and labelling are to be done as per the IHM.</p>
+                        <p>b) Work and abatement are planned in the ship recycling plan.<br/></p>
+                        <p>c) Standard operation procedures as per SRFP Removal on-site or in the mobile unit.
+                        Barricade the area and stop surrounding work,</p>
+                    </td>
+                    <td>
+                    <p>a) The sample should be wrapped in aluminium foil and transferred into a vessel or container (e.g., glass or another inert material) with a cap or screw top. The vessel should be labelled.</p>
+                    <p>b) Collected samples in sealed containers.</p>
+                    <p>c) Keep the sample in a dedicated/separate storage area with proper labelling.Barricade the area for any further entry to an unauthorized person</p>
+                    </td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>PCN</td>
+                    <td>
+                        <p>Health Effects:</p>
+                        <p>a) Severe skin rashes</p>
+                        <p>b) Chronic exposure increases the risk of liver disease leading to deaths.</p>
+                        <p>c) Acute exposure causes chloral-acne.</p>
+                        <p>d) Increased cancer risks have been suspected.</p>
+                        <p>e)Release as by-products of waste incineration</p>
+                        <p>Persist for long periods in the environment.</p>
+                    </td>
+                    <td>
+                        <p>• Person exposed.</p>
+                        <p>• Environment</p>
+                        <p>• Community</p>
+                        <p>Assets</p>
+                    </td>
+                    <td>3</td>
+                    <td>3</td>
+                    <td>9</td>
+                    <td>
+                        <p>a) Marking and labelling are to be done as per the IHM.</p>
+                        <p>b) Work and abatement are planned in the ship recycling plan.<br/></p>
+                        <p>c) Standard operation procedures as per SRFP Removal on-site or in the mobile unit.
+                        Barricade the area and stop surrounding work,</p>
+                    </td>
+                    <td>
+                    <p>a) The sample should be wrapped in aluminium foil and transferred into a vessel or container (e.g., glass or another inert material) with a cap or screw top. The vessel should be labelled.</p>
+                    <p>b) Collected samples in sealed containers.</p>
+                    <p>c) Keep the sample in a dedicated/separate storage area with proper labelling.Barricade the area for any further entry to an unauthorized person</p>
+                    </td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>PBB</td>
+                    <td>
+                        <p>Health Effects:</p>
+                        <p>a) Pre- and post-natal exposure to girls leads to menarche at an earlier age.</p>
+                        <p>b) Cause skin problems, such as acne, in consumers of the contaminated food.</p>
+                        <p>c) Cause cancer in human beings</p>
+                        <p>d) Fatigue, reduced capacity to work, headache, dizziness, and irritability.</p>
+                        Increasing levels have been detected in the blood of marine mammals such as harbour seals.</p>
+                        <p>Gastrointestinal syndromes include diminished appetite, weight loss, abdominal pain & diarrhoea.</p>
+                    </td>
+                    <td>
+                        <p>• Person exposed.</p>
+                        <p>• Environment</p>
+                        <p>• Community</p>
+                        <p>Assets</p>
+                    </td>
+                    <td>3</td>
+                    <td>3</td>
+                    <td>9</td>
+                    <td>
+                        <p>a) Marking and labelling are to be done as per the IHM.</p>
+                        <p>b) Work and abatement are planned in the ship recycling plan.<br/></p>
+                        <p>c) Standard operation procedures as per SRFP Removal on-site or in the mobile unit.
+                        Barricade the area and stop surrounding work,</p>
+                    </td>
+                    <td>
+                    <p>a) The sample should be wrapped in aluminium foil and transferred into a vessel or container (e.g., glass or another inert material) with a cap or screw top. The vessel should be labelled.</p>
+                    <p>b) Collected samples in sealed containers.</p>
+                    <p>c) Keep the sample in a dedicated/separate storage area with proper labelling.Barricade the area for any further entry to an unauthorized person</p>
+                    </td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>PBDEs</td>
+                    <td>
+                        <p>Health Effects:</p>
+                        <p>a) Reduce fertility in humans at levels found in households.</p>
+                        <p>b) Exposure to low levels through ingestion of food and by inhalation</p>
+                        <p>c) Bio-accumulates in blood, breast milk, and fat tissues.</p>
+                        <p>d) Endocrine disruptors and neurotoxins.</p>
+                        <p>e) Cause liver tumours, and neuro developmental & thyroid dysfunctions.
+                        Increasing levels have been detected in the blood of marine mammals such as harbour seals.</p>
+                    </td>
+                    <td>
+                        <p>• Person exposed.</p>
+                        <p>• Environment</p>
+                        <p>• Community</p>
+                        <p>Assets</p>
+                    </td>
+                    <td>3</td>
+                    <td>3</td>
+                    <td>9</td>
+                    <td>
+                        <p>a) Marking and labelling are to be done as per the IHM.</p>
+                        <p>b) Work and abatement are planned in the ship recycling plan.<br/></p>
+                        <p>c) Standard operation procedures as per SRFP Removal on-site or in the mobile unit.
+                        Barricade the area and stop surrounding work,</p>
+                    </td>
+                    <td>
+                    <p>a) The sample should be wrapped in aluminium foil and transferred into a vessel or container (e.g., glass or another inert material) with a cap or screw top. The vessel should be labelled.</p>
+                    <p>b) Collected samples in sealed containers.</p>
+                    <p>c) Keep the sample in a dedicated/separate storage area with proper labelling.Barricade the area for any further entry to an unauthorized person</p>
+                    </td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+            </thboy>
+        </table>
     </div>
 </div>

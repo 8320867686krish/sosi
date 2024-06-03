@@ -223,7 +223,7 @@ class ReportContoller extends Controller
             $mpdf->SetHTMLHeader($header);
             $mpdf->SetHTMLFooter($footer);
 
-
+            $mpdf->shrink_tables_to_fit = 0;
             // Load main HTML content
             $mpdf->shrink_tables_to_fit = 1;
             $mpdf->h2toc = ['H2' => 0, 'H3' => 1];
@@ -261,9 +261,11 @@ class ReportContoller extends Controller
                 }
                 $mpdf->AddPage('p');
                 $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechmentsResult', 'ChecksList', 'foundItems')));
-                $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
+                $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll','ChecksList')));
                 $mpdf->AddPage('L');
+                $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
 
+                $mpdf->AddPage('L');
                 $mpdf->WriteHTML(view('report.riskAssessments'));
 
 
