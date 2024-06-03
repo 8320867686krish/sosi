@@ -418,6 +418,7 @@
     <div class="section-1-1">
         <h2>5.Conclusion & Further Recommendations</h2>
         <p>With the Document Analysis and Laboratory of the samples taken from the vessel, following is the summary of the final contained items:</p>
+        @foreach( $lebResultAll as $value)
 
         <table>
             <thead>
@@ -430,7 +431,6 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach( $lebResultAll as $value)
                     <tr>
                         <td>{{$loop->iteration}}</td>
                         <td>{{$value['check']['name']}}</td>
@@ -438,13 +438,41 @@
                         <td>1</td>
                     </tr>
                     <tr>
-                        <td colspan="4">Quantity calculation</td>
+                        <td colspan="4" align="center"><b>Lab Remarks:</b></td>
+                       
                        
                     </tr>
+                    @if($value['lab_remarks'])
+                    <tr>
+                        <td colspan="4">{{$value['lab_remarks']}}</td>
+                       
+                       
+                    </tr>
+                    @endif
+                    <tr>
+                        <td colspan="4" align="center"><b>Quantity calculation</b></td>
+                       
+                       
+                    </tr>
+                    <tr>
+                        <td><b>Unit</b>{{$value['unit']}}</td>
+                        <td><b>Number</b>{{$value['number']}}</td>
+                        <td><b>Total</b>{{$value['total']}}</td>
+                    </tr>
+                    <tr>
+                    <td><b>Sample Weight</b> : {{$value['sample_weight']}}</td>
+                        <td><b>Sample Area</b> : {{$value['sample_area']}}</td>
+                        <td><b>Density</b> : {{$value['density']}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><td><b>Affected Area</b> : {{$value['affected_area']}}</td></td>
+                    </tr>
                     
-                @endforeach
+                
             </tbody>
         </table>
+        <br/>
+        @endforeach
     </div>
 </div>
 <div class="next">
