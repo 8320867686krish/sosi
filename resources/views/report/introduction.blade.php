@@ -36,6 +36,9 @@
             <h3> 1.3 Project Particular </h3>
             <table>
                 <tr>
+                    <td colspan="2" align="center"><b>Ship Particulars Details</b></td>
+                </tr>
+                <tr>
                     <td>Name of Ship</td>
                     <td> {{$projectDetail['ship_name']}}</td>
                 </tr>
@@ -87,6 +90,95 @@
                     <td>Vessel Previous Name</td>
                     <td> {{$projectDetail['vessel_previous_name']}}</td>
                 </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center"><b>Ship Owner Details</b></td>
+                </tr>
+                <tr>
+                    <td>Ship Owner Name</td>
+                    <td> {{$projectDetail['client']->owner_name}}</td>
+                </tr>
+                <tr>
+                    <td>Ship Owner Email</td>
+                    <td> {{$projectDetail['client']->owner_email}}</td>
+                </tr>
+                <tr>
+                    <td>Ship Owner Phone</td>
+                    <td> {{$projectDetail['client']->owner_phone}}</td>
+                </tr>
+                <tr>
+                    <td>Ship Owner Address</td>
+                    <td> {{$projectDetail['client']->owner_address}}</td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center"><b>Ship Manager Details</b></td>
+                </tr>
+                <tr>
+                    <td>Ship Manager Name</td>
+                    <td> {{$projectDetail['client']->manager_name}}</td>
+                </tr>
+                <tr>
+                    <td>Ship Manager Email</td>
+                    <td> {{$projectDetail['client']->manager_email}}</td>
+                </tr>
+                <tr>
+                    <td>Ship Manager Phone</td>
+                    <td> {{$projectDetail['client']->manager_phone}}</td>
+                </tr>
+                <tr>
+                    <td>Ship Manager Address</td>
+                    <td>{{$projectDetail['client']->manager_address}}</td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center"><b>Survey Details</b></td>
+                </tr>
+                <tr>
+                    <td>Surveyor Name</td>
+                    <td>{{$projectDetail['surveyorName']}}</td>
+                </tr>
+                <tr>
+                    <td>Survey Location Name</td>
+                    <td>{{$projectDetail['survey_location_name']}}</td>
+                </tr>
+                <tr>
+                    <td>Survey Location Address</td>
+                    <td>{{$projectDetail['survey_location_address']}}</td>
+                </tr>
+                <tr>
+                    <td>Survey Type</td>
+                    <td>{{$projectDetail['survey_type']}}</td>
+                </tr>
+                <tr>
+                    <td>Survey Date</td>
+                    <td>{{ !empty($projectDetail['survey_date']) ? date('d-m-Y', strtotime($projectDetail['survey_date'])) : null}}</td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center"><b>Laboratory</b></td>
+                </tr>
+                @if (!empty($projectDetail['laboratorie1']))
+                    <tr>
+                        <td>Laboratory</td>
+                        <td>{{ $projectDetail['laboratorie1'] }}</td>
+                    </tr>
+                @endif
+
+                @if (!empty($projectDetail['laboratorie2']))
+                    <tr>
+                        <td>Laboratory 2</td>
+                        <td>{{$projectDetail['laboratorie2']}}</td>
+                    </tr>
+                @endif
             </table>
         </div>
 
