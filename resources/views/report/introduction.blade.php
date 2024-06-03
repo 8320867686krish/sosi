@@ -35,40 +35,45 @@
         <div class="section-1-3 next">
             <h3> 1.3 Project Particular </h3>
             <table>
-
-                <tr>
-                    <td>IMO number</td>
-                    <td> {{$projectDetail['imo_number']}}</td>
-                </tr>
                 <tr>
                     <td>Name of Ship</td>
                     <td> {{$projectDetail['ship_name']}}</td>
                 </tr>
                 <tr>
-                    <td>Flag</td>
-                    <td> {{$projectDetail['flag_of_ship']}}</td>
+                    <td>IMO Number</td>
+                    <td> {{$projectDetail['imo_number']}}</td>
+                </tr>
+                <tr>
+                    <td>Call Sign</td>
+                    <td> {{$projectDetail['call_sign']}}</td>
+                </tr>
+                <tr>
+                    <td>Type of ship</td>
+                    <td> {{$projectDetail['ship_type']}}</td>
                 </tr>
                 <tr>
                     <td>Port of Registry Kunching</td>
                     <td> {{$projectDetail['port_of_registry']}}</td>
                 </tr>
                 <tr>
-                    <td>Type of Vessel</td>
+                    <td>Vessel Class</td>
                     <td> {{$projectDetail['vessel_class']}}</td>
-                </tr>
-                <tr>
-                    <td>Building Yard Details</td>
-                    <td> {{$projectDetail['building_details']}}</td>
-                </tr>
-                <tr>
-                    <td>Date of delivery</td>
-                    <td>{{$projectDetail['delivery_date']}}</td>
-
                 </tr>
                 <tr>
                     <td>IHM Certifying Class</td>
                     <td>{{$projectDetail['ihm_class']}}</td>
-
+                </tr>
+                <tr>
+                    <td>Flag of ship</td>
+                    <td> {{$projectDetail['flag_of_ship']}}</td>
+                </tr>
+                <tr>
+                    <td>Date of delivery</td>
+                    <td>{{$projectDetail['delivery_date']}}</td>
+                </tr>
+                <tr>
+                    <td>Building Yard Details</td>
+                    <td> {{$projectDetail['building_details']}}</td>
                 </tr>
                 <tr>
                     <td>Dimensions (L x B x D)</td>
@@ -77,6 +82,10 @@
                 <tr>
                     <td>Gross Tonnage (GT)</td>
                     <td>{{$projectDetail['gross_tonnage']}}</td>
+                </tr>
+                <tr>
+                    <td>Vessel Previous Name</td>
+                    <td> {{$projectDetail['vessel_previous_name']}}</td>
                 </tr>
             </table>
         </div>
