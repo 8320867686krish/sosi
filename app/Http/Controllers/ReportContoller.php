@@ -40,7 +40,7 @@ class ReportContoller extends Controller
 
         $project = Projects::with('client:id,manager_name,manager_email,manager_phone,manager_address,owner_name,owner_email,owner_phone,owner_address')->findOrFail($id);
 
-        //  $deck =  Deck::with('checks.hazmats')->find($id); 
+        //  $deck =  Deck::with('checks.hazmats')->find($id);
 
         $hazmats = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($id) {
             $query->where('project_id', $id);
@@ -270,24 +270,27 @@ class ReportContoller extends Controller
 
             $titleHtml = '<h2 style="text-align:center" id="lebResult">Appendix-4 Leb Result</h2>';
 
-            $filePath =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult1'];
-            if (file_exists($filePath) && @$projectDetail['leb1LaboratoryResult1']) {
-                $this->mergePdf($filePath, $titleHtml, $mpdf);
-            }
-            $filePath1 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult2'];
-            if (file_exists($filePath1) && @$projectDetail['leb1LaboratoryResult2']) {
-                $this->mergePdf($filePath1, null, $mpdf);
-            }
-            $filePath2 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult1'];
-            if (file_exists($filePath2) && @$projectDetail['leb2LaboratoryResult1']) {
-                $this->mergePdf($filePath2, null, $mpdf);
-            }
-            $filePath3 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult2'];
-            if (file_exists($filePath) && @$projectDetail['leb2LaboratoryResult2']) {
-                $this->mergePdf($filePath3, null, $mpdf);
-            }
+            // $filePath =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult1'];
+            // if (@$projectDetail['leb1LaboratoryResult1']) {
+            //     if (file_exists($filePath)){
+            //         $this->mergePdf($filePath, $titleHtml, $mpdf);
+
+            //     }
+            // }
+            // $filePath1 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult2'];
+            // if (file_exists($filePath1) && @$projectDetail['leb1LaboratoryResult2']) {
+            //     $this->mergePdf($filePath1, null, $mpdf);
+            // }
+            // $filePath2 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult1'];
+            // if (file_exists($filePath2) && @$projectDetail['leb2LaboratoryResult1']) {
+            //     $this->mergePdf($filePath2, null, $mpdf);
+            // }
+            // $filePath3 =  public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult2'];
+            // if (file_exists($filePath) && @$projectDetail['leb2LaboratoryResult2']) {
+            //     $this->mergePdf($filePath3, null, $mpdf);
+            // }
             $titleattach = '<h2 style="text-align:center">Appendix-5 Supporting Documents/plans from Ship</h2>';
-          
+
             $i = 0;
             foreach ($check_has_hazmats as $checkvalue) {
                 $image = $checkvalue->image;
@@ -296,7 +299,7 @@ class ReportContoller extends Controller
                     $i++;
                     $imageValue = basename($checkvalue->image);
                     $filePath =  public_path('images/hazmat') . "/" . $projectDetail['id'] . "/" . $imageValue;
-                   
+
                     if (file_exists($filePath)) {
                         if($i == 1){
                             $this->mergePdf($filePath, $titleattach, $mpdf);
@@ -343,7 +346,7 @@ class ReportContoller extends Controller
                 }
             }
 
-           
+
             $mpdf->Output('project_report.pdf', 'I');
             // Output the PDF
             $mpdf->Output('project_report.pdf', 'I');
