@@ -223,7 +223,7 @@ class ReportContoller extends Controller
             $mpdf->SetHTMLHeader($header);
             $mpdf->SetHTMLFooter($footer);
 
-
+            $mpdf->shrink_tables_to_fit = 0;
             // Load main HTML content
 
             $mpdf->h2toc = ['H2' => 0, 'H3' => 1];
