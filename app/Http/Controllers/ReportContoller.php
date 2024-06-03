@@ -40,7 +40,7 @@ class ReportContoller extends Controller
 
         $project = Projects::with('client:id,manager_name,manager_email,manager_phone,manager_address,owner_name,owner_email,owner_phone,owner_address')->findOrFail($id);
 
-        //  $deck =  Deck::with('checks.hazmats')->find($id); 
+        //  $deck =  Deck::with('checks.hazmats')->find($id);
 
         $hazmats = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($id) {
             $query->where('project_id', $id);
