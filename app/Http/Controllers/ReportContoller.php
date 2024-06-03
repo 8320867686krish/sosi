@@ -261,9 +261,11 @@ class ReportContoller extends Controller
                 }
                 $mpdf->AddPage('p');
                 $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechmentsResult', 'ChecksList', 'foundItems')));
-                $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
+                $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll','ChecksList')));
                 $mpdf->AddPage('L');
+                $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
 
+                $mpdf->AddPage('L');
                 $mpdf->WriteHTML(view('report.riskAssessments'));
 
 

@@ -442,40 +442,40 @@
                 <tr>
                     <td><b>Unit</b></td>
                     <td colspan="3">{{$value['unit']}}</td>
-                
+
                 </tr>
                 <tr>
                     <td><b>Number</b></td>
                     <td colspan="3">{{$value['number']}}</td>
-                    
+
                 </tr>
                 <tr>
                     <td><b>Total</b></td>
                     <td colspan="3">{{$value['Total']}}</td>
-                   
-        
+
+
                 </tr>
                 <tr>
                     <td><b>Sample Weight</b></td>
                     <td colspan="3">{{$value['sample_weight']}}</td>
-                    
+
                 </tr>
                 <tr>
                     <td><b>Sample Area</b></td>
                     <td colspan="3">{{$value['sample_area']}}</td>
-              
+
                 </tr>
                 <tr>
                     <td><b>Density</b></td>
                     <td colspan="3">{{$value['density']}}</td>
-                   
+
                 </tr>
                 <tr>
                     <td><b>Affected Area</b></td>
                     <td colspan="3">{{$value['affected_area']}}</td>
-                   
+
                 </tr>
-              
+
                 <tr>
                     <td><b>Remarks:</b></td>
 

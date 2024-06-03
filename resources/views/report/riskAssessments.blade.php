@@ -10,7 +10,7 @@
 
                 </tr>
 
-                
+
                 <tr>
                     <td rowspan="8">Increasing Likelihood</td>
                     <td colspan="5">Effect @ Environments</td>
@@ -112,5 +112,90 @@
         <p><span class="modirateRisk">Moderate Risk: Monitor (48)</span></p>
         <p><span class="light-green">Low Risk: No Action (1-3)</span></p>
 
+    </div>
+    <div class="section-1-1">
+        <table>
+        <thead>
+            <tr>
+                <th colspan="11">Risk Assessment: Hazmat specific Risk assessment</th>
+            </tr>
+            <tr>
+                <th>Task:</th>
+                <th colspan="10">IHM Sampling</th>
+            </tr>
+            <tr>
+                <th rowspan="4">Haz-Mats</th>
+                <th colspan="2">Risk Scenario and Harm</th>
+                <th colspan="3">Initial Risk</th>
+                <th colspan="5">Control Measures</th>
+            </tr>
+            <tr>
+               <th rowspan="3">Risk Description</th>
+               <th rowspan="3">Category @ Risk</th>
+               <th rowspan="3">Likelihood</th>
+               <th rowspan="3">Severity</th>
+               <th rowspan="3">Risk Level</th>
+               <th colspan="2">Prevention and mitigation specific to yard and ship</th>
+               <th  rowspan="3">Likelihood</th>
+               <th  rowspan="3">Severity</th>
+               <th rowspan="3">Risk Level</th>
+            </tr>
+            <tr>
+                <th colspan="2">Current & Planned Measures to reduce</th>
+            </tr>
+            <tr>
+                <th>Prevention Likelihood</th>
+                <th>Mitigation Severity</th>
+            </tr>
+            <tr>
+                <th colspan="11">Hazmat specific Risk assessment</th>
+            </tr>
+            
+          
+          
+        </thead>
+            <thboy>
+                <tr>
+                <td rowspan="2">ACM</td>                    
+                <td rowspan="2">Long-term danger to <br />health: Asbestos has<br /> proven to cause-<br />
+                        a) Asbestosis (lung scarring)<br />
+                        b) Lung cancer<br />
+                        c) Mesothelioma (cancer of pleura)<br />
+                        d) Pleural changes(thickening)<br />
+                        e) Carcinogenic<br />
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Person exposed.</li>
+                            <li>Environment.</li>
+                            <li>Community</li>
+                            <li>Assets</li>
+                        </ul>
+                    </td>
+                    <td>4</td>
+                    <td>3</td>
+                    <td>12</td>
+                    <td rowspan="2">>
+                        a) Marking and <br />labelling are to <br />be done as per <br />the IHM.<br />
+                        b) Work & abatement <br/>are planned in the <br/>ship recycling plan.<br/>
+                        c) Standard operation <br/>procedures as per <br/>SRFP Removal on<br/>-site or in the <br/>mobile unit.<br/>
+                        d) Barricade<br/> the area and <br/>stop <br/>surrounding<br/> the work.
+                        e) Wetting method to <br/>be used.
+
+                    </td>
+                    <td rowspan="2">
+                    a)	Medical-evacuation team /Ambulance always on standby<br/>
+                    b)	Medical check-ups of the workers in regular intervals are involved in the ACM removal process.<br/>
+                    c)	In the case of dispersion, water sprays the area to decontaminate it from any air-borne particles.<br/>
+                    d)	Barricade the area for any further entry to an unauthorized person<br/>
+
+
+                    </td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>2</td>
+                </tr>
+            </thboy>
+        </table>
     </div>
 </div>
