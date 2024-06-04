@@ -218,7 +218,10 @@ class ProjectsController extends Controller
     public function saveDetail(ProjectDetailRequest $request)
     {
         try {
-            $inputData = $request->only(['id']); // Only take necessary fields
+            $inputData = $request->input();
+            unset($inputData['manager_name']);
+            unset($inputData['owner_name']);
+            unset($inputData['_token']);
             $projectId = $inputData['id'];
 
             // Handle file upload if 'image' is present in the request
@@ -1095,6 +1098,8 @@ class ProjectsController extends Controller
                     CheckImage::create($checkData);
                 }
             }
+
+            Checks::where('id', $checkId)->update(['isCompleted' => 1]);
 
             return response()->json(["isStatus" => true, 'message' => 'Check image saved successfully']);
         } catch (Throwable $th) {
