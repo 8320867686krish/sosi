@@ -187,6 +187,7 @@
         <p>Once the samples are collected & sorted, are to be sent to the ISO17025 or equally credited laboratory.laboratory name Certificate : see attachment . the test results are recorded see: <a href="#lebResult" style="cursor:pointer">attachment lab test results</a> </p>
         <h3><b>4.4.1 Threshold Values & Testing Standards</b></h3>
         <p>The below cumulative list is its threshold values and test standard to follow:</p>
+        <div class="test">
         <table>
             <thead>
                 <tr>
@@ -197,6 +198,7 @@
                 </tr>
             </thead>
             <tbody>
+               
                 <tr>
                     <td rowspan="3">1.</td>
                     <td rowspan="3">Asbestos</td>
@@ -409,6 +411,7 @@
 
             </tbody>
         </table>
+        </div>
         <p>*Persistent organic compounds (POPs) which come under the purview of IHM are: Polychlorinated Naphthalenes (PCN), Polychlorinated biphenyls (PCB), Hexa Bromo Cyclodo Decane (HBCDD), Certain short-chain chlorinated paraffin (Alkanes, C10-C13, chloro) (SCCP), Poly Brominated Diphenyl Ethers (PBDEs), Poly Brominated Biphenyl (PBBs), Per Fluoro octane Sulfonic acid (PFOS) & its derivatives (PFOS)</p>
 
         <p>**HBCDD & PFOS are listed in EUSRR, but not listed in HKC.</p>

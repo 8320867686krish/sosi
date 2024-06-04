@@ -131,6 +131,7 @@ body {
     color:#000 !important;
     font-weight: 700;
 }
+
 .parentDot:before{
     content: '';
     width: 196px !important;
