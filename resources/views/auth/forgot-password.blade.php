@@ -48,7 +48,7 @@
         </div>
         <div class="card">
             <div class="card-header text-center">
-                <img class="logo-img" src="../assets/images/logo.png" alt="logo">
+                <img class="logo-img" src="{{ asset('assets/images/logo.png') }}" alt="logo">
             </div>
             <div class="card-body">
                 <form method="POST" action="{{ route('password.email') }}">

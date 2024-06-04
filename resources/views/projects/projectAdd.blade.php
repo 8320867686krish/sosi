@@ -170,11 +170,11 @@
 
             $('#imo_number').blur(function() {
                 imo = $(this).val();
-                $("#project_no").val("sosi/" + ship_identi + "/" + imo);
+                $("#project_no").val("SOSI/" + ship_identi + "/" + imo);
             });
             $('#client_id').change(function() {
                 ship_identi = $(this).find('option:selected').data('identi');
-                $("#project_no").val("sosi/" + ship_identi + (imo ? "/" + imo : ""));
+                $("#project_no").val("SOSI/" + ship_identi + (imo ? "/" + imo : ""));
             })
         });
     </script>

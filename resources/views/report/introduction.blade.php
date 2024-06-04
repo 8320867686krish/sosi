@@ -90,11 +90,10 @@
                     <td>Vessel Previous Name</td>
                     <td> {{$projectDetail['vessel_previous_name']}}</td>
                 </tr>
-                <tr>
-                    <td colspan="2">&nbsp;</td>
-                </tr>
+                
                 <tr>
                     <td colspan="2" align="center"><b>Ship Owner Details</b></td>
+
                 </tr>
                 <tr>
                     <td>Ship Owner Name</td>
@@ -134,9 +133,7 @@
                     <td>Ship Manager Address</td>
                     <td>{{$projectDetail['client']->manager_address}}</td>
                 </tr>
-                <tr>
-                    <td colspan="2">&nbsp;</td>
-                </tr>
+                
                 <tr>
                     <td colspan="2" align="center"><b>Survey Details</b></td>
                 </tr>
@@ -160,9 +157,7 @@
                     <td>Survey Date</td>
                     <td>{{ !empty($projectDetail['survey_date']) ? date('d-m-Y', strtotime($projectDetail['survey_date'])) : null}}</td>
                 </tr>
-                <tr>
-                    <td colspan="2">&nbsp;</td>
-                </tr>
+               
                 <tr>
                     <td colspan="2" align="center"><b>Laboratory</b></td>
                 </tr>
