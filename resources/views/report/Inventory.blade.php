@@ -2,14 +2,12 @@
     <!-- Section 1.1 -->
     <h2>2. Inventory of Hazardous Materials (IHM) Part-1 </h2>
     <div class="section-1-1">
-        <center>
-            <h5>
+            <h5 style="text-align: center;">
                 Part-1
             </h5>
-        </center>
-        <center>
-            <h4>Hazardous materials contained in the ship's structure and equipment</h4>
-        </center>
+
+            <h4 style="text-align: center;">Hazardous materials contained in the ship's structure and equipment</h4>
+
         @if(@$filteredResults1)
         <h5>I-1 – Paints and coating systems containing materials listed in table A and table B of appendix 1 of these guidelines</h4>
 

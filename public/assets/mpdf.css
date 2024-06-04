@@ -120,6 +120,25 @@ body {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
+        page-break-inside: avoid;
+
+}
+.setFont{
+    font-size:16px;
+}
+.sufont{
+    font-size: 14px;
+    color:#000 !important;
+    font-weight: 700;
+}
+.parentDot:before{
+    content: '';
+    width: 196px !important;
+    display: block;
+    background-color: red;
+    height: 2px;
+    top: 8px;
+    position: relative;
 }
 
 .section-1-3 table td,

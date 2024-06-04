@@ -499,14 +499,15 @@
                         <input type="hidden" name="project_id" value="{{ $project->id }}" />
                         <div class="form-group">
                             <div class="row">
-                                <div class="col-5">
+                                <div class="col-4">
                                     <input type="number" name="version" placeholder="Version Number..." class="form-control form-control-lg">
                                 </div>
-                                <div class="col-5">
+                                <div class="col-4">
                                     <input type="date" name="date" class="form-control form-control-lg">
                                 </div>
-                                <div class="col-2">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                <div class="col-4">
+                                    <button type="submit" name="action" class="btn btn-primary" value="submit">Submit</button>
+                                    <button type="submit" name="action" class="btn btn-primary" value="summery" >Summery</button>
                                 </div>
                             </div>
                         </div>

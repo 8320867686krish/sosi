@@ -17,6 +17,7 @@ use App\Models\Deck;
 use App\Models\ReportMaterial;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Exception;
 
 ini_set("pcre.backtrack_limit", "5000000");
 
@@ -66,7 +67,143 @@ class ReportContoller extends Controller
         return Excel::download(new MultiSheetExport($project, $hazmats, $checks, $isSample), $filename, $exportFormat);
     }
 
+    public function summeryReport($post){
+        $project_id = $post['project_id'];
+        $version = $post['version'];
+        $date = date('d-m-Y', strtotime($post['date']));
+       
+        $projectDetail = Projects::with('client')->find($project_id);
+        if (!$projectDetail) {
+            die('Project details not found');
+        }
+        $options = new Options();
+        $dompdf = new Dompdf($options);
+        $html = '';
+        $logo = 'https://sosindi.com/IHM/public/assets/images/logo.png';
+        $lebResult = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
+        $filteredResults1 = $lebResult->filter(function ($item) {
+            return $item->IHM_part == 'IHMPart1-1';
+        });
 
+        $filteredResults2 = $lebResult->filter(function ($item) {
+            return $item->IHM_part == 'IHMPart1-2';
+        });
+        $filteredResults3 = $lebResult->filter(function ($item) {
+            return $item->IHM_part == 'IHMPart1-3';
+        });
+        $decks = Deck::with(['checks' => function ($query) {
+            $query->whereHas('check_hazmats', function ($query) {
+                $query->where('type', 'PCHM')->orWhere('type', 'Contained');
+            });
+        }])->where('project_id', $project_id)->get();
+        $html = '';
+        $html .= "<h3>Location Diagram</h3>";
+        foreach ($decks as $deck) {
+            // Convert the image to base64
+            $imagePath = $deck['image'];
+            $imageData = base64_encode(file_get_contents($imagePath));
+            $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
+
+            // Main container
+            $html .= '<div style="position: relative;>';
+            if (count($deck['checks']) > 0) {
+                // Background image using base64
+                $html .= '<img src="' . $imageBase64 . '" />';
+
+                // Container for checks
+                $html .= '<div id="showDeckCheck" style="">';
+
+                if (!empty($deck['checks'])) {
+                    foreach ($deck['checks'] as $key => $value) {
+                        $top = $value->position_top - ($value->isApp == 1 ? 20 : 0);
+                        $left = $value->position_left - ($value->isApp == 1 ? 20 : 0);
+
+                        // Position the dot using fixed units
+                        $html .= '<div style="position: absolute; top: ' . $top . 'px; left: ' . $left . 'px; width: 20px; height: 20px; border: 2px solid red; background: red;border-radius:50%;  text-align: center; line-height: 5mm;"  class="parentDot" >';
+                        $html .= '<div class="tooltip" style="display: block; position: relative; top: -10px; left: 183px; background-color: #fff; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">' . $value['name'] . '</div>';
+
+                        $html .= '</div>';
+                    }
+                }
+
+                // Close containers
+                $html .= '</div>';
+                $html .= '</div>';
+            }
+        }
+
+        $dompdf->loadHtml($html);
+
+        $dompdf->render();
+        $coverPdfContent = $dompdf->output();
+        $filePath = storage_path('app/pdf/rr.pdf');
+        file_put_contents($filePath, $coverPdfContent);
+        try {
+            // Create an instance of mPDF with specified margins
+            $mpdf = new Mpdf([
+                'mode' => 'c',
+                'margin_left' => 32,
+                'margin_right' => 25,
+                'margin_top' => 27,
+                'margin_bottom' => 25,
+                'margin_header' => 16,
+                'margin_footer' => 13,
+            ]);
+            $mpdf->defaultPageNumStyle = '1';
+            $mpdf->SetDisplayMode('fullpage');
+            $pageCount = $mpdf->setSourceFile(storage_path('app/pdf/rr.pdf'));
+
+            // Add each page of the Dompdf-generated PDF to the mPDF document
+
+            $mpdf->use_kwt = true;
+            $mpdf->defaultPageNumStyle = '1';
+            $mpdf->SetDisplayMode('fullpage');
+
+            // Define header content with logo
+            $header = '
+            <table width="100%" style="border-bottom: 1px solid #000000; vertical-align: middle; font-family: serif; font-size: 9pt; color: #000088;">
+                <tr>
+                    <td width="10%"><img src="' . $logo . '" width="50" /></td>
+                    <td width="80%" align="center">' . $projectDetail['ship_name'] . '</td>
+                    <td width="10%" style="text-align: right;">' . $projectDetail['project_no'] . '<br/>' . $date . '</td>
+                </tr>
+            </table>';
+
+            // Define footer content with page number
+            $footer = '
+            <table width="100%" style="vertical-align: bottom; font-family: serif; font-size: 8pt; color: #000000;">
+                <tr>
+                    <td width="33%" style="text-align: left;">' . $projectDetail['ihm_table'] . '</td>
+                    <td width="33%" style="text-align: center;">Revision:' . $version . '</td>
+                    <td width="33%" style="text-align: right;">{PAGENO}/{nbpg}</td>
+                </tr>
+            </table>';
+            $mpdf->SetHTMLHeader($header);
+            $mpdf->SetHTMLFooter($footer);
+
+           
+
+            $stylesheet = file_get_contents('public/assets/mpdf.css');
+            $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
+
+
+            $mpdf->WriteHTML(view('report.cover', compact('projectDetail')));
+            $mpdf->WriteHTML(view('report.shipParticular', compact('projectDetail')));
+            $mpdf->AddPage('L'); // Set landscape mode for the inventory page
+
+            $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3','decks')));
+            for ($i = 1; $i <= $pageCount; $i++) {
+                $mpdf->AddPage('L');
+                $templateId = $mpdf->importPage($i);
+                $mpdf->useTemplate($templateId,0,0,100,100);
+            }
+            $mpdf->Output();
+
+        }catch (\Mpdf\MpdfException $e) {
+            // Handle mPDF exception
+            echo $e->getMessage();
+        }
+    }
     public function genratePdf(Request $request)
     {
 
@@ -74,7 +211,11 @@ class ReportContoller extends Controller
         $project_id = $post['project_id'];
         $version = $post['version'];
         $date = date('d-m-Y', strtotime($post['date']));
-
+        if ($request->input('action') == "summery") {
+           
+            return $this->summeryReport($post);
+        }
+        
         $projectDetail = Projects::with('client')->find($project_id);
         if (!$projectDetail) {
             die('Project details not found');
@@ -158,8 +299,10 @@ class ReportContoller extends Controller
 
         $lebResult = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
         $lebResultAll = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->get();
+        
         $attechments = Attechments::where('project_id', $project_id)->where('attachment_type', '!=', 'shipBrifPlan')->get();
         $brifPlan = Attechments::where('project_id', $project_id)->where('attachment_type', '=', 'shipBrifPlan')->first();
+        
         if (@$brifPlan['documents']) {
             $brifimage = public_path('images/attachment') . "/" . $projectDetail['id'] . "/" . $brifPlan['documents'];
         } else {
@@ -223,9 +366,7 @@ class ReportContoller extends Controller
             $mpdf->SetHTMLHeader($header);
             $mpdf->SetHTMLFooter($footer);
 
-            $mpdf->shrink_tables_to_fit = 0;
             // Load main HTML content
-            $mpdf->shrink_tables_to_fit = 1;
             $mpdf->h2toc = ['H2' => 0, 'H3' => 1];
             $mpdf->h2bookmarks = ['H2' => 0, 'H3' => 1];
             // Set header and footer
@@ -252,7 +393,7 @@ class ReportContoller extends Controller
                 $mpdf->WriteHTML(view('report.introduction', compact('hazmets', 'projectDetail')));
                 $mpdf->AddPage('L'); // Set landscape mode for the inventory page
 
-                $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3', 'decks')));
+                $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
 
                 for ($i = 1; $i <= $pageCount; $i++) {
                     $mpdf->AddPage();
@@ -317,12 +458,12 @@ class ReportContoller extends Controller
                         }
                     }
                 }
-                $gaPlan =  public_path('images/projects') . "/" . $projectDetail['id'] . "/" . $projectDetail['ga_plan'];
+                $gaPlan =  public_path('images/projects') . "/" . $projectDetail['id'] . "/" . $projectDetail['deck_image'];
                 $attachmentCount = 1;
                 if (file_exists($gaPlan) && @$projectDetail['ga_plan']) {
                     $titleattach = '<h2 style="text-align:center">AttachMent ' . $attachmentCount . ' Ga Plan </h2>';
 
-                    $this->mergePdf($gaPlan, $titleattach, $mpdf, $page = 'L');
+                    $this->mergeImageToPdf($gaPlan, $titleattach, $mpdf,$page='L');
                 }
                 foreach ($attechments as $value) {
                     $attachmentCount++;
@@ -353,16 +494,40 @@ class ReportContoller extends Controller
             echo $e->getMessage();
         }
     }
-    protected function mergeImageToPdf($imagePath, $title, $mpdf)
-    {
-        // Get the image dimensions
-        list($width, $height) = getimagesize($imagePath);
+    protected function mergeImageToPdf($imagePath, $title, $mpdf,$page = null)
+    {  list($width, $height) = getimagesize($imagePath);
 
-        // Create a new PDF page and add the image
-        $mpdf->AddPage();
-        $mpdf->WriteHTML($title);
-
-        $mpdf->Image($imagePath, 0, 30, null, null, 'jpg', '', true, false);
+        // Define page dimensions based on the given page format
+        $pageWidth = $mpdf->w - $mpdf->lMargin - $mpdf->rMargin; // Considering margins
+        $pageHeight = $mpdf->h - $mpdf->tMargin - $mpdf->bMargin; // Considering margins
+    
+        // Calculate the aspect ratio
+        $imageAspect = $width / $height;
+        $pageAspect = $pageWidth / $pageHeight;
+    
+        // Scale image dimensions to fit within page dimensions
+        if ($imageAspect > $pageAspect) {
+            // Scale image to fit page width
+            $newWidth = $pageWidth;
+            $newHeight = $pageWidth / $imageAspect;
+        } else {
+            // Scale image to fit page height
+            $newHeight = $pageHeight;
+            $newWidth = $pageHeight * $imageAspect;
+        }
+    
+        // Center the image on the page
+        $x = ($pageWidth - $newWidth) / 2 + $mpdf->lMargin;
+        $y = ($pageHeight - $newHeight) / 2 + $mpdf->tMargin;
+    
+        // Create a new PDF page
+        $mpdf->AddPage($page);
+    
+        // Add the title
+        $mpdf->WriteHTML('<h1>' . $title . '</h1>');
+    
+        // Add the image to the page
+        $mpdf->Image($imagePath, $x, 35, 0, $newHeight, 'png', '', true, false);
     }
     protected function mergePdf($filePath, $title, $mpdf, $page = null)
     {
