@@ -1753,7 +1753,7 @@
                 $('#checkImageAddForm')[0].reset();
             });
 
-            $('#checkImageListPreview').on('click', '.deleteCheckImage', function() {
+            $(document).on('click', '#checkImageListPreview .deleteCheckImage', function() {
                 let imageId = $(this).attr('data-id');
                 let deleteUrl = "{{ route('deleteCheckImage', ':id') }}".replace(':id', imageId);
                 let confirmMsg = "Are you sure you want to delete this check image?";
@@ -1765,7 +1765,6 @@
                     }
                 });
             });
-
 
             $(document).on("click", ".modalCheckbtn", function() {
                 let checkId = $(this).attr('data-id');

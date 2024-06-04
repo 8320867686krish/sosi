@@ -161,21 +161,7 @@ th {
     padding: 5px;
 }
 
-.section-1-1 table td {
-    border: 1px solid black;
-    /* Adds border to each cell */
-    padding: 4px;
-    /* Adds padding to cells */
-    font-size: 14px;
-    padding: 5px;
-}
-
-
-
-
-
-.section-1-1 table td,
-th {
+.section-1-1 table td, th {
     border: 1px solid black;
     /* Adds border to each cell */
     padding: 4px;

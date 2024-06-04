@@ -1,19 +1,18 @@
 <div class="container">
     <!-- Section 1.1 -->
-    <h2>1.0 Report</h2>
+    <h2>1.Introduction to Project</h2>
     <div class="section-1-1">
         <h3>1.1 Scope</h3>
-        <p>This analysis of the Initial IHM (Part-1) report provided by the owner to bridge gaps with requirements laid
-            out in HKC- MEPC.269(68) & EUSRR IHM requirements as per EMSA guidelines, and/or other limitations and
-            challenges associated while making the Inital IHM reports & Additional samplings.</p>
+        <p>The scope for development of the Inventory of hazardous material (part-1)  on board mainly covers and consists of Materials contained in ship structure or equipment; and material to be listed in the inventory as per MEPC 379(80) and EU1257/2013, which are mentioned in appendix 1 of the MEPC 379(80) and Annex I, Annex II of the EU 1257/2013). These items are further classified according to their properties. As per IMO regulation Table A, and table B detailed as per MEPC 379(80) correspond to part I of the Inventory.</p>
+        <p>This analysis of the Initial IHM (Part-1)  report provided by the owner to bridge gaps with requirements laid out in HKC- MEPC.379(80) &  EUSRR IHM requirements as per EMSA guidelines, and/or other limitations and challenges associated while making the Inital IHM reports & Additional samplings for the vessel ({{$projectDetail['ship_name']}}) on behalf of ({{$projectDetail['manager_name']}}).</p>
 
+        <h3>1.2	Objective</h3>
+        <p>The objectives of the inventory are to provide ship-specific information on the actual hazardous materials onboard, to protect health and safety, and prevent environmental pollution at ship recycling facilities. This information will be used by the ship recycling facilities to decide how to manage the type and amounts of materials identified in the Inventory of Hazardous Material (IHM) (regulation 9 of the Hong Kong Convention).</p>
     </div>
 
     <div class="section-1-1">
-        <h3>1.2 Events</h3>
-        <p>Upon the request from the recycling yard YS Investments, Solution for Overall Ship India Pvt. Ltd. (herein
-            after referring as SOS India) visited the vessel for preparation of Gap analysis (herein after referring as
-            GA) for the previous Inventory of Hazardous Material (IHM) provided by Vessel Owner.</p>
+        <h3>1.3 Chain of Events</h3>
+        <p>Upon the request from the {{$projectDetail['manager_name']}}, Solution for Overall Ship India Pvt. Ltd. (herein after referring as SOS India) visited the vessel for preparation of Gap analysis (herein after referring as GA) for the previous Inventory of Hazardous Material (IHM) provided by Vessel Owner.</p>
         <p>The followings were the salient points for preparation:</p>
         <ul>
             <li>Discussed the scope of the Gap analysis.</li>
@@ -23,15 +22,11 @@
             <li>Prepared VSCP (Visual sample checkpoints) taking references from existing IHM report, MEPC 269(68)
                 guidelines, and EU guidelines (EMSA's Best Practice Guidance on the Inventory of Hazardous Materials)
                 along with available vessel documents & various other technical reports & analysis.</li>
-            <li>The onboard inspection was carried out, ship recycling yard input, while inspection, considered for
-                additional samplings & risk assessment (See Appendix 3) carried out. Samples were collected with
-                sampling precautions (See under Sampling Process and Survey Onboard), and sample points were sealed &
-                marked to minimize possibilities of any leakage or scatterings, or contamination.</li>
+            <li>The onboard inspection was carried out, ship recycling yard input, while inspection, considered for additional samplings & risk assessment (inside document hyperlink to risk assessment) carried out. Samples were collected with sampling precautions (See under Sampling Process and Survey Onboard), and sample points were sealed & marked to minimize possibilities of any leakage or scatterings, or contamination.</li>
             <li>Samples were dispatched to the relevant laboratory for lab testing owing to standards & specifications
                 mentioned in MEPC 269(68) guidelines. (See the “Threshold values and test standard” in the cumulative
                 list under Section A (applicable requirement))</li>
-            <li>Prepared the Gap Analysis report after receiving the lab test results.(Attached are Lab reports in
-                Appendix 2).</li>
+            <li>Prepared the Gap Analysis report after receiving the lab test results. (Attached are Lab reports in inside document hyperlink to lab test result)</li>
         </ul>
         <p>The methods and procedures for developing GA report for the IHM of the vessel comply with the IMO Hong Kong
             International Convention for the Safe and Environmentally Sound Recycling of Ships (2009), considering the
@@ -49,6 +44,47 @@
         </ul>
         <p>The additional sampling for the IHM survey onboard Maersk Patras was carried out by the SOS India
             representative whilst the vessel was at YS Investments LLP, Plot–59, Alang, Gujarat, India</p>
+
+        <h3>1.3 Limitations</h3>
+        <p>SOS India Pvt Ltd does not warrant or assume any kind of liability for the up-to-date nature, accuracy, completeness or quality of the HazMat weight calculation provided. Liability claims against any member of SOS India Pvt Ltd in relation to any loss or damage arising out of or in connection with the use or non-use of HazMat weight calculation provided, including the use of incorrect or incomplete HazMat weight calculation data, are excluded to the fullest extent permissible by law. All weight calculation data may be subject to alteration and are non-binding. Each SOS India Pvt Ltd member expressly reserves the right without notice to change, supplement or delete parts of the HazMat weight calculation data or to stop the publication and usage temporarily or definitively.</p>
+    </div>
+
+    <div class="section-1-1">
+        <h3>1.4 Abbreviations & Normative References</h3>
+        <h4>Abbreviation</h4>
+        <ul>
+            <li>IHM= Inventory of Hazardous Materials</li>
+            <li>ACMs= Asbestos Containing Materials</li>
+            <li>PCBs= Poly chlorinated biphenyls</li>
+            <li>ODS= Ozone Depleting Substances</li>
+            <li>PBBs= Poly Brominated Biphenyls</li>
+            <li>PBDEs=Poly Brominated Diphenyl ethers</li>
+            <li>PCNs=Polychlorinated naphthalene</li>
+            <li>SCCPs= Short chain chlorinated paraffin</li>
+            <li>PFOS= Perfluorooctane Sulfonic Acid</li>
+            <li>HBCDD= Hexa Bromo Cyclododecane</li>
+            <li>POP= Persistent Organic Pollutants</li>
+            <li>PCHM= Potentially Containing Hazardous Materials</li>
+            <li>VSCP= Visual/Sampling Check Plan</li>
+            <li>ECR= Engine control room</li>
+            <li>CCR= Cargo control room</li>
+            <li>D/G= Diesel Engine</li>
+            <li>L.O. = Lubricating oil</li>
+            <li>N.D. = Not Detected</li>
+        </ul>
+        <h4>Normative Reference:</h4>
+        <ul>
+            <li>Hong Kong International Convention for the Safe and Environmentally Sound Recycling of Ships, 2009
+                (SR/CONF/45)</li>
+            <li>2015 Guidelines for the Development of the Inventory of Hazardous Materials (MEPC. 269(68))</li>
+            <li>EU Regulation on Ship Recycling, Regulation (EU) No1257/2013</li>
+            <li>EMSA’s Best Practice Guidance on the Inventory of Hazardous Material, 2016-10-28</li>
+            <li>SOLAS regulation II -1/3-5 new amendments concerning the new installation of asbestos-containing
+                material, MSC.282(86)</li>
+            <li>MSC. 1/Circ. 1426 Unified Interpretation of SOLAS Regulation II- 1/3-5</li>
+            <li>MSC. 1/Circ.1374 Information on Prohibiting the use of asbestos onboard ships</li>
+            <li>MSC. 1/Circ.1379 Unified Interpretation of SOLAS Regulation II- 1/3-5</li>
+        </ul>
     </div>
 
     <div class="section-1-1 next">
@@ -109,43 +145,6 @@
     </div>
 
     <div class="section-1-1 next">
-        <h2>3.0 Abbreviation and Normative Reference</h2>
-        <h3>3.1 Abbreviation</h3>
-        <ul>
-            <li>IHM= Inventory of Hazardous Materials</li>
-            <li>ACMs= Asbestos Containing Materials</li>
-            <li>PCBs= Poly chlorinated biphenyls</li>
-            <li>ODS= Ozone Depleting Substances</li>
-            <li>PBBs= Poly Brominated Biphenyls</li>
-            <li>PBDEs=Poly Brominated Diphenyl ethers</li>
-            <li>PCNs=Polychlorinated naphthalene</li>
-            <li>SCCPs= Short chain chlorinated paraffin</li>
-            <li>PFOS= Perfluorooctane Sulfonic Acid</li>
-            <li>HBCDD= Hexa Bromo Cyclododecane</li>
-            <li>POP= Persistent Organic Pollutants</li>
-            <li>PCHM= Potentially Containing Hazardous Materials</li>
-            <li>VSCP= Visual/Sampling Check Plan</li>
-            <li>ECR= Engine control room</li>
-            <li>CCR= Cargo control room</li>
-            <li>D/G= Diesel Engine</li>
-            <li>L.O. = Lubricating oil</li>
-            <li>N.D. = Not Detected</li>
-        </ul>
-        <h3>3.2 Normative Reference:</h3>
-        <ul>
-            <li>Hong Kong International Convention for the Safe and Environmentally Sound Recycling of Ships, 2009
-                (SR/CONF/45)</li>
-            <li>2015 Guidelines for the Development of the Inventory of Hazardous Materials (MEPC. 269(68))</li>
-            <li>EU Regulation on Ship Recycling, Regulation (EU) No1257/2013</li>
-            <li>EMSA’s Best Practice Guidance on the Inventory of Hazardous Material, 2016-10-28</li>
-            <li>SOLAS regulation II -1/3-5 new amendments concerning the new installation of asbestos-containing
-                material, MSC.282(86)</li>
-            <li>MSC. 1/Circ. 1426 Unified Interpretation of SOLAS Regulation II- 1/3-5</li>
-            <li>MSC. 1/Circ.1374 Information on Prohibiting the use of asbestos onboard ships</li>
-            <li>MSC. 1/Circ.1379 Unified Interpretation of SOLAS Regulation II- 1/3-5</li>
-        </ul>
-    </div>
-    <div class="section-1-1 next">
         <h2>4.0 Section A: Applicable requirements</h2>
         <h3>4.1 Introduction</h3>
         <p>Development and preparation of Inventory of hazardous material as per MEPC 269(68) and EUSRR 1257/2013.</p>
@@ -176,8 +175,7 @@
     </div>
 
     <div class="section-1-1 next">
-        <p style="font-size: 18px;"><b><u>The below cumulative list is its threshold values and test standard to
-                    follow:</u></b></p>
+        <p style="font-size: 18px;"><b><u>The below cumulative list is its threshold values and test standard to follow:</u></b></p>
         <table>
             <thead>
                 <tr>
@@ -211,7 +209,6 @@
                     <td>MEPC. 379(80) 2023 Guidelines for the development of the IHM</td>
                 </tr>
                 <tr>
-
                     <td>EPA8082A Polychlorinated biphenyls (PCBs) by Gas Chromatography</td>
                 </tr>
 
@@ -235,11 +232,9 @@
                         convention)</td>
                 </tr>
                 <tr>
-
                     <td>MEPC. 104(49) Guidelines of brief sampling of anti-fouling systems</td>
                 </tr>
                 <tr>
-
                     <td>MEPC. 379(80) 2023 Guidelines for the development of the IHM</td>
                 </tr>
                 <tr>
@@ -317,7 +312,6 @@
                         ICP-OES, and ICP-MS</td>
                 </tr>
 
-
                 <tr>
                     <td rowspan="3">9.</td>
                     <td rowspan="3">Mercury and Mercury compounds</td>
@@ -332,9 +326,6 @@
                     <td>IEC62321-4:2013 Determination of certain substances in electro technical products-part-4:
                         Mercury in polymers, metals & electronics by CV-AAS, CV-AFS, ICP-OES, and ICP-MS</td>
                 </tr>
-
-
-
 
                 <tr>
                     <td rowspan="3">10.</td>
@@ -779,12 +770,132 @@
             <li>How they may harm people</li>
             <li>What you are already doing to control the risks</li>
         </ul>
-        <h3>8.2 Risk Assessment for IHM:</h3>
+        <h3>7.2 Risk Assessment for IHM:</h3>
         <p>A good appreciation of HSE (health, safety&environment) risks in the area of responsibility helps to correctly direct resources for improvement. The Risk Assessment Matrix is a tool to rank and assess these risks and discuss what changes need to be made so that the risk is also was/is reasonably practicable.</p>
         <p>Ensuring that risk is managed in a structured and rational way is a necessary part of a safety management system. Rationalizing risk in this way can help better allocate resources and ensure that adequate barriers are put in place to prevent incidents. Applying the Risk Assessment Matrix properly and frequently is a natural way to communicate and plan for HSE improvement. The Risk Assessment Matrix can help managers better appreciate their roles in managing the HSE risk in their area of responsibility and can help them come to a good understanding of their role in demonstrating risk is managed too low as is reasonably practicable.
         </p>
         <p>How to use: Apply the Risk Assessment Matrix properly and frequently as a natural way to communicate and plan for HSE improvement.</p>
         <p>As a group exercise, consider the potential incidents that could happen and plot that incident on the Risk Assessment Matrix depending on its severity and the likelihood of happening. Consider how the risk of the incident happening can be reduced by changing how the work takes place or building extra safeguards.</p>
+        <p>TheDetailed Risk Assessment has been attached under Appendix“3”for the sampling and whole exercise.</p>
     </div>
     {{-- 7.0 Risk Assessment in Gap Analysis and Sampling end --}}
+
+    {{-- 9.0 Remarks and Limitations start --}}
+    <div class="section-1-1 next">
+        <p>This report States the status of hazardous materials presented onboard the vessel at the time of inspection through document assessment, visual check, and sample testing. The information provided in this statement/report gives to the best of our knowledge a fair view of the actual potentially hazardous materials situation of the vessel. However, S.O.S.India does not by this report give a guarantee related to the content of potentially hazardous materials, nor does S.O.S. India give a guarantee related to the accuracy and correctness of all the information in every respect. S.O.S. India has no liability for any loss, damage or expense, or other consequences of whatsoever nature due to information that has not been provided or information that is incorrect or inaccurate concerning the actual condition of the vessel.</p>
+    </div>
+    {{-- 9.0 Remarks and Limitations end --}}
+
+    {{-- Appendix 1.0 - Visual and Sampling Check Plan section start --}}
+    <div class="section-1-1 next">
+        <h2 id="appendix1_check_plan">Appendix 1.0 - Visual and Sampling Check Plan</h2>
+        <h3>1.1 Table A: Ship Details</h3>
+        <table style="padding-left: 10px;">
+            <tr>
+                <td>Name of Ship</td>
+                <td> {{$projectDetail['ship_name']}}</td>
+            </tr>
+            <tr>
+                <td>IMO Number</td>
+                <td>{{$projectDetail['imo_number']}}</td>
+            </tr>
+            <tr>
+                <td>Gross Tonnage</td>
+                <td>{{$projectDetail['gross_tonnage']}}</td>
+            </tr>
+            <tr>
+                <td>L x B x D</td>
+                <td>{{$projectDetail['x_breadth_depth']}}</td>
+            </tr>
+            <tr>
+                <td>Year of delivery</td>
+                <td>{{ !empty($projectDetail['delivery_date']) ? date('Y', strtotime($projectDetail['delivery_date'])) : null}}</td>
+            </tr>
+            <tr>
+                <td>Ship Owner</td>
+                <td>{{$projectDetail['client']->owner_name}}</td>
+            </tr>
+        </table>
+        <h3>1.2 Visual checks</h3>
+        <p>All items likely to contain hazards, as listed in Table C, <a href="#appendix1_check_plan">Appendix 1</a> materials, are to be checked on board for manufacturers' labels, material characteristics, or other identifying features to verify what materials are present, without exposing those carrying out the checks to any hazard. The results will be listed in <a href="#">Table C</a> or can be entered directly into the Inventory of Hazardous Materials. <a href="#">Appendix 2</a> materials should be listed as far as practicable.</p>
+        <h3>1.3 Sampling checks</h3>
+        <p>All items likely to contain hazards, as listed in Table C, which have not been properly identified by the checks above, should be subject to sampling. The sampling techniques should be detailed under ‘Sampling Methods'.</p>
+        <h3>1.4 Abbreviation Used</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="2">Result of Documentation Analysis</th>
+                    <th colspan="2">Procedure of Check</th>
+                    <th colspan="2">Result of Check</th>
+                </tr>
+            </thead>
+            <thead>
+                <tr>
+                    <td>N</td>
+                    <td>Not Contained</td>
+                    <td>V</td>
+                    <td>Visually Verified</td>
+                    <td>N</td>
+                    <td>Not Contained</td>
+                </tr>
+                <tr>
+                    <td>C</td>
+                    <td>Contained</td>
+                    <td rowspan="2">S</td>
+                    <td rowspan="2">Sample Taken</td>
+                    <td rowspan="2">C</td>
+                    <td rowspan="2">Contained</td>
+                </tr>
+                <tr>
+                    <td>Unknown</td>
+                    <td>Unable to conclude</td>
+                </tr>
+                <tr>
+                    <td rowspan="2">Assumption</td>
+                    <td rowspan="2">Assumptions based on referred guidelines/reports</td>
+                    <td rowspan="2">VSNP</td>
+                    <td rowspan="2">Visual/Sample Not Possible</td>
+                    <td>PCHM</td>
+                    <td>Potentially Contained Hazardous material</td>
+                </tr>
+                <tr>
+                    <td>BTV</td>
+                    <td>Below Threshold Value</td>
+                </tr>
+            </thead>
+        </table>
+        <h3>1.5 Table B: Contact Details</h3>
+        <table>
+            <tr>
+                <td>Prepared by (name)</td>
+                <td>Dileep Pandey</td>
+            </tr>
+            <tr>
+                <td>Job title/position</td>
+                <td>Project Manager</td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td>SOS India Pvt. Ltd., Ground floor, G-046, Agarwal trade center, Plot 62, Sector11, CBD Belapur, Navi Mumbai, Mumbai, Maharashtra 400614</td>
+            </tr>
+            <tr>
+                <td>Telephone Number</td>
+                <td>+91 7715023032</td>
+            </tr>
+            <tr>
+                <td>Email address</td>
+                <td><a href="mailto:info@sosindi.com">info@sosindi.com</a></td>
+            </tr>
+            <tr>
+                <td>Date</td>
+                <td>{{date('d-m-Y')}}</td>
+            </tr>
+            <tr>
+                <td>Signature</td>
+                <td></td>
+            </tr>
+        </table>
+        <h3></h3>
+    </div>
+    {{-- Appendix 1.0 - Visual and Sampling Check Plan section end --}}
 </div>
