@@ -39,7 +39,7 @@
                     <td colspan="2" align="center"><b>Ship Particulars Details</b></td>
                 </tr>
                 <tr>
-                    <td>Name of Ship</td>
+                    <td width="30%">Name of Ship</td>
                     <td> {{$projectDetail['ship_name']}}</td>
                 </tr>
                 <tr>
