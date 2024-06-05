@@ -31,7 +31,9 @@
                     <td>{{$value->total}}</td>
                     <td>{{$value->unit}}</td>
                     <td>{{ $value->lab_remarks }}</td>
-                    <td><a href="{{$value['check']['checkSingleimage']['image']}}"  target="_blank"><img src="{{$value['check']['checkSingleimage']['image']}}" width="70px" height="70px"/></a></td>
+                    
+
+                    <td><a href="{{$value['check']['checkSingleimage']['image']}}"><img src="{{$value['check']['checkSingleimage']['image']}}" width="70px" height="70px"/></a></td>
                 </tr>
                
                 @endforeach
