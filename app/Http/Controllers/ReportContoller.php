@@ -298,8 +298,7 @@ class ReportContoller extends Controller
         $ChecksList = Deck::with(['checks.check_hazmats'])->where('project_id', $project_id)->get();
 
         $lebResult = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
-        $lebResultAll = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->get();
-
+        $lebResultAll = LabResult::with(['check.checkSingleimage', 'hazmat'])->where('project_id', $project_id)->get();
         $attechments = Attechments::where('project_id', $project_id)->where('attachment_type', '!=', 'shipBrifPlan')->get();
         $brifPlan = Attechments::where('project_id', $project_id)->where('attachment_type', '=', 'shipBrifPlan')->first();
 
@@ -408,6 +407,7 @@ class ReportContoller extends Controller
 
                 $mpdf->AddPage('L');
                 $mpdf->WriteHTML(view('report.riskAssessments'));
+                $mpdf->WriteHTML(view('report.sampleImage', compact('lebResultAll')));
 
 
                 $titleHtml = '<h2 style="text-align:center" id="lebResult">Appendix-4 Leb Result</h2>';

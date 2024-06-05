@@ -20,11 +20,13 @@
             <tbody>
                 @foreach($ChecksList as $value)
                 @if(count($value['checks']) > 0)
+                @php $count = 1; @endphp
+
                 @foreach ($value->checks as $check)
                 @php $hazmatsCount = count($check->check_hazmats); @endphp
                 @if ($hazmatsCount == 0)
                 <tr>
-                    <td>1</td>
+                    <td>{{$count}}</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>{{ $check->location }} @if($check->sub_location){{ ',' . $check->sub_location }}
@@ -35,11 +37,12 @@
                     <td>{{ $check->type }}</td>
                     <td>&nbsp;</td>
                 </tr>
+                @php $count++; @endphp
                 @endif
                 @foreach ($check->check_hazmats as $index => $hazmat)
-                <tr style="background-color: {{ ($hazmat->type == 'Contained' || $hazmat->type == 'PCHM') ? 'red' : 'transparent' }};">
+                <tr style="background-color: {{ ($hazmat->type == 'Contained' || $hazmat->type == 'PCHM') ? '#CC3300' : 'transparent' }};color:#fff;">
 
-                    <td>1</td>
+                    <td>{{$count}}</td>
                     <td>{{ $hazmat->hazmat->table_type }}</td>
                     <td>{{ $hazmat->hazmat->short_name }}</td>
                     <td>{{ $check->location }} @if($check->sub_location){{ ',' . $check->sub_location }}
@@ -56,6 +59,7 @@
                     <td>{{ substr($hazmat->type, 0, 1) }}</td>
 
                 </tr>
+                @php $count++; @endphp
                 @endforeach
                 @endforeach
                 @endif
