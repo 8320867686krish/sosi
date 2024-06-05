@@ -10,6 +10,7 @@
         <p>The objectives of the inventory are to provide ship-specific information on the actual hazardous materials onboard, to protect health and safety, and prevent environmental pollution at ship recycling facilities. This information will be used by the ship recycling facilities to decide how to manage the type and amounts of materials identified in the Inventory of Hazardous Material (IHM) (regulation 9 of the Hong Kong Convention).</p>
     </div>
 
+    {{-- 1.3 Chain of Events section start --}}
     <div class="section-1-1">
         <h3>1.3 Chain of Events</h3>
         <p>Upon the request from the {{$projectDetail['manager_name']}}, Solution for Overall Ship India Pvt. Ltd. (herein after referring as SOS India) visited the vessel for preparation of Gap analysis (herein after referring as GA) for the previous Inventory of Hazardous Material (IHM) provided by Vessel Owner.</p>
@@ -48,7 +49,9 @@
         <h3>1.3 Limitations</h3>
         <p>SOS India Pvt Ltd does not warrant or assume any kind of liability for the up-to-date nature, accuracy, completeness or quality of the HazMat weight calculation provided. Liability claims against any member of SOS India Pvt Ltd in relation to any loss or damage arising out of or in connection with the use or non-use of HazMat weight calculation provided, including the use of incorrect or incomplete HazMat weight calculation data, are excluded to the fullest extent permissible by law. All weight calculation data may be subject to alteration and are non-binding. Each SOS India Pvt Ltd member expressly reserves the right without notice to change, supplement or delete parts of the HazMat weight calculation data or to stop the publication and usage temporarily or definitively.</p>
     </div>
+    {{-- 1.3 Chain of Events section end --}}
 
+    {{-- 1.4 Abbreviations & Normative References section start --}}
     <div class="section-1-1">
         <h3>1.4 Abbreviations & Normative References</h3>
         <h4>Abbreviation</h4>
@@ -86,9 +89,282 @@
             <li>MSC. 1/Circ.1379 Unified Interpretation of SOLAS Regulation II- 1/3-5</li>
         </ul>
     </div>
+    {{-- 1.4 Abbreviations & Normative References section end --}}
 
-    <div class="section-1-1 next">
-        <h2>2.0 Executive Summary</h2>
+    {{-- 1.5 Project Particular section start --}}
+    <div class="section-1-1">
+        <h3>1.5 Project Particular</h3>
+        <table>
+            <tr>
+                <td colspan="2" align="center">
+                    <b><p class="setFont">Ship Particulars Details</p></b>
+                </td>
+            </tr>
+            <tr>
+                <td width="30%">
+                    <p class="sufont">Name of Ship
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['ship_name'] }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">IMO Number</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['imo_number'] }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Call Sign</p>
+                </td>
+                <td>
+                    <p class="sufont"> {{ $projectDetail['call_sign'] }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Type of ship</p>
+                </td>
+                <td>
+                    <p class="sufont"> {{ $projectDetail['ship_type'] }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Port of Registry Kunching</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['port_of_registry'] }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Vessel Class</p>
+                </td>
+                <td>
+                    <p class="sufont"> {{ $projectDetail['vessel_class'] }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">IHM Certifying Class</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['ihm_class'] }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Flag of ship</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['flag_of_ship'] }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Date of delivery</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['delivery_date'] }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Building Yard Details</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['building_details'] }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Dimensions (L x B x D)</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['x_breadth_depth'] }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Gross Tonnage (GT)</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['gross_tonnage'] }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Vessel Previous Name</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['vessel_previous_name'] }}</p>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" align="center"><b>
+                        <p class="setfont">Ship Owner Details</p>
+                    </b></td>
+
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Ship Owner Name</p>
+                </td>
+                <td>
+                    <p class="sufont"> {{ $projectDetail['client']->owner_name }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Ship Owner Email</p>
+                </td>
+                <td>
+                    <p class="sufont"> {{ $projectDetail['client']->owner_email }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Ship Owner Phone</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['client']->owner_phone }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Ship Owner Address</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['client']->owner_address }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><b>
+                        <p class="setfont">Ship Manager Details</p>
+                    </b></td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Ship Manager Name</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['client']->manager_name }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Ship Manager Email</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['client']->manager_email }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Ship Manager Phone</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['client']->manager_phone }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Ship Manager Address</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['client']->manager_address }}</p>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" align="center"><b>
+                        <p class="setfont">Survey Details</p>
+                    </b></td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Surveyor Name</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['surveyorName'] }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Survey Location Name</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['survey_location_name'] }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Survey Location Address</p>
+                </td>
+                <td>{{ $projectDetail['survey_location_address'] }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Survey Type</p>
+                </td>
+                <td>
+                    <p class="sufont">{{ $projectDetail['survey_type'] }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="sufont">Survey Date</p>
+                </td>
+                <td>
+                    <p class="sufont">
+                        {{ !empty($projectDetail['survey_date']) ? date('d-m-Y', strtotime($projectDetail['survey_date'])) : null }}
+                    </p>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" align="center"><b>
+                        <p class="setfont">Laboratory</p>
+                    </b></td>
+            </tr>
+            @if (!empty($projectDetail['laboratorie1']))
+                <tr>
+                    <td>
+                        <p class="sufont">Laboratory</p>
+                    </td>
+                    <td>
+                        <p class="sufont">{{ $projectDetail['laboratorie1'] }}</p>
+                    </td>
+                </tr>
+            @endif
+
+            @if (!empty($projectDetail['laboratorie2']))
+                <tr>
+                    <td>
+                        <p class="sufont">Laboratory 2</p>
+                    </td>
+                    <td>
+                        <p class="sufont">{{ $projectDetail['laboratorie2'] }}</p>
+                    </td>
+                </tr>
+            @endif
+        </table>
+    </div>
+    {{-- 1.5 Project Particular section end --}}
+
+    {{-- 1.6 Executive Summary section start --}}
+    <div class="section-1-1">
+        <h3>1.6 Executive Summary</h3>
+        <p>The onboard visual/sampling check was carried out at ({{$projectDetail['survey_location_address']}}) by IHM expert ({{$projectDetail['surveyorName']}}) on ({{!empty($projectDetail['survey_date']) ? date('d-m-Y', strtotime($projectDetail['survey_date'])) : null}}) as per  the visual/sampling check plan. Sampling points on ship were marked/labeled with check point numbers same as mentioned on sampling bag . The collected samples were appropriate bagged/packed and sent to the ({{$projectDetail['laboratorie1']}}) for the analysis. Following is details number of sampling & visual checks carried out for the vessel:</p>
         <table>
             <thead>
                 <tr>
@@ -134,6 +410,15 @@
                     @endphp
                 @endforeach
                 <tr>
+                    <td>BWM
+                        Convention</td>
+                    <td>D-2</td>
+                    <td>Microorganisms in Ballast Water (D2 Standard)</td>
+                    <td valign="middle" align="center">0</td>
+                    <td valign="middle" align="center">0</td>
+                    <td valign="middle" align="center">0</td>
+                </tr>
+                <tr>
                     <td colspan="3" style="border: 2px solid #000000"></td>
                     <td valign="middle" align="center" style="border: 2px solid #000000"><b>{{ $sampling }}</b></td>
                     <td valign="middle" align="center" style="border: 2px solid #000000"><b>{{ $visual }}</b></td>
@@ -143,6 +428,7 @@
         </table>
 
     </div>
+    {{-- 1.6 Executive Summary section end --}}
 
     <div class="section-1-1 next">
         <h2>4.0 Section A: Applicable requirements</h2>

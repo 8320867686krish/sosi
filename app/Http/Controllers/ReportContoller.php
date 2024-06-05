@@ -71,7 +71,7 @@ class ReportContoller extends Controller
         $project_id = $post['project_id'];
         $version = $post['version'];
         $date = date('d-m-Y', strtotime($post['date']));
-       
+
         $projectDetail = Projects::with('client')->find($project_id);
         if (!$projectDetail) {
             die('Project details not found');
@@ -181,7 +181,7 @@ class ReportContoller extends Controller
             $mpdf->SetHTMLHeader($header);
             $mpdf->SetHTMLFooter($footer);
 
-           
+
 
             $stylesheet = file_get_contents('public/assets/mpdf.css');
             $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
@@ -212,10 +212,10 @@ class ReportContoller extends Controller
         $version = $post['version'];
         $date = date('d-m-Y', strtotime($post['date']));
         if ($request->input('action') == "summery") {
-           
+
             return $this->summeryReport($post);
         }
-        
+
         $projectDetail = Projects::with('client')->find($project_id);
         if (!$projectDetail) {
             die('Project details not found');
@@ -299,10 +299,10 @@ class ReportContoller extends Controller
 
         $lebResult = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
         $lebResultAll = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->get();
-        
+
         $attechments = Attechments::where('project_id', $project_id)->where('attachment_type', '!=', 'shipBrifPlan')->get();
         $brifPlan = Attechments::where('project_id', $project_id)->where('attachment_type', '=', 'shipBrifPlan')->first();
-        
+
         if (@$brifPlan['documents']) {
             $brifimage = public_path('images/attachment') . "/" . $projectDetail['id'] . "/" . $brifPlan['documents'];
         } else {
@@ -485,6 +485,7 @@ class ReportContoller extends Controller
             }
             else if($reportType == 'IHM Gap Analysis'){
                 $mpdf->WriteHTML(view('report.gapAnaylisis', compact('projectDetail','hazmets')));
+                $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
             }
 
 
@@ -500,11 +501,11 @@ class ReportContoller extends Controller
         // Define page dimensions based on the given page format
         $pageWidth = $mpdf->w - $mpdf->lMargin - $mpdf->rMargin; // Considering margins
         $pageHeight = $mpdf->h - $mpdf->tMargin - $mpdf->bMargin; // Considering margins
-    
+
         // Calculate the aspect ratio
         $imageAspect = $width / $height;
         $pageAspect = $pageWidth / $pageHeight;
-    
+
         // Scale image dimensions to fit within page dimensions
         if ($imageAspect > $pageAspect) {
             // Scale image to fit page width
@@ -515,17 +516,17 @@ class ReportContoller extends Controller
             $newHeight = $pageHeight;
             $newWidth = $pageHeight * $imageAspect;
         }
-    
+
         // Center the image on the page
         $x = ($pageWidth - $newWidth) / 2 + $mpdf->lMargin;
         $y = ($pageHeight - $newHeight) / 2 + $mpdf->tMargin;
-    
+
         // Create a new PDF page
         $mpdf->AddPage($page);
-    
+
         // Add the title
         $mpdf->WriteHTML('<h1>' . $title . '</h1>');
-    
+
         // Add the image to the page
         $mpdf->Image($imagePath, $x, 35, 0, $newHeight, 'png', '', true, false);
     }
