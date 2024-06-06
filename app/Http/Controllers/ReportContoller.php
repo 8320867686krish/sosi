@@ -218,9 +218,27 @@ class ReportContoller extends Controller
 
 
         $ChecksList = Deck::with(['checks.check_hazmats'])->where('project_id', $project_id)->get();
+        $allChecks = $decks->flatMap(function($deck) {
+            return $deck->checks;
+        });
 
+        // Separate the checks based on their type
+        $sampleChecks = $allChecks->filter(function($check) {
+            return $check->type === 'sample';
+        });
+
+        $visualChecks = $allChecks->filter(function($check) {
+            return $check->type === 'visual';
+        });
         $lebResult = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
         $lebResultAll = LabResult::with(['check.checkSingleimage', 'hazmat'])->where('project_id', $project_id)->get();
+        $sampleChecks = $lebResultAll->filter(function($labResult) {
+            return $labResult->check && $labResult->check->type === 'sample';
+        });
+
+        $visualChecks = $lebResultAll->filter(function($labResult) {
+            return $labResult->check && $labResult->check->type === 'visual';
+        });
         $attechments = Attechments::where('project_id', $project_id)->where('attachment_type', '!=', 'shipBrifPlan')->get();
         $brifPlan = Attechments::where('project_id', $project_id)->where('attachment_type', '=', 'shipBrifPlan')->first();
 
@@ -395,7 +413,7 @@ class ReportContoller extends Controller
                 }
                 foreach ($attechments as $value) {
                     $attachmentCount++;
-                    $titleattach = '<h2 style="text-align:center">AttachMent ' . $attachmentCount . " " . $value['heading'] . '</h2>';
+                    $titleattach = '<h2 style="text-align:center">Attachment ' . $attachmentCount . " " . $value['heading'] . '</h2>';
 
                     $filePath =  public_path('images/attachment') . "/" . $projectDetail['id'] . "/" . $value['documents'];
                     if (file_exists($filePath) && @$value['documents']) {
@@ -426,6 +444,12 @@ class ReportContoller extends Controller
                     // Get the dimensions of the current page
 
                 }
+                $mpdf->AddPage('P');
+                $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll', 'ChecksList')));
+                $mpdf->AddPage('L');
+                $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
+                $mpdf->WriteHTML(view('report.riskAssessments'));
+                $mpdf->WriteHTML(view('report.sampleImage', compact('lebResultAll')));
             }
 
 

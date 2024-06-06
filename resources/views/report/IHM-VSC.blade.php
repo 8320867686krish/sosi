@@ -490,6 +490,7 @@
         @endforeach
     </div>
 </div>
+@if($projectDetail['ihm_table'] == 'IHM Part 1')
 <div class="next">
     <h2>6.IHM Part-1 Maintenance and Record of Changes </h2>
     <div class="section-1-1">
@@ -566,3 +567,4 @@
         </table>
     </div>
 </div>
+@endif
