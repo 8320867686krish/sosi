@@ -202,7 +202,7 @@ class ReportContoller extends Controller
                 $query->where('type', 'PCHM')->orWhere('type', 'Contained');
             });
         }])->where('project_id', $project_id)->get();
-        if ($reportType == 'IHM Part 1') {
+        if ($reportType == 'IHM Part 1' || $reportType == 'IHM Gap Analysis') {
             $filename = $this->drawDigarm($decks);
         }
 
@@ -257,7 +257,6 @@ class ReportContoller extends Controller
             ]);
             $mpdf->defaultPageNumStyle = '1';
             $mpdf->SetDisplayMode('fullpage');
-            $pageCount = $mpdf->setSourceFile(storage_path('app/pdf/') . "/" . $filename);
 
 
             // Add each page of the Dompdf-generated PDF to the mPDF document
@@ -314,6 +313,7 @@ class ReportContoller extends Controller
             if ($reportType == 'IHM Part 1') {
                 $mpdf->WriteHTML(view('report.introduction', compact('hazmets', 'projectDetail')));
                 $mpdf->AddPage('L'); // Set landscape mode for the inventory page
+                $pageCount = $mpdf->setSourceFile(storage_path('app/pdf/') . "/" . $filename);
 
                 $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
 
@@ -412,7 +412,20 @@ class ReportContoller extends Controller
                 }
             } else if ($reportType == 'IHM Gap Analysis') {
                 $mpdf->WriteHTML(view('report.gapAnaylisis', compact('projectDetail', 'hazmets')));
+                $mpdf->AddPage('L');
                 $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
+                $pageCount = $mpdf->setSourceFile(storage_path('app/pdf/') . "/" . $filename);
+
+                for ($i = 1; $i <= $pageCount; $i++) {
+                    $mpdf->AddPage('L');
+                    if ($i = 1) {
+                        $mpdf->writeHtml('<h3>Location Diagram</h3>');
+                    }
+                    $templateId = $mpdf->importPage($i);
+                    $mpdf->useTemplate($templateId, 50, 20, null, null);
+                    // Get the dimensions of the current page
+
+                }
             }
 
 
