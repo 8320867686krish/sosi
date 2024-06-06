@@ -468,8 +468,8 @@ class ReportContoller extends Controller
                         $startPosition = $left;
                         $addInLeft = $addInLeft;
                         $tooltipText = $value['name'] . '<br/>' . $value['type'];
-                        $tooltipWidth = strlen($tooltipText) * 4; 
-                        $leftP = $tooltipWidth + 20;
+                        $tooltipWidth = strlen($tooltipText); 
+                        $leftP = $tooltipWidth + 50;
                         $rightPosition="-".$leftP."px";
                         if ($addInLeft == "right") {
                             // Adjust tooltip position to the right
