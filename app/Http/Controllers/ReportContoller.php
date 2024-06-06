@@ -97,7 +97,7 @@ class ReportContoller extends Controller
                 $query->where('type', 'PCHM')->orWhere('type', 'Contained');
             });
         }])->where('project_id', $project_id)->get();
-        $filename= $this->drawDigarm($decks);
+        $filename = $this->drawDigarm($decks);
 
         try {
             // Create an instance of mPDF with specified margins
@@ -112,7 +112,7 @@ class ReportContoller extends Controller
             ]);
             $mpdf->defaultPageNumStyle = '1';
             $mpdf->SetDisplayMode('fullpage');
-            $pageCount = $mpdf->setSourceFile(storage_path('app/pdf/rr.pdf'));
+            $pageCount = $mpdf->setSourceFile(storage_path('app/pdf/') . "/" . $filename);
 
             // Add each page of the Dompdf-generated PDF to the mPDF document
 
@@ -155,8 +155,12 @@ class ReportContoller extends Controller
             $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3', 'decks')));
             for ($i = 1; $i <= $pageCount; $i++) {
                 $mpdf->AddPage('L');
+                if ($i = 1) {
+                    $mpdf->writeHtml('<h3>Location Diagram</h3>');
+                }
                 $templateId = $mpdf->importPage($i);
-                $mpdf->useTemplate($templateId, 0, 0, 100, 100);
+                $mpdf->useTemplate($templateId, 50, 20, null, null);
+
             }
             $mpdf->Output();
         } catch (\Mpdf\MpdfException $e) {
@@ -191,7 +195,7 @@ class ReportContoller extends Controller
                 $foundItems[$value['structure']] = $report_materials[$index];
             }
         }
-      
+
         $html = '';
         $decks = Deck::with(['checks' => function ($query) {
             $query->whereHas('check_hazmats', function ($query) {
@@ -199,7 +203,7 @@ class ReportContoller extends Controller
             });
         }])->where('project_id', $project_id)->get();
         if ($reportType == 'IHM Part 1') {
-          $filename= $this->drawDigarm($decks);
+            $filename = $this->drawDigarm($decks);
         }
 
         $logo = 'https://sosindi.com/IHM/public/assets/images/logo.png';
@@ -253,7 +257,8 @@ class ReportContoller extends Controller
             ]);
             $mpdf->defaultPageNumStyle = '1';
             $mpdf->SetDisplayMode('fullpage');
-            $pageCount = $mpdf->setSourceFile(storage_path('app/pdf/')."/".$filename);
+            $pageCount = $mpdf->setSourceFile(storage_path('app/pdf/') . "/" . $filename);
+
 
             // Add each page of the Dompdf-generated PDF to the mPDF document
 
@@ -292,7 +297,7 @@ class ReportContoller extends Controller
 
             $stylesheet = file_get_contents('public/assets/mpdf.css');
             $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
-      
+
 
             $mpdf->WriteHTML(view('report.cover', compact('projectDetail')));
             $mpdf->TOCpagebreak();
@@ -314,13 +319,13 @@ class ReportContoller extends Controller
 
                 for ($i = 1; $i <= $pageCount; $i++) {
                     $mpdf->AddPage('L');
-                    if($i = 1){
+                    if ($i = 1) {
                         $mpdf->writeHtml('<h3>Location Diagram</h3>');
                     }
                     $templateId = $mpdf->importPage($i);
-                    $mpdf->useTemplate($templateId,50,20,null,null);
+                    $mpdf->useTemplate($templateId, 50, 20, null, null);
                     // Get the dimensions of the current page
-                
+
                 }
                 $mpdf->AddPage('p');
                 $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechmentsResult', 'ChecksList', 'foundItems')));
@@ -417,10 +422,11 @@ class ReportContoller extends Controller
             echo $e->getMessage();
         }
     }
-    public function drawDigarm($decks){
+    public function drawDigarm($decks)
+    {
         $options = new Options();
         $dompdf = new Dompdf($options);
-        $html="";
+        $html = "";
         $html .= "<div style='text-align: center;'>";
         $html .= "<div class='maincontnt' style='display: flex;justify-content: center;align-items: center;
         flex-direction: column;'>";
@@ -457,7 +463,8 @@ class ReportContoller extends Controller
                         $html .= '<span class="tooltip" style="position: absolute;
                         background-color: #fff;
                         border: 1px solid #FF0000;
-                        padding: 15px;
+                        padding-left: 2px;
+                        padding-right: 2px;
                         border-radius: 5px;
                         white-space: nowrap;
                         z-index: 1; /* Ensure tooltip is above the dots and lines */
@@ -468,32 +475,32 @@ class ReportContoller extends Controller
                         $startPosition = $left;
                         $addInLeft = $addInLeft;
                         $tooltipText = $value['name'] . '<br/>' . $value['type'];
-                        $tooltipWidth = strlen($tooltipText)*5; 
-                        $leftP = $tooltipWidth + 50;
-                        $rightPosition="-".$leftP."px";
+                        $tooltipWidth = strlen($tooltipText) * 4;
+                        $leftP = $tooltipWidth + 20;
+                        $rightPosition = "-" . $leftP . "px";
                         if ($addInLeft == "right") {
                             // Adjust tooltip position to the right
-                           
-                            $html .= 'top: ' . ($toolTipTop - 5) . 'px; right:'.$rightPosition;
+
+                            $html .= 'top: ' . ($toolTipTop - 5) . 'px; right:' . $rightPosition;
                             $totalWidthLine = $imageWidth - $startPosition + $leftP;
                         } else {
-                            $html .= 'top: ' . ($toolTipTop - 5) . 'px; left:'.$rightPosition;
+                            $html .= 'top: ' . ($toolTipTop - 5) . 'px; left:' . $rightPosition;
                             $totalWidthLine = $left + $leftP;
                         }
                         $totalWidthLineRound = abs($totalWidthLine) . 'px';
                         $linetop = ($toolTipTop + 7) . 'px';
 
-                        $html .= '">' . $tooltipText. '</span>';
+                        $html .= '">' . $tooltipText . '</span>';
                         $tooltipWidth = strlen($tooltipText); // Estimate width based on character count
 
                         if ($addInLeft == "right") {
                             $html .= '<span class="line" style="position: absolute;
                         width: 1px;
-                        background-color: #FF0000;top:' . $linetop . ';right:'.$rightPosition.';height:2px;width:' . $totalWidthLineRound . '"></span>';
+                        background-color: #FF0000;top:' . $linetop . ';right:' . $rightPosition . ';height:2px;width:' . $totalWidthLineRound . '"></span>';
                         } else {
                             $html .= '<span class="line" style="position: absolute;
                             width: 1px;
-                            background-color: #FF0000;top:' . $linetop . ';left:'.$rightPosition.';height:2px;width:' . $totalWidthLineRound . '"></span>';
+                            background-color: #FF0000;top:' . $linetop . ';left:' . $rightPosition . ';height:2px;width:' . $totalWidthLineRound . '"></span>';
                         }
                     }
                 }
@@ -507,8 +514,8 @@ class ReportContoller extends Controller
 
         $dompdf->render();
         $coverPdfContent = $dompdf->output();
-        $filename = "project".uniqid().".pdf";
-        $filePath = storage_path('app/pdf/')."/".$filename ;
+        $filename = "project" . uniqid() . ".pdf";
+        $filePath = storage_path('app/pdf/') . "/" . $filename;
         file_put_contents($filePath, $coverPdfContent);
         return $filename;
     }
