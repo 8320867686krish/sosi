@@ -97,48 +97,8 @@ class ReportContoller extends Controller
                 $query->where('type', 'PCHM')->orWhere('type', 'Contained');
             });
         }])->where('project_id', $project_id)->get();
-        $html = '';
-        $html .= "<h3>Location Diagram</h3>";
-        foreach ($decks as $deck) {
-            // Convert the image to base64
-            $imagePath = $deck['image'];
-            $imageData = base64_encode(file_get_contents($imagePath));
-            $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
+        $filename= $this->drawDigarm($decks);
 
-            // Main container
-            $html .= '<div style="position: relative;>';
-            if (count($deck['checks']) > 0) {
-                // Background image using base64
-                $html .= '<img src="' . $imageBase64 . '" />';
-
-                // Container for checks
-                $html .= '<div id="showDeckCheck" style="">';
-
-                if (!empty($deck['checks'])) {
-                    foreach ($deck['checks'] as $key => $value) {
-                        $top = $value->position_top - ($value->isApp == 1 ? 20 : 0);
-                        $left = $value->position_left - ($value->isApp == 1 ? 20 : 0);
-
-                        // Position the dot using fixed units
-                        $html .= '<div style="position: absolute; top: ' . $top . 'px; left: ' . $left . 'px; width: 20px; height: 20px; border: 2px solid red; background: red;border-radius:50%;  text-align: center; line-height: 5mm;"  class="parentDot" >';
-                        $html .= '<div class="tooltip" style="display: block; position: relative; top: -10px; left: 183px; background-color: #fff; border: 1px solid #ccc; padding: 5px; border-radius: 5px;">' . $value['name'] . '</div>';
-
-                        $html .= '</div>';
-                    }
-                }
-
-                // Close containers
-                $html .= '</div>';
-                $html .= '</div>';
-            }
-        }
-
-        $dompdf->loadHtml($html);
-
-        $dompdf->render();
-        $coverPdfContent = $dompdf->output();
-        $filePath = storage_path('app/pdf/rr.pdf');
-        file_put_contents($filePath, $coverPdfContent);
         try {
             // Create an instance of mPDF with specified margins
             $mpdf = new Mpdf([
@@ -507,26 +467,33 @@ class ReportContoller extends Controller
                         $toolTipTop = $top;
                         $startPosition = $left;
                         $addInLeft = $addInLeft;
-
+                        $tooltipText = $value['name'] . '<br/>' . $value['type'];
+                        $tooltipWidth = strlen($tooltipText) * 6; 
+                        $leftP = $tooltipWidth + 20;
+                        $rightPosition="-".$leftP."px";
                         if ($addInLeft == "right") {
                             // Adjust tooltip position to the right
-                            $html .= 'top: ' . ($toolTipTop - 5) . 'px; right: -50px;';
-                            $totalWidthLine = $imageWidth - $startPosition + 50;
+                           
+                            $html .= 'top: ' . ($toolTipTop - 5) . 'px; right:'.$rightPosition;
+                            $totalWidthLine = $imageWidth - $startPosition + $leftP;
                         } else {
-                            $html .= 'top: ' . ($toolTipTop - 5) . 'px; left: -100px;';
-                            $totalWidthLine = $left + 100;
+                            $html .= 'top: ' . ($toolTipTop - 5) . 'px; left:'.$rightPosition;
+                            $totalWidthLine = $left + $leftP;
                         }
                         $totalWidthLineRound = abs($totalWidthLine) . 'px';
                         $linetop = ($toolTipTop + 7) . 'px';
-                        $html .= '">' . $value['name'] .'<br/>'.$value['type']. '</span>';
+
+                        $html .= '">' . $tooltipText. '</span>';
+                        $tooltipWidth = strlen($tooltipText); // Estimate width based on character count
+
                         if ($addInLeft == "right") {
                             $html .= '<span class="line" style="position: absolute;
                         width: 1px;
-                        background-color: #FF0000;top:' . $linetop . ';right:-50px;height:2px;width:' . $totalWidthLineRound . '"></span>';
+                        background-color: #FF0000;top:' . $linetop . ';right:'.$rightPosition.';height:2px;width:' . $totalWidthLineRound . '"></span>';
                         } else {
                             $html .= '<span class="line" style="position: absolute;
                             width: 1px;
-                            background-color: #FF0000;top:' . $linetop . ';left:-100px;height:2px;width:' . $totalWidthLineRound . '"></span>';
+                            background-color: #FF0000;top:' . $linetop . ';left:'.$rightPosition.';height:2px;width:' . $totalWidthLineRound . '"></span>';
                         }
                     }
                 }
