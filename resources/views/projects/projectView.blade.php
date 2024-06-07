@@ -506,7 +506,7 @@
                                     <input type="date" name="date" class="form-control form-control-lg">
                                 </div>
                                 <div class="col-4">
-                                    <button type="submit" name="action" class="btn btn-primary" value="submit">Submit</button>
+                                    <button type="submit" name="action" class="btn btn-primary" value="submit">Full Report</button>
                                     <button type="submit" name="action" class="btn btn-primary" value="summery" >Summery</button>
                                 </div>
                             </div>

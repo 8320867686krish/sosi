@@ -102,11 +102,11 @@ class ReportContoller extends Controller
         try {
             // Create an instance of mPDF with specified margins
             $mpdf = new Mpdf([
-                'mode' => 'c',
-                'margin_left' => 32,
-                'margin_right' => 25,
-                'margin_top' => 27,
-                'margin_bottom' => 25,
+                'format' => 'A4',
+                'margin_left' => 10,
+                'margin_right' => 10,
+                'margin_top' => 10,
+                'margin_bottom' => 10,
                 'margin_header' => 16,
                 'margin_footer' => 13,
             ]);
@@ -358,6 +358,7 @@ class ReportContoller extends Controller
                 }
                 unlink(storage_path('app/pdf/') . "/" . $vspPrepration);
             }
+            $mpdf->AddPage('p');
                 $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
                 $mpdf->AddPage('L');
                 $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
@@ -415,7 +416,7 @@ class ReportContoller extends Controller
                         }
                     }
                 }
-                $gaPlan =  public_path('images/projects') . "/" . $projectDetail['id'] . "/" . $projectDetail['deck_image'];
+                $gaPlan =  public_path('images/projects') . "/" . $projectDetail['id'] . "/" . $projectDetail['ga_plan'];
                 $attachmentCount = 1;
                 if (file_exists($gaPlan) && @$projectDetail['ga_plan']) {
                     $titleattach = '<h2 style="text-align:center">AttachMent ' . $attachmentCount . ' Ga Plan </h2>';
@@ -615,7 +616,8 @@ class ReportContoller extends Controller
                         border-radius: 5px;
                         white-space: nowrap;
                         z-index: 1; /* Ensure tooltip is above the dots and lines */
-                        color:#BF0A30;';
+                        color:#BF0A30;font-size:10px;';
+                        
 
                         // Calculate tooltip position
                         $toolTipTop = $top;
@@ -635,10 +637,10 @@ class ReportContoller extends Controller
                         if ($addInLeft == "right") {
                             // Adjust tooltip position to the right
 
-                            $html .= 'top: ' . ($toolTipTop - 5) . 'px; right:' . $rightPosition;
+                            $html .= 'top: ' . ($toolTipTop + 15) . 'px; right:' . $rightPosition;
                             $totalWidthLine = $imageWidth - $startPosition + $leftP;
                         } else {
-                            $html .= 'top: ' . ($toolTipTop - 5) . 'px; left:' . $rightPosition;
+                            $html .= 'top: ' . ($toolTipTop +15) . 'px; left:' . $rightPosition;
                             $totalWidthLine = $left + $leftP;
                         }
                         $totalWidthLineRound = abs($totalWidthLine) . 'px';
@@ -647,7 +649,7 @@ class ReportContoller extends Controller
                         $html .= '">' . $tooltipText."<br/>";
                         if($hazmatsCount != 0) {
                             foreach ($value->check_hazmats as $index => $hazmat) {
-                                $html .= '<span class="subcircle" style="display: inline-block; width: 10px; height: 10px;background:'.$hazmat["hazmat"]["color"].'; border-radius: 50%; margin-left: 3px;"></span>';
+                                $html .= '<span class="subcircle" style="color:'.$hazmat["hazmat"]["color"].';">.$hazmat["hazmat"]["short_name"]</span>';
                             }
                         }
                        
@@ -732,12 +734,20 @@ class ReportContoller extends Controller
             $mpdf->AddPage($page);
 
             $templateId = $mpdf->importPage($i);
+            $size = $mpdf->getTemplateSize($templateId);
+
             if ($i === 1 && @$title) {
                 $mpdf->WriteHTML($title);
-                $mpdf->useTemplate($templateId, null, 40, 200, 200);
-            } else {
-                $mpdf->useTemplate($templateId,null,40,200,200);
-            }
+            } 
+            $scale = min(
+                ($mpdf->w - $mpdf->lMargin - $mpdf->rMargin) / $size['width'],
+                ($mpdf->h - $mpdf->tMargin - $mpdf->bMargin) / $size['height']
+            );
+        
+          
+        
+            // Use the template and apply the calculated scale
+            $mpdf->useTemplate($templateId, $mpdf->lMargin, $mpdf->tMargin, $size['width'] * $scale, $size['height'] * $scale);
         }
     }
     protected function savePdf($content, $filename)

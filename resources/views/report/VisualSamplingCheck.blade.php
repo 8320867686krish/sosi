@@ -28,7 +28,7 @@
                     <td rowspan="2">S</td>
                     <td rowspan="2">Sample Taken</td>
                     <td rowspan="2">C</td>
-                    <td rowspan="2">>Contained</td>
+                    <td rowspan="2">Contained</td>
                 </tr>
                 <tr>
                     
@@ -114,7 +114,7 @@
                     @endif
 
                     <td {{$color}}>{{ ($check->type == 'visual') ? 'V' : 'S' }}</td>
-                    <td {{$color}}>{{ substr($hazmat->type, 0, 1) }}</td>
+                    <td {{$color}}>{{ $hazmat->type }}</td>
 
                 </tr>
                 @php $count++; @endphp

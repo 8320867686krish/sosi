@@ -3,7 +3,7 @@
     <h2>Appendix-3 Onboard Survey & Lab Analysis Record</h2>
     <div class="section-1-1">
         @if(@$sampleImage)
-        <h4>Sample Recoreds
+        <h4>Sample Recoreds</h4><br/>
         <table>
             <thead>
                 <tr>
@@ -36,7 +36,7 @@
                     <td></td>
                     @if(@$value['checkSingleimage']['image'])
 
-                    <td><a href="{{$value['checkSingleimage']['image']}}"><img src="{{$value['checkSingleimage']['image']}}" width="70px" height="70px" /></a></td>
+                    <td  width="20%"><a href="{{$value['checkSingleimage']['image']}}"><img src="{{$value['checkSingleimage']['image']}}" width="100px" height="100px" /></a></td>
                     @else
                     <td>&nbsp;</td>
                     @endif
@@ -52,12 +52,12 @@
                     <td>{{ $value->sub_location }}</td>
                     <td>{{ $value->equipment }}</td>
                     <td>{{ $value->component }}</td>
-                    <td>{{$hazmat['unit']}}</td>
-                    <td>{{$hazmat['total']}}</td>
+                    <td width="8%">{{$hazmat['unit']}}</td>
+                    <td width="8%">{{$hazmat['total']}}</td>
                     <td>{{$hazmat['lab_remarks']}}</td>
                     @if(@$value['checkSingleimage']['image'])
 
-                    <td><a href="{{$value['checkSingleimage']['image']}}"><img src="{{$value['checkSingleimage']['image']}}" width="70px" height="70px" /></a></td>
+                    <td width="20%"><a href="{{$value['checkSingleimage']['image']}}"><img src="{{$value['checkSingleimage']['image']}}" width="70px" height="70px" /></a></td>
                     @else
                     <td>&nbsp;</td>
                     @endif
@@ -84,7 +84,7 @@
         @endif
 
         @if(@$visualImage)
-        <h4>Visaula Recoreds
+        <h4>Visaula Recoreds</h4><br/>
         <table>
             <thead>
                 <tr>
@@ -117,7 +117,7 @@
                     <td></td>
                     @if(@$value['checkSingleimage']['image'])
 
-                    <td><a href="{{$value['checkSingleimage']['image']}}"><img src="{{$value['checkSingleimage']['image']}}" width="70px" height="70px" /></a></td>
+                    <td  width="20%"><a href="{{$value['checkSingleimage']['image']}}"><img src="{{$value['checkSingleimage']['image']}}" width="70px" height="70px" /></a></td>
                     @else
                     <td>&nbsp;</td>
                     @endif
@@ -133,12 +133,12 @@
                     <td>{{ $value->sub_location }}</td>
                     <td>{{ $value->equipment }}</td>
                     <td>{{ $value->component }}</td>
-                    <td>{{$hazmat['unit']}}</td>
-                    <td>{{$hazmat['total']}}</td>
+                    <td width="8%">{{$hazmat['unit']}}</td>
+                    <td width="8%">{{$hazmat['total']}}</td>
                     <td>{{$hazmat['lab_remarks']}}</td>
                     @if(@$value['checkSingleimage']['image'])
 
-                    <td><a href="{{$value['checkSingleimage']['image']}}"><img src="{{$value['checkSingleimage']['image']}}" width="70px" height="70px" /></a></td>
+                    <td  width="20%"><a href="{{$value['checkSingleimage']['image']}}"><img src="{{$value['checkSingleimage']['image']}}" width="70px" height="70px" /></a></td>
                     @else
                     <td>&nbsp;</td>
                     @endif
