@@ -1,4 +1,4 @@
-<div class="container next">
+<div class="container">
     <!-- Section 1.1 -->
     <h2>4.IHM-VSC Onboard Survey</h2>
     <div class="section-1-1">

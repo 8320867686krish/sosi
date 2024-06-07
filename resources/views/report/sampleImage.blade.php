@@ -12,7 +12,7 @@
                     <th colspan="2">Location</th>
                     <th>Equipment</th>
                     <th>Component</th>
-                    <th colspan="2">Sample Quantity</th>
+                    <th>Sample Quantity</th>
                     <th>Remarks</th>
                     <th>Photograph</th>
                 </tr>
@@ -52,8 +52,7 @@
                     <td>{{ $value->sub_location }}</td>
                     <td>{{ $value->equipment }}</td>
                     <td>{{ $value->component }}</td>
-                    <td width="8%">{{$hazmat['unit']}}</td>
-                    <td width="8%">{{$hazmat['total']}}</td>
+                    <td width="8%">{{$hazmat['sample_weight']}}</td>
                     <td>{{$hazmat['lab_remarks']}}</td>
                     @if(@$value['checkSingleimage']['image'])
 
@@ -93,7 +92,7 @@
                     <th colspan="2">Location</th>
                     <th>Equipment</th>
                     <th>Component</th>
-                    <th colspan="2">Sample Quantity</th>
+                    <th>Sample Quantity</th>
                     <th>Remarks</th>
                     <th>Photograph</th>
                 </tr>
@@ -114,7 +113,6 @@
                     <td>{{ $value->component }}</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <td></td>
                     @if(@$value['checkSingleimage']['image'])
 
                     <td  width="20%"><a href="{{$value['checkSingleimage']['image']}}"><img src="{{$value['checkSingleimage']['image']}}" width="70px" height="70px" /></a></td>
@@ -133,8 +131,7 @@
                     <td>{{ $value->sub_location }}</td>
                     <td>{{ $value->equipment }}</td>
                     <td>{{ $value->component }}</td>
-                    <td width="8%">{{$hazmat['unit']}}</td>
-                    <td width="8%">{{$hazmat['total']}}</td>
+                    <td width="8%">{{$hazmat['sample_weight']}}</td>
                     <td>{{$hazmat['lab_remarks']}}</td>
                     @if(@$value['checkSingleimage']['image'])
 

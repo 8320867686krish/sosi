@@ -281,7 +281,7 @@ class ProjectsController extends Controller
                         return response()->json(["isStatus" => true, 'message' => 'File processed successfully.'], 200);
                     } catch (Throwable $e) {
                         // Return error response if file cannot be processed
-                        return response()->json(["isStatus" => false, 'message' => 'Error processing the file.'], 500);
+                        return response()->json(["isStatus" => false, 'message' => ' This is enrypted file.'], 500);
                     }
                 } else {
                     // Return error response if file type is not supported
