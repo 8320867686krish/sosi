@@ -32,7 +32,7 @@
             </ul>
         </div>
 
-        <div class="section-1-3 next">
+        <div class="section-1-3">
             <h3> 1.3 Project Particular </h3>
             <table>
                 <tr>

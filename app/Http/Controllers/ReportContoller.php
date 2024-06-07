@@ -155,6 +155,7 @@ class ReportContoller extends Controller
                 }
                 $templateId = $mpdf->importPage($i);
                 $mpdf->useTemplate($templateId, 50, 20, null, null);
+
             }
             $mpdf->Output();
         } catch (\Mpdf\MpdfException $e) {
@@ -247,14 +248,24 @@ class ReportContoller extends Controller
             // Create an instance of mPDF with specified margins
             $mpdf = new Mpdf([
                 'mode' => 'c',
-                'margin_left' => 32,
-                'margin_right' => 25,
+                'mode' => 'utf-8',
+                'format' => 'A4',
+                'margin_left' => 10,
+                'margin_right' => 10,
                 'margin_top' => 27,
                 'margin_bottom' => 25,
                 'margin_header' => 16,
                 'margin_footer' => 13,
                 'defaultPagebreakType' => 'avoid',
+                'imageProcessor' => 'GD', // or 'imagick' if you have Imagick installed
+                'jpeg_quality' => 75, // Set the JPEG quality (0-100)
+                'shrink_tables_to_fit' => 1, // Shrink tables to fit the page width
+                'tempDir' => __DIR__ . '/tmp', // Set a temporary directory for mPDF
+              
+              
+                'allow_output_buffering' => true,
             ]);
+           
             $mpdf->defaultPageNumStyle = '1';
             $mpdf->SetDisplayMode('fullpage');
 
@@ -329,25 +340,30 @@ class ReportContoller extends Controller
 
                 $mpdf->AddPage('p');
                 $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechmentsResult', 'ChecksList', 'foundItems')));
+                $mpdf->writeHtml('<h3 style="font_size:14px;">3.4 VSCP Preparation</h3>');
                 foreach ($ChecksList as $value) {
                     if (count($value['checks']) > 0) {
                         $vspPrepration = $this->drawDigarmWithTable($value);
+                    
 
+                    $vspPreprationpageCount = $mpdf->setSourceFile(storage_path('app/pdf/') . "/" . $vspPrepration);
 
-                        $vspPreprationpageCount = $mpdf->setSourceFile(storage_path('app/pdf/') . "/" . $vspPrepration);
-
-                        for ($i = 1; $i <= $vspPreprationpageCount; $i++) {
-                            $mpdf->AddPage('L');
-                            if ($i = 1) {
-                                // $mpdf->writeHtml('<h3 style="font_size:14px;">3.4 VSCP Preparation</h3>');
-                            }
-                            $templateId = $mpdf->importPage($i);
-                            $mpdf->useTemplate($templateId, 50, 0, null, null);
-                            // Get the dimensions of the current page
-
+                    for ($i = 1; $i <= $vspPreprationpageCount; $i++) {
+                        $mpdf->AddPage('L');
+                        if ($i = 1) {
+                           // $mpdf->writeHtml('<h3 style="font_size:14px;">3.4 VSCP Preparation</h3>');
                         }
-                        unlink(storage_path('app/pdf/') . "/" . $vspPrepration);
+                        $templateId = $mpdf->importPage($i);
+                        $mpdf->useTemplate($templateId, 50, 0, null, null);
+                        // Get the dimensions of the current page
+
                     }
+                    unlink(storage_path('app/pdf/') . "/" . $vspPrepration);
+                    $render = view('report.vscpPrepration',['checks'=> $value['checks']])->render();
+                    $mpdf->AddPage('p');
+                    $mpdf->writeHtml($render);
+                    }
+                  
                 }
                 $mpdf->AddPage('p');
                 $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
@@ -612,6 +628,7 @@ class ReportContoller extends Controller
                     $extract = explode("#", $value['name']);
                     if ($hazmatsCount == 0) {
                         $tooltipText = ($value['type'] == 'sample' ? 'SCP' : 'VSCP') . "<br/>" . $extract[1];
+
                     } else {
                         $tooltipText = ($value['type'] == 'sample' ? 'SCP' : 'VSCP') . "<br/>" . $extract[1];
                     }
@@ -653,6 +670,7 @@ class ReportContoller extends Controller
                 }
             }
             $html .= '</span>';
+
         }
 
         $html .= '</div>';
