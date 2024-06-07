@@ -219,18 +219,7 @@ class ReportContoller extends Controller
 
 
         $ChecksList = Deck::with(['checks.check_hazmats'])->where('project_id', $project_id)->get();
-        $allChecks = $decks->flatMap(function($deck) {
-            return $deck->checks;
-        });
-
-        // Separate the checks based on their type
-        $sampleChecks = $allChecks->filter(function($check) {
-            return $check->type === 'sample';
-        });
-
-        $visualChecks = $allChecks->filter(function($check) {
-            return $check->type === 'visual';
-        });
+        
         $lebResult = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
         $lebResultAll = LabResult::with(['check.checkSingleimage', 'hazmat'])->where('project_id', $project_id)->get();
         $sampleChecks = $lebResultAll->filter(function($labResult) {
@@ -333,8 +322,7 @@ class ReportContoller extends Controller
                 $mpdf->WriteHTML(view('report.introduction', compact('hazmets', 'projectDetail')));
                 $mpdf->AddPage('L'); // Set landscape mode for the inventory page
                 $pageCount = $mpdf->setSourceFile(storage_path('app/pdf/') . "/" . $filename);
-                $vspPrepration = $this->drawDigarmWithTable( $ChecksList);
-                $vspPreprationpageCount = $mpdf->setSourceFile(storage_path('app/pdf/') . "/" . $vspPrepration);
+             
 
                 $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
 
@@ -348,8 +336,15 @@ class ReportContoller extends Controller
                     // Get the dimensions of the current page
 
                 }
+                unlink(storage_path('app/pdf/') . "/" . $filename);
+
                 $mpdf->AddPage('p');
                 $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechmentsResult', 'ChecksList', 'foundItems')));
+                foreach($ChecksList as $value){
+                    $vspPrepration = $this->drawDigarmWithTable( $value);
+                    $vspPreprationpageCount = $mpdf->setSourceFile(storage_path('app/pdf/') . "/" . $vspPrepration);
+
+                
                 for ($i = 1; $i <= $vspPreprationpageCount; $i++) {
                     $mpdf->AddPage('L');
                     if ($i = 1) {
@@ -360,6 +355,8 @@ class ReportContoller extends Controller
                     // Get the dimensions of the current page
 
                 }
+                unlink(storage_path('app/pdf/') . "/" . $vspPrepration);
+            }
                 $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
                 $mpdf->AddPage('L');
                 $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
@@ -577,24 +574,23 @@ class ReportContoller extends Controller
         $html .= "<div style='text-align: center;'>";
         $html .= "<div class='maincontnt' style='display: flex;justify-content: center;align-items: center;
         flex-direction: column;'>";
-        foreach ($decks as $deck) {
             // Convert the image to base64
-            $imagePath = $deck['image'];
+            $imagePath = $decks['image'];
             $imageData = base64_encode(file_get_contents($imagePath));
             $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
             list($imageWidth, $imageHeight) = getimagesize($imagePath);
 
 
-            if (count($deck['checks']) > 0) {
+            if (count($decks['checks']) > 0) {
                 // Background image using base64
-                $html.="<h4 style='marging-bottom:2px;'>Digarm For ".$deck['name']."</h4>";
+                $html.="<h4 style='marging-bottom:2px;'>Digarm For ".$decks['name']."</h4>";
 
                 $html .= '<span class="image-container" style="  position: relative;
                 display: inline-block;
                 margin: 20px;">';
                 $html .= '<img src="' . $imageBase64 . '"  />';
-                if (!empty($deck['checks'])) {
-                    foreach ($deck['checks'] as $key => $value) {
+                if (!empty($decks['checks'])) {
+                    foreach ($decks['checks'] as $key => $value) {
                         $hazmatsCount = count($value->check_hazmats);
                         $top = $value->position_top;
                         $left = $value->position_left;
@@ -682,7 +678,7 @@ class ReportContoller extends Controller
                             </tr>
                           </thead>';
                 
-                foreach ($deck['checks'] as $check) {
+                foreach ($decks['checks'] as $check) {
                     $hazmatsCount = count($check->check_hazmats);
                     if ($hazmatsCount == 0) {
                         $html .= '<tr>
@@ -712,7 +708,7 @@ class ReportContoller extends Controller
                 
             }
            
-        }
+        
         $html .= '</div>';
         $html .= '</div>';
       
