@@ -208,6 +208,7 @@
                 <div class="row card-body">
                     <div class="col-12 IHMTypeDiv">
                         <div class="form-group mb-3">
+                            <label for="">Type</label>
                             <select class="form-control IHM_type">
                                 <option value="">Select Type</option>
                                 <option value="Contained">Contained</option>
@@ -219,6 +220,7 @@
                     </div>
                     <div class="col-6 IHMPartDiv">
                         <div class="form-group">
+                            <label for="IHM Part"></label>
                             <select class="form-control IHM_part">
                                 <option value="">Select IHM Part</option>
                                 <option value="IHMPart1-1">IHM Part 1-1</option>
@@ -229,49 +231,49 @@
                     </div>
                     <div class="col-4">
                         <div class="form-group mb-3">
-                            {{-- <label for="unit">Unit</label> --}}
+                            <label for="unit">Unit</label>
                             <input type="text" class="form-control unit" placeholder="Unit...">
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group">
-                            {{-- <label for="number">Number</label> --}}
+                            <label for="number">Number</label>
                             <input type="number" class="form-control number" placeholder="Number...">
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group mb-3">
-                            {{-- <label for="total"> (KG.)</label> --}}
+                            <label for="total">Total (KG.)</label>
                             <input type="text" class="form-control total" placeholder="Total (KG.)">
                         </div>
                     </div>
                     <div class="col-3">
                         <div class="form-group">
-                            {{-- <label for="total">Total (KG.)</label> --}}
+                            <label for="total">Sample Weight</label>
                             <input type="text" class="form-control weight" placeholder="Sample Weight">
                         </div>
                     </div>
                     <div class="col-3">
                         <div class="form-group">
-                            {{-- <label for="total">Total (KG.)</label> --}}
+                            <label for="total">Sampling Area</label>
                             <input type="text" class="form-control sarea" placeholder="Sampling Area">
                         </div>
                     </div>
                     <div class="col-3">
                         <div class="form-group">
-                            {{-- <label for="total">Total (KG.)</label> --}}
+                            <label for="total">Density</label>
                             <input type="text" class="form-control density" placeholder="Density">
                         </div>
                     </div>
                     <div class="col-3">
                         <div class="form-group">
-                            {{-- <label for="total">Total (KG.)</label> --}}
+                            <label for="total">Affected Area</label>
                             <input type="text" class="form-control affected" placeholder="Affected Area">
                         </div>
                     </div>
                     <div class="col-12 lab_remarks">
                         <div class="form-group mb-3">
-                            {{-- <label for="lab_remarks">Remarks</label> --}}
+                            <label for="lab_remarks">Remarks</label>
                             <textarea class="form-control labRemarksTextarea" rows="2" placeholder="Remark..."></textarea>
                         </div>
                     </div>
@@ -386,7 +388,7 @@
                                     <div class="col-12 col-md-12 mb-4" id="labResultSection"
                                         style="background: #efeff6;border: 1px solid #efeff6;">
                                         <div class="pt-4">
-                                            <h5 class="text-center" style="color:#757691">Lab Result</h5>
+                                            <h5 class="text-center" style="color:#757691">Find Results</h5>
                                             <div class=" mb-4 col-12" id="showLabResult">
 
                                             </div>

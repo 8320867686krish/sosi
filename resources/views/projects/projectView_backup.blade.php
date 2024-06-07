@@ -570,8 +570,7 @@
                                     <div class="col-12 col-md-12 mb-3"
                                         style="background: #efeff6;border: 1px solid #efeff6;">
                                         <div class="pt-4">
-                                            <h5 class="text-center" background: #efeff6;border: 1px solid #efeff6;>Lab
-                                                Result</h5>
+                                            <h5 class="text-center" style="background: #efeff6;border: 1px solid #efeff6;">Find Results</h5>
                                             <div class="mb-4 col-12" id="showLabResult">
 
                                             </div>
