@@ -185,11 +185,13 @@
                 <thead>
                     <tr>
                         <th colspan="3" valign="middle" align="center">Hazardous Material</th>
-                        <th colspan="3" valign="middle" align="center">Number of Checks</th>
+                        <th colspan="4" valign="middle" align="center">Number of Checks</th>
                     </tr>
                     <tr>
                         <th valign="middle"><b>Table</b></th>
                         <th valign="middle"><b>HM</b></th>
+                        <th valign="middle"><b>Colour</b></th>
+                        
                         <th valign="middle"><b>Name</b></th>
                         <th valign="middle"><b>Sampleing</b></th>
                         <th valign="middle"><b>Visual</b></th>
@@ -209,8 +211,11 @@
                             {{ $hazmat->table_type }}
                         </td>
                         <td valign="middle">{{ $hazmat->short_name }}</td>
-                        <td>
+                        <td  style="background-color: {{$hazmat->color}}; display: inline-block; width: 15%;">&nbsp;
+                        </td>
+                        <td width="50%">
                             {{ $hazmat->name }}
+
                         </td>
                         <td valign="middle" align="center">{{ $hazmat->sample_count }}
                         </td>
@@ -226,7 +231,7 @@
                     @endphp
                     @endforeach
                     <tr>
-                        <td colspan="3" style="border: 2px solid #000000"></td>
+                        <td colspan="4" style="border: 2px solid #000000"></td>
                         <td valign="middle" align="center" style="border: 2px solid #000000"><b>{{ $sampling }}</b></td>
                         <td valign="middle" align="center" style="border: 2px solid #000000"><b>{{ $visual }}</b></td>
                         <td valign="middle" align="center" style="border: 2px solid #000000"><b>{{ $total }}</b></td>
