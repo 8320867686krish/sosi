@@ -219,16 +219,17 @@ class ReportContoller extends Controller
 
 
         $ChecksList = Deck::with(['checks.check_hazmats'])->where('project_id', $project_id)->get();
-        
-        $lebResult = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
-        $lebResultAll = LabResult::with(['check.checkSingleimage', 'hazmat'])->where('project_id', $project_id)->get();
-        $sampleChecks = $lebResultAll->filter(function($labResult) {
-            return $labResult->check && $labResult->check->type === 'sample';
+        $ChecksListImage = Checks::with(['checkSingleimage','labResults'])->where('project_id', $project_id)->get();
+        $sampleImage = $ChecksListImage->filter(function ($item) {
+            return $item->type == 'sample';
         });
 
-        $visualChecks = $lebResultAll->filter(function($labResult) {
-            return $labResult->check && $labResult->check->type === 'visual';
+        $visualImage = $ChecksListImage->filter(function ($item) {
+            return $item->type == 'visual';
         });
+        $lebResult = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
+        $lebResultAll = LabResult::with(['check.checkSingleimage', 'hazmat'])->where('project_id', $project_id)->get();
+      
         $attechments = Attechments::where('project_id', $project_id)->where('attachment_type', '!=', 'shipBrifPlan')->get();
         $brifPlan = Attechments::where('project_id', $project_id)->where('attachment_type', '=', 'shipBrifPlan')->first();
 
@@ -363,7 +364,7 @@ class ReportContoller extends Controller
 
                 $mpdf->AddPage('L');
                 $mpdf->WriteHTML(view('report.riskAssessments'));
-                $mpdf->WriteHTML(view('report.sampleImage', compact('lebResultAll')));
+                $mpdf->WriteHTML(view('report.sampleImage', compact('sampleImage','visualImage')));
 
 
                 $titleHtml = '<h2 style="text-align:center" id="lebResult">Appendix-4 Leb Result</h2>';
@@ -459,7 +460,7 @@ class ReportContoller extends Controller
                 $mpdf->AddPage('L');
                 $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
                 $mpdf->WriteHTML(view('report.riskAssessments'));
-                $mpdf->WriteHTML(view('report.sampleImage', compact('lebResultAll')));
+                $mpdf->WriteHTML(view('report.sampleImage', compact('sampleImage','visualImage')));
             }
 
 
@@ -666,44 +667,7 @@ class ReportContoller extends Controller
                     }
                 }
                 $html .= '</span>';
-                $html .= '<table style="border: 1px solid #000; width: 100%; border-collapse: collapse;">';
-                $html .= '<thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Location</th>
-                                <th>Function, Equipment, Component</th>
-                                <th>Materials</th>
-                                <th>Document Analysis Result</th>
-                                <th>Remarks</th>
-                            </tr>
-                          </thead>';
-                
-                foreach ($decks['checks'] as $check) {
-                    $hazmatsCount = count($check->check_hazmats);
-                    if ($hazmatsCount == 0) {
-                        $html .= '<tr>
-                                    <td>' . $check['name'] . '</td>
-                                    <td>' . $check->location . ($check->sub_location ? ',' . $check->sub_location : '') . '</td>
-                                    <td>' . $check->equipment . ' , ' . $check->component . '</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>' . $check->remarks . '</td>
-                                  </tr>';
-                    } else {
-                        foreach ($check->check_hazmats as $index => $hazmat) {
-                            $html .= '<tr>
-                                        <td>' . $check['name'] . '</td>
-                                        <td>' . $check->location . ($check->sub_location ? ',' . $check->sub_location : '') . '</td>
-                                        <td>' . $check->equipment . ' , ' . $check->component . '</td>
-                                        <td>' . $hazmat->hazmat->short_name . '</td>
-                                        <td>' . $hazmat->type . '</td>
-                                        <td>' . $check->remarks . '</td>
-                                      </tr>';
-                        }
-                    }
-                }
-        
-                $html .= '</table>';
+             
               
                 
             }
@@ -770,9 +734,9 @@ class ReportContoller extends Controller
             $templateId = $mpdf->importPage($i);
             if ($i === 1 && @$title) {
                 $mpdf->WriteHTML($title);
-                $mpdf->useTemplate($templateId, null, 40, null, null);
+                $mpdf->useTemplate($templateId, null, 40, 200, 200);
             } else {
-                $mpdf->useTemplate($templateId);
+                $mpdf->useTemplate($templateId,null,40,200,200);
             }
         }
     }
