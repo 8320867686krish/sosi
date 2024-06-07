@@ -202,6 +202,7 @@ class ReportContoller extends Controller
                 $query->where('type', 'PCHM')->orWhere('type', 'Contained');
             });
         }])->where('project_id', $project_id)->get();
+
         if ($reportType == 'IHM Part 1' || $reportType == 'IHM Gap Analysis') {
             $filename = $this->drawDigarm($decks);
         }
@@ -332,6 +333,8 @@ class ReportContoller extends Controller
                 $mpdf->WriteHTML(view('report.introduction', compact('hazmets', 'projectDetail')));
                 $mpdf->AddPage('L'); // Set landscape mode for the inventory page
                 $pageCount = $mpdf->setSourceFile(storage_path('app/pdf/') . "/" . $filename);
+                $vspPrepration = $this->drawDigarmWithTable( $ChecksList);
+                $vspPreprationpageCount = $mpdf->setSourceFile(storage_path('app/pdf/') . "/" . $vspPrepration);
 
                 $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
 
@@ -347,7 +350,17 @@ class ReportContoller extends Controller
                 }
                 $mpdf->AddPage('p');
                 $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechmentsResult', 'ChecksList', 'foundItems')));
-                $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll', 'ChecksList')));
+                for ($i = 1; $i <= $vspPreprationpageCount; $i++) {
+                    $mpdf->AddPage('L');
+                    if ($i = 1) {
+                        $mpdf->writeHtml('<h3>3.4 VSCP Preparation</h3>');
+                    }
+                    $templateId = $mpdf->importPage($i);
+                    $mpdf->useTemplate($templateId, 50, 0, null, null);
+                    // Get the dimensions of the current page
+
+                }
+                $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
                 $mpdf->AddPage('L');
                 $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
 
@@ -488,8 +501,8 @@ class ReportContoller extends Controller
                         $html .= '<span class="dot" style="top:' . $top . 'px;left:' . $left . 'px; position: absolute;
                         width: 12px;
                         height: 12px;
-                        border: 2px solid #FF0000;
-                        background: #FF0000;
+                        border: 2px solid #BF0A30;
+                        background: #BF0A30;
                         border-radius: 50%;
                         text-align: center;
                         line-height: 20px;"></span>';
@@ -499,13 +512,13 @@ class ReportContoller extends Controller
                         }
                         $html .= '<span class="tooltip" style="position: absolute;
                         background-color: #fff;
-                        border: 1px solid #FF0000;
+                        border: 1px solid #BF0A30;
                         padding-left: 2px;
                         padding-right: 2px;
                         border-radius: 5px;
                         white-space: nowrap;
                         z-index: 1; /* Ensure tooltip is above the dots and lines */
-                        color:#FF0000;';
+                        color:#BF0A30;';
 
                         // Calculate tooltip position
                         $toolTipTop = $top;
@@ -533,11 +546,11 @@ class ReportContoller extends Controller
                         if ($addInLeft == "right") {
                             $html .= '<span class="line" style="position: absolute;
                         width: 1px;
-                        background-color: #FF0000;top:' . $linetop . ';right:' . $rightPosition . ';height:2px;width:' . $totalWidthLineRound . '"></span>';
+                        background-color: #BF0A30;top:' . $linetop . ';right:' . $rightPosition . ';height:2px;width:' . $totalWidthLineRound . '"></span>';
                         } else {
                             $html .= '<span class="line" style="position: absolute;
                             width: 1px;
-                            background-color: #FF0000;top:' . $linetop . ';left:' . $rightPosition . ';height:2px;width:' . $totalWidthLineRound . '"></span>';
+                            background-color: #BF0A30;top:' . $linetop . ';left:' . $rightPosition . ';height:2px;width:' . $totalWidthLineRound . '"></span>';
                         }
                     }
                 }
@@ -552,6 +565,163 @@ class ReportContoller extends Controller
         $dompdf->render();
         $coverPdfContent = $dompdf->output();
         $filename = "project" . uniqid() . ".pdf";
+        $filePath = storage_path('app/pdf/') . "/" . $filename;
+        file_put_contents($filePath, $coverPdfContent);
+        return $filename;
+    }
+    public function drawDigarmwithTable($decks)
+    {
+        $options = new Options();
+        $dompdf = new Dompdf($options);
+        $html = "";
+        $html .= "<div style='text-align: center;'>";
+        $html .= "<div class='maincontnt' style='display: flex;justify-content: center;align-items: center;
+        flex-direction: column;'>";
+        foreach ($decks as $deck) {
+            // Convert the image to base64
+            $imagePath = $deck['image'];
+            $imageData = base64_encode(file_get_contents($imagePath));
+            $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
+            list($imageWidth, $imageHeight) = getimagesize($imagePath);
+
+
+            if (count($deck['checks']) > 0) {
+                // Background image using base64
+                $html.="<h4 style='marging-bottom:2px;'>Digarm For ".$deck['name']."</h4>";
+
+                $html .= '<span class="image-container" style="  position: relative;
+                display: inline-block;
+                margin: 20px;">';
+                $html .= '<img src="' . $imageBase64 . '"  />';
+                if (!empty($deck['checks'])) {
+                    foreach ($deck['checks'] as $key => $value) {
+                        $hazmatsCount = count($value->check_hazmats);
+                        $top = $value->position_top;
+                        $left = $value->position_left;
+                      
+                        $html .= '<span class="dot" style="top:' . $top . 'px;left:' . $left . 'px; position: absolute;
+                            width: 12px;
+                            height: 12px;
+                            border: 2px solid #BF0A30;
+                            background: #BF0A30;
+                            border-radius: 50%;
+                            text-align: center;
+                            line-height: 20px;"></span>';
+                        $addInLeft = "right";
+                        if (($imageWidth / 2) > $left) {
+                            $addInLeft = "left";
+                        }
+                        $html .= '<span class="tooltip" style="position: absolute;
+                        background-color: #fff;
+                        border: 1px solid #BF0A30;
+                        padding: 3px;
+                        border-radius: 5px;
+                        white-space: nowrap;
+                        z-index: 1; /* Ensure tooltip is above the dots and lines */
+                        color:#BF0A30;';
+
+                        // Calculate tooltip position
+                        $toolTipTop = $top;
+                        $startPosition = $left;
+                        $addInLeft = $addInLeft;
+                        $extract=explode("#",$value['name']);
+                        if($hazmatsCount == 0){
+                            $tooltipText =($value['type'] == 'sample'? 'SCP' : 'VSCP')."<br/>".$extract[1];
+
+                        }else{
+                            $tooltipText =($value['type'] == 'sample'? 'SCP' : 'VSCP')."<br/>".$extract[1];
+                        }
+
+                        $tooltipWidth = strlen($tooltipText) * 4;
+                        $leftP = $tooltipWidth + 20;
+                        $rightPosition = "-" . $leftP . "px";
+                        if ($addInLeft == "right") {
+                            // Adjust tooltip position to the right
+
+                            $html .= 'top: ' . ($toolTipTop - 5) . 'px; right:' . $rightPosition;
+                            $totalWidthLine = $imageWidth - $startPosition + $leftP;
+                        } else {
+                            $html .= 'top: ' . ($toolTipTop - 5) . 'px; left:' . $rightPosition;
+                            $totalWidthLine = $left + $leftP;
+                        }
+                        $totalWidthLineRound = abs($totalWidthLine) . 'px';
+                        $linetop = ($toolTipTop + 7) . 'px';
+
+                        $html .= '">' . $tooltipText."<br/>";
+                        if($hazmatsCount != 0) {
+                            foreach ($value->check_hazmats as $index => $hazmat) {
+                                $html .= '<span class="subcircle" style="display: inline-block; width: 10px; height: 10px;background:'.$hazmat["hazmat"]["color"].'; border-radius: 50%; margin-left: 3px;"></span>';
+                            }
+                        }
+                       
+        
+                        $html .= '</span>';
+                        $tooltipWidth = strlen($tooltipText); // Estimate width based on character count
+
+                        if ($addInLeft == "right") {
+                            $html .= '<span class="line" style="position: absolute;
+                        width: 1px;
+                        background-color: #BF0A30;top:' . $linetop . ';right:' . $rightPosition . ';height:2px;width:' . $totalWidthLineRound . '"></span>';
+                        } else {
+                            $html .= '<span class="line" style="position: absolute;
+                            width: 1px;
+                            background-color: #BF0A30;top:' . $linetop . ';left:' . $rightPosition . ';height:2px;width:' . $totalWidthLineRound . '"></span>';
+                        }
+                    }
+                }
+                $html .= '</span>';
+                $html .= '<table style="border: 1px solid #000; width: 100%; border-collapse: collapse;">';
+                $html .= '<thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Location</th>
+                                <th>Function, Equipment, Component</th>
+                                <th>Materials</th>
+                                <th>Document Analysis Result</th>
+                                <th>Remarks</th>
+                            </tr>
+                          </thead>';
+                
+                foreach ($deck['checks'] as $check) {
+                    $hazmatsCount = count($check->check_hazmats);
+                    if ($hazmatsCount == 0) {
+                        $html .= '<tr>
+                                    <td>' . $check['name'] . '</td>
+                                    <td>' . $check->location . ($check->sub_location ? ',' . $check->sub_location : '') . '</td>
+                                    <td>' . $check->equipment . ' , ' . $check->component . '</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>' . $check->remarks . '</td>
+                                  </tr>';
+                    } else {
+                        foreach ($check->check_hazmats as $index => $hazmat) {
+                            $html .= '<tr>
+                                        <td>' . $check['name'] . '</td>
+                                        <td>' . $check->location . ($check->sub_location ? ',' . $check->sub_location : '') . '</td>
+                                        <td>' . $check->equipment . ' , ' . $check->component . '</td>
+                                        <td>' . $hazmat->hazmat->short_name . '</td>
+                                        <td>' . $hazmat->type . '</td>
+                                        <td>' . $check->remarks . '</td>
+                                      </tr>';
+                        }
+                    }
+                }
+        
+                $html .= '</table>';
+              
+                
+            }
+           
+        }
+        $html .= '</div>';
+        $html .= '</div>';
+      
+
+
+        $dompdf->loadHtml($html);
+        $dompdf->render();
+        $coverPdfContent = $dompdf->output();
+        $filename = "project" . uniqid() . "ab.pdf";
         $filePath = storage_path('app/pdf/') . "/" . $filename;
         file_put_contents($filePath, $coverPdfContent);
         return $filename;

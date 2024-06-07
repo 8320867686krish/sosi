@@ -19,8 +19,8 @@
             <tbody>
                 @foreach($lebResultAll as $value)
 
-              
-              
+
+
                 <tr>
                     <td>{{$value->check->name}}</td>
                     <td>{{ $value->hazmat->short_name }}</td>
@@ -31,11 +31,11 @@
                     <td>{{$value->total}}</td>
                     <td>{{$value->unit}}</td>
                     <td>{{ $value->lab_remarks }}</td>
-                    
 
-                    <td><a href="{{$value['check']['checkSingleimage']['image']}}"><img src="{{$value['check']['checkSingleimage']['image']}}" width="70px" height="70px"/></a></td>
+
+                    <td><a href="{{$value['check']['checkSingleimage']['image']}}"><img src="{{$value['check']['checkSingleimage']['image']}}" width="70px" height="70px" /></a></td>
                 </tr>
-               
+
                 @endforeach
             </tbody>
         </table>
