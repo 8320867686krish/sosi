@@ -351,10 +351,10 @@ class ReportContoller extends Controller
                     for ($i = 1; $i <= $vspPreprationpageCount; $i++) {
                         $mpdf->AddPage('L');
                         if ($i = 1) {
-                           // $mpdf->writeHtml('<h3 style="font_size:14px;">3.4 VSCP Preparation</h3>');
+                            $mpdf->writeHtml('<h4 style="font_size:12px;text-align:center">'.$value['name'].'</h4>');
                         }
                         $templateId = $mpdf->importPage($i);
-                        $mpdf->useTemplate($templateId, 50, 0, null, null);
+                        $mpdf->useTemplate($templateId, 50, 20, null, null);
                         // Get the dimensions of the current page
 
                     }
@@ -374,7 +374,7 @@ class ReportContoller extends Controller
                 $mpdf->WriteHTML(view('report.riskAssessments'));
                 $mpdf->WriteHTML(view('report.sampleImage', compact('sampleImage', 'visualImage')));
 
-                $titleHtml = '<h2 style="text-align:center" id="lebResult">Appendix-4 Leb Result</h2>';
+                $titleHtml = '<h2 style="text-align:center;font_size:12px;" id="lebResult">Appendix-4 Leb Result</h2>';
 
                 $filePath = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult1'];
                 if (file_exists($filePath) && @$projectDetail['leb1LaboratoryResult1']) {
@@ -422,12 +422,12 @@ class ReportContoller extends Controller
                         }
                     }
                 }
-                $gaPlan = public_path('images/projects') . "/" . $projectDetail['id'] . "/" . $projectDetail['deck_image'];
+                $gaPlan = public_path('images/projects') . "/" . $projectDetail['id'] . "/" . $projectDetail['ga_plan'];
                 $attachmentCount = 1;
                 if (file_exists($gaPlan) && @$projectDetail['ga_plan']) {
                     $titleattach = '<h2 style="text-align:center;font-size:14px;">AttachMent ' . $attachmentCount . ' Ga Plan </h2>';
 
-                    $this->mergeImageToPdf($gaPlan, $titleattach, $mpdf, $page = 'L');
+                    $this->mergePdf($gaPlan, $titleattach, $mpdf, $page = 'L');
                 }
                 foreach ($attechments as $value) {
                     $attachmentCount++;
@@ -588,7 +588,7 @@ class ReportContoller extends Controller
 
         if (count($decks['checks']) > 0) {
             // Background image using base64
-            $html .= "<h4 style='marging-bottom:2px;'>Digarm For " . $decks['name'] . "</h4>";
+          
 
             $html .= '<span class="image-container" style="  position: relative;
                 display: inline-block;
@@ -639,10 +639,10 @@ class ReportContoller extends Controller
                     if ($addInLeft == "right") {
                         // Adjust tooltip position to the right
 
-                        $html .= 'top: ' . ($toolTipTop + 15) . 'px; right:' . $rightPosition;
+                        $html .= 'top: ' . ($toolTipTop - 5) . 'px; right:' . $rightPosition;
                         $totalWidthLine = $imageWidth - $startPosition + $leftP;
                     } else {
-                        $html .= 'top: ' . ($toolTipTop + 15) . 'px; left:' . $rightPosition;
+                        $html .= 'top: ' . ($toolTipTop - 5) . 'px; left:' . $rightPosition;
                         $totalWidthLine = $left + $leftP;
                     }
                     $totalWidthLineRound = abs($totalWidthLine) . 'px';
@@ -651,7 +651,7 @@ class ReportContoller extends Controller
                     $html .= '">' . $tooltipText . "<br/>";
                     if ($hazmatsCount != 0) {
                         foreach ($value->check_hazmats as $index => $hazmat) {
-                            $html .= '<span class="subcircle" style="color:' . $hazmat["hazmat"]["color"] . ';">.$hazmat["hazmat"]["short_name"]</span>';
+                            $html .= '<span class="subcircle" style="color:' . $hazmat["hazmat"]["color"] . ';">.'.$hazmat["hazmat"]["short_name"].'</span>';
                         }
                     }
 
