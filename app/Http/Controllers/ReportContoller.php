@@ -111,6 +111,7 @@ class ReportContoller extends Controller
             $mpdf->defaultPageNumStyle = '1';
             $mpdf->SetDisplayMode('fullpage');
             $pageCount = $mpdf->setSourceFile(storage_path('app/pdf/') . "/" . $filename);
+            $mpdf->SetCompression(true);
 
             // Add each page of the Dompdf-generated PDF to the mPDF document
 
@@ -155,7 +156,6 @@ class ReportContoller extends Controller
                 }
                 $templateId = $mpdf->importPage($i);
                 $mpdf->useTemplate($templateId, 50, 20, null, null);
-
             }
             $mpdf->Output();
         } catch (\Mpdf\MpdfException $e) {
@@ -261,11 +261,11 @@ class ReportContoller extends Controller
                 'jpeg_quality' => 75, // Set the JPEG quality (0-100)
                 'shrink_tables_to_fit' => 1, // Shrink tables to fit the page width
                 'tempDir' => __DIR__ . '/tmp', // Set a temporary directory for mPDF
-              
-              
+
+
                 'allow_output_buffering' => true,
             ]);
-           
+
             $mpdf->defaultPageNumStyle = '1';
             $mpdf->SetDisplayMode('fullpage');
 
@@ -344,26 +344,25 @@ class ReportContoller extends Controller
                 foreach ($ChecksList as $value) {
                     if (count($value['checks']) > 0) {
                         $vspPrepration = $this->drawDigarmWithTable($value);
-                    
 
-                    $vspPreprationpageCount = $mpdf->setSourceFile(storage_path('app/pdf/') . "/" . $vspPrepration);
 
-                    for ($i = 1; $i <= $vspPreprationpageCount; $i++) {
-                        $mpdf->AddPage('L');
-                        if ($i = 1) {
-                            $mpdf->writeHtml('<h4 style="font_size:12px;text-align:center">'.$value['name'].'</h4>');
+                        $vspPreprationpageCount = $mpdf->setSourceFile(storage_path('app/pdf/') . "/" . $vspPrepration);
+
+                        for ($i = 1; $i <= $vspPreprationpageCount; $i++) {
+                            $mpdf->AddPage('L');
+                            if ($i = 1) {
+                                $mpdf->writeHtml('<h4 style="font_size:12px;text-align:center">' . $value['name'] . '</h4>');
+                            }
+                            $templateId = $mpdf->importPage($i);
+                            $mpdf->useTemplate($templateId, 50, 20, null, null);
+                            // Get the dimensions of the current page
+
                         }
-                        $templateId = $mpdf->importPage($i);
-                        $mpdf->useTemplate($templateId, 50, 20, null, null);
-                        // Get the dimensions of the current page
-
+                        unlink(storage_path('app/pdf/') . "/" . $vspPrepration);
+                        $render = view('report.vscpPrepration', ['checks' => $value['checks']])->render();
+                        $mpdf->AddPage('p');
+                        $mpdf->writeHtml($render);
                     }
-                    unlink(storage_path('app/pdf/') . "/" . $vspPrepration);
-                    $render = view('report.vscpPrepration',['checks'=> $value['checks']])->render();
-                    $mpdf->AddPage('p');
-                    $mpdf->writeHtml($render);
-                    }
-                  
                 }
                 $mpdf->AddPage('p');
                 $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
@@ -373,41 +372,25 @@ class ReportContoller extends Controller
                 $mpdf->AddPage('L');
                 $mpdf->WriteHTML(view('report.riskAssessments'));
                 $mpdf->WriteHTML(view('report.sampleImage', compact('sampleImage', 'visualImage')));
-
-                $titleHtml = '<h2 style="text-align:center;font_size:12px;" id="lebResult">Appendix-4 Leb Result</h2>';
-
-                $filePath = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult1'];
-                if (file_exists($filePath) && @$projectDetail['leb1LaboratoryResult1']) {
-                    $this->mergePdf($filePath, $titleHtml, $mpdf);
-                }
-                $filePath1 = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult2'];
-                if (file_exists($filePath1) && @$projectDetail['leb1LaboratoryResult2']) {
-                    $this->mergePdf($filePath1, null, $mpdf);
-                }
-                $filePath2 = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult1'];
-                if (file_exists($filePath2) && @$projectDetail['leb2LaboratoryResult1']) {
-                    $this->mergePdf($filePath2, null, $mpdf);
-                }
-                $filePath3 = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult2'];
-                if (file_exists($filePath) && @$projectDetail['leb2LaboratoryResult2']) {
-                    $this->mergePdf($filePath3, null, $mpdf);
-                }
-                $titleattach = '<h2 style="text-align:center">Appendix-5 Supporting Documents/plans from Ship</h2>';
+                $titleattach = '<h2 style="text-align:center">Appendix-4 Supporting Documents/plans from Ship</h2>';
 
                 $i = 0;
                 foreach ($check_has_hazmats as $checkvalue) {
                     $image = $checkvalue->image;
 
                     if (@$image) {
-                        $i++;
-                        $imageValue = basename($checkvalue->image);
-                        $filePath = public_path('images/hazmat') . "/" . $projectDetail['id'] . "/" . $imageValue;
 
-                        if (file_exists($filePath)) {
-                            if ($i == 1) {
-                                $this->mergePdf($filePath, $titleattach, $mpdf);
-                            } else {
-                                $this->mergePdf($filePath, null, $mpdf);
+                        $imageValue = basename($checkvalue->image);
+                        if (@$imageValue) {
+                            $i++;
+                            $filePath = public_path('images/hazmat') . "/" . $projectDetail['id'] . "/" . $imageValue;
+
+                            if (file_exists($filePath)) {
+                                if ($i == 1) {
+                                    $this->mergePdf($filePath, $titleattach, $mpdf);
+                                } else {
+                                    $this->mergePdf($filePath, null, $mpdf);
+                                }
                             }
                         }
                     }
@@ -416,22 +399,68 @@ class ReportContoller extends Controller
 
                     if (@$imageDoc) {
                         $imageDocValue = basename($checkvalue->imadocge);
-                        $filePathDoc = public_path('images/hazmat') . "/" . $projectDetail['id'] . "/" . $imageDocValue;
-                        if (file_exists($filePathDoc)) {
-                            $this->mergePdf($filePath, null, $mpdf);
+                        if (@$imageDocValue) {
+                            $filePathDoc = public_path('images/hazmat') . "/" . $projectDetail['id'] . "/" . $imageDocValue;
+                            if (file_exists($filePathDoc)) {
+                                $this->mergePdf($filePathDoc, null, $mpdf);
+                            }
                         }
                     }
                 }
+                $attachmentCount = 0;
+
+                if (@$projectDetail['leb1LaboratoryResult1']) {
+                  
+
+                    $filePath = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult1'];
+                    if (file_exists($filePath) && @$projectDetail['leb1LaboratoryResult1']) {
+                        $attachmentCount++;
+                        $titleHtml = '<h2 style="text-align:center;font_size:12px;" id="lebResult">Attachment '.$attachmentCount.' Leb Result1 for leb1</h2>';
+
+                        $this->mergePdf($filePath, $titleHtml, $mpdf);
+                    }
+                }
+                if (@$projectDetail['leb1LaboratoryResult2']) {
+
+                    $filePath1 = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult2'];
+                    if (file_exists($filePath1) && @$projectDetail['leb1LaboratoryResult2']) {
+                        $attachmentCount++;
+                        $titleHtml = '<h2 style="text-align:center;font_size:12px;padding-bottom:10px;" id="lebResult">Attachment '.$attachmentCount.' Leb Result1 for leb2</h2>';
+                        $this->mergePdf($filePath1, $titleHtml, $mpdf);
+                    }
+                }
+
+                if (@$projectDetail['leb2LaboratoryResult1']) {
+
+                    $filePath2 = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult1'];
+                    if (file_exists($filePath2) && @$projectDetail['leb2LaboratoryResult1']) {
+                        $attachmentCount++;
+                        $titleHtml = '<h2 style="text-align:center;font_size:12px;padding-bottom:10px;" id="lebResult">Attachment '.$attachmentCount.' Leb Result1 for leb2</h2>';
+                        $this->mergePdf($filePath2, $titleHtml, $mpdf);
+                    }
+                }
+
+                if(@$projectDetail['leb2LaboratoryResult2']){
+
+                    $filePath3 = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult2'];
+                    if (file_exists($filePath) && @$projectDetail['leb2LaboratoryResult2']) {
+                        $attachmentCount++;
+                        $titleHtml = '<h2 style="text-align:center;font_size:12px;" id="lebResult">Attachment '.$attachmentCount.' Leb Result2 for leb2</h2>';
+                        $this->mergePdf($filePath3, $titleHtml, $mpdf);
+                    }
+    
+                }
+              
                 $gaPlan = public_path('images/projects') . "/" . $projectDetail['id'] . "/" . $projectDetail['ga_plan'];
-                $attachmentCount = 1;
                 if (file_exists($gaPlan) && @$projectDetail['ga_plan']) {
-                    $titleattach = '<h2 style="text-align:center;font-size:14px;">AttachMent ' . $attachmentCount . ' Ga Plan </h2>';
+                      $attachmentCount++;
+                    $titleattach = '<h2 style="text-align:center;font-size:12px;">AttachMent ' . $attachmentCount . ' Ga Plan </h2>';
 
                     $this->mergePdf($gaPlan, $titleattach, $mpdf, $page = 'L');
                 }
                 foreach ($attechments as $value) {
                     $attachmentCount++;
-                    $titleattach = '<h2 style="text-align:center;font-size:14px;">Attachment ' . $attachmentCount . " " . $value['heading'] . '</h2>';
+                    $titleattach = '<h2 style="text-align:center;font-size:12px;">Attachment ' . $attachmentCount . " " . $value['heading'] . '</h2>';
 
                     $filePath = public_path('images/attachment') . "/" . $projectDetail['id'] . "/" . $value['documents'];
                     if (file_exists($filePath) && @$value['documents']) {
@@ -588,31 +617,31 @@ class ReportContoller extends Controller
 
         if (count($decks['checks']) > 0) {
             // Background image using base64
-          
 
-            $html .= '<span class="image-container" style="  position: relative;
+
+            $html .= '<div class="image-container" style="  position: relative;
                 display: inline-block;
                 margin: 20px;">';
-            $html .= '<img src="' . $imageBase64 . '"  width="100%"/>';
+            $html .= '<img src="' . $imageBase64 . '" />';
             if (!empty($decks['checks'])) {
                 foreach ($decks['checks'] as $key => $value) {
                     $hazmatsCount = count($value->check_hazmats);
                     $top = $value->position_top;
                     $left = $value->position_left;
 
-                    $html .= '<span class="dot" style="top:' . $top . 'px;left:' . $left . 'px; position: absolute;
+                    $html .= '<div class="dot" style="top:' . $top . 'px;left:' . $left . 'px; position: absolute;
                             width: 12px;
                             height: 12px;
                             border: 2px solid #BF0A30;
                             background: #BF0A30;
                             border-radius: 50%;
                             text-align: center;
-                            line-height: 20px;"></span>';
+                            line-height: 20px;"></div>';
                     $addInLeft = "right";
                     if (($imageWidth / 2) > $left) {
                         $addInLeft = "left";
                     }
-                    $html .= '<span class="tooltip" style="position: absolute;
+                    $html .= '<div class="tooltip" style="position: absolute;
                         background-color: #fff;
                         border: 1px solid #BF0A30;
                         padding: 3px;
@@ -628,7 +657,6 @@ class ReportContoller extends Controller
                     $extract = explode("#", $value['name']);
                     if ($hazmatsCount == 0) {
                         $tooltipText = ($value['type'] == 'sample' ? 'SCP' : 'VSCP') . "<br/>" . $extract[1];
-
                     } else {
                         $tooltipText = ($value['type'] == 'sample' ? 'SCP' : 'VSCP') . "<br/>" . $extract[1];
                     }
@@ -651,11 +679,11 @@ class ReportContoller extends Controller
                     $html .= '">' . $tooltipText . "<br/>";
                     if ($hazmatsCount != 0) {
                         foreach ($value->check_hazmats as $index => $hazmat) {
-                            $html .= '<span class="subcircle" style="color:' . $hazmat["hazmat"]["color"] . ';">.'.$hazmat["hazmat"]["short_name"].'</span>';
+                            $html .= '<span class="subcircle" style="color:' . $hazmat["hazmat"]["color"] . ';">.' . $hazmat["hazmat"]["short_name"] . '</span>';
                         }
                     }
 
-                    $html .= '</span>';
+                    $html .= '</div>';
                     $tooltipWidth = strlen($tooltipText); // Estimate width based on character count
 
                     if ($addInLeft == "right") {
@@ -669,8 +697,7 @@ class ReportContoller extends Controller
                     }
                 }
             }
-            $html .= '</span>';
-
+            $html .= '</div>';
         }
 
         $html .= '</div>';
@@ -732,16 +759,16 @@ class ReportContoller extends Controller
             $templateId = $mpdf->importPage($i);
             $size = $mpdf->getTemplateSize($templateId);
 
-            if ($i === 1 && @$title) {
-                $mpdf->WriteHTML($title);
-            }
+           
             $scale = min(
                 ($mpdf->w - $mpdf->lMargin - $mpdf->rMargin) / $size['width'],
                 ($mpdf->h - $mpdf->tMargin - $mpdf->bMargin) / $size['height']
             );
-
+            if ($i === 1 && @$title) {
+                $mpdf->WriteHTML($title);
+            }
             // Use the template and apply the calculated scale
-            $mpdf->useTemplate($templateId, $mpdf->lMargin, $mpdf->tMargin, $size['width'], $size['height'] * $scale);
+            $mpdf->useTemplate($templateId, $mpdf->lMargin, $mpdf->tMargin, $size['width'] * $scale, $size['height'] * $scale);
         }
     }
     protected function savePdf($content, $filename)
