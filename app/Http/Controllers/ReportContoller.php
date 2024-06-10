@@ -451,21 +451,21 @@ class ReportContoller extends Controller
     
                 }
               
-                $gaPlan = public_path('images/projects') . "/" . $projectDetail['id'] . "/" . $projectDetail['ga_plan'];
+                $gaPlan = public_path('images/projects') . "/" . $projectDetail['id'] . "/" . $projectDetail['deck_image'];
                 if (file_exists($gaPlan) && @$projectDetail['ga_plan']) {
                       $attachmentCount++;
                     $titleattach = '<h2 style="text-align:center;font-size:12px;">AttachMent ' . $attachmentCount . ' Ga Plan </h2>';
-
-                    $this->mergePdf($gaPlan, $titleattach, $mpdf, $page = 'L');
+                   // $gaplan = 'https://sosindi.com/IHM/public/images/projects/12/amanah_1716551673.png';
+                    $this->mergeImageToPdf($gaPlan, $titleattach, $mpdf, $page = 'L');
                 }
                 foreach ($attechments as $value) {
-                    $attachmentCount++;
+                  
                     $titleattach = '<h2 style="text-align:center;font-size:12px;">Attachment ' . $attachmentCount . " " . $value['heading'] . '</h2>';
 
                     $filePath = public_path('images/attachment') . "/" . $projectDetail['id'] . "/" . $value['documents'];
                     if (file_exists($filePath) && @$value['documents']) {
                         $fileExtension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-
+                        $attachmentCount++;
                         if ($fileExtension === 'pdf') {
                             // If it's a PDF, merge it
                             $this->mergePdf($filePath, $titleattach, $mpdf);
@@ -715,37 +715,19 @@ class ReportContoller extends Controller
     {
         list($width, $height) = getimagesize($imagePath);
 
-        // Define page dimensions based on the given page format
-        $pageWidth = $mpdf->w - $mpdf->lMargin - $mpdf->rMargin; // Considering margins
-        $pageHeight = $mpdf->h - $mpdf->tMargin - $mpdf->bMargin; // Considering margins
-
-        // Calculate the aspect ratio
-        $imageAspect = $width / $height;
-        $pageAspect = $pageWidth / $pageHeight;
-
-        // Scale image dimensions to fit within page dimensions
-        if ($imageAspect > $pageAspect) {
-            // Scale image to fit page width
-            $newWidth = $pageWidth;
-            $newHeight = $pageWidth / $imageAspect;
-        } else {
-            // Scale image to fit page height
-            $newHeight = $pageHeight;
-            $newWidth = $pageHeight * $imageAspect;
-        }
-
-        // Center the image on the page
-        $x = ($pageWidth - $newWidth) / 2 + $mpdf->lMargin;
-        $y = ($pageHeight - $newHeight) / 2 + $mpdf->tMargin;
-
-        // Create a new PDF page
+        $pageWidth = $mpdf->w; // Width of the page in mm
+        $pageHeight = $mpdf->h; // Height of the page in mm
+        
+        // Calculate the x position to center the image
+        $imageX = ($pageWidth - $width) / 2;
+        $imageY = 35; // Adjust the Y position as needed
         $mpdf->AddPage($page);
 
         // Add the title
         $mpdf->WriteHTML('<h1>' . $title . '</h1>');
 
         // Add the image to the page
-        $mpdf->Image($imagePath, $x, 35, 0, $newHeight, 'png', '', true, false);
+        $mpdf->Image($imagePath,0, 35,  $mpdf->w ,null, 'png', '', true, false);
     }
     protected function mergePdf($filePath, $title, $mpdf, $page = null)
     {
@@ -766,9 +748,12 @@ class ReportContoller extends Controller
             );
             if ($i === 1 && @$title) {
                 $mpdf->WriteHTML($title);
+                $lmargin = 25;
+            }else{
+                $lmargin = $mpdf->lMargin;
             }
             // Use the template and apply the calculated scale
-            $mpdf->useTemplate($templateId, $mpdf->lMargin, $mpdf->tMargin, $size['width'] * $scale, $size['height'] * $scale);
+            $mpdf->useTemplate($templateId, $lmargin, $mpdf->tMargin, $size['width'] * $scale, $size['height'] * $scale);
         }
     }
     protected function savePdf($content, $filename)

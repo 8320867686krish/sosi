@@ -10,7 +10,7 @@
                         </button>
                     </h5>
                 </div>
-                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion4">
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion4">
                     <div class="card-body">
                         @php
                             $minCount = 10;
