@@ -593,7 +593,7 @@ class ReportContoller extends Controller
             $html .= '<span class="image-container" style="  position: relative;
                 display: inline-block;
                 margin: 20px;">';
-            $html .= '<img src="' . $imageBase64 . '"  />';
+            $html .= '<img src="' . $imageBase64 . '"  width="100%"/>';
             if (!empty($decks['checks'])) {
                 foreach ($decks['checks'] as $key => $value) {
                     $hazmatsCount = count($value->check_hazmats);
@@ -741,7 +741,7 @@ class ReportContoller extends Controller
             );
 
             // Use the template and apply the calculated scale
-            $mpdf->useTemplate($templateId, $mpdf->lMargin, $mpdf->tMargin, $size['width'] * $scale, $size['height'] * $scale);
+            $mpdf->useTemplate($templateId, $mpdf->lMargin, $mpdf->tMargin, $size['width'], $size['height'] * $scale);
         }
     }
     protected function savePdf($content, $filename)
