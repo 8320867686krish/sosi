@@ -615,8 +615,8 @@ class ReportContoller extends Controller
                 foreach ($decks['checks'] as $key => $value) {
                     $i++;
                     $hazmatsCount = count($value->check_hazmats);
-                    $top = $value->position_top * $scalingFactor;
-                    $left = $value->position_left * $scalingFactor;
+                    $top = ($value->position_top * $scalingFactor);
+                    $left = ($value->position_left * $scalingFactor) + 8;
 
                     $html .= '<div class="dot" style="top:' . $top . 'px;left:' . $left . 'px; position: absolute;
                             width: 12px;
