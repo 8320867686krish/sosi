@@ -249,7 +249,7 @@ class ReportContoller extends Controller
             $mpdf = new Mpdf([
                 'mode' => 'c',
                 'mode' => 'utf-8',
-                'format' => 'A1',
+                'format' => 'A2',
                 'margin_left' => 10,
                 'margin_right' => 10,
                 'margin_top' => 27,
@@ -598,9 +598,9 @@ class ReportContoller extends Controller
         $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
        
         list($imageWidth, $imageHeight) = getimagesize($imagePath);
-        $pageWidth = $imageWidth; // Points (A4 width in points)
+//        $pageWidth = $imageWidth; // Points (A4 width in points)
 
-        $scalingFactor = $pageWidth / $imageWidth; // Scaling factor to fit image in page width
+  //      $scalingFactor = $pageWidth / $imageWidth; // Scaling factor to fit image in page width
 
         if (count($decks['checks']) > 0) {
             // Background image using base64
@@ -608,14 +608,14 @@ class ReportContoller extends Controller
             $html .= '<div class="image-container" style="  position: relative;
                 display: inline-block;
                 margin: 20px;">';
-                $html .= '<img src="' . $imageBase64 . '" width="'.  $pageWidth.'"/>';
+                $html .= '<img src="' . $imageBase64 . '"/>';
                 if (!empty($decks['checks'])) {
                 $i=0;
                 foreach ($decks['checks'] as $key => $value) {
                     $i++;
                     $hazmatsCount = count($value->check_hazmats);
-                    $top = ($value->position_top * $scalingFactor);
-                    $left = ($value->position_left * $scalingFactor) + 8;
+                    $top = ($value->position_top );
+                    $left = ($value->position_left ) + 8;
 
                     $html .= '<div class="dot" style="top:' . $top . 'px;left:' . $left . 'px; position: absolute;
                             width: 12px;
@@ -626,7 +626,7 @@ class ReportContoller extends Controller
                             text-align: center;
                             line-height: 20px;"></div>';
                     $addInLeft = "right";
-                    if (($pageWidth / 2) > $left) {
+                    if (($imageWidth / 2) > $left) {
                         $addInLeft = "left";
                     }
                     $html .= '<div class="tooltip" style="position: absolute;
@@ -656,7 +656,7 @@ class ReportContoller extends Controller
                         // Adjust tooltip position to the right
 
                         $html .= 'top: ' . ($toolTipTop - 5) . 'px; right:' . $rightPosition;
-                        $totalWidthLine = $pageWidth - $startPosition + $leftP;
+                        $totalWidthLine = $imageWidth - $startPosition + $leftP;
                     } else {
                         $html .= 'top: ' . ($toolTipTop - 5) . 'px; left:' . $rightPosition;
                         $totalWidthLine = $left + $leftP;
