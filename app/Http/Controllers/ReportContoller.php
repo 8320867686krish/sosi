@@ -347,7 +347,9 @@ class ReportContoller extends Controller
                 $mpdf->writeHtml('<h3 style="font_size:14px;">3.4 VSCP Preparation</h3>');
                 foreach ($ChecksList as $value) {
                     if (count($value['checks']) > 0) {
-                        $vspPrepration = $this->drawDigarmWithTable($value,$pageSize=$mpdf->w);
+                        $pageWidth = $mpdf->w;
+
+                        $vspPrepration = $this->drawDigarmWithTable($value,$pageWidth);
 
                         $vspPreprationpageCount = $mpdf->setSourceFile(storage_path('app/pdf/') . "/" . $vspPrepration);
 
@@ -367,7 +369,7 @@ class ReportContoller extends Controller
                         $mpdf->writeHtml($render);
                     }
                 }
-              
+               
                 $mpdf->AddPage('p');
                 $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
                 $mpdf->AddPage('L');
@@ -597,9 +599,10 @@ class ReportContoller extends Controller
         $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
        
         list($imageWidth, $imageHeight) = getimagesize($imagePath);
+        $scalingFactor = $pageWidth / $imageWidth;
+
         if (count($decks['checks']) > 0) {
             // Background image using base64
-
 
             $html .= '<div class="image-container" style="  position: relative;
                 display: inline-block;
@@ -640,13 +643,13 @@ class ReportContoller extends Controller
                     $addInLeft = $addInLeft;
                     $extract = explode("#", $value['name']);
                     if ($hazmatsCount == 0) {
-                        $tooltipText = ($value['type'] == 'sample' ? 'SCP' : 'VSCP') . $extract[1];
+                        $tooltipText = ($value['type'] == 'sample' ? 'S' : 'V') . $extract[1];
                     } else {
-                        $tooltipText = ($value['type'] == 'sample' ? 'SCP' : 'VSCP') . $extract[1];
+                        $tooltipText = ($value['type'] == 'sample' ? 'S' : 'V') . $extract[1];
                     }
 
                     $tooltipWidth = strlen($tooltipText) * 4;
-                    $leftP = ($i % 2 == 0) ? $tooltipWidth * 2 : $tooltipWidth  * 4;
+                    $leftP = ($i % 2 == 0) ? $tooltipWidth * 2 : $tooltipWidth  * $i;
                     $rightPosition = "-" . $leftP . "px";
                     if ($addInLeft == "right") {
                         // Adjust tooltip position to the right
