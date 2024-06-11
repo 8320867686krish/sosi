@@ -249,7 +249,7 @@ class ReportContoller extends Controller
             $mpdf = new Mpdf([
                 'mode' => 'c',
                 'mode' => 'utf-8',
-                'format' => 'A4',
+                'format' => 'A1',
                 'margin_left' => 10,
                 'margin_right' => 10,
                 'margin_top' => 27,
@@ -336,7 +336,7 @@ class ReportContoller extends Controller
                         $mpdf->writeHtml('<h3 style="font_size:14px;">Location Diagram</h3>');
                     }
                     $templateId = $mpdf->importPage($i);
-                    $mpdf->useTemplate($templateId, 50, 20, null, null);
+                    $mpdf->useTemplate($templateId,0, 20, null, null);
                     // Get the dimensions of the current page
 
                 }
@@ -598,7 +598,7 @@ class ReportContoller extends Controller
         $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
        
         list($imageWidth, $imageHeight) = getimagesize($imagePath);
-        $pageWidth = "595.28"; // Points (A4 width in points)
+        $pageWidth = $imageWidth; // Points (A4 width in points)
 
         $scalingFactor = $pageWidth / $imageWidth; // Scaling factor to fit image in page width
 
