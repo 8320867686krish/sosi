@@ -608,7 +608,7 @@ class ReportContoller extends Controller
             $html .= '<div class="image-container" style="  position: relative;
                 display: inline-block;
                 margin: 20px;">';
-            $html .= '<img src="' . $imageBase64 . '" width=100%/>';
+            $html .= '<img src="' . $imageBase64 . '" width=50%/>';
             if (!empty($decks['checks'])) {
                 $i=0;
                 foreach ($decks['checks'] as $key => $value) {
