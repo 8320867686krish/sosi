@@ -369,7 +369,6 @@ class ReportContoller extends Controller
                         $mpdf->writeHtml($render);
                     }
                 }
-                echo exit();
                 $mpdf->AddPage('p');
                 $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
                 $mpdf->AddPage('L');
@@ -691,7 +690,6 @@ class ReportContoller extends Controller
 
         $html .= '</div>';
         $html .= '</div>';
-        echo $html;
         $dompdf->loadHtml($html);
         $dompdf->render();
         $coverPdfContent = $dompdf->output();
