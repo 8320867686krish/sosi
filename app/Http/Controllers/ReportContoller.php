@@ -598,7 +598,7 @@ class ReportContoller extends Controller
         $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
        
         list($imageWidth, $imageHeight) = getimagesize($imagePath);
-        $pageWidth = 595.28; // Points (A4 width in points)
+        $pageWidth = $imageWidth; // Points (A4 width in points)
 
         $scalingFactor = $pageWidth / $imageWidth; // Scaling factor to fit image in page width
 
