@@ -598,7 +598,7 @@ class ReportContoller extends Controller
         $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
        
         list($imageWidth, $imageHeight) = getimagesize($imagePath);
-        $pageWidth = $imageWidth; // Points (A4 width in points)
+        $pageWidth = "595.28"; // Points (A4 width in points)
 
         $scalingFactor = $pageWidth / $imageWidth; // Scaling factor to fit image in page width
 
@@ -608,7 +608,7 @@ class ReportContoller extends Controller
             $html .= '<div class="image-container" style="  position: relative;
                 display: inline-block;
                 margin: 20px;">';
-                $html .= '<img src="' . $imageBase64 . '" width="' . $pageWidth . '"/>';
+                $html .= '<img src="' . $imageBase64 . '" width="'.  $pageWidth.'"/>';
                 if (!empty($decks['checks'])) {
                 $i=0;
                 foreach ($decks['checks'] as $key => $value) {
