@@ -249,7 +249,7 @@ class ReportContoller extends Controller
             $mpdf = new Mpdf([
                 'mode' => 'c',
                 'mode' => 'utf-8',
-                'format' => 'A2',
+                'format' => 'A4',
                 'margin_left' => 10,
                 'margin_right' => 10,
                 'margin_top' => 27,
@@ -336,7 +336,7 @@ class ReportContoller extends Controller
                         $mpdf->writeHtml('<h3 style="font_size:14px;">Location Diagram</h3>');
                     }
                     $templateId = $mpdf->importPage($i);
-                    $mpdf->useTemplate($templateId,0, 20, null, null);
+                    $mpdf->useTemplate($templateId, 50, 20, null, null);
                     // Get the dimensions of the current page
 
                 }
@@ -359,11 +359,11 @@ class ReportContoller extends Controller
                                 $mpdf->writeHtml('<h4 style="font_size:12px;text-align:center">' . $value['name'] . '</h4>');
                             }
                             $templateId = $mpdf->importPage($i);
-                            $mpdf->useTemplate($templateId, 50, 20, null, null);
+                            $mpdf->useTemplate($templateId, 0, 20, null, null);
                             // Get the dimensions of the current page
 
                         }
-                        unlink(storage_path('app/pdf/') . "/" . $vspPrepration);
+                      //  unlink(storage_path('app/pdf/') . "/" . $vspPrepration);
                         $render = view('report.vscpPrepration', ['checks' => $value['checks']])->render();
                         $mpdf->AddPage('p');
                         $mpdf->writeHtml($render);
@@ -598,9 +598,7 @@ class ReportContoller extends Controller
         $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
        
         list($imageWidth, $imageHeight) = getimagesize($imagePath);
-//        $pageWidth = $imageWidth; // Points (A4 width in points)
-
-  //      $scalingFactor = $pageWidth / $imageWidth; // Scaling factor to fit image in page width
+       
 
         if (count($decks['checks']) > 0) {
             // Background image using base64
@@ -614,8 +612,8 @@ class ReportContoller extends Controller
                 foreach ($decks['checks'] as $key => $value) {
                     $i++;
                     $hazmatsCount = count($value->check_hazmats);
-                    $top = ($value->position_top );
-                    $left = ($value->position_left ) + 8;
+                    $top = $value->position_top;
+                    $left = $value->position_left;
 
                     $html .= '<div class="dot" style="top:' . $top . 'px;left:' . $left . 'px; position: absolute;
                             width: 12px;
