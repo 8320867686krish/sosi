@@ -375,7 +375,6 @@ class ReportContoller extends Controller
                     $mpdf->writeHtml($vspPrepration);
                 }
             }
-            exit();
             $mpdf->AddPage('p');
             $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
             $mpdf->AddPage('L');
@@ -497,6 +496,7 @@ class ReportContoller extends Controller
     }
     public function drawDigarm($decks)
     {
+        
         $options = new Options();
         $dompdf = new Dompdf($options);
         $html = "";
@@ -563,7 +563,7 @@ class ReportContoller extends Controller
                         $linetop = ($toolTipTop + 7) . 'px';
 
                         $html .= '">' . $tooltipText . '</span>';
-                        $tooltipWidth = strlen($tooltipText); // Estimate width based on character count
+                        $tooltipWidth = strlen($tooltipText); // Estimate width baSsed on character count
 
                         if ($addInLeft == "right") {
                             $html .= '<span class="line" style="position: absolute;
@@ -597,7 +597,8 @@ class ReportContoller extends Controller
         $dompdf = new Dompdf($options);
 
         $html = "";
-        $html .= "<div class='maincontnt'>";
+        $html .= "<div class='maincontnt' style='display: flex;justify-content: center;align-items: center;
+        flex-direction: column;'>";
         // Convert the image to base64
         $imagePath = $decks['image'];
         $imageData = base64_encode(file_get_contents($imagePath));
@@ -614,6 +615,7 @@ class ReportContoller extends Controller
         $html .= $newImage;
 
 
+        $html .= '<p>' . $decks["name"] . '</p>';
 
 
 
@@ -647,22 +649,20 @@ class ReportContoller extends Controller
             $html .= $javascript;
 
             }else{
-                
-                $html .= '<span class="dot" style="top:' . $top . 'px;left:' . $left . 'px; position: absolute;
+                $html .= '<div class="dot" style="top:' . $top . 'px;left:' . $left . 'px; position: absolute;
                 width: 12px;
                 height: 12px;
                 border: 2px solid #BF0A30;
                 background: #BF0A30;
                 border-radius: 50%;
                 text-align: center;
-                line-height: 20px;"></span>';
+                line-height: 20px;"></div>';
             }
            
 
         }
         $html .= '</div>';
         $html .= '</div>';
-        echo $html;
         $dompdf->loadHtml($html);
         $dompdf->render();
         $coverPdfContent = $dompdf->output();
