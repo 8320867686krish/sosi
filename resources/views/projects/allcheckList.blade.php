@@ -3,7 +3,7 @@
     @foreach ($project->checks as $check)
         @php $hazmatsCount = count($check->check_hazmats); @endphp
         @if ($hazmatsCount == 0)
-            <tr id="checkListTr_{{ $check->id }}">
+            <tr id="checkListTr_{{ $check->id }}" @if($check->markAsChange == 1) style="background-color: #f7ff005e; color: #000000" @endif>
                 <td>{{ $count }}</td>
                 <td>{{ $check->initialsChekId }}</td>
                 <td>{{ $check->name }}</td>
@@ -27,7 +27,7 @@
             @php $count++; @endphp
         @endif
         @foreach ($check->check_hazmats as $index => $hazmat)
-            <tr id="checkListTr_{{ $check->id }}">
+            <tr id="checkListTr_{{ $check->id }}" @if($check->markAsChange == 1) style="background-color: #f7ff005e; color: #000000" @endif>
             <td>{{ $count }}</td>
                 <td>{{ $check->initialsChekId }}</td>
                 <td>{{ $check->name }}</td>
