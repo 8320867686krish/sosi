@@ -1,13 +1,33 @@
-<div class="section-1-1">
+<style>
+    table {
+        border: 1px solid #000;
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+    }
+    table td, th {
+    border: 1px solid black;
+    padding: 4px;
+    text-align: left;
+    font-size: 12px;
+}
+.next {
+    page-break-before: always;
+
+}
+
+
+</style>
+<div class="section-1-1 next">
     <table>
         <thead>
             <tr>
                 <th>S.N</th>
-                <th>HazMat</th>
+                <th style="width:5%">HazMat</th>
                 <th>Location</th>
                 <th>Equipment</th>
                 <th>Component</th>
-                <th>Document Analysis</th>
+                <th style="width:4%">Document Analysis</th>
                 <th>Remarks</th>
             </tr>
 
@@ -35,7 +55,7 @@
             <tr>
 
                 <td>{{$check['name']}}</td>
-                <td><span style="background-color:{{$hazmat->hazmat->color}};display:inline-block;height:10%"></span>{{ $hazmat->hazmat->short_name }}</td>
+                <td><span style="background-color:{{$hazmat->hazmat->color}};display:inline-block;width:10px;height:10px;"></span>{{ $hazmat->hazmat->short_name }}</td>
                 <td>{{ $check->location }} @if($check->sub_location){{ ',' . $check->sub_location }}
                     @endif</td>
                 <td>{{ $check->equipment }}</td>

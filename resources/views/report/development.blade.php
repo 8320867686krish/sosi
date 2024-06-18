@@ -1,4 +1,7 @@
 <!-- Section 1.1 -->
+ <section id="section3">
+ <section id="section3.1">
+
 <h2>3.Development of IHM of({{$projectDetail['ship_name']}})</h2>
 <div class="section-1-1">
     <h3>3.1 Collection of Necessary Information</h3>
@@ -13,7 +16,9 @@
         @endif
     </ul>
 
-
+</div>
+ </section>
+    <section id="section3.2" class="section-1-1">
     <h3 style="padding-top:20px;">3.2 Indicative List</h3>
 
     <h3>Materials to be listed from Table-A</h3>
@@ -448,7 +453,7 @@
             </tbody>
         </table>
     </div>
-    <div style="margin-top:20px;" class="next">
+    <div style="margin-top:20px;">
         <h4><b>2.Polychlorinated biphenyl (PCBs)</b></h4>
         <table>
             <thead>
@@ -704,7 +709,8 @@
             <li>Adhesives</li>
         </ul>
     </div>
-    <div style="margin-top:20px;" class="next">
+    </section>
+    <div style="margin-top:20px;" class="next section-1-1">
         <h3>Materials listed from Table-B</h3>
         <table>
             <thead>
@@ -783,7 +789,8 @@
 
         </table>
     </div>
-    <div class="next" style="margin-top:20px;">
+
+    <div id="section3.3" class="next" style="margin-top:20px;">
         <h3>3.3 Working Procedure </h3>
         <p>In order to create checks for the Visual Sampling Check Plan (VSCP) the following flow chart is referenced which is provided in MEPC 379(80) guidelines for preparation of the IHM.</p>
 
@@ -801,6 +808,7 @@
 
             <p>5. When equipment, systems and/or area of ship are not accessible for visual check or sampling checks, this equipment system and/or area is classified as ‘Potentially Containing Hazardous Materials (PCHM)’</p>
         </div>
-    </div>
+</div>
 
 </div>
+ </section>

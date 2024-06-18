@@ -16,11 +16,16 @@ use Dompdf\Options;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Mpdf\Mpdf;
+use Smalot\PdfParser\Parser;
 
-ini_set("pcre.backtrack_limit", "5000000");
+ini_set('memory_limit', '512M');
+
 
 class ReportContoller extends Controller
 {
+    protected $pdfGenerator;
+
+
     public function exportDataInExcel(Request $request, $id, $isSample = null)
     {
         if ($request->type == 'xlsx') {
@@ -163,311 +168,459 @@ class ReportContoller extends Controller
             echo $e->getMessage();
         }
     }
+
     public function genratePdf(Request $request)
     {
-  $post = $request->input();
-    $project_id = $post['project_id'];
-    $version = $post['version'];
-    $date = date('d-m-Y', strtotime($post['date']));
-    
-    $decksval = Deck::with(['checks'])->where('project_id', $project_id)->get();
 
-    $options = new Options();
-    $options->set('defaultFont', 'DejaVu Sans');
-    $dompdf = new Dompdf($options);
+        $pdfFiles = [];
+        $post = $request->input();
+        $project_id = $post['project_id'];
+        $version = $post['version'];
+        $date = date('d-m-Y', strtotime($post['date']));
+        $projectDetail = Projects::with('client')->find($project_id);
 
-    $html = "";
-    $i = 1; // Initialize a counter for the image ID
+        $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
+            $query->where('project_id', $project_id);
+        }])->withCount(['checkHasHazmatsSample as sample_count' => function ($query) use ($project_id) {
+            $query->where('project_id', $project_id);
+        }])->withCount(['checkHasHazmatsVisual as visual_count' => function ($query) use ($project_id) {
+            $query->where('project_id', $project_id);
+        }])->get();
 
-    foreach ($decksval as $decks) {
-        $html .= "<div class='maincontnt' style='display: flex; justify-content: center; align-items: center; flex-direction: column;page-break-after: always; height:100vh;'>";
-      //  $html .= '<p>' . htmlspecialchars($decks['name'], ENT_QUOTES, 'UTF-8') . '</p>';
-        
-        // Convert the image to base64
-        $imagePath = $decks['image'];
-        $imageData = base64_encode(file_get_contents($imagePath));
-        $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
+        $decksval = Deck::with(['checks' => function ($query) {
+            $query->whereHas('check_hazmats', function ($query) {
+                $query->where('type', 'PCHM')->orWhere('type', 'Contained');
+            });
+        }])->where('project_id', $project_id)->get();
 
-        list($width, $height) = getimagesize($imagePath);
- $html .= '<div style="margin-top:25%">';
-        $html .= '<div class="image-container" id="imgc' . $i . '" style="position: relative; display: inline-block; width:100%;">';
-        $image_width  = 1024;
-      
-
-        if ($width > 1000) {
-            $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:'.  $image_width .'px" />';
-        } else {
-            $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
-        }
-
-        $html .= $newImage;
-        $k = 0;
-        foreach ($decks['checks'] as $key => $value) {
-            $top = $value->position_top;
-            $left = $value->position_left;
-               $k++; 
-            if ($width > 1000) {
-                $topshow = ($image_width * $top) / $width;
-                $leftshow = ($image_width * $left) / $width;
- 
-                      
-                $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;
-                    width: 2px;
-                    height: 2px;
-                    border: 2px solid #BF0A30;
-                    background: #BF0A30;
-                    border-radius: 50%;
-                    text-align: center;
-                    line-height: 20px;"></div>';
-                
-                // $html .= '<span class="tooltip" style="position: absolute;
-                //         background-color: #fff;
-                //         border: 1px solid #BF0A30;
-                //         padding-left: 2px;
-                //         padding-right: 2px;
-                //         border-radius: 5px;
-                //         white-space: nowrap;
-                //         z-index: 1; /* Ensure tooltip is above the dots and lines */
-                //         color:#BF0A30;';
-                        if($k % 2 == 0){
-                               $linetop =  $topshow - 20;
-                         $html .= '<span class="line" style="position: absolute;background-color: #BF0A30;top:' . $linetop .';left:'.$leftshow.';height:70px;width:5px;"></span>';
-                        }
-                  
-                        
-                            // Adjust tooltip position to the right
-
-                         //   $html .= 'top: ' . ($toolTipTop - 5) . 'px; right:' . $rightPosition;
-                        //    $totalWidthLine = $width - $startPosition + $leftP;
-                        
-                      //  $totalWidthLineRound = abs($totalWidthLine) . 'px';
-                      //  $linetop = ($toolTipTop + 7) . 'px';
-
-                      //  $html .= '">' . $tooltipText . '</span>';
-                       
-                      
-
-            } else {
-                $html .= '<div class="dot" style="top:' . $top . 'px; left:' . $left . 'px; position: absolute;
-                    width: 2px;
-                    height: 2px;
-                    border: 2px solid #BF0A30;
-                    background: #BF0A30;
-                    border-radius: 50%;
-                    text-align: center;
-                    line-height: 20px;"></div>';
-            }
-
-        }
- $html .= '</div>';
-        $html .= '</div>';
-        $html .= '</div>';
-        
-        $i++; // Increment the counter for the next image ID
-        if($i == 3){
-            echo $html;
-            exit();
-        }
-       
-    }
-    
-
-    // Debugging step: echo the generated HTML to see the structure and content
-
-    // Load HTML into Dompdf
-    $dompdf->loadHtml($html);
-
-    // Set the paper size and orientation
-    $dompdf->setPaper('A4', 'landscape');
-
-    // Render the HTML as PDF
-    $dompdf->render();
-
-    // Stream the PDF to the browser
-    $dompdf->stream('document.pdf', [
-        'Attachment' => false // Set to true to download the file
-    ]);
-
-    }
-    public function drawDigarm($decks)
-    {
         $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isPhpEnabled', true);
+
+        $options->set('defaultFont', 'DejaVu Sans');
+
         $dompdf = new Dompdf($options);
-        $html = "";
-        $html .= "<div style='text-align: center;'>";
-        $html .= "<div class='maincontnt' style='display: flex;justify-content: center;align-items: center;
-        flex-direction: column;'>";
-        foreach ($decks as $deck) {
-            // Convert the image to base64
-            $imagePath = $deck['image'];
-            $imageData = base64_encode(file_get_contents($imagePath));
-            $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
-            list($imageWidth, $imageHeight) = getimagesize($imagePath);
 
-            if (count($deck['checks']) > 0) {
-                // Background image using base64
-                $html .= '<span class="image-container" style="  position: relative;
-                display: inline-block;
-                margin: 20px;">';
-                $html .= '<img src="' . $imageBase64 . '"  />';
-                if (!empty($deck['checks'])) {
-                    foreach ($deck['checks'] as $key => $value) {
-                        $top = $value->position_top;
-                        $left = $value->position_left;
-                        $html .= '<span class="dot" style="top:' . $top . 'px;left:' . $left . 'px; position: absolute;
-                        width: 12px;
-                        height: 12px;
-                        border: 2px solid #BF0A30;
-                        background: #BF0A30;
-                        border-radius: 50%;
-                        text-align: center;
-                        line-height: 20px;"></span>';
-                        $addInLeft = "right";
-                        if (($imageWidth / 2) > $left) {
-                            $addInLeft = "left";
-                        }
-                        $html .= '<span class="tooltip" style="position: absolute;
-                        background-color: #fff;
-                        border: 1px solid #BF0A30;
-                        padding-left: 2px;
-                        padding-right: 2px;
-                        border-radius: 5px;
-                        white-space: nowrap;
-                        z-index: 1; /* Ensure tooltip is above the dots and lines */
-                        color:#BF0A30;';
+        $logo = 'https://sosindi.com/IHM/public/assets/images/logo.png';
 
-                        // Calculate tooltip position
-                        $toolTipTop = $top;
-                        $startPosition = $left;
-                        $addInLeft = $addInLeft;
-                        $tooltipText = $value['name'] . '<br/>' . $value['type'];
-                        $tooltipWidth = strlen($tooltipText) * 4;
-                        $leftP = $tooltipWidth + 20;
-                        $rightPosition = "-" . $leftP . "px";
-                        if ($addInLeft == "right") {
-                            // Adjust tooltip position to the right
+        $lebResultAll = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
 
-                            $html .= 'top: ' . ($toolTipTop - 5) . 'px; right:' . $rightPosition;
-                            $totalWidthLine = $imageWidth - $startPosition + $leftP;
+        $attechments = Attechments::where('project_id', $project_id)->where('attachment_type', '!=', 'shipBrifPlan')->get();
+        $brifPlan = Attechments::where('project_id', $project_id)->where('attachment_type', '=', 'shipBrifPlan')->first();
+        $ChecksList = Deck::with(['checks.check_hazmats'])->where('project_id', $project_id)->get();
+        $ChecksListImage = Checks::with(['checkSingleimage', 'labResults'])->where('project_id', $project_id)->get();
+
+        $sampleImage = $ChecksListImage->filter(function ($item) {
+            return $item->type == 'sample';
+        });
+
+        $visualImage = $ChecksListImage->filter(function ($item) {
+            return $item->type == 'visual';
+        });
+        if (@$brifPlan['documents']) {
+            $brifimage = public_path('images/attachment') . "/" . $projectDetail['id'] . "/" . $brifPlan['documents'];
+        } else {
+            $brifimage = '';
+        };
+        $attechmentsResult = $attechments->filter(function ($item) {
+            return $item->attachment_type == 'shipPlan';
+        });
+        $filteredResults1 = $lebResultAll->filter(function ($item) {
+            return $item->IHM_part == 'IHMPart1-1';
+        });
+
+        $filteredResults2 = $lebResultAll->filter(function ($item) {
+            return $item->IHM_part == 'IHMPart1-2';
+        });
+        $filteredResults3 = $lebResultAll->filter(function ($item) {
+            return $item->IHM_part == 'IHMPart1-3';
+        });
+        $report_materials = ReportMaterial::where('project_id', $project_id)->get()->toArray();
+        $foundItems = [];
+
+        foreach ($report_materials as $value) {
+            $index = array_search($value['structure'], array_column($report_materials, 'structure'));
+            if ($index !== false) {
+                $foundItems[$value['structure']] = $report_materials[$index];
+            }
+        }
+
+        $mpdf = new Mpdf([
+            'mode' => 'c',
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'margin_left' => 10,
+            'margin_right' => 10,
+            'margin_top' => 27,
+            'margin_bottom' => 25,
+            'margin_header' => 16,
+            'margin_footer' => 13,
+            'defaultPagebreakType' => 'avoid',
+            'imageProcessor' => 'GD', // or 'imagick' if you have Imagick installed
+            'jpeg_quality' => 75, // Set the JPEG quality (0-100)
+            'shrink_tables_to_fit' => 1, // Shrink tables to fit the page width
+            'tempDir' => __DIR__ . '/tmp', // Set a temporary directory for mPDF
+
+
+            'allow_output_buffering' => true,
+        ]);
+
+        $mpdf->defaultPageNumStyle = '1';
+        $mpdf->SetDisplayMode('fullpage');
+
+        // Add each page of the Dompdf-generated PDF to the mPDF document
+
+        $mpdf->use_kwt = true;
+        $mpdf->defaultPageNumStyle = '1';
+        $mpdf->SetDisplayMode('fullpage');
+
+        // Define header content with logo
+        $header = '
+        <table width="100%" style="border-bottom: 1px solid #000000; vertical-align: middle; font-family: serif; font-size: 9pt; color: #000088;">
+            <tr>
+                <td width="10%"><img src="' . $logo . '" width="50" /></td>
+                <td width="80%" align="center">' . $projectDetail['ship_name'] . '</td>
+                <td width="10%" style="text-align: right;">' . $projectDetail['project_no'] . '<br/>' . $date . '</td>
+            </tr>
+        </table>';
+
+        // Define footer content with page number
+        $footer = '
+        <table width="100%" style="vertical-align: bottom; font-family: serif; font-size: 8pt; color: #000000;">
+            <tr>
+                <td width="33%" style="text-align: left;">' . $projectDetail['ihm_table'] . '</td>
+                <td width="33%" style="text-align: center;">Revision:' . $version . '</td>
+                <td width="33%" style="text-align: right;">{PAGENO}/{nbpg}</td>
+            </tr>
+        </table>';
+    
+        $mpdf->SetHTMLHeader($header);
+        $mpdf->SetHTMLFooter($footer);
+
+        // Load main HTML content
+        $mpdf->h2toc = ['H2' => 0, 'H3' => 1];
+        $mpdf->h2bookmarks = ['H2' => 0, 'H3' => 1];
+        // Set header and footer
+
+        // Add Table of Contents
+        $stylesheet = file_get_contents('public/assets/mpdf.css');
+
+        $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
+
+        $mpdf->WriteHTML(view('report.cover', compact('projectDetail')));
+        $mpdf->TOCpagebreak();
+        $mpdf->TOCpagebreakByArray([
+            'links' => true,
+            'toc-preHTML' => '',
+            'toc-bookmarkText' => 'Table of Contents',
+            'level' => 0,
+            'page-break-inside' => 'avoid',
+            'suppress' => false, // This should prevent a new page from being created before and after TOC
+            'toc-resetpagenum' => 1,
+        ]);
+        $mpdf->WriteHTML(view('report.introduction', compact('hazmets', 'projectDetail')));
+
+        $mpdf->AddPage('L'); // Set landscape mode for the inventory page
+
+        $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
+        $mpdf->AddPage('p');
+        $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechmentsResult', 'ChecksList', 'foundItems')));
+
+        $html = $this->drawDigarm($ChecksList);
+        $fileNameDiagram = $this->genrateDompdf($html, 'le');
+        $mpdf->setSourceFile($fileNameDiagram);
+
+        $pageCount = $mpdf->setSourceFile($fileNameDiagram);
+        for ($i = 1; $i <= $pageCount; $i++) {
+
+            $mpdf->AddPage('L');
+            if ($i == 1) {
+                $mpdf->WriteHTML('<h3 style="font-size:16px">3.4 VSCP Preparation</h2>');
+            }
+            $templateId = $mpdf->importPage($i);
+
+
+
+            // Use the template and apply the calculated scale
+            $mpdf->useTemplate($templateId,0,5,null,null);
+        }
+        $mpdf->AddPage('P');
+        $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
+        $mpdf->AddPage('L');
+        $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
+
+        $mpdf->WriteHTML(view('report.riskAssessments'));
+
+        $html = view('report.sampleImage', compact('sampleImage', 'visualImage'))->render();
+       
+        $fileNameDiagram = $this->genrateDompdf($html, 'le');
+      
+        $mpdf->setSourceFile($fileNameDiagram);
+
+        $pageCount = $mpdf->setSourceFile($fileNameDiagram);
+        for ($i = 1; $i <= $pageCount; $i++) {
+            $mpdf->AddPage('L');
+            if ($i == 1) {
+                $mpdf->WriteHTML('<h2>Appendix-3 Onboard Survey & Lab Analysis Record</h2>');
+            }
+            $templateId = $mpdf->importPage($i);
+            $mpdf->useTemplate($templateId, 0, 30, null, null);
+        }
+
+        $titleattach = '<h2 style="text-align:center">Appendix-4 Supporting Documents/plans from Ship</h2>';
+        $check_has_hazmats = CheckHasHazmat::where('project_id', $project_id)->get();
+
+        $i = 0;
+        foreach ($check_has_hazmats as $checkvalue) {
+            $image = $checkvalue->image;
+
+            if (@$image) {
+
+                $imageValue = basename($checkvalue->image);
+                if (@$imageValue) {
+                    $i++;
+                    $filePath = public_path('images/hazmat') . "/" . $projectDetail['id'] . "/" . $imageValue;
+
+                    if (file_exists($filePath)) {
+                        if ($i == 1) {
+                            $this->mergePdf($filePath, $titleattach, $mpdf);
                         } else {
-                            $html .= 'top: ' . ($toolTipTop - 5) . 'px; left:' . $rightPosition;
-                            $totalWidthLine = $left + $leftP;
-                        }
-                        $totalWidthLineRound = abs($totalWidthLine) . 'px';
-                        $linetop = ($toolTipTop + 7) . 'px';
-
-                        $html .= '">' . $tooltipText . '</span>';
-                        $tooltipWidth = strlen($tooltipText); // Estimate width based on character count
-
-                        if ($addInLeft == "right") {
-                            $html .= '<span class="line" style="position: absolute;
-                        width: 1px;
-                        background-color: #BF0A30;top:' . $linetop . ';right:' . $rightPosition . ';height:2px;width:' . $totalWidthLineRound . '"></span>';
-                        } else {
-                            $html .= '<span class="line" style="position: absolute;
-                            width: 1px;
-                            background-color: #BF0A30;top:' . $linetop . ';left:' . $rightPosition . ';height:2px;width:' . $totalWidthLineRound . '"></span>';
+                            $this->mergePdf($filePath, null, $mpdf);
                         }
                     }
                 }
-                $html .= '</span>';
+            }
+
+            $imageDoc = $checkvalue->doc;
+
+            if (@$imageDoc) {
+                $imageDocValue = basename($checkvalue->imadocge);
+                if (@$imageDocValue) {
+                    $filePathDoc = public_path('images/hazmat') . "/" . $projectDetail['id'] . "/" . $imageDocValue;
+                    if (file_exists($filePathDoc)) {
+                        $this->mergePdf($filePathDoc, null, $mpdf);
+                    }
+                }
             }
         }
-        $html .= '</div>';
-        $html .= '</div>';
+        $attachmentCount = 0;
 
-        $dompdf->loadHtml($html);
+        if (@$projectDetail['leb1LaboratoryResult1']) {
 
-        $dompdf->render();
-        $coverPdfContent = $dompdf->output();
-        $filename = "project" . uniqid() . ".pdf";
-        $filePath = storage_path('app/pdf/') . "/" . $filename;
-        file_put_contents($filePath, $coverPdfContent);
-        return $filename;
+
+            $filePath = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult1'];
+            if (file_exists($filePath) && @$projectDetail['leb1LaboratoryResult1']) {
+                $attachmentCount++;
+                $titleHtml = '<h2 style="text-align:center;font_size:12px;" id="lebResult">Attachment ' . $attachmentCount . ' Leb Result1 for leb1</h2>';
+                $this->mergePdf($filePath, $titleHtml, $mpdf);
+            }
+        }
+        if (@$projectDetail['leb1LaboratoryResult2']) {
+
+            $filePath1 = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult2'];
+            if (file_exists($filePath1) && @$projectDetail['leb1LaboratoryResult2']) {
+                $attachmentCount++;
+                $titleHtml = '<h2 style="text-align:center;font_size:12px;padding-bottom:10px;" id="lebResult">Attachment ' . $attachmentCount . ' Leb Result1 for leb2</h2>';
+                $this->mergePdf($filePath1, $titleHtml, $mpdf);
+            }
+        }
+
+        if (@$projectDetail['leb2LaboratoryResult1']) {
+
+            $filePath2 = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult1'];
+            if (file_exists($filePath2) && @$projectDetail['leb2LaboratoryResult1']) {
+                $attachmentCount++;
+                $titleHtml = '<h2 style="text-align:center;font_size:12px;padding-bottom:10px;" id="lebResult">Attachment ' . $attachmentCount . ' Leb Result1 for leb2</h2>';
+                $this->mergePdf($filePath2, $titleHtml, $mpdf);
+            }
+        }
+
+        if (@$projectDetail['leb2LaboratoryResult2']) {
+
+            $filePath3 = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult2'];
+            if (file_exists($filePath) && @$projectDetail['leb2LaboratoryResult2']) {
+                $attachmentCount++;
+                $titleHtml = '<h2 style="text-align:center;font_size:12px;" id="lebResult">Attachment ' . $attachmentCount . ' Leb Result2 for leb2</h2>';
+                $this->mergePdf($filePath3, $titleHtml, $mpdf);
+            }
+        }
+
+        $gaPlan = public_path('images/projects') . "/" . $projectDetail['id'] . "/" . $projectDetail['deck_image'];
+        if (file_exists($gaPlan) && @$projectDetail['ga_plan']) {
+            $attachmentCount++;
+            $titleattach = '<h2 style="text-align:center;font-size:12px;">AttachMent ' . $attachmentCount . ' Ga Plan </h2>';
+            $this->mergeImageToPdf($gaPlan, $titleattach, $mpdf, $page = 'L');
+        }
+        foreach ($attechments as $value) {
+
+            $titleattach = '<h2 style="text-align:center;font-size:12px;">Attachment ' . $attachmentCount . " " . $value['heading'] . '</h2>';
+
+            $filePath = public_path('images/attachment') . "/" . $projectDetail['id'] . "/" . $value['documents'];
+            if (file_exists($filePath) && @$value['documents']) {
+                $fileExtension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+                $attachmentCount++;
+                if ($fileExtension === 'pdf') {
+                    $this->mergePdf($filePath, $titleattach, $mpdf);
+                } elseif (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
+                    $this->mergeImageToPdf($filePath, $titleattach, $mpdf);
+                }
+            }
+        }
+        $mpdf->Output('project_report.pdf', 'I');
     }
-    public function drawDigarmwithTable($decks, $pageWidth)
+    public function genrateDomPdf($html, $page)
     {
-        $options = new Options();
-        $dompdf = new Dompdf($options);
-$dompdf->set_paper("a4", "lendscape");
-
-        $html = "";
-        $html .= "<div class='maincontnt' style='display: flex;justify-content: center;align-items: center;
-        flex-direction: column;'>";
-        // Convert the image to base64
-        $imagePath = $decks['image'];
-        $imageData = base64_encode(file_get_contents($imagePath));
-        $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
-
-        list($width, $height) = getimagesize($imagePath);
-        $html .= '<div class="image-container" id="imgc' . $pageWidth . '" style="  position: relative;
-        display: inline-block;width:100%">';
-        $new_width  = 1024;
-$new_height = 768;
+        $dompdf = new Dompdf();
 
 
-if ($width > $height) {
-  $image_height = floor(($height/$width)*$new_width);
-  $image_width  = $new_width;
-} else {
-  $image_width  = floor(($width/$height)*$new_height);
-  $image_height = $new_height;
-}
-        if ($width > 1000) {
-            $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $pageWidth . '" style="width:'.$image_width.'px" />';
-            
-          
-            
-        } else {
-            $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $pageWidth . '"  />';
-        }
-        $html .= $newImage;
-
-
-        $html .= '<p>' . $decks["name"] . '</p>';
-
-        $otherHtml = '';
-
-        foreach ($decks['checks'] as $key => $value) {
-
-            $top = $value->position_top;
-            $left = $value->position_left;
-            if ($width > 1000) {
-                 $topshow =  ($image_width * $top) / $width;
-            $leftshow = ($image_width * $left) / $width;
-             
-             $html .= '<div class="dot" style="top:' . $topshow . 'px;left:' . $leftshow . 'px; position: absolute;
-                width: 12px;
-                height: 12px;
-                border: 2px solid #BF0A30;
-                background: #BF0A30;
-                border-radius: 50%;
-                text-align: center;
-                line-height: 20px;"></div>';
-
-            }else{
-                $html .= '<div class="dot" style="top:' . $top . 'px;left:' . $left . 'px; position: absolute;
-                width: 12px;
-                height: 12px;
-                border: 2px solid #BF0A30;
-                background: #BF0A30;
-                border-radius: 50%;
-                text-align: center;
-                line-height: 20px;"></div>';
-            }
-           
-
-        }
-        $html .= '</div>';
-        $html .= '</div>';
-        $html = str_replace($otherHtml, '', $html);
         $dompdf->loadHtml($html);
+        if (@$page) {
+            $dompdf->setPaper('A4', 'landscape');
+        } else {
+
+            $dompdf->setPaper('A4', 'portrait');
+        }
         $dompdf->render();
-        $coverPdfContent = $dompdf->output();
+        $mainContentPdf = $dompdf->output();
         $filename = "project" . uniqid() . "ab.pdf";
         $filePath = storage_path('app/pdf/') . "/" . $filename;
-        file_put_contents($filePath, $coverPdfContent);
-        return $filename;
+
+        file_put_contents($filePath, $mainContentPdf);
+        return $filePath;
+    }
+    public function drawDigarm($decksval)
+    {
+        $i = 1;
+        $html = "";
+        foreach ($decksval as $decks) {
+            if (count($decks['checks']) > 0) {
+                $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
+                $imagePath = $decks['image'];
+                $imageData = base64_encode(file_get_contents($imagePath));
+                $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
+
+                list($width, $height) = getimagesize($imagePath);
+                $html .= '<div style="margin-top:25%">';
+                $html .= '<div class="image-container" id="imgc' . $i . '" style="position: relative; display: inline-block; width:100%;">';
+                $image_width  = 1024;
+
+                if ($width > 1000) {
+                    $image_height = ($image_width * $height) / $width;
+
+                    $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px" />';
+                } else {
+                    $image_height = $height;
+                    $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
+                }
+                // dump( $image_height);
+                $html .= $newImage;
+                $k = 1;
+                $oddTop = 0;
+                $evenTop = 0;
+
+                foreach ($decks['checks'] as $key => $value) {
+                    $top = $value->position_top;
+                    $left = $value->position_left;
+
+                    $explode = explode("#", $value['name']);
+                    $tooltipText = ($value['type'] == 'sample' ? 's' : 'v') . $explode[1] . "<br/>";
+                    $hazmatCount = count($value['check_hazmats']); // Get the total number of elements
+
+                    foreach ($value['check_hazmats'] as $index => $hazmet) {
+                        $tooltipText .= '<span style="font-size:10px;color:' . $hazmet->hazmat->color . '">' . $hazmet->hazmat->short_name . '</span>';
+
+                        // Append a comma if it's not the last element
+                        if ($index < $hazmatCount - 1) {
+                            $tooltipText .= ',';
+                        }
+                    }
+
+
+                    $k++;
+                    if ($width > 1000) {
+                        $topshow = ($image_width * $top) / $width;
+                        $leftshow = ($image_width * $left) / $width;
+                    } else {
+                        $topshow = $top;
+                        $leftshow = $left;
+                    }
+                    $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;
+                    width: 1px;
+                    height: 1px;
+                    border: 2px solid #BF0A30;
+                    background: #BF0A30;
+                    border-radius: 50%;
+                    text-align: center;
+                    line-height: 20px;"></div>';
+
+
+
+                    if ($k % 2 == 1) {
+                        if (abs($oddTop - $topshow) < 50) {
+                            $gap = 10 * $k;
+                        } else {
+                            $gap = 10;
+                        }
+
+                        $lineTopPosition = "-" . $gap . "px";
+
+                        $lineHeight = ($topshow + $gap) . "px";
+                        $lineLeftPosition =  ($leftshow + 2) . "px";
+                        $tooltipStart = ($topshow + $gap) - $topshow;
+
+                        $html .= '<span class="tooltip" style="position: absolute;
+                        background-color: #fff;
+                        border: 1px solid #BF0A30;
+                        padding: 1px;
+                        border-radius: 5px;
+                        white-space: nowrap;
+                        z-index: 1; 
+                        color:#BF0A30;font-size:10px;';
+                        $tooltipwidth = ($leftshow + 2);
+                        $html .= 'top:' . "-" . ($gap + 26) . 'px; left:' . ($tooltipwidth - 12) . 'px';
+                        $html .= '">' . $tooltipText . '</span>';
+                        $html .= '<span class="line" style="position: absolute;background-color: #BF0A30;top:' . $lineTopPosition  . ';left:' . $lineLeftPosition . ';height:' . $lineHeight . ';width:1px;"></span>';
+
+                        $oddTop = $topshow;
+                    } else {
+                        if (abs($evenTop - $topshow) < 50) {
+                            $gap = 15 * $k;
+                        } else {
+                            $gap = 15;
+                        }
+                        $lineTopPosition =   $topshow . "px";
+
+                        $lineHeight = ($image_height - $topshow + $gap) . "px";
+                        $lineLeftPosition =  ($leftshow + 2) . "px";
+                        $html .= '<span class="tooltip" style="position: absolute;
+                        background-color: #fff;
+                        border: 1px solid #BF0A30;
+                        padding: 1px;
+                        border-radius: 5px;
+                        white-space: nowrap;
+                        z-index: 1; 
+                        color:#BF0A30;font-size:10px;';
+                        $tooltipwidth = ($leftshow + 2);
+
+                        $html .= 'top:' . ($image_height + $gap) . 'px; left:' . ($tooltipwidth - 12) . 'px';
+                        $html .= '">' . $tooltipText . '</span>';
+
+                        $html .= '<span class="line" style="position: absolute;background-color: #BF0A30;top:' . $lineTopPosition  . ';left:' . $lineLeftPosition . ';height:' . $lineHeight . ';width:1px;">' . $k . '</span>';
+
+                        $evenTop = $topshow;
+                    }
+                }
+
+                $html .= '</div>';
+                $html .= '</div>';
+                $html .= '</div>';
+                $html .= view('report.vscpPrepration', ['checks' => $decks['checks']])->render();
+
+                $i++; // Increment the counter for the next image ID
+            }
+        }
+
+        return $html;
     }
     protected function mergeImageToPdf($imagePath, $title, $mpdf, $page = null)
     {

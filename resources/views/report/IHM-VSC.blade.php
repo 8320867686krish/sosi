@@ -1,5 +1,7 @@
+<section id="section4" class="next">
 <div class="container">
     <!-- Section 1.1 -->
+     <section id="section4.1">
     <h2>4.IHM-VSC Onboard Survey</h2>
     <div class="section-1-1">
         <p>After arrival onboard the vessel {{$projectDetail['ship_name']}} , a safety briefing was carried out with ship staff to explain the purpose and scope of the IHM survey explaining the various check points & location from where the visuals/samples must be taken along with safety precaution measures taken while taking samples and marking places as Potentially hazardous materials.</p>
@@ -143,7 +145,8 @@
         </div>
 
     </div>
-    <div class="next section-1-1">
+     </section>
+    <section class="next section-1-1" id="section4.2">
         <h3>4.2 Sampling Strategy</h3>
         <br />
         <table>
@@ -177,12 +180,14 @@
             </tbody>
 
         </table>
+    </section>
+    <section class="next section-1-1" id="section4.3">
         <p><b>4.3 packing of IHM Samples:</b></p>
         <p>Bulky material (e.g., paint, isolation, concrete) should be given into a plastic bag which is allowed to glue a label on it. Maybe the bags are pre-labelled (label with sample no. on it). Liquid samples should be put into a coloured glass (up to 10ml is enough) and the glass should be put into a plastic containment that is matching (not too big) Breakable containments (glass) should be packed properly. In case the package is damaged because of not proper packing, Courier accepts no responsibility all samples are packed into one or more parcels which can then be sent to the laboratory. Samples should be labelled & marked. The location of samples should also be marked with their respective numbering.</p>
 
 
-    </div>
-    <div class=" section-1-1">
+    </section>
+    <section class=" section-1-1" id="section4.3">
         <h3>4.4 Laboratory Analysis</h3>
         <p>Once the samples are collected & sorted, are to be sent to the ISO17025 or equally credited laboratory.laboratory name Certificate : see attachment . the test results are recorded see: <a href="#lebResult" style="cursor:pointer">attachment lab test results</a> </p>
         <h3><b>4.4.1 Threshold Values & Testing Standards</b></h3>
@@ -415,8 +420,9 @@
         <p>*Persistent organic compounds (POPs) which come under the purview of IHM are: Polychlorinated Naphthalenes (PCN), Polychlorinated biphenyls (PCB), Hexa Bromo Cyclodo Decane (HBCDD), Certain short-chain chlorinated paraffin (Alkanes, C10-C13, chloro) (SCCP), Poly Brominated Diphenyl Ethers (PBDEs), Poly Brominated Biphenyl (PBBs), Per Fluoro octane Sulfonic acid (PFOS) & its derivatives (PFOS)</p>
 
         <p>**HBCDD & PFOS are listed in EUSRR, but not listed in HKC.</p>
-    </div>
+                </section>
 </div>
+</section>
 <div class="next">
     <div class="section-1-1">
         <h2>5.Conclusion & Further Recommendations</h2>

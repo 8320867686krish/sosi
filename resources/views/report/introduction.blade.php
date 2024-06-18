@@ -1,16 +1,20 @@
-<div class="container">
+
+
+    <div class="container" id="Introduction">
         <!-- Section 1.1 -->
         <h2>1. Introduction to Project</h2>
         <div class="section-1-1">
-            <h3>1.1 Scope, Exemption and Exclusions</h3>
-            <p>The Scope of this document is to prepare an Inventory of Hazardous Materials as per IMO HKC- MEPC 379(80) and EUSRR-EMSA guidelines for the vessel <b>{{$projectDetail['ship_name']}}</b> on behalf of <b>{{$projectDetail['client']['manager_name']}}</b>.</p>
-            <p>The scope of this IHM report is delimited by the availability of documentation, acknowledging that certain records may not be accessible. Additionally, due to operational constraints, there are limitations on inspecting all spaces and equipment aboard the vessel while it remains in operation.</p>
+            <section id="section1.1">
+                <h3>1.1 Scope, Exemption and Exclusions</h3>
+                <p>The Scope of this document is to prepare an Inventory of Hazardous Materials as per IMO HKC- MEPC 379(80) and EUSRR-EMSA guidelines for the vessel <b>{{$projectDetail['ship_name']}}</b> on behalf of <b>{{$projectDetail['client']['manager_name']}}</b>.</p>
+                <p>The scope of this IHM report is delimited by the availability of documentation, acknowledging that certain records may not be accessible. Additionally, due to operational constraints, there are limitations on inspecting all spaces and equipment aboard the vessel while it remains in operation.</p>
 
-            <p>SOS India Pvt Ltd does not warrant or assume any kind of liability for the up-to-date nature, accuracy, completeness or quality of the HazMat weight calculation provided. Liability claims against any member of SOS India Pvt Ltd in relation to any loss or damage arising out of or in connection with the use or non-use of HazMat weight calculation provided, including the use of incorrect or incomplete HazMat weight calculation data, are excluded to the fullest extent permissible by law. All weight calculation data may be subject to alteration and are non-binding. Each SOS India Pvt Ltd member expressly reserves the right without notice to change, supplement or delete parts of the HazMat weight calculation data or to stop the publication and usage temporarily or definitively.</p>
+                <p>SOS India Pvt Ltd does not warrant or assume any kind of liability for the up-to-date nature, accuracy, completeness or quality of the HazMat weight calculation provided. Liability claims against any member of SOS India Pvt Ltd in relation to any loss or damage arising out of or in connection with the use or non-use of HazMat weight calculation provided, including the use of incorrect or incomplete HazMat weight calculation data, are excluded to the fullest extent permissible by law. All weight calculation data may be subject to alteration and are non-binding. Each SOS India Pvt Ltd member expressly reserves the right without notice to change, supplement or delete parts of the HazMat weight calculation data or to stop the publication and usage temporarily or definitively.</p>
+            </section>
         </div>
 
         <!-- Section 1.2 -->
-        <div class="section-1-2 next">
+        <section class="section-1-2 next" id="section1.2">
             <h3>1.2 Abbreviations & Normative References</h3>
             <p>Abbreviation :</p>
             <ul>
@@ -30,9 +34,9 @@
                 <li>7. MSC. 1/Circ.1374 Information on Prohibiting the use of asbestos onboard ships</li>
                 <li>8. MSC. 1/Circ.1379 Unified Interpretation of SOLAS Regulation II- 1/3-5</li>
             </ul>
-        </div>
+        </section>
 
-        <div class="section-1-3">
+        <section class="section-1-3"  id="section1.3">
             <h3> 1.3 Project Particular </h3>
             <table>
                 <tr>
@@ -90,7 +94,7 @@
                     <td>Vessel Previous Name</td>
                     <td> {{$projectDetail['vessel_previous_name']}}</td>
                 </tr>
-                
+
                 <tr>
                     <td colspan="2" align="center"><b>Ship Owner Details</b></td>
 
@@ -133,7 +137,7 @@
                     <td>Ship Manager Address</td>
                     <td>{{$projectDetail['client']->manager_address}}</td>
                 </tr>
-                
+
                 <tr>
                     <td colspan="2" align="center"><b>Survey Details</b></td>
                 </tr>
@@ -157,27 +161,28 @@
                     <td>Survey Date</td>
                     <td>{{ !empty($projectDetail['survey_date']) ? date('d-m-Y', strtotime($projectDetail['survey_date'])) : null}}</td>
                 </tr>
-               
+
                 <tr>
                     <td colspan="2" align="center"><b>Laboratory</b></td>
                 </tr>
                 @if (!empty($projectDetail['laboratorie1']))
-                    <tr>
-                        <td>Laboratory</td>
-                        <td>{{ $projectDetail['laboratorie1'] }}</td>
-                    </tr>
+                <tr>
+                    <td>Laboratory</td>
+                    <td>{{ $projectDetail['laboratorie1'] }}</td>
+                </tr>
                 @endif
 
                 @if (!empty($projectDetail['laboratorie2']))
-                    <tr>
-                        <td>Laboratory 2</td>
-                        <td>{{$projectDetail['laboratorie2']}}</td>
-                    </tr>
+                <tr>
+                    <td>Laboratory 2</td>
+                    <td>{{$projectDetail['laboratorie2']}}</td>
+                </tr>
                 @endif
             </table>
-        </div>
+        </section>
 
-        <div class="section-1-4 next">
+        <section id="section1.4" class="next section-1-4">
+
             <h3> 1.4 Executive Summary</h3>
             <p style="padding-bottom:25px">2. The onboard visual/sampling check was carried out at <b>{{$projectDetail['survey_location_name']}}</b> by IHM expert {{$projectDetail['surveyorName']}} on <b>{{$projectDetail['survey_date']}}</b> as per the visual/sampling check plan. Sampling points on ship were marked/labeled with check point numbers same as mentioned on sampling bag . The collected samples were appropriate bagged/packed and sent to the <b>{{$projectDetail['laboratorie1']}}</b> for the analysis. Following is details number of sampling & visual checks carried out for the vessel:</p>
 
@@ -190,8 +195,8 @@
                     <tr>
                         <th valign="middle"><b>Table</b></th>
                         <th valign="middle"><b>HM</b></th>
-                        <th valign="middle"><b>Colour</b></th>
-                        
+                        <th valign="middle" style="width: 10%"><b>Colour</b></th>
+
                         <th valign="middle"><b>Name</b></th>
                         <th valign="middle"><b>Sampleing</b></th>
                         <th valign="middle"><b>Visual</b></th>
@@ -211,7 +216,7 @@
                             {{ $hazmat->table_type }}
                         </td>
                         <td valign="middle">{{ $hazmat->short_name }}</td>
-                        <td  style="background-color: {{$hazmat->color}}; display: inline-block; width: 15%;">&nbsp;
+                        <td style="background-color: {{$hazmat->color}}; display: inline-block;">&nbsp;
                         </td>
                         <td width="50%">
                             {{ $hazmat->name }}
@@ -238,5 +243,5 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
+        </section>
     </div>
