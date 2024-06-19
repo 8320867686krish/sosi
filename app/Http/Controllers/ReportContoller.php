@@ -356,7 +356,7 @@ class ReportContoller extends Controller
         foreach ($sampleImageChunks as $index => $chunk) {
             $show = true;
             $title = "Sample Records";
-            $html = view('report.sampleImage', compact('chunk','title'))->render();
+            $html = view('report.sampleImage', compact('chunk','title','show'))->render();
             $mpdf->WriteHTML($html);
         }
         $sampleImageChunks = $visualImage->chunk(50);
