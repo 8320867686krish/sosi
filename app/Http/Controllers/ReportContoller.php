@@ -354,7 +354,8 @@ class ReportContoller extends Controller
         $mpdf->WriteHTML(view('report.riskAssessments'));
         $sampleImageChunks = $sampleImage->chunk(50);
         foreach ($sampleImageChunks as $index => $chunk) {
-            $html = view('report.sampleImage', compact('chunk'))->render();
+        
+            $html = view('report.sampleImage', compact('chunk','index'))->render();
             $mpdf->WriteHTML($html);
         }
         $sampleImageChunks = $visualImage->chunk(50);
