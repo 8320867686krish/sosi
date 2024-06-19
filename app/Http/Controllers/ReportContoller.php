@@ -472,8 +472,10 @@ class ReportContoller extends Controller
                 }
             }
         }
-        $mpdf->Output('project_report.pdf', 'I');
-    }
+        return response()->make($mpdf->Output('project_report.pdf', 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="project_report.pdf"'
+        ]);    }
 
     private function importPagesToMpdf($mpdf, $filePath, $isFirstChunk)
     {
