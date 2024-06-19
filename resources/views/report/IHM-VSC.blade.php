@@ -1,4 +1,4 @@
-<section id="section4" class="next">
+<section id="section4">
 <div class="container">
     <!-- Section 1.1 -->
      <section id="section4.1">

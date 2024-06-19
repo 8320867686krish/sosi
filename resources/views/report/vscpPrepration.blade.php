@@ -1,24 +1,31 @@
 <style>
-    table {
+    .section-1-1 table {
         border: 1px solid #000;
         width: 100%;
         border-collapse: collapse;
         font-size: 12px;
     }
-    table td, th {
-    border: 1px solid black;
-    padding: 4px;
-    text-align: left;
-    font-size: 12px;
-}
-.next {
-    page-break-before: always;
 
-}
+    .section-1-1 table td, th {
+        border: 1px solid black;
+        padding: 4px;
+        text-align: left;
+        font-size: 12px;
+    }
+
+    .next {
+        page-break-before: always;
+    }
+
+    .section-1-1 tbody tr:nth-child(10n) {
+        page-break-after: always;
+    }
 
 
+    
+    
 </style>
-<div class="section-1-1 next">
+<div class="section-1-1">
     <table>
         <thead>
             <tr>

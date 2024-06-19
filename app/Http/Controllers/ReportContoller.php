@@ -326,24 +326,25 @@ class ReportContoller extends Controller
         $mpdf->AddPage('p');
         $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechmentsResult', 'ChecksList', 'foundItems')));
 
-        $html = $this->drawDigarm($ChecksList);
-        $fileNameDiagram = $this->genrateDompdf($html, 'le');
-        $mpdf->setSourceFile($fileNameDiagram);
-
-        $pageCount = $mpdf->setSourceFile($fileNameDiagram);
-        for ($i = 1; $i <= $pageCount; $i++) {
-
-            $mpdf->AddPage('L');
-            if ($i == 1) {
-                $mpdf->WriteHTML('<h3 style="font-size:16px">3.4 VSCP Preparation</h2>');
+        foreach($ChecksList as $key=>$value){
+            $html = $this->drawDigarm($value);
+            $fileNameDiagram = $this->genrateDompdf($html, 'le');
+            $mpdf->setSourceFile($fileNameDiagram);
+    
+            $pageCount = $mpdf->setSourceFile($fileNameDiagram);
+            for ($i = 1; $i <= $pageCount; $i++) {
+    
+                $mpdf->AddPage('L');
+                if ($key == 0) {
+                    $mpdf->WriteHTML('<h3 style="font-size:16px">3.4 VSCP Preparation</h2>');
+                }
+                $templateId = $mpdf->importPage($i);
+                $mpdf->useTemplate($templateId, 0, 5, null, null);
             }
-            $templateId = $mpdf->importPage($i);
-
-
-
-            // Use the template and apply the calculated scale
-            $mpdf->useTemplate($templateId, 0, 5, null, null);
+            $mpdf->AddPage('L');
+            $mpdf->writeHTML( view('report.vscpPrepration', ['checks' => $value['checks']]));
         }
+     
 
         $mpdf->AddPage('P');
         $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
@@ -355,18 +356,13 @@ class ReportContoller extends Controller
         foreach ($sampleImageChunks as $index => $chunk) {
             $html = view('report.sampleImage', compact('chunk'))->render();
             $mpdf->WriteHTML($html);
-
-    
-
         }
         $sampleImageChunks = $visualImage->chunk(50);
         foreach ($sampleImageChunks as $index => $chunk) {
             $html = view('report.sampleImage', compact('chunk'))->render();
-                        $mpdf->WriteHTML($html);
-
-          
+            $mpdf->WriteHTML($html);
         }
-            
+
 
         $titleattach = '<h2 style="text-align:center">Appendix-4 Supporting Documents/plans from Ship</h2>';
         $check_has_hazmats = CheckHasHazmat::where('project_id', $project_id)->get();
@@ -384,9 +380,9 @@ class ReportContoller extends Controller
 
                     if (file_exists($filePath)) {
                         if ($i == 1) {
-                         //   $this->mergePdf($filePath, $titleattach, $mpdf);
+                            //   $this->mergePdf($filePath, $titleattach, $mpdf);
                         } else {
-                           // $this->mergePdf($filePath, null, $mpdf);
+                            // $this->mergePdf($filePath, null, $mpdf);
                         }
                     }
                 }
@@ -506,11 +502,10 @@ class ReportContoller extends Controller
         file_put_contents($filePath, $mainContentPdf);
         return $filePath;
     }
-    public function drawDigarm($decksval)
+    public function drawDigarm($decks)
     {
         $i = 1;
         $html = "";
-        foreach ($decksval as $decks) {
             if (count($decks['checks']) > 0) {
                 $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
                 $imagePath = $decks['image'];
@@ -632,11 +627,10 @@ class ReportContoller extends Controller
                 $html .= '</div>';
                 $html .= '</div>';
                 $html .= '</div>';
-                $html .= view('report.vscpPrepration', ['checks' => $decks['checks']])->render();
 
                 $i++; // Increment the counter for the next image ID
             }
-        }
+        
 
         return $html;
     }
