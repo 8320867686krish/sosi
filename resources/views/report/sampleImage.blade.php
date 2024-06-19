@@ -1,13 +1,13 @@
 <!-- resources/views/report/sampleImageChunk.blade.php -->
 <style>
-    table {
+   .section-1-1 table {
         border: 1px solid #000;
         width: 100%;
         border-collapse: collapse;
         font-size: 14px;
     }
 
-    table td, th {
+    .section-1-1 table td, th {
         border: 1px solid black;
         padding: 4px;
         text-align: left;
@@ -18,7 +18,7 @@
         page-break-before: always;
     }
 
-    tbody tr:nth-child(5n) {
+    .section-1-1 tbody tr:nth-child(5n) {
         page-break-after: always;
     }
 </style>

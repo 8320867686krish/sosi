@@ -34,7 +34,7 @@
                 <th>Location</th>
                 <th>Equipment</th>
                 <th>Component</th>
-                <th style="width:4%">Document Analysis</th>
+                <th style="width:5%">Document Analysis</th>
                 <th>Remarks</th>
             </tr>
 
