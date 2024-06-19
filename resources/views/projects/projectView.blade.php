@@ -442,6 +442,7 @@
             </div>
             <div class="email-body">
                 <div class="table-responsive">
+                    <h4 style="background-color: #f7ff005e; color: #000000" class="mb-3">Change Checks:- <b>{{ $project->markAsChangeCount  }}</b></h4>
                     <table class="table table-striped table-bordered first" width="100%">
                         <thead>
                             <tr>

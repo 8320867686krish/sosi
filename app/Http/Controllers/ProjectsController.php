@@ -87,6 +87,7 @@ class ProjectsController extends Controller
         if ($project) {
             $project->decks = $project->decks()->orderBy('id', 'desc')->get();
             $project->checks = $project->checks()->with('check_hazmats.hazmat')->orderBy('id', 'desc')->get();
+            $project->markAsChangeCount = $project->checks()->where('markAsChange', 1)->count();
         }
 
         $attachment = Attechments::where('project_id', $project_id)->get();
@@ -123,10 +124,6 @@ class ProjectsController extends Controller
             }
         }
         unset($project->materials);
-        // foreach($foundItems['Transformer']['extraField'] as $field1){
-        //     dd($field1);
-        // }
-        // dd($foundItems['Transformer']['extraField']);
 
         return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id, 'isBack' =>  $isBack, "hazmats" => $hazmats, 'attachment' => $attachment, 'foundItems' => $foundItems]);
     }
@@ -1218,9 +1215,29 @@ class ProjectsController extends Controller
             }
 
             return response()->json(['isStatus' => true, 'message' => 'Material report save successfully.']);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json(['isStatus' => false, 'error' => 'An error occurred while processing your request.']);
             // dd($th->getMessage());
+        }
+    }
+
+    public function addGapAnalysisReport(Request  $request){
+        try {
+            $productId = $request->input('project_id');
+            $analysisData = $request->input('gapAnalysis');
+
+            if(isset($analysisData)){
+                $insertAnalysisData = [
+                    'project_id' => $productId,
+                    'structure' => 'gapAnalysis',
+                    'extraField' => json_encode($analysisData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+                ];
+                ReportMaterial::updateOrCreate(['project_id' => $productId, "structure" => "gapAnalysis"], $insertAnalysisData);
+            }
+
+            return response()->json(['isStatus' => true, 'message' => 'Gap Analysis report save successfully.']);
+        } catch (Throwable $th) {
+            return response()->json(['isStatus' => false, 'error' => 'An error occurred while processing your request.']);
         }
     }
 }

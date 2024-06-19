@@ -198,6 +198,7 @@ class SyncProjectController extends Controller
                 $value['isApp'] = 1;
                 $value['project_id'] = $value['project_id'];
                 $value['deck_id'] = $value['deck_id'];
+                $value['markAsChange'] = $value['markAsChange'];
                 $checkAdd = Checks::updateOrCreate(['id' => $value['id']], $value);
                 $checkId = $checkAdd->id;
                 $checkImage[$value['id']] = $checkId;
