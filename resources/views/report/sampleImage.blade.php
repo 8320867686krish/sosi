@@ -25,7 +25,7 @@
 
 <div class="container">
     <div class="section-1-1">
-        @if(@$show)
+        @if(@$show && $show == true)
         <h2>Appendix-3 Onboard Sampling & Lab Analysis Record</h2>
         @endif
         <h4>{{$title}}</h4>
