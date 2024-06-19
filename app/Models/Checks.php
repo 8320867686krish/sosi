@@ -21,7 +21,7 @@ class Checks extends Model
     }
     public function checkSingleimage()
     {
-        return $this->hasOne(CheckImage::class, 'check_id', 'id');
+        return $this->hasMany(CheckImage::class, 'check_id', 'id')->take(2);
     }
     public function hazmats()
     {
