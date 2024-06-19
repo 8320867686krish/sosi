@@ -81,7 +81,7 @@
                     <td>{{ $hazmat['lab_remarks'] }}</td>
                     <td>
                         @if($hasImage)
-                        <a href="#"><img src="#" width="100px" height="100px" /></a>
+                        <a href="#"><img src="{{$imagePath}}" width="100px" height="100px" /></a>
                         @else
                         &nbsp;
                         @endif
