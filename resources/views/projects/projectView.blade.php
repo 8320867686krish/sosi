@@ -507,7 +507,9 @@
                                 </div>
                                 <div class="col-4">
                                     <button type="submit" name="action" class="btn btn-primary" value="submit">Full Report</button>
+                                        @if($project->ihm_table == 'IHM Part 1')
                                     <button type="submit" name="action" class="btn btn-primary" value="summery" >Summery</button>
+                                    @endif
                                 </div>
                             </div>
                         </div>
