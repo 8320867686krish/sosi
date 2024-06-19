@@ -18,7 +18,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Mpdf\Mpdf;
 use Smalot\PdfParser\Parser;
 
-ini_set('memory_limit', '512M');
+ini_set("pcre.backtrack_limit", "1000000");
 
 
 class ReportContoller extends Controller
@@ -293,7 +293,7 @@ class ReportContoller extends Controller
                 <td width="33%" style="text-align: right;">{PAGENO}/{nbpg}</td>
             </tr>
         </table>';
-    
+
         $mpdf->SetHTMLHeader($header);
         $mpdf->SetHTMLFooter($footer);
 
@@ -342,30 +342,76 @@ class ReportContoller extends Controller
 
 
             // Use the template and apply the calculated scale
-            $mpdf->useTemplate($templateId,0,5,null,null);
+            $mpdf->useTemplate($templateId, 0, 5, null, null);
         }
+
         $mpdf->AddPage('P');
         $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
         $mpdf->AddPage('L');
         $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
 
         $mpdf->WriteHTML(view('report.riskAssessments'));
+        $sampleImageChunks = $sampleImage->chunk(5);
+        foreach ($sampleImageChunks as $index => $chunk) {
+            $html = view('report.sampleImage', compact('chunk'))->render();
+            $mpdf->WriteHTML($html);
 
-        $html = view('report.sampleImage', compact('sampleImage', 'visualImage'))->render();
-       
-        $fileNameDiagram = $this->genrateDompdf($html, 'le');
-      
-        $mpdf->setSourceFile($fileNameDiagram);
+    
+            // $fileNameDiagram = $this->genrateDompdf($html, 'le');
+            // $mpdf->setSourceFile($fileNameDiagram);
 
-        $pageCount = $mpdf->setSourceFile($fileNameDiagram);
-        for ($i = 1; $i <= $pageCount; $i++) {
-            $mpdf->AddPage('L');
-            if ($i == 1) {
-                $mpdf->WriteHTML('<h2>Appendix-3 Onboard Survey & Lab Analysis Record</h2>');
-            }
-            $templateId = $mpdf->importPage($i);
-            $mpdf->useTemplate($templateId, 0, 30, null, null);
+            // $pageCount = $mpdf->setSourceFile($fileNameDiagram);
+            // for ($i = 1; $i <= $pageCount; $i++) {
+            //     $mpdf->AddPage('L');
+            //     $templateId = $mpdf->importPage($i);
+
+            //     if ($i == 1) {
+            //         $mpdf->WriteHTML('<h2>Appendix-3 Onboard Survey & Lab Analysis Record</h2>');
+            //         $mpdf->useTemplate($templateId, 0, 20, null, null);
+            //     } else {
+            //         $mpdf->useTemplate($templateId, 0, 15, null, null);
+            //     }
+            // }
+            // unlink($fileNameDiagram);
+
         }
+        // $sampleImageChunks = $visualImage->chunk(5);
+        // foreach ($sampleImageChunks as $index => $chunk) {
+        //     $html = view('report.sampleImage', compact('chunk'))->render();
+        //     $fileNameDiagram = $this->genrateDompdf($html, 'le');
+        //     $mpdf->setSourceFile($fileNameDiagram);
+
+        //     $pageCount = $mpdf->setSourceFile($fileNameDiagram);
+        //     for ($i = 1; $i <= $pageCount; $i++) {
+        //         $mpdf->AddPage('L');
+        //         $templateId = $mpdf->importPage($i);
+
+              
+        //             $mpdf->useTemplate($templateId, 0, 15, null, null);
+                
+        //     }
+        // }
+        //     $visualImageChunks = $this->getVisualImageChunks();
+        //     $html = view('report.sampleImage', compact('sampleImage', 'visualImage'))->render();
+
+        //    $fileNameDiagram = $this->genrateDompdf($html, 'le');
+
+        //    $mpdf->setSourceFile($fileNameDiagram);
+
+        //     $pageCount = $mpdf->setSourceFile($fileNameDiagram);
+        //     for ($i = 1; $i <= $pageCount; $i++) {
+        //         $mpdf->AddPage('L');
+        //         $templateId = $mpdf->importPage($i);
+
+        //         if ($i == 1) {
+        //             $mpdf->WriteHTML('<h2>Appendix-3 Onboard Survey & Lab Analysis Record</h2>');
+        //             $mpdf->useTemplate($templateId, 0, 20, null, null);
+
+        //         }else{
+        //             $mpdf->useTemplate($templateId, 0, 10, null, null);
+
+        //         }
+        //     }
 
         $titleattach = '<h2 style="text-align:center">Appendix-4 Supporting Documents/plans from Ship</h2>';
         $check_has_hazmats = CheckHasHazmat::where('project_id', $project_id)->get();
@@ -467,6 +513,23 @@ class ReportContoller extends Controller
             }
         }
         $mpdf->Output('project_report.pdf', 'I');
+    }
+
+    private function importPagesToMpdf($mpdf, $filePath, $isFirstChunk)
+    {
+        $pageCount = $mpdf->setSourceFile($filePath);
+
+        for ($i = 1; $i <= $pageCount; $i++) {
+            $mpdf->AddPage('L');
+            $templateId = $mpdf->importPage($i);
+
+            if ($i == 1 && $isFirstChunk) {
+                $mpdf->WriteHTML('<h2>Appendix-3 Onboard Survey & Lab Analysis Record</h2>');
+                $mpdf->useTemplate($templateId, 0, 20, null, null);
+            } else {
+                $mpdf->useTemplate($templateId, 0, 10, null, null);
+            }
+        }
     }
     public function genrateDomPdf($html, $page)
     {
