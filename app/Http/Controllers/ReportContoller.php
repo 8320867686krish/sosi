@@ -276,7 +276,7 @@ class ReportContoller extends Controller
 
         // Define header content with logo
         $header = '
-        <table width="100%" style="border-bottom: 1px solid #000000; vertical-align: middle; font-family: serif; font-size: 9pt; color: #000088;">
+        <table width="100%" style="vertical-align: middle; font-family: serif; font-size: 9pt; color: #000088;">
             <tr>
                 <td width="10%"><img src="' . $logo . '" width="50" /></td>
                 <td width="80%" align="center">' . $projectDetail['ship_name'] . '</td>
@@ -351,47 +351,20 @@ class ReportContoller extends Controller
         $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
 
         $mpdf->WriteHTML(view('report.riskAssessments'));
-        $sampleImageChunks = $sampleImage->chunk(5);
+        $sampleImageChunks = $sampleImage->chunk(50);
         foreach ($sampleImageChunks as $index => $chunk) {
             $html = view('report.sampleImage', compact('chunk'))->render();
             $mpdf->WriteHTML($html);
 
     
-            // $fileNameDiagram = $this->genrateDompdf($html, 'le');
-            // $mpdf->setSourceFile($fileNameDiagram);
-
-            // $pageCount = $mpdf->setSourceFile($fileNameDiagram);
-            // for ($i = 1; $i <= $pageCount; $i++) {
-            //     $mpdf->AddPage('L');
-            //     $templateId = $mpdf->importPage($i);
-
-            //     if ($i == 1) {
-            //         $mpdf->WriteHTML('<h2>Appendix-3 Onboard Survey & Lab Analysis Record</h2>');
-            //         $mpdf->useTemplate($templateId, 0, 20, null, null);
-            //     } else {
-            //         $mpdf->useTemplate($templateId, 0, 15, null, null);
-            //     }
-            // }
-            // unlink($fileNameDiagram);
 
         }
-        $sampleImageChunks = $visualImage->chunk(5);
+        $sampleImageChunks = $visualImage->chunk(50);
         foreach ($sampleImageChunks as $index => $chunk) {
             $html = view('report.sampleImage', compact('chunk'))->render();
                         $mpdf->WriteHTML($html);
 
-            // $fileNameDiagram = $this->genrateDompdf($html, 'le');
-            // $mpdf->setSourceFile($fileNameDiagram);
-
-            // $pageCount = $mpdf->setSourceFile($fileNameDiagram);
-            // for ($i = 1; $i <= $pageCount; $i++) {
-            //     $mpdf->AddPage('L');
-            //     $templateId = $mpdf->importPage($i);
-
-              
-            //         $mpdf->useTemplate($templateId, 0, 15, null, null);
-                
-            // }
+          
         }
             
 
@@ -426,7 +399,7 @@ class ReportContoller extends Controller
                 if (@$imageDocValue) {
                     $filePathDoc = public_path('images/hazmat') . "/" . $projectDetail['id'] . "/" . $imageDocValue;
                     if (file_exists($filePathDoc)) {
-                       // $this->mergePdf($filePathDoc, null, $mpdf);
+                        $this->mergePdf($filePathDoc, null, $mpdf);
                     }
                 }
             }
@@ -440,7 +413,7 @@ class ReportContoller extends Controller
             if (file_exists($filePath) && @$projectDetail['leb1LaboratoryResult1']) {
                 $attachmentCount++;
                 $titleHtml = '<h2 style="text-align:center;font_size:12px;" id="lebResult">Attachment ' . $attachmentCount . ' Leb Result1 for leb1</h2>';
-              //  $this->mergePdf($filePath, $titleHtml, $mpdf);
+                $this->mergePdf($filePath, $titleHtml, $mpdf);
             }
         }
         if (@$projectDetail['leb1LaboratoryResult2']) {
@@ -449,7 +422,7 @@ class ReportContoller extends Controller
             if (file_exists($filePath1) && @$projectDetail['leb1LaboratoryResult2']) {
                 $attachmentCount++;
                 $titleHtml = '<h2 style="text-align:center;font_size:12px;padding-bottom:10px;" id="lebResult">Attachment ' . $attachmentCount . ' Leb Result1 for leb2</h2>';
-               // $this->mergePdf($filePath1, $titleHtml, $mpdf);
+                $this->mergePdf($filePath1, $titleHtml, $mpdf);
             }
         }
 
@@ -459,7 +432,7 @@ class ReportContoller extends Controller
             if (file_exists($filePath2) && @$projectDetail['leb2LaboratoryResult1']) {
                 $attachmentCount++;
                 $titleHtml = '<h2 style="text-align:center;font_size:12px;padding-bottom:10px;" id="lebResult">Attachment ' . $attachmentCount . ' Leb Result1 for leb2</h2>';
-               // $this->mergePdf($filePath2, $titleHtml, $mpdf);
+                $this->mergePdf($filePath2, $titleHtml, $mpdf);
             }
         }
 
@@ -469,7 +442,7 @@ class ReportContoller extends Controller
             if (file_exists($filePath) && @$projectDetail['leb2LaboratoryResult2']) {
                 $attachmentCount++;
                 $titleHtml = '<h2 style="text-align:center;font_size:12px;" id="lebResult">Attachment ' . $attachmentCount . ' Leb Result2 for leb2</h2>';
-              //  $this->mergePdf($filePath3, $titleHtml, $mpdf);
+                $this->mergePdf($filePath3, $titleHtml, $mpdf);
             }
         }
 
@@ -477,23 +450,23 @@ class ReportContoller extends Controller
         if (file_exists($gaPlan) && @$projectDetail['ga_plan']) {
             $attachmentCount++;
             $titleattach = '<h2 style="text-align:center;font-size:12px;">AttachMent ' . $attachmentCount . ' Ga Plan </h2>';
-           // $this->mergeImageToPdf($gaPlan, $titleattach, $mpdf, $page = 'L');
+            $this->mergeImageToPdf($gaPlan, $titleattach, $mpdf, $page = 'L');
         }
-        // foreach ($attechments as $value) {
+        foreach ($attechments as $value) {
 
-        //     $titleattach = '<h2 style="text-align:center;font-size:12px;">Attachment ' . $attachmentCount . " " . $value['heading'] . '</h2>';
+            $titleattach = '<h2 style="text-align:center;font-size:12px;">Attachment ' . $attachmentCount . " " . $value['heading'] . '</h2>';
 
-        //     $filePath = public_path('images/attachment') . "/" . $projectDetail['id'] . "/" . $value['documents'];
-        //     if (file_exists($filePath) && @$value['documents']) {
-        //         $fileExtension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-        //         $attachmentCount++;
-        //         if ($fileExtension === 'pdf') {
-        //             $this->mergePdf($filePath, $titleattach, $mpdf);
-        //         } elseif (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
-        //             $this->mergeImageToPdf($filePath, $titleattach, $mpdf);
-        //         }
-        //     }
-        // }
+            $filePath = public_path('images/attachment') . "/" . $projectDetail['id'] . "/" . $value['documents'];
+            if (file_exists($filePath) && @$value['documents']) {
+                $fileExtension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+                $attachmentCount++;
+                if ($fileExtension === 'pdf') {
+                    $this->mergePdf($filePath, $titleattach, $mpdf);
+                } elseif (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
+                    $this->mergeImageToPdf($filePath, $titleattach, $mpdf);
+                }
+            }
+        }
         $mpdf->Output('project_report.pdf', 'I');
     }
 
