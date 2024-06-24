@@ -1,13 +1,14 @@
 <!-- resources/views/report/sampleImageChunk.blade.php -->
 <style>
-   .section-1-1 table {
+    .section-1-1 table {
         border: 1px solid #000;
         width: 100%;
         border-collapse: collapse;
         font-size: 14px;
     }
 
-    .section-1-1 table td, th {
+    .section-1-1 table td,
+    th {
         border: 1px solid black;
         padding: 4px;
         text-align: left;
@@ -51,8 +52,8 @@
 
                 $hasImage = !empty($a[0]['image']);
                 if ($hasImage) {
-                    $imagePath = $a[0]['image'];
-                     $imagePath1 = $a[1]['image'];
+                $imagePath = $a[0]['image'];
+                $imagePath1 = $a[1]['image'];
 
 
                 }
@@ -70,8 +71,9 @@
                     <td>&nbsp;</td>
                     <td>
                         @if($hasImage)
-                            <a href="{{$imagePath1 ?? #}}"><img src="{{$imagePath}}" width="100px" height="100px" /></a>
-
+                        <a href="{{ $imagePath1 ?? '#' }}">
+                            <img src="{{ $imagePath }}" width="100px" height="100px" />
+                        </a>
                         @else
                         &nbsp;
                         @endif
@@ -90,8 +92,9 @@
                     <td>{{ $hazmat['lab_remarks'] }}</td>
                     <td>
                         @if($hasImage)
-                        <a href="{{$imagePath1 ?? #}}"><img src="{{$imagePath}}" width="100px" height="100px" /></a>
-                        @else
+                        <a href="{{ $imagePath1 ?? '#' }}">
+                            <img src="{{ $imagePath }}" width="100px" height="100px" />
+                        </a> @else
                         &nbsp;
                         @endif
                     </td>
