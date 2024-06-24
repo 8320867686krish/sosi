@@ -46,9 +46,14 @@
                 @foreach($chunk as $value)
                 @php
                 $hazmatsCount = count($value->labResults);
-                $hasImage = !empty($value['checkSingleimage']['image'][0]);
+                $checkImage=$value['check_image']->slice(0, 2);
+                $a=$checkImage->toArray();
+
+                $hasImage = !empty($a[0]['image']);
                 if ($hasImage) {
-                    $imagePath = $value['checkSingleimage']['image'][0];
+                    $imagePath = $a[0]['image'];
+                     $imagePath1 = $a[1]['image'];
+
 
                 }
                 @endphp
@@ -65,7 +70,8 @@
                     <td>&nbsp;</td>
                     <td>
                         @if($hasImage)
-                        <a href="{{$imagePath}}"><img src="{{ $imagePath }}" width="100px" height="100px" /></a>
+                            <a href="{{$imagePath1 ?? #}}"><img src="{{$imagePath}}" width="100px" height="100px" /></a>
+
                         @else
                         &nbsp;
                         @endif
@@ -84,7 +90,7 @@
                     <td>{{ $hazmat['lab_remarks'] }}</td>
                     <td>
                         @if($hasImage)
-                        <a href="#"><img src="{{$imagePath}}" width="100px" height="100px" /></a>
+                        <a href="{{$imagePath1 ?? #}}"><img src="{{$imagePath}}" width="100px" height="100px" /></a>
                         @else
                         &nbsp;
                         @endif

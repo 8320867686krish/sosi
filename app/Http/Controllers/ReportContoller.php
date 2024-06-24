@@ -217,9 +217,7 @@ class ReportContoller extends Controller
                     $query->where('type', 'PCHM')->orWhere('type', 'Contained');
                 });
             }])->where('project_id', $project_id)->get();
-        $ChecksListImage = Checks::with(['checkSingleimage' => function ($query) {
-            $query->take(2);
-        }, 'labResults'])->where('project_id', $project_id)->get();
+        $ChecksListImage = Checks::with(['check_image','labResults'])->where('project_id', $project_id)->get();
 
         $sampleImage = $ChecksListImage->filter(function ($item) {
             return $item->type == 'sample';
@@ -403,9 +401,10 @@ class ReportContoller extends Controller
             $title = "Sample Records";
 
             $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
-
-            $mpdf->WriteHTML($html);
+echo $html;
+            //$mpdf->WriteHTML($html);
         }
+        exit();
         $sampleImageChunks = $visualImage->chunk(50);
         foreach ($sampleImageChunks as $index => $chunk) {
             $title = "Visual Records";
