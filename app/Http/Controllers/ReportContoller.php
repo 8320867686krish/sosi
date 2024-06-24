@@ -100,22 +100,30 @@ class ReportContoller extends Controller
                 $query->where('type', 'PCHM')->orWhere('type', 'Contained');
             });
         }])->where('project_id', $project_id)->get();
-        $filename = $this->drawDigarm($decks);
 
         try {
             // Create an instance of mPDF with specified margins
             $mpdf = new Mpdf([
+                'mode' => 'c',
+                'mode' => 'utf-8',
                 'format' => 'A4',
                 'margin_left' => 10,
                 'margin_right' => 10,
                 'margin_top' => 10,
-                'margin_bottom' => 10,
-                'margin_header' => 16,
-                'margin_footer' => 13,
+                'margin_bottom' => 20,
+                'margin_header' => 0,
+                'margin_footer' => 10,
+                'defaultPagebreakType' => 'avoid',
+                'imageProcessor' => 'GD', // or 'imagick' if you have Imagick installed
+                'jpeg_quality' => 75, // Set the JPEG quality (0-100)
+                'shrink_tables_to_fit' => 1, // Shrink tables to fit the page width
+                'tempDir' => __DIR__ . '/tmp', // Set a temporary directory for mPDF
+    
+    
+                'allow_output_buffering' => true,
             ]);
             $mpdf->defaultPageNumStyle = '1';
             $mpdf->SetDisplayMode('fullpage');
-            $pageCount = $mpdf->setSourceFile(storage_path('app/pdf/') . "/" . $filename);
             $mpdf->SetCompression(true);
 
             // Add each page of the Dompdf-generated PDF to the mPDF document
@@ -154,15 +162,28 @@ class ReportContoller extends Controller
             $mpdf->AddPage('L'); // Set landscape mode for the inventory page
 
             $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3', 'decks')));
-            for ($i = 1; $i <= $pageCount; $i++) {
-                $mpdf->AddPage('L');
-                if ($i = 1) {
-                    $mpdf->writeHtml('<h3>Location Diagram</h3>');
+            foreach ($decks as $key => $value) {
+                if (count($value['checks']) > 0) {
+                    $html = $this->drawDigarm($value);
+                    $fileNameDiagram = $this->genrateDompdf($html, 'le');
+                    $mpdf->setSourceFile($fileNameDiagram);
+    
+                    $pageCount = $mpdf->setSourceFile($fileNameDiagram);
+                    for ($i = 1; $i <= $pageCount; $i++) {
+    
+                        $mpdf->AddPage('L');
+                        if ($key == 0) {
+                            $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h2><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
+                        }
+                        $templateId = $mpdf->importPage($i);
+                        $mpdf->useTemplate($templateId, 0, 5, null, null);
+                    }
                 }
-                $templateId = $mpdf->importPage($i);
-                $mpdf->useTemplate($templateId, 50, 20, null, null);
             }
-            $mpdf->Output();
+            return response()->make($mpdf->Output('summeryReport.pdf', 'D'), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="project_report.pdf"'
+            ]);
         } catch (\Mpdf\MpdfException $e) {
             // Handle mPDF exception
             echo $e->getMessage();
@@ -178,7 +199,9 @@ class ReportContoller extends Controller
         $version = $post['version'];
         $date = date('d-m-Y', strtotime($post['date']));
         $projectDetail = Projects::with('client')->find($project_id);
-
+        if ($post['action'] == 'summery') {
+            $this->summeryReport($post);
+        }
         $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
             $query->where('project_id', $project_id);
         }])->withCount(['checkHasHazmatsSample as sample_count' => function ($query) use ($project_id) {
