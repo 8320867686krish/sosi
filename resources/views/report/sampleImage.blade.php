@@ -53,7 +53,12 @@
                 $hasImage = !empty($a[0]['image']);
                 if ($hasImage) {
                 $imagePath = $a[0]['image'];
-                $imagePath1 = $a[1]['image'];
+                if (@$a[1]['image']){
+                    $imagePath1 = $a[1]['image'];
+
+                }else{
+                    $imagePath1 = "#";
+                }
 
 
                 }
