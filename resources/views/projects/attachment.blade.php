@@ -38,7 +38,7 @@
                             <option value="">Selet Attachment Type</option>
                             <option value="genral">Genral</option>
                             <option value="shipPlan">Ship Plan</option>
-                            <option value="shipBrifPlan">Ship Brif Plan</option>
+                            <option value="shipBrifPlan">Ship Brief Plan</option>
 
                         </select>
                     </div>
