@@ -49,7 +49,6 @@
                 $hasImage = !empty($value['checkSingleimage']['image'][0]);
                 if ($hasImage) {
                     $imagePath = $value['checkSingleimage']['image'][0];
-                    $imagePath1 = $value['checkSingleimage']['image'][1];
 
                 }
                 @endphp
@@ -66,7 +65,7 @@
                     <td>&nbsp;</td>
                     <td>
                         @if($hasImage)
-                        <a href="{{$imagePath1}}"><img src="{{ $imagePath }}" width="100px" height="100px" /></a>
+                        <a href="{{$imagePath}}"><img src="{{ $imagePath }}" width="100px" height="100px" /></a>
                         @else
                         &nbsp;
                         @endif

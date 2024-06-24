@@ -205,10 +205,21 @@ class ReportContoller extends Controller
 
         $lebResultAll = LabResult::with(['check', 'hazmat'])->where('project_id', $project_id)->where('type', 'Contained')->orwhere('type', 'PCHM')->get();
 
+
         $attechments = Attechments::where('project_id', $project_id)->where('attachment_type', '!=', 'shipBrifPlan')->get();
         $brifPlan = Attechments::where('project_id', $project_id)->where('attachment_type', '=', 'shipBrifPlan')->first();
-        $ChecksList = Deck::with(['checks.check_hazmats'])->where('project_id', $project_id)->get();
-        $ChecksListImage = Checks::with(['checkSingleimage', 'labResults'])->where('project_id', $project_id)->get();
+        $ChecksList = Deck::with(['checks.check_hazmats'])
+            ->where('project_id', $project_id)
+            ->get();
+
+            $decks = Deck::with(['checks' => function ($query) {
+                $query->whereHas('check_hazmats', function ($query) {
+                    $query->where('type', 'PCHM')->orWhere('type', 'Contained');
+                });
+            }])->where('project_id', $project_id)->get();
+        $ChecksListImage = Checks::with(['checkSingleimage' => function ($query) {
+            $query->take(2);
+        }, 'labResults'])->where('project_id', $project_id)->get();
 
         $sampleImage = $ChecksListImage->filter(function ($item) {
             return $item->type == 'sample';
@@ -235,14 +246,18 @@ class ReportContoller extends Controller
         $filteredResults3 = $lebResultAll->filter(function ($item) {
             return $item->IHM_part == 'IHMPart1-3';
         });
-        $report_materials = ReportMaterial::where('project_id', $project_id)->get()->toArray();
-        $foundItems = [];
+        if ($projectDetail['ihm_table'] == 'IHM Part 1') {
+            $report_materials = ReportMaterial::where('project_id', $project_id)->get()->toArray();
+            $foundItems = [];
 
-        foreach ($report_materials as $value) {
-            $index = array_search($value['structure'], array_column($report_materials, 'structure'));
-            if ($index !== false) {
-                $foundItems[$value['structure']] = $report_materials[$index];
+            foreach ($report_materials as $value) {
+                $index = array_search($value['structure'], array_column($report_materials, 'structure'));
+                if ($index !== false) {
+                    $foundItems[$value['structure']] = $report_materials[$index];
+                }
             }
+        } else {
+            $reportMaterials = ReportMaterial::where('project_id', $project_id)->where('structure', 'gapAnalysis')->first()->toArray();
         }
 
         $mpdf = new Mpdf([
@@ -251,10 +266,10 @@ class ReportContoller extends Controller
             'format' => 'A4',
             'margin_left' => 10,
             'margin_right' => 10,
-            'margin_top' => 27,
-            'margin_bottom' => 25,
-            'margin_header' => 16,
-            'margin_footer' => 13,
+            'margin_top' => 10,
+            'margin_bottom' => 20,
+            'margin_header' => 0,
+            'margin_footer' => 10,
             'defaultPagebreakType' => 'avoid',
             'imageProcessor' => 'GD', // or 'imagick' if you have Imagick installed
             'jpeg_quality' => 75, // Set the JPEG quality (0-100)
@@ -318,33 +333,59 @@ class ReportContoller extends Controller
             'suppress' => false, // This should prevent a new page from being created before and after TOC
             'toc-resetpagenum' => 1,
         ]);
-        $mpdf->WriteHTML(view('report.introduction', compact('hazmets', 'projectDetail')));
+        if ($projectDetail['ihm_table'] == 'IHM Part 1') {
+            $mpdf->WriteHTML(view('report.introduction', compact('hazmets', 'projectDetail')));
+        } else {
+            $mpdf->WriteHTML(view('report.gapAnaylisis', compact('hazmets', 'projectDetail')));
+        }
 
         $mpdf->AddPage('L'); // Set landscape mode for the inventory page
 
         $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
-        $mpdf->AddPage('p');
-        $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechmentsResult', 'ChecksList', 'foundItems')));
+        foreach ($decks as $key => $value) {
+            if (count($value['checks']) > 0) {
+                $html = $this->drawDigarm($value);
+                $fileNameDiagram = $this->genrateDompdf($html, 'le');
+                $mpdf->setSourceFile($fileNameDiagram);
 
-        foreach($ChecksList as $key=>$value){
+                $pageCount = $mpdf->setSourceFile($fileNameDiagram);
+                for ($i = 1; $i <= $pageCount; $i++) {
+
+                    $mpdf->AddPage('L');
+                    if ($key == 0) {
+                        $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h2><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
+                    }
+                    $templateId = $mpdf->importPage($i);
+                    $mpdf->useTemplate($templateId, 0, 5, null, null);
+                }
+            }
+        }
+        $mpdf->AddPage('p');
+        if ($projectDetail['ihm_table'] == 'IHM Part 1') {
+            $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechmentsResult', 'foundItems')));
+        } else {
+            $mpdf->WriteHTML(view('report.gapdevelopment', compact('projectDetail', 'reportMaterials', 'attechmentsResult')));
+        }
+
+        foreach ($ChecksList as $key => $value) {
             $html = $this->drawDigarm($value);
             $fileNameDiagram = $this->genrateDompdf($html, 'le');
             $mpdf->setSourceFile($fileNameDiagram);
-    
+
             $pageCount = $mpdf->setSourceFile($fileNameDiagram);
             for ($i = 1; $i <= $pageCount; $i++) {
-    
+
                 $mpdf->AddPage('L');
                 if ($key == 0) {
-                    $mpdf->WriteHTML('<h3 style="font-size:16px">3.4 VSCP Preparation</h2>');
+                    $mpdf->WriteHTML('<h3 style="font-size:14px">3.4 VSCP Preparation</h2>');
                 }
                 $templateId = $mpdf->importPage($i);
                 $mpdf->useTemplate($templateId, 0, 5, null, null);
             }
             $mpdf->AddPage('L');
-            $mpdf->writeHTML( view('report.vscpPrepration', ['checks' => $value['checks']]));
+            $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks']]));
         }
-     
+
 
         $mpdf->AddPage('P');
         $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
@@ -354,21 +395,21 @@ class ReportContoller extends Controller
         $mpdf->WriteHTML(view('report.riskAssessments'));
         $sampleImageChunks = $sampleImage->chunk(50);
         foreach ($sampleImageChunks as $index => $chunk) {
-            if($index == 0){
+            if ($index == 0) {
                 $show = true;
-
-            }else{
+            } else {
                 $show = false;
-
             }
             $title = "Sample Records";
-            $html = view('report.sampleImage', compact('chunk','title','show'))->render();
+
+            $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
+
             $mpdf->WriteHTML($html);
         }
         $sampleImageChunks = $visualImage->chunk(50);
         foreach ($sampleImageChunks as $index => $chunk) {
             $title = "Visual Records";
-            $html = view('report.sampleImage', compact('chunk','title'))->render();
+            $html = view('report.sampleImage', compact('chunk', 'title'))->render();
             $mpdf->WriteHTML($html);
         }
 
@@ -475,7 +516,8 @@ class ReportContoller extends Controller
         return response()->make($mpdf->Output('project_report.pdf', 'D'), 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename="project_report.pdf"'
-        ]);    }
+        ]);
+    }
 
     private function importPagesToMpdf($mpdf, $filePath, $isFirstChunk)
     {
@@ -517,58 +559,58 @@ class ReportContoller extends Controller
     {
         $i = 1;
         $html = "";
-            if (count($decks['checks']) > 0) {
-                $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
-                $imagePath = $decks['image'];
-                $imageData = base64_encode(file_get_contents($imagePath));
-                $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
+        if (count($decks['checks']) > 0) {
+            $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
+            $imagePath = $decks['image'];
+            $imageData = base64_encode(file_get_contents($imagePath));
+            $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
 
-                list($width, $height) = getimagesize($imagePath);
-                $html .= '<div style="margin-top:25%">';
-                $html .= '<div class="image-container" id="imgc' . $i . '" style="position: relative; display: inline-block; width:100%;">';
-                $image_width  = 1024;
+            list($width, $height) = getimagesize($imagePath);
+            $html .= '<div style="margin-top:25%">';
+            $html .= '<div class="image-container" id="imgc' . $i . '" style="position: relative; display: inline-block; width:100%;">';
+            $image_width  = 1024;
 
-                if ($width > 1000) {
-                    $image_height = ($image_width * $height) / $width;
+            if ($width > 1000) {
+                $image_height = ($image_width * $height) / $width;
 
-                    $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px" />';
-                } else {
-                    $image_height = $height;
-                    $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
+                $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px" />';
+            } else {
+                $image_height = $height;
+                $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
+            }
+            // dump( $image_height);
+            $html .= $newImage;
+            $k = 1;
+            $oddTop = 0;
+            $evenTop = 0;
+
+            foreach ($decks['checks'] as $key => $value) {
+                $top = $value->position_top;
+                $left = $value->position_left;
+
+                $explode = explode("#", $value['name']);
+                $tooltipText = ($value['type'] == 'sample' ? 's' : 'v') . $explode[1] . "<br/>";
+                $hazmatCount = count($value['check_hazmats']); // Get the total number of elements
+
+                foreach ($value['check_hazmats'] as $index => $hazmet) {
+                    $tooltipText .= '<span style="font-size:10px;color:' . $hazmet->hazmat->color . '">' . $hazmet->hazmat->short_name . '</span>';
+
+                    // Append a comma if it's not the last element
+                    if ($index < $hazmatCount - 1) {
+                        $tooltipText .= ',';
+                    }
                 }
-                // dump( $image_height);
-                $html .= $newImage;
-                $k = 1;
-                $oddTop = 0;
-                $evenTop = 0;
-
-                foreach ($decks['checks'] as $key => $value) {
-                    $top = $value->position_top;
-                    $left = $value->position_left;
-
-                    $explode = explode("#", $value['name']);
-                    $tooltipText = ($value['type'] == 'sample' ? 's' : 'v') . $explode[1] . "<br/>";
-                    $hazmatCount = count($value['check_hazmats']); // Get the total number of elements
-
-                    foreach ($value['check_hazmats'] as $index => $hazmet) {
-                        $tooltipText .= '<span style="font-size:10px;color:' . $hazmet->hazmat->color . '">' . $hazmet->hazmat->short_name . '</span>';
-
-                        // Append a comma if it's not the last element
-                        if ($index < $hazmatCount - 1) {
-                            $tooltipText .= ',';
-                        }
-                    }
 
 
-                    $k++;
-                    if ($width > 1000) {
-                        $topshow = ($image_width * $top) / $width;
-                        $leftshow = ($image_width * $left) / $width;
-                    } else {
-                        $topshow = $top;
-                        $leftshow = $left;
-                    }
-                    $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;
+                $k++;
+                if ($width > 1000) {
+                    $topshow = ($image_width * $top) / $width;
+                    $leftshow = ($image_width * $left) / $width;
+                } else {
+                    $topshow = $top;
+                    $leftshow = $left;
+                }
+                $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;
                     width: 1px;
                     height: 1px;
                     border: 2px solid #BF0A30;
@@ -579,44 +621,20 @@ class ReportContoller extends Controller
 
 
 
-                    if ($k % 2 == 1) {
-                        if (abs($oddTop - $topshow) < 50) {
-                            $gap = 10 * $k;
-                        } else {
-                            $gap = 10;
-                        }
-
-                        $lineTopPosition = "-" . $gap . "px";
-
-                        $lineHeight = ($topshow + $gap) . "px";
-                        $lineLeftPosition =  ($leftshow + 2) . "px";
-                        $tooltipStart = ($topshow + $gap) - $topshow;
-
-                        $html .= '<span class="tooltip" style="position: absolute;
-                        background-color: #fff;
-                        border: 1px solid #BF0A30;
-                        padding: 1px;
-                        border-radius: 5px;
-                        white-space: nowrap;
-                        z-index: 1; 
-                        color:#BF0A30;font-size:10px;';
-                        $tooltipwidth = ($leftshow + 2);
-                        $html .= 'top:' . "-" . ($gap + 26) . 'px; left:' . ($tooltipwidth - 12) . 'px';
-                        $html .= '">' . $tooltipText . '</span>';
-                        $html .= '<span class="line" style="position: absolute;background-color: #BF0A30;top:' . $lineTopPosition  . ';left:' . $lineLeftPosition . ';height:' . $lineHeight . ';width:1px;"></span>';
-
-                        $oddTop = $topshow;
+                if ($k % 2 == 1) {
+                    if (abs($oddTop - $topshow) < 50) {
+                        $gap = 10 * $k;
                     } else {
-                        if (abs($evenTop - $topshow) < 50) {
-                            $gap = 15 * $k;
-                        } else {
-                            $gap = 15;
-                        }
-                        $lineTopPosition =   $topshow . "px";
+                        $gap = 10;
+                    }
 
-                        $lineHeight = ($image_height - $topshow + $gap) . "px";
-                        $lineLeftPosition =  ($leftshow + 2) . "px";
-                        $html .= '<span class="tooltip" style="position: absolute;
+                    $lineTopPosition = "-" . $gap . "px";
+
+                    $lineHeight = ($topshow + $gap) . "px";
+                    $lineLeftPosition =  ($leftshow + 2) . "px";
+                    $tooltipStart = ($topshow + $gap) - $topshow;
+
+                    $html .= '<span class="tooltip" style="position: absolute;
                         background-color: #fff;
                         border: 1px solid #BF0A30;
                         padding: 1px;
@@ -624,24 +642,48 @@ class ReportContoller extends Controller
                         white-space: nowrap;
                         z-index: 1; 
                         color:#BF0A30;font-size:10px;';
-                        $tooltipwidth = ($leftshow + 2);
+                    $tooltipwidth = ($leftshow + 2);
+                    $html .= 'top:' . "-" . ($gap + 26) . 'px; left:' . ($tooltipwidth - 12) . 'px';
+                    $html .= '">' . $tooltipText . '</span>';
+                    $html .= '<span class="line" style="position: absolute;background-color: #BF0A30;top:' . $lineTopPosition  . ';left:' . $lineLeftPosition . ';height:' . $lineHeight . ';width:1px;"></span>';
 
-                        $html .= 'top:' . ($image_height + $gap) . 'px; left:' . ($tooltipwidth - 12) . 'px';
-                        $html .= '">' . $tooltipText . '</span>';
-
-                        $html .= '<span class="line" style="position: absolute;background-color: #BF0A30;top:' . $lineTopPosition  . ';left:' . $lineLeftPosition . ';height:' . $lineHeight . ';width:1px;">' . $k . '</span>';
-
-                        $evenTop = $topshow;
+                    $oddTop = $topshow;
+                } else {
+                    if (abs($evenTop - $topshow) < 50) {
+                        $gap = 15 * $k;
+                    } else {
+                        $gap = 15;
                     }
+                    $lineTopPosition =   $topshow . "px";
+
+                    $lineHeight = ($image_height - $topshow + $gap) . "px";
+                    $lineLeftPosition =  ($leftshow + 2) . "px";
+                    $html .= '<span class="tooltip" style="position: absolute;
+                        background-color: #fff;
+                        border: 1px solid #BF0A30;
+                        padding: 1px;
+                        border-radius: 5px;
+                        white-space: nowrap;
+                        z-index: 1; 
+                        color:#BF0A30;font-size:10px;';
+                    $tooltipwidth = ($leftshow + 2);
+
+                    $html .= 'top:' . ($image_height + $gap) . 'px; left:' . ($tooltipwidth - 12) . 'px';
+                    $html .= '">' . $tooltipText . '</span>';
+
+                    $html .= '<span class="line" style="position: absolute;background-color: #BF0A30;top:' . $lineTopPosition  . ';left:' . $lineLeftPosition . ';height:' . $lineHeight . ';width:1px;">' . $k . '</span>';
+
+                    $evenTop = $topshow;
                 }
-
-                $html .= '</div>';
-                $html .= '</div>';
-                $html .= '</div>';
-
-                $i++; // Increment the counter for the next image ID
             }
-        
+
+            $html .= '</div>';
+            $html .= '</div>';
+            $html .= '</div>';
+
+            $i++; // Increment the counter for the next image ID
+        }
+
 
         return $html;
     }
