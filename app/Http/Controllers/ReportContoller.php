@@ -401,10 +401,8 @@ class ReportContoller extends Controller
             $title = "Sample Records";
 
             $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
-echo $html;
-            //$mpdf->WriteHTML($html);
+            $mpdf->WriteHTML($html);
         }
-        exit();
         $sampleImageChunks = $visualImage->chunk(50);
         foreach ($sampleImageChunks as $index => $chunk) {
             $title = "Visual Records";
