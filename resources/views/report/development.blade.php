@@ -1,198 +1,182 @@
 <!-- Section 1.1 -->
- <section id="section3">
- <section id="section3.1">
+<section id="section3">
+    <section id="section3.1">
 
-<h2>3.Development of IHM of({{$projectDetail['ship_name']}})</h2>
-<div class="section-1-1">
-    <h3>3.1 Collection of Necessary Information</h3>
-    <p>After receiving the request from the <b>{{$projectDetail['client']['name']}}</b> team SOSI requested and receive the following documents & plans from the ship :</p>
-    <ul>
-        @if(count($attechmentsResult)>0)
-        @foreach($attechmentsResult as $value)
-        <li>{{$loop->iteration}}. {{$value->heading}}</li>
-        @endforeach
-        @else
-        <li>Not Found</li>
-        @endif
-    </ul>
+        <h2>3.Development of IHM of({{$projectDetail['ship_name']}})</h2>
+        <div class="section-1-1">
+            <h3>3.1 Collection of Necessary Information</h3>
+            <p>After receiving the request from the <b>{{$projectDetail['client']['name']}}</b> team SOSI requested and receive the following documents & plans from the ship :</p>
+            <ul>
+                @if(count($attechmentsResult)>0)
+                @foreach($attechmentsResult as $value)
+                <li>{{$loop->iteration}}. {{$value->heading}}</li>
+                @endforeach
+                @else
+                <li>Not Found</li>
+                @endif
+            </ul>
 
-</div>
- </section>
+        </div>
+    </section>
     <section id="section3.2" class="section-1-1">
-    <h3 style="padding-top:20px;">3.2 Indicative List</h3>
+        <h3 style="padding-top:20px;">3.2 Indicative List</h3>
 
-    <h3>Materials to be listed from Table-A</h3>
-    <p>Table A lists the following four materials</p>
-    <ul>
-        <li>1. Asbestos </li>
-        <li>2. Polychlorinated biphenyls (PCBs) </li>
-        <li>3. Ozone-depleting substances </li>
-        <li>4. Anti-fouling systems containing organotin compounds as a biocide or</li>
-        <li>5. Cybutryne</li>
-        <li>6. PFOS (as pe EUSRR & EMSA)</li>
-    </ul>
-    <div style="margin-top:20px;">
-        <h4><b>1.Asbestos</b></h4>
-        <table>
-            <thead>
-                <tr>
-                    <th>Structure and/or equipment</th>
-                    <th>Component</th>
-                </tr>
-            </thead>
-            <tbody>
-
-
-                @php
-                $ex = @$foundItems['Propeller shafting']['component'] ?? 0;
-
-                $json = @$foundItems['Propeller shafting']['make'] ?? 0;
-                @endphp
-                <tr>
-                    <td rowspan="{{(@$ex)?count($ex):1}}">Propeller shafting<br />
-                        Make/Model : {{@$json[0]['model']}}<br />
-                        Manufacturer: {{@$json[0]['manufacturer']}}
-                    </td>
-                    <td>{{@$ex[0]}}</td>
-                </tr>
-                @if(@$ex)
-                @for($i = 1; $i < count($ex); $i++) <tr>
-                    <td>{{ $ex[$i] }}</td>
+        <h3>Materials to be listed from Table-A</h3>
+        <p>Table A lists the following four materials</p>
+        <ul>
+            <li>1. Asbestos </li>
+            <li>2. Polychlorinated biphenyls (PCBs) </li>
+            <li>3. Ozone-depleting substances </li>
+            <li>4. Anti-fouling systems containing organotin compounds as a biocide or</li>
+            <li>5. Cybutryne</li>
+            <li>6. PFOS (as pe EUSRR & EMSA)</li>
+        </ul>
+        <div style="margin-top:20px;">
+            <h4><b>1.Asbestos</b></h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Structure and/or equipment</th>
+                        <th>Component</th>
                     </tr>
-                    @endfor
-                    @endif
+                </thead>
+                <tbody>
 
-
-
-            </tbody>
-        </table>
-        <br /></br>
-        <table>
-            <thead>
-                <tr>
-                    <th>Structure and/or equipment</th>
-                    <th>Component</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php
-                $ex = @$foundItems['Main engine']['component']?? [];
-                $json_boiler = @$foundItems['Main engine']['make']?? [];
-
-                @endphp
-                <tr>
-                    <td rowspan="{{(@$ex)?count($ex):1}}">Main engine<br />
-                        @foreach($json_boiler as $value)
-                        
-                        @if(@$value['model'])
-                        #{{$loop->iteration}}<br/>
-                        Make/Model : {{@$value['model']}}<br />
-                        @endif
-                        @if(@$value['model'])
-                        Manufacturer: {{@$value['manufacturer']}}<br />
-                        @endif
-                        @endforeach
-                    </td>
-                    <td>{{@$ex[0]}}</td>
-                </tr>
-                @if (!empty($ex))
-
-                @for($i = 1; $i < count($ex); $i++) <tr>
-                    <td>{{ $ex[$i] }}</td>
-                    </tr>
-                    @endfor
-                    @endif
 
                     @php
-                $ex = @$foundItems['Diesel engine']['component'] ?? [];
-                $json_boiler = @$foundItems['Diesel engine']['make']?? [];
+                    $ex = @$foundItems['Propeller shafting']['component'] ?? 0;
 
-                @endphp
-                <tr>
-                    <td rowspan="{{(@$ex)?count($ex):1}}">Diesel engine<br />
-                    @foreach($json_boiler as $value)
-                        
-                        @if(@$value['model'])
-                        #{{$loop->iteration}}<br/>
-                        Make/Model : {{@$value['model']}}<br />
-                        @endif
-                        @if(@$value['model'])
-                        Manufacturer: {{@$value['manufacturer']}}<br />
-                        @endif
-                        @endforeach
-                    </td>
-                    <td>{{@$ex[0]}}</td>
-                </tr>
-                @if (!empty($ex))
-
-                @for($i = 1; $i < count($ex); $i++) <tr>
-                    <td>{{ $ex[$i] }}</td>
-                    </tr>
-                    @endfor
-                    @endif
+                    $json = @$foundItems['Propeller shafting']['make'] ?? 0;
+                    @endphp
                     <tr>
-                        <td style="border-bottom:none">Turbine engine</td>
-                        <td>Urethane formed material</td>
+                        <td rowspan="{{(@$ex)?count($ex):1}}">Propeller shafting<br />
+                            Make/Model : {{@$json[0]['model']}}<br />
+                            Manufacturer: {{@$json[0]['manufacturer']}}
+                        </td>
+                        <td>{{@$ex[0]}}</td>
                     </tr>
-                    <tr>
-                        <td style="border-bottom:none;border-top:none;"></td>
-                        <td>Blowing agent for insulation of LNG carriers</td>
-                    </tr>
-                    <tr>
-                        <td style="border-top:none"></td>
-                        <td>Blowing agent for insulation of LNG carriers</td>
-                    </tr>
-
-
-
-
-            </tbody>
-        </table>
-        <br /><br />
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Structure and/or equipment</th>
-                    <th>Component</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php
-                $ex_boiler = @$foundItems['Boiler']['component'] ?? [];
-                $json_boiler = @$foundItems['Boiler']['make'] ?? [];
-
-
-                @endphp
-                <tr>
-                    <td rowspan="{{count($ex_boiler)}}">Boiler<br />
-                    @foreach($json_boiler as $value)
-                        
-                        @if(@$value['model'])
-                        #{{$loop->iteration}}<br/>
-                        Make/Model : {{@$value['model']}}<br />
+                    @if(@$ex)
+                    @for($i = 1; $i < count($ex); $i++) <tr>
+                        <td>{{ $ex[$i] }}</td>
+                        </tr>
+                        @endfor
                         @endif
-                        @if(@$value['model'])
-                        Manufacturer: {{@$value['manufacturer']}}<br />
-                        @endif
-                        @endforeach
-                    </td>
-                    <td>{{@$ex_boiler[0]}}</td>
-                </tr>
-                @if(@$ex_boiler)
-                @for($i = 1; $i < count($ex_boiler); $i++) <tr>
-                    <td>{{ $ex_boiler[$i] }}</td>
+
+
+
+                </tbody>
+            </table>
+            <br /></br>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Structure and/or equipment</th>
+                        <th>Component</th>
                     </tr>
-                    @endfor
-                    @endif
+                </thead>
+                <tbody>
                     @php
-                    $ex_boiler = @$foundItems['Exhaust gas economizer']['component'] ?? [];
+                    $ex = @$foundItems['Main engine']['component']?? [];
+                    $json_boiler = @$foundItems['Main engine']['make']?? [];
 
                     @endphp
                     <tr>
-                        <td rowspan="{{count($ex_boiler)}}">Exhaust gas economizer<br />
-                            remarks:{{@$foundItems['Exhaust gas economizer']['remark']}}
+                        <td rowspan="{{(@$ex)?count($ex):1}}">Main engine<br />
+                            @foreach($json_boiler as $value)
 
+                            @if(@$value['model'])
+                            #{{$loop->iteration}}<br />
+                            Make/Model : {{@$value['model']}}<br />
+                            @endif
+                            @if(@$value['model'])
+                            Manufacturer: {{@$value['manufacturer']}}<br />
+                            @endif
+                            @endforeach
+                        </td>
+                        <td>{{@$ex[0]}}</td>
+                    </tr>
+                    @if (!empty($ex))
+
+                    @for($i = 1; $i < count($ex); $i++) <tr>
+                        <td>{{ $ex[$i] }}</td>
+                        </tr>
+                        @endfor
+                        @endif
+
+                        @php
+                        $ex = @$foundItems['Diesel engine']['component'] ?? [];
+                        $json_boiler = @$foundItems['Diesel engine']['make']?? [];
+
+                        @endphp
+                        <tr>
+                            <td rowspan="{{(@$ex)?count($ex):1}}">Diesel engine<br />
+                                @foreach($json_boiler as $value)
+
+                                @if(@$value['model'])
+                                #{{$loop->iteration}}<br />
+                                Make/Model : {{@$value['model']}}<br />
+                                @endif
+                                @if(@$value['model'])
+                                Manufacturer: {{@$value['manufacturer']}}<br />
+                                @endif
+                                @endforeach
+                            </td>
+                            <td>{{@$ex[0]}}</td>
+                        </tr>
+                        @if (!empty($ex))
+
+                        @for($i = 1; $i < count($ex); $i++) <tr>
+                            <td>{{ $ex[$i] }}</td>
+                            </tr>
+                            @endfor
+                            @endif
+                            <tr>
+                                <td style="border-bottom:none">Turbine engine</td>
+                                <td>Urethane formed material</td>
+                            </tr>
+                            <tr>
+                                <td style="border-bottom:none;border-top:none;"></td>
+                                <td>Blowing agent for insulation of LNG carriers</td>
+                            </tr>
+                            <tr>
+                                <td style="border-top:none"></td>
+                                <td>Blowing agent for insulation of LNG carriers</td>
+                            </tr>
+
+
+
+
+                </tbody>
+            </table>
+            <br /><br />
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Structure and/or equipment</th>
+                        <th>Component</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                    $ex_boiler = @$foundItems['Boiler']['component'] ?? [];
+                    $json_boiler = @$foundItems['Boiler']['make'] ?? [];
+
+
+                    @endphp
+                    <tr>
+                        <td rowspan="{{count($ex_boiler)}}">Boiler<br />
+                            @foreach($json_boiler as $value)
+
+                            @if(@$value['model'])
+                            #{{$loop->iteration}}<br />
+                            Make/Model : {{@$value['model']}}<br />
+                            @endif
+                            @if(@$value['model'])
+                            Manufacturer: {{@$value['manufacturer']}}<br />
+                            @endif
+                            @endforeach
+                        </td>
                         <td>{{@$ex_boiler[0]}}</td>
                     </tr>
                     @if(@$ex_boiler)
@@ -201,24 +185,14 @@
                         </tr>
                         @endfor
                         @endif
-
                         @php
-                        $ex_boiler = @$foundItems['Incinerator']['component'] ?? [];
-                        $json_boiler = @$foundItems['Incinerator']['make'] ?? [];
+                        $ex_boiler = @$foundItems['Exhaust gas economizer']['component'] ?? [];
 
                         @endphp
                         <tr>
-                            <td rowspan="{{count($ex_boiler)}}">Incinerator<br />
-                            @foreach($json_boiler as $value)
-                        
-                        @if(@$value['model'])
-                        #{{$loop->iteration}}<br/>
-                        Make/Model : {{@$value['model']}}<br />
-                        @endif
-                        @if(@$value['model'])
-                        Manufacturer: {{@$value['manufacturer']}}<br />
-                        @endif
-                        @endforeach
+                            <td rowspan="{{count($ex_boiler)}}">Exhaust gas economizer<br />
+                                remarks:{{@$foundItems['Exhaust gas economizer']['remark']}}
+
                             <td>{{@$ex_boiler[0]}}</td>
                         </tr>
                         @if(@$ex_boiler)
@@ -229,23 +203,22 @@
                             @endif
 
                             @php
-                            $ex_boiler = @$foundItems['Auxiliary machinery']['component']??[];
-                            $json_boiler = @$foundItems['Auxiliary machinery']['make']?? [];
+                            $ex_boiler = @$foundItems['Incinerator']['component'] ?? [];
+                            $json_boiler = @$foundItems['Incinerator']['make'] ?? [];
 
                             @endphp
                             <tr>
-                                <td rowspan="{{count($ex_boiler)}}">Auxiliary machinery<br />
-                                @foreach($json_boiler as $value)
-                        
-                        @if(@$value['model'])
-                        #{{$loop->iteration}}<br/>
-                        Make/Model : {{@$value['model']}}<br />
-                        @endif
-                        @if(@$value['model'])
-                        Manufacturer: {{@$value['manufacturer']}}<br />
-                        @endif
-                        @endforeach
+                                <td rowspan="{{count($ex_boiler)}}">Incinerator<br />
+                                    @foreach($json_boiler as $value)
 
+                                    @if(@$value['model'])
+                                    #{{$loop->iteration}}<br />
+                                    Make/Model : {{@$value['model']}}<br />
+                                    @endif
+                                    @if(@$value['model'])
+                                    Manufacturer: {{@$value['manufacturer']}}<br />
+                                    @endif
+                                    @endforeach
                                 <td>{{@$ex_boiler[0]}}</td>
                             </tr>
                             @if(@$ex_boiler)
@@ -254,58 +227,24 @@
                                 </tr>
                                 @endfor
                                 @endif
-                                <tr>
-                                    <td style="border-bottom:none">Valve</td>
-                                    <td>Gland packing with valve, sheet packing with piping flange</td>
-                                </tr>
-                                <tr>
-                                    <td style="border-top:none;"></td>
-                                    <td>Gland packing with valve, sheet packing with piping flange</td>
-                                </tr>
-
-
-                                <tr>
-                                    <td>Pipe, duct</td>
-                                    <td>Lagging material and insulation</td>
-                                </tr>
-                                <tr>
-                                    <td>Tank (fuel tank, hot water, tank, condenser), other equipment (fuel strainer, lubricant oil
-                                        strainer)</td>
-                                    <td>Lagging material and insulation</td>
-                                </tr>
-                                <tr>
-                                    <td>Electric equipment</td>
-                                    <td>Insulation material</td>
-                                </tr>
-                                <tr>
-                                    <td>Airborne asbestos</td>
-                                    <td>Wall, ceiling</td>
-                                </tr>
-                                <tr>
-                                    <td>Ceiling, floor and wall in accommodation area</td>
-                                    <td>Ceiling, floor, wall</td>
-                                </tr>
-                                <tr>
-                                    <td>Fire door</td>
-                                    <td>Packing, construction and insulation of the fire door</td>
-                                </tr>
 
                                 @php
-                                $ex_boiler =@$foundItems['Inert gas system']['component'] ?? [];
-                                $json_boiler = @$foundItems['Inert gas system']['make'] ?? [];
+                                $ex_boiler = @$foundItems['Auxiliary machinery']['component']??[];
+                                $json_boiler = @$foundItems['Auxiliary machinery']['make']?? [];
+
                                 @endphp
                                 <tr>
-                                    <td rowspan="{{count($ex_boiler)}}">Inert gas system<br />
-                                    @foreach($json_boiler as $value)
-                        
-                        @if(@$value['model'])
-                        #{{$loop->iteration}}<br/>
-                        Make/Model : {{@$value['model']}}<br />
-                        @endif
-                        @if(@$value['model'])
-                        Manufacturer: {{@$value['manufacturer']}}<br />
-                        @endif
-                        @endforeach
+                                    <td rowspan="{{count($ex_boiler)}}">Auxiliary machinery<br />
+                                        @foreach($json_boiler as $value)
+
+                                        @if(@$value['model'])
+                                        #{{$loop->iteration}}<br />
+                                        Make/Model : {{@$value['model']}}<br />
+                                        @endif
+                                        @if(@$value['model'])
+                                        Manufacturer: {{@$value['manufacturer']}}<br />
+                                        @endif
+                                        @endforeach
 
                                     <td>{{@$ex_boiler[0]}}</td>
                                 </tr>
@@ -315,22 +254,59 @@
                                     </tr>
                                     @endfor
                                     @endif
+                                    <tr>
+                                        <td style="border-bottom:none">Valve</td>
+                                        <td>Gland packing with valve, sheet packing with piping flange</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border-top:none;"></td>
+                                        <td>Gland packing with valve, sheet packing with piping flange</td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td>Pipe, duct</td>
+                                        <td>Lagging material and insulation</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tank (fuel tank, hot water, tank, condenser), other equipment (fuel strainer, lubricant oil
+                                            strainer)</td>
+                                        <td>Lagging material and insulation</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Electric equipment</td>
+                                        <td>Insulation material</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Airborne asbestos</td>
+                                        <td>Wall, ceiling</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ceiling, floor and wall in accommodation area</td>
+                                        <td>Ceiling, floor, wall</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fire door</td>
+                                        <td>Packing, construction and insulation of the fire door</td>
+                                    </tr>
+
                                     @php
-                                    $ex_boiler = @$foundItems['Air conditioning system']['component'] ?? [];
-                                    $json_boiler = @$foundItems['Air conditioning system']['make'] ?? [];
+                                    $ex_boiler =@$foundItems['Inert gas system']['component'] ?? [];
+                                    $json_boiler = @$foundItems['Inert gas system']['make'] ?? [];
                                     @endphp
                                     <tr>
-                                        <td rowspan="{{count($ex_boiler)}}">Air conditioning system<br />
-                                        @foreach($json_boiler as $value)
-                        
-                        @if(@$value['model'])
-                        #{{$loop->iteration}}<br/>
-                        Make/Model : {{@$value['model']}}<br />
-                        @endif
-                        @if(@$value['model'])
-                        Manufacturer: {{@$value['manufacturer']}}<br />
-                        @endif
-                        @endforeach
+                                        <td rowspan="{{count($ex_boiler)}}">Inert gas system<br />
+                                            @foreach($json_boiler as $value)
+
+                                            @if(@$value['model'])
+                                            #{{$loop->iteration}}<br />
+                                            Make/Model : {{@$value['model']}}<br />
+                                            @endif
+                                            @if(@$value['model'])
+                                            Manufacturer: {{@$value['manufacturer']}}<br />
+                                            @endif
+                                            @endforeach
+
                                         <td>{{@$ex_boiler[0]}}</td>
                                     </tr>
                                     @if(@$ex_boiler)
@@ -339,6 +315,30 @@
                                         </tr>
                                         @endfor
                                         @endif
+                                        @php
+                                        $ex_boiler = @$foundItems['Air conditioning system']['component'] ?? [];
+                                        $json_boiler = @$foundItems['Air conditioning system']['make'] ?? [];
+                                        @endphp
+                                        <tr>
+                                            <td rowspan="{{count($ex_boiler)}}">Air conditioning system<br />
+                                                @foreach($json_boiler as $value)
+
+                                                @if(@$value['model'])
+                                                #{{$loop->iteration}}<br />
+                                                Make/Model : {{@$value['model']}}<br />
+                                                @endif
+                                                @if(@$value['model'])
+                                                Manufacturer: {{@$value['manufacturer']}}<br />
+                                                @endif
+                                                @endforeach
+                                            <td>{{@$ex_boiler[0]}}</td>
+                                        </tr>
+                                        @if(@$ex_boiler)
+                                        @for($i = 1; $i < count($ex_boiler); $i++) <tr>
+                                            <td>{{ $ex_boiler[$i] }}</td>
+                                            </tr>
+                                            @endfor
+                                            @endif
 
 
 
@@ -346,375 +346,375 @@
 
 
 
-            </tbody>
-        </table>
-        <br /><br />
-        <table>
-            <thead>
-                <tr>
-                    <th>Structure and/or equipment</th>
-                    <th>Component</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style="border-bottom:none;">Miscellaneous</td>
-                    <td>Ropes</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Thermal insulating materials</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Fire shields/fire proofing</td>
-                </tr>
+                </tbody>
+            </table>
+            <br /><br />
+            <table>
+                <thead>
+                    <tr>
+                        <th>Structure and/or equipment</th>
+                        <th>Component</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="border-bottom:none;">Miscellaneous</td>
+                        <td>Ropes</td>
+                    </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Thermal insulating materials</td>
+                    </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Fire shields/fire proofing</td>
+                    </tr>
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Space/duct insulation</td>
-                </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Space/duct insulation</td>
+                    </tr>
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Electrical cable materials</td>
-                </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Electrical cable materials</td>
+                    </tr>
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Brake linings</td>
-                </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Brake linings</td>
+                    </tr>
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Floor tiles/deck underlay</td>
-                </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Floor tiles/deck underlay</td>
+                    </tr>
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Steam/water/vent flange gaskets</td>
-                </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Steam/water/vent flange gaskets</td>
+                    </tr>
 
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Adhesives/mastics/fillers</td>
-                </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Adhesives/mastics/fillers</td>
+                    </tr>
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Sound damping</td>
-                </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Sound damping</td>
+                    </tr>
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Moulded plastic products</td>
-                </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Moulded plastic products</td>
+                    </tr>
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Sealing putty</td>
-                </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Sealing putty</td>
+                    </tr>
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Shaft/valve packing</td>
-                </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Shaft/valve packing</td>
+                    </tr>
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Electrical bulkhead penetration packing</td>
-                </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Electrical bulkhead penetration packing</td>
+                    </tr>
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Circuit breaker arc chutes</td>
-                </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Circuit breaker arc chutes</td>
+                    </tr>
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Pipe hanger inserts</td>
-                </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Pipe hanger inserts</td>
+                    </tr>
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Weld shop protectors/burn covers</td>
-                </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Weld shop protectors/burn covers</td>
+                    </tr>
 
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td>Fire-fighting blankets/clothing/equipment</td>
-                </tr>
-                <tr>
-                    <td style="border-bottom:none;border-top:none;"></td>
-                    <td> Concrete ballast</td>
-                </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td>Fire-fighting blankets/clothing/equipment</td>
+                    </tr>
+                    <tr>
+                        <td style="border-bottom:none;border-top:none;"></td>
+                        <td> Concrete ballast</td>
+                    </tr>
 
-            </tbody>
-        </table>
-    </div>
-    <div style="margin-top:20px;">
-        <h4><b>2.Polychlorinated biphenyl (PCBs)</b></h4>
-        <table>
-            <thead>
-                <tr>
-                    <th>Equipment</th>
-                    <th>Component of equipment</th>
-                </tr>
-            </thead>
-            <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div style="margin-top:20px;">
+            <h4><b>2.Polychlorinated biphenyl (PCBs)</b></h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Equipment</th>
+                        <th>Component of equipment</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-                @php
+                    @php
 
-                $ex_boiler = @$foundItems['Transformer']['component']??[];
-                $json_boiler = @$foundItems['Transformer']['make']?? [];
+                    $ex_boiler = @$foundItems['Transformer']['component']??[];
+                    $json_boiler = @$foundItems['Transformer']['make']?? [];
 
-                @endphp
-                <tr>
-                    <td rowspan="{{count($ex_boiler)}}">Transformer<br />
-                    @foreach($json_boiler as $value)
-                        
-                        @if(@$value['model'])
-                        #{{$loop->iteration}}<br/>
-                        Make/Model : {{@$value['model']}}<br />
+                    @endphp
+                    <tr>
+                        <td rowspan="{{count($ex_boiler)}}">Transformer<br />
+                            @foreach($json_boiler as $value)
+
+                            @if(@$value['model'])
+                            #{{$loop->iteration}}<br />
+                            Make/Model : {{@$value['model']}}<br />
+                            @endif
+                            @if(@$value['model'])
+                            Manufacturer: {{@$value['manufacturer']}}<br />
+                            @endif
+                            @endforeach
+                            Type : {{@$foundItems['Transformer']['type'] ?? ""}}<br />
+
+                        <td>{{@$ex_boiler[0]}}</td>
+                    </tr>
+                    @if(@$ex_boiler)
+                    @for($i = 1; $i < count($ex_boiler); $i++) <tr>
+                        <td>{{ $ex_boiler[$i] }}</td>
+                        </tr>
+                        @endfor
                         @endif
-                        @if(@$value['model'])
-                        Manufacturer: {{@$value['manufacturer']}}<br />
+
+                        <tr>
+                            <td>Condenser</td>
+                            <td>Insulating oil</td>
+                        </tr>
+                        <tr>
+                            <td>Fuel heater</td>
+                            <td>Heating medium</td>
+                        </tr>
+
+                        <tr>
+                            <td>Electric cable</td>
+                            <td>Covering, insulating tape</td>
+                        </tr>
+
+                        <tr>
+                            <td>Lubricating oil</td>
+                            <td>&nbsp;</td>
+                        </tr>
+
+                        <tr>
+                            <td>Heat oil</td>
+                            <td>Thermometers, sensors, indicators</td>
+                        </tr>
+                        @php
+                        $transfomerValue = @$foundItems['Transformer']['extraField']??[];
+                        @endphp
+                        @if(@$transfomerValue)
+                        @php
+                        $extraField = json_decode($transfomerValue, true);
+                        @endphp
+
+                        @if(is_array($extraField))
+                        @foreach($extraField as $key => $value)
+                        @if(!empty($value))
+                        <tr>
+                            <td>{{ $key }}</td>
+                            <td>{{ $value }}</td>
+                        </tr>
                         @endif
                         @endforeach
-                        Type : {{@$foundItems['Transformer']['type'] ?? ""}}<br />
+                        @endif
+                        @endif
 
-                    <td>{{@$ex_boiler[0]}}</td>
-                </tr>
-                @if(@$ex_boiler)
-                @for($i = 1; $i < count($ex_boiler); $i++) <tr>
-                    <td>{{ $ex_boiler[$i] }}</td>
-                    </tr>
-                    @endfor
-                    @endif
 
-                    <tr>
-                        <td>Condenser</td>
-                        <td>Insulating oil</td>
-                    </tr>
-                    <tr>
-                        <td>Fuel heater</td>
-                        <td>Heating medium</td>
-                    </tr>
 
-                    <tr>
-                        <td>Electric cable</td>
-                        <td>Covering, insulating tape</td>
-                    </tr>
 
+
+
+                </tbody>
+            </table>
+        </div>
+        <div style="margin-top:20px;" class="next">
+            <h4><b>3.Ozone-depleting substances</b></h4>
+            <table>
+                <thead>
                     <tr>
-                        <td>Lubricating oil</td>
+                        <th>Materials</th>
+                        <th>Name</th>
+                        <th>Make/Model</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                    $dtaa=json_decode(@$foundItems['Refrigeration System']['extraField'],true);
+
+                    @endphp
+                    @if(@$dtaa)
+                    <tr>
+                        <td>Refrigeration System</td>
+
+                        <td>{{ $dtaa['name'] }}</td>
+                        <td>{{ $dtaa['model'] }}</td>
+
+                    </tr>
+                    @else
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
                         <td>&nbsp;</td>
                     </tr>
-
+                    @endif
+                    @php
+                    $dtaa=json_decode(@$foundItems['Ac System']['extraField'],true)
+                    @endphp
+                    @if(@$dtaa)
                     <tr>
-                        <td>Heat oil</td>
-                        <td>Thermometers, sensors, indicators</td>
+                        <td>Ac System</td>
+                        <td>{{ $dtaa['name'] }}</td>
+                        <td>{{ $dtaa['model'] }}</td>
                     </tr>
-                    @php
-                    $transfomerValue = @$foundItems['Transformer']['extraField']??[];
-                    @endphp
-                    @if(@$transfomerValue)
-                    @php
-                    $extraField = json_decode($transfomerValue, true);
-                    @endphp
-
-                    @if(is_array($extraField))
-                    @foreach($extraField as $key => $value)
-                    @if(!empty($value))
+                    @else
                     <tr>
-                        <td>{{ $key }}</td>
-                        <td>{{ $value }}</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
                     </tr>
                     @endif
-                    @endforeach
+                </tbody>
+            </table>
+            <br />
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Equipment/Location</th>
+                        <th>Material</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                    $dtaa=json_decode(@$foundItems['Cold Room']['extraField'],true);
+
+                    @endphp
+                    @if(@$dtaa)
+                    <tr>
+                        <td>Cold Room</td>
+
+                        <td>{{ $dtaa['equipment'] }}</td>
+                        <td>{{ $dtaa['material'] }}</td>
+
+                    </tr>
+                    @else
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
                     @endif
-                    @endif
+
+                </tbody>
+            </table>
+            <br />
+            <table>
+                <thead>
+                    <tr>
+                        <th>Materials</th>
+                        <th>Component of equipment</th>
+                        <th>Period for use of ODS in Japan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CFCs (R11, R12)</td>
+                        <td>Refrigerant for refrigerators</td>
+                        <td>Until 1996</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">CFCs</td>
+
+
+                        <td>Urethane formed material</td>
+                        <td>Until 1996</td>
+
+                    <tr>
+                        <td>Blowing agent for insulation of LNG carriers</td>
+                        <td>Until 1996</td>
+                    </tr>
+                    <tr>
+                        <td>Halons</td>
+                        <td>Extinguishing agent</td>
+                        <td>Until 1996</td>
+                    </tr>
+                    <tr>
+                        <td>Other fully halogenated CFCs</td>
+                        <td>The possibility of usage in ships is low</td>
+                        <td>Until 1996</td>
+                    </tr>
+                    <tr>
+                        <td>Carbon tetrachloride</td>
+                        <td>The possibility of usage in ships is low</td>
+                        <td>Until 1996</td>
+                    </tr>
+                    <tr>
+                        <td>1,1,1-Trichloroethane (methyl chloroform)</td>
+                        <td>The possibility of usage in ships is low</td>
+                        <td>Until 1996</td>
+                    </tr>
+                    <tr>
+                        <td>HCFC (R22, R141b)</td>
+                        <td>Refrigerant for refrigerating machine</td>
+                        <td>It is possible to use it until 2020</td>
+                    </tr>
+                    <tr>
+                        <td>HBFC</td>
+                        <td>The possibility of usage in ships is low</td>
+                        <td>Until 1996</td>
+                    </tr>
+                    <tr>
+                        <td>Methyl bromide</td>
+                        <td>The possibility of usage in ships is low</td>
+                        <td>Until 1996</td>
+                    </tr>
 
 
 
 
 
 
-            </tbody>
-        </table>
-    </div>
-    <div style="margin-top:20px;" class="next">
-        <h4><b>3.Ozone-depleting substances</b></h4>
-        <table>
-            <thead>
-                <tr>
-                    <th>Materials</th>
-                    <th>Name</th>
-                    <th>Make/Model</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php
-                $dtaa=json_decode(@$foundItems['Refrigeration System']['extraField'],true);
-
-                @endphp
-                @if(@$dtaa)
-                <tr>
-                    <td>Refrigeration System</td>
-
-                    <td>{{ $dtaa['name'] }}</td>
-                    <td>{{ $dtaa['model'] }}</td>
-
-                </tr>
-                @else
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                @endif
-                @php
-                $dtaa=json_decode(@$foundItems['Ac System']['extraField'],true)
-                @endphp
-                @if(@$dtaa)
-                <tr>
-                    <td>Ac System</td>
-                    <td>{{ $dtaa['name'] }}</td>
-                    <td>{{ $dtaa['model'] }}</td>
-                </tr>
-                @else
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                @endif
-            </tbody>
-        </table>
-        <br/>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Equipment/Location</th>
-                    <th>Material</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php
-                $dtaa=json_decode(@$foundItems['Cold Room']['extraField'],true);
-
-                @endphp
-                @if(@$dtaa)
-                <tr>
-                    <td>Cold Room</td>
-
-                    <td>{{ $dtaa['equipment'] }}</td>
-                    <td>{{ $dtaa['material'] }}</td>
-
-                </tr>
-                @else
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                @endif
-              
-            </tbody>
-        </table>
-        <br />
-        <table>
-            <thead>
-                <tr>
-                    <th>Materials</th>
-                    <th>Component of equipment</th>
-                    <th>Period for use of ODS in Japan</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>CFCs (R11, R12)</td>
-                    <td>Refrigerant for refrigerators</td>
-                    <td>Until 1996</td>
-                </tr>
-                <tr>
-                    <td rowspan="2">CFCs</td>
-
-
-                    <td>Urethane formed material</td>
-                    <td>Until 1996</td>
-
-                <tr>
-                    <td>Blowing agent for insulation of LNG carriers</td>
-                    <td>Until 1996</td>
-                </tr>
-                <tr>
-                    <td>Halons</td>
-                    <td>Extinguishing agent</td>
-                    <td>Until 1996</td>
-                </tr>
-                <tr>
-                    <td>Other fully halogenated CFCs</td>
-                    <td>The possibility of usage in ships is low</td>
-                    <td>Until 1996</td>
-                </tr>
-                <tr>
-                    <td>Carbon tetrachloride</td>
-                    <td>The possibility of usage in ships is low</td>
-                    <td>Until 1996</td>
-                </tr>
-                <tr>
-                    <td>1,1,1-Trichloroethane (methyl chloroform)</td>
-                    <td>The possibility of usage in ships is low</td>
-                    <td>Until 1996</td>
-                </tr>
-                <tr>
-                    <td>HCFC (R22, R141b)</td>
-                    <td>Refrigerant for refrigerating machine</td>
-                    <td>It is possible to use it until 2020</td>
-                </tr>
-                <tr>
-                    <td>HBFC</td>
-                    <td>The possibility of usage in ships is low</td>
-                    <td>Until 1996</td>
-                </tr>
-                <tr>
-                    <td>Methyl bromide</td>
-                    <td>The possibility of usage in ships is low</td>
-                    <td>Until 1996</td>
-                </tr>
-
-
-
-
-
-
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div style="margin-top:20px;">
-        <h4><b>4.Organotin compounds</b></h4>
-        <p>Organotin compounds include tributyl tins (TBT), triphenyl tins (TPT) and tributyl tin oxide (TBTO). Organotin compounds have been used as anti-fouling paint on ships' bottoms, and the International Convention on the Control of Harmful Anti-fouling Systems on Ships (AFS Convention, as amended) stipulates that all ships shall not apply or reapply organotin compounds after 1 January 2003, and that, after 1 January 2008, all ships shall either not bear such compounds on their hulls or shall bear a coating that forms a barrier preventing such compounds from leaching into the sea. The above-mentioned dates may have been extended by permission of the Administration bearing in mind that the AFS Convention entered into force on 17 September 2008.</p>
-    </div>
-    <div style="margin-top:20px;">
-        <h4><b>5.Cybutryne </b></h4>
-        <p>Cybutryne has been used as biocide in anti-fouling systems, and the International Convention on the Control of Harmful Anti-fouling Systems on Ships (AFS Convention, as amended) stipulates that all ships shall not apply or reapply cybutryne after 1 January 2023, and that ships bearing an anti-fouling system that contains this substance in the external coating layer of their hulls or external parts or surfaces on 1 January 2023 shall either remove the anti-fouling system or apply a coating that forms a barrier to this substance leaching from the underlying non-compliant anti-fouling system at the next scheduled renewal of the anti-fouling system after 1 January 2023, but no later than 60 months following the last application to the ship of an anti-fouling system containing cybutryne.</p>
-    </div>
-    <div style="margin-top:20px;">
-        <h4><b>6. Perfluoro octane sulfonic acid-PFOS (EUSRR/EMSA)</b></h4>
-        <p>In the marine industry, it can be found in fire-fighting foams on vessels carrying inflammable
-            fluids and those with helicopter decks, rubber, and plastic materials (i.e.: cable sheaths, PVC
-            flooring, gaskets, and seals) and coatings (i.e. paint). An indicative list of materials and
-        </p>
-        <ul>
-            <li>AFFF Foam Solution</li>
-            <li>Coatings</li>
-            <li>Adhesives</li>
-        </ul>
-    </div>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="margin-top:20px;">
+            <h4><b>4.Organotin compounds</b></h4>
+            <p>Organotin compounds include tributyl tins (TBT), triphenyl tins (TPT) and tributyl tin oxide (TBTO). Organotin compounds have been used as anti-fouling paint on ships' bottoms, and the International Convention on the Control of Harmful Anti-fouling Systems on Ships (AFS Convention, as amended) stipulates that all ships shall not apply or reapply organotin compounds after 1 January 2003, and that, after 1 January 2008, all ships shall either not bear such compounds on their hulls or shall bear a coating that forms a barrier preventing such compounds from leaching into the sea. The above-mentioned dates may have been extended by permission of the Administration bearing in mind that the AFS Convention entered into force on 17 September 2008.</p>
+        </div>
+        <div style="margin-top:20px;">
+            <h4><b>5.Cybutryne </b></h4>
+            <p>Cybutryne has been used as biocide in anti-fouling systems, and the International Convention on the Control of Harmful Anti-fouling Systems on Ships (AFS Convention, as amended) stipulates that all ships shall not apply or reapply cybutryne after 1 January 2023, and that ships bearing an anti-fouling system that contains this substance in the external coating layer of their hulls or external parts or surfaces on 1 January 2023 shall either remove the anti-fouling system or apply a coating that forms a barrier to this substance leaching from the underlying non-compliant anti-fouling system at the next scheduled renewal of the anti-fouling system after 1 January 2023, but no later than 60 months following the last application to the ship of an anti-fouling system containing cybutryne.</p>
+        </div>
+        <div style="margin-top:20px;">
+            <h4><b>6. Perfluoro octane sulfonic acid-PFOS (EUSRR/EMSA)</b></h4>
+            <p>In the marine industry, it can be found in fire-fighting foams on vessels carrying inflammable
+                fluids and those with helicopter decks, rubber, and plastic materials (i.e.: cable sheaths, PVC
+                flooring, gaskets, and seals) and coatings (i.e. paint). An indicative list of materials and
+            </p>
+            <ul>
+                <li>AFFF Foam Solution</li>
+                <li>Coatings</li>
+                <li>Adhesives</li>
+            </ul>
+        </div>
     </section>
     <div style="margin-top:20px;" class="next section-1-1">
         <h3>Materials listed from Table-B</h3>
@@ -814,7 +814,6 @@
 
             <p>5. When equipment, systems and/or area of ship are not accessible for visual check or sampling checks, this equipment system and/or area is classified as ‘Potentially Containing Hazardous Materials (PCHM)’</p>
         </div>
-</div>
 
-</div>
- </section>
+    </div>
+</section>
