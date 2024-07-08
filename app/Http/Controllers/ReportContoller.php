@@ -606,8 +606,11 @@ class ReportContoller extends Controller
                 list($width, $height) = getimagesize($imagePath);
 
                 if ($height >= $width) {
-                    $html = '<div class="main" style="position:relative;height:100vh;">
-                           <div class="image-container" style="border: 1px solid red;left:40%;top:0%;margin: auto;position: absolute;"><img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
+                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
+                $html .= '<div style="margin-top:20%">';
+                $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
+                $html .= '<div class="image-container " id="imgc' . $i . '" style="position: relative;">';
+                $html .= $newImage;
                     foreach ($chunk as $key => $value) {
                         $center++;
                         $top = $value['position_top'];
@@ -649,7 +652,7 @@ class ReportContoller extends Controller
                     }
                     $html .= '     
                            </div> 
-                        </div>';
+                        </div></div>';
                     return $html;
                 }
 
