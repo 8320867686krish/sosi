@@ -174,10 +174,10 @@ class ReportContoller extends Controller
 
                         $mpdf->AddPage('L');
                         if ($key == 0) {
-                            $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h2><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
+                            $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h3><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
                         }
                         $templateId = $mpdf->importPage($i);
-                        $mpdf->useTemplate($templateId, 0, 0, 1000, 500); // Use the template with appropriate dimensions
+                        $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
 
                         //  $mpdf->useTemplate($templateId, 0, 5, null, null);
                     }
@@ -381,7 +381,8 @@ class ReportContoller extends Controller
                         $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h3><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
                     }
                     $templateId = $mpdf->importPage($i);
-                    $mpdf->useTemplate($templateId, 0, 5, null, null);
+                    $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
+
                 }
                 unlink($fileNameDiagram);
             }
@@ -395,20 +396,15 @@ class ReportContoller extends Controller
 
         foreach ($ChecksList as $key => $value) {
             $html = $this->drawDigarm($value);
-            //  echo $html;
             $fileNameDiagram = $this->genrateDompdf($html, 'le');
-
             $mpdf->setSourceFile($fileNameDiagram);
-
             $pageCount = $mpdf->setSourceFile($fileNameDiagram);
             for ($i = 1; $i <= $pageCount; $i++) {
-
                 $mpdf->AddPage('L');
                 if ($key == 0) {
                     $mpdf->WriteHTML('<h3 style="font-size:14px">3.4 VSCP Preparation.' . $mpdf->w . '</h3>');
                 }
                 $templateId = $mpdf->importPage($i);
-                //$mpdf->useTemplate($templateId, 0, 0, null, null);
                 $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
 
             }
@@ -417,31 +413,30 @@ class ReportContoller extends Controller
             unlink($fileNameDiagram);
         }
 
-        // exit();
         $mpdf->AddPage('P');
         $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
         $mpdf->AddPage('L');
         $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
 
         $mpdf->WriteHTML(view('report.riskAssessments'));
-        // $sampleImageChunks = $sampleImage->chunk(50);
-        // foreach ($sampleImageChunks as $index => $chunk) {
-        //     if ($index == 0) {
-        //         $show = true;
-        //     } else {
-        //         $show = false;
-        //     }
-        //     $title = "Sample Records";
+        $sampleImageChunks = $sampleImage->chunk(50);
+        foreach ($sampleImageChunks as $index => $chunk) {
+            if ($index == 0) {
+                $show = true;
+            } else {
+                $show = false;
+            }
+            $title = "Sample Records";
 
-        //     $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
-        //     $mpdf->WriteHTML($html);
-        // }
-        // $sampleImageChunks = $visualImage->chunk(50);
-        // foreach ($sampleImageChunks as $index => $chunk) {
-        //     $title = "Visual Records";
-        //     $html = view('report.sampleImage', compact('chunk', 'title'))->render();
-        //     $mpdf->WriteHTML($html);
-        // }
+            $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
+            $mpdf->WriteHTML($html);
+        }
+        $sampleImageChunks = $visualImage->chunk(50);
+        foreach ($sampleImageChunks as $index => $chunk) {
+            $title = "Visual Records";
+            $html = view('report.sampleImage', compact('chunk', 'title'))->render();
+            $mpdf->WriteHTML($html);
+        }
 
 
         $titleattach = '<h2 style="text-align:center">Appendix-4 Supporting Documents/plans from Ship</h2>';
@@ -549,32 +544,14 @@ class ReportContoller extends Controller
         ]);
     }
 
-    private function importPagesToMpdf($mpdf, $filePath, $isFirstChunk)
-    {
-        $pageCount = $mpdf->setSourceFile($filePath);
 
-        for ($i = 1; $i <= $pageCount; $i++) {
-            $mpdf->AddPage('L');
-            $templateId = $mpdf->importPage($i);
-
-            if ($i == 1 && $isFirstChunk) {
-                $mpdf->WriteHTML('<h2>Appendix-3 Onboard Survey & Lab Analysis Record</h2>');
-                $mpdf->useTemplate($templateId, 0, 20, null, null);
-            } else {
-                $mpdf->useTemplate($templateId, 0, 10, null, null);
-            }
-        }
-    }
     public function genrateDomPdf($html, $page)
     {
         $dompdf = new Dompdf();
-
-
         $dompdf->loadHtml($html);
         if (@$page) {
             $dompdf->setPaper('A4', 'landscape');
         } else {
-
             $dompdf->setPaper('A4', 'portrait');
         }
         $dompdf->render();
@@ -596,7 +573,6 @@ class ReportContoller extends Controller
         if (count($decks['checks']) > 0) {
             $chunks = array_chunk($decks['checks']->toArray(), 15);
             $k = 0;
-            $center = 0;
             $gap = 1;
             $increaseGap = 30;
             foreach ($chunks as $chunkIndex => $chunk) {
@@ -610,9 +586,6 @@ class ReportContoller extends Controller
                 } else {
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
                 }
-
-
-
                 $html .= '<div style="margin-top:20%">';
 
                 $html .= '<div class="image-container " id="imgc' . $i . '" style="position: relative;">';
@@ -632,9 +605,7 @@ class ReportContoller extends Controller
                         $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
                     }
                 }
-                // dump( $image_height);
                 $html .= $newImage;
-
                 $evenarrayLeft = [];
                 $evenarrayTop = [];
                 $sameLocationevenarray = [];
@@ -741,35 +712,19 @@ class ReportContoller extends Controller
     }
     protected function mergeImageToPdf($imagePath, $title, $mpdf, $page = null)
     {
-        list($width, $height) = getimagesize($imagePath);
-
-        $pageWidth = $mpdf->w; // Width of the page in mm
-        $pageHeight = $mpdf->h; // Height of the page in mm
-
-        // Calculate the x position to center the image
-        $imageX = ($pageWidth - $width) / 2;
-        $imageY = 35; // Adjust the Y position as needed
         $mpdf->AddPage($page);
-
-        // Add the title
         $mpdf->WriteHTML('<h1>' . $title . '</h1>');
-
-        // Add the image to the page
         $mpdf->Image($imagePath, 0, 35,  $mpdf->w, null, 'png', '', true, false);
     }
     protected function mergePdf($filePath, $title, $mpdf, $page = null)
     {
         $mpdf->setSourceFile($filePath);
-
         $pageCount = $mpdf->setSourceFile($filePath);
         for ($i = 1; $i <= $pageCount; $i++) {
 
             $mpdf->AddPage($page);
-
             $templateId = $mpdf->importPage($i);
             $size = $mpdf->getTemplateSize($templateId);
-
-
             $scale = min(
                 ($mpdf->w - $mpdf->lMargin - $mpdf->rMargin) / $size['width'],
                 ($mpdf->h - $mpdf->tMargin - $mpdf->bMargin) / $size['height']
@@ -780,22 +735,7 @@ class ReportContoller extends Controller
             } else {
                 $lmargin = $mpdf->lMargin;
             }
-            // Use the template and apply the calculated scale
             $mpdf->useTemplate($templateId, $lmargin, $mpdf->tMargin, $size['width'] * $scale, $size['height'] * $scale);
         }
-    }
-    protected function savePdf($content, $filename)
-    {
-        // Specify the folder where PDF files will be stored
-        $pdfFolderPath = storage_path('app/pdf');
-
-        // Ensure the folder exists, if not create it
-        if (!is_dir($pdfFolderPath)) {
-            mkdir($pdfFolderPath, 0777, true);
-        }
-
-        // Save the PDF file to the folder
-        $filePath = $pdfFolderPath . '/' . $filename;
-        file_put_contents($filePath, $content);
     }
 }
