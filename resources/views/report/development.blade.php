@@ -518,7 +518,7 @@
                     </tr>
                     @php
                     $transfomerValue = @$foundItems['Transformer']['extraField']??[];
-
+                    @if(@$transfomerValue)
                     $extraField = json_decode($transfomerValue, true);
                     @endphp
 
@@ -531,6 +531,7 @@
                     </tr>
                     @endif
                     @endforeach
+                    @endif
                     @endif
 
 
