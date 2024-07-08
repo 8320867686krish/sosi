@@ -629,7 +629,7 @@ class ReportContoller extends Controller
                         }
                         if ($center % 2 == 0) {
                             $lineWidth = $left + 50;
-                            $tooltipLeft = $width + 40;
+                            $tooltipLeft = $left + $lineWidth;
                             $html .= '<div class="dot" style="top:' . $top . 'px; left:' . $left . 'px; position: absolute;border: 2px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
                             $html .= '<span class="line" style="position: absolute;background-color: #2B35AF;top:' . $top + 1  . ';right:' . $left . 'px;width:' . $lineWidth . 'px;height:1px;"></span>';
 
@@ -637,7 +637,7 @@ class ReportContoller extends Controller
 
                         } else {
                             $lineWidth = $left + 50;
-                            $tooltipLeft = $width + 40;
+                            $tooltipLeft = $left + $lineWidth;
                             $html .= '<div class="dot" style="top:' . $top . 'px; left:' . $left . 'px; position: absolute;border: 2px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
                             $html .= '<span class="line" style="position: absolute;background-color: #2B35AF;top:' . $top + 1  . ';left:' . $left . 'px;width:' . $lineWidth . 'px;height:1px;"></span>';
 
