@@ -76,8 +76,8 @@
             </thead>
             <tbody>
                 @php
-                $ex = @$foundItems['Main engine']['component'];
-                $json_boiler = @$foundItems['Main engine']['make'];
+                $ex = @$foundItems['Main engine']['component']?? [];
+                $json_boiler = @$foundItems['Main engine']['make']?? [];
 
                 @endphp
                 <tr>
@@ -104,8 +104,8 @@
                     @endif
 
                     @php
-                $ex = @$foundItems['Diesel engine']['component'];
-                $json_boiler = @$foundItems['Diesel engine']['make'];
+                $ex = @$foundItems['Diesel engine']['component'] ?? [];
+                $json_boiler = @$foundItems['Diesel engine']['make']?? [];
 
                 @endphp
                 <tr>
