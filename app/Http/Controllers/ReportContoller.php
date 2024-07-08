@@ -395,7 +395,7 @@ class ReportContoller extends Controller
 
         foreach ($ChecksList as $key => $value) {
             $html = $this->drawDigarm($value);
-              echo $html;
+            echo $html;
             $fileNameDiagram = $this->genrateDompdf($html, 'le');
 
             $mpdf->setSourceFile($fileNameDiagram);
@@ -417,7 +417,7 @@ class ReportContoller extends Controller
             unlink($fileNameDiagram);
         }
 
-          exit();
+        exit();
         $mpdf->AddPage('P');
         $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
         $mpdf->AddPage('L');
@@ -607,10 +607,10 @@ class ReportContoller extends Controller
 
                 if ($height >= $width) {
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
-                $html .= '<div style="margin-top:20%">';
-                $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
-                $html .= '<div class="image-container " id="imgc' . $i . '" style="position: relative;">';
-                $html .= $newImage;
+                    $html .= '<div style="margin-top:20%">';
+                    $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
+                    $html .= '<div class="image-container " id="imgc' . $i . '" style="position: relative;">';
+                    $html .= $newImage;
                     foreach ($chunk as $key => $value) {
                         $center++;
                         $top = $value['position_top'];
@@ -627,32 +627,27 @@ class ReportContoller extends Controller
                                 }
                             }
                         }
-                        if($center % 2 == 0){
+                        if ($center % 2 == 0) {
                             $lineWidth = $left + 50;
                             $tooltipLeft = $width + 40;
                             $html .= '<div class="dot" style="top:' . $top . 'px; left:' . $left . 'px; position: absolute;border: 2px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
-                            $html .= '<span class="line" style="position: absolute;background-color: #2B35AF;top:' . $top+1  . ';right:' . $left . 'px;width:'.$lineWidth.'px;height:1px;"></span>';
-                           
-                             $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $top . 'px; right:' . ($tooltipLeft) . 'px">' . $tooltipText . '</span>';
-                             
-                            $html.='</div>';
-                           
-                        }else{
-                            $lineWidth = $left + 50;
-                            $tooltipLeft = $width + 40;
-                            $html .= '<div class="dot" style="top:' . $top . 'px; left:' . $left . 'px; position: absolute;border: 2px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
-                            $html .= '<span class="line" style="position: absolute;background-color: #2B35AF;top:' . $top+1  . ';left:' . $left . 'px;width:'.$lineWidth.'px;height:1px;"></span>';
-                           
-                             $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $top . 'px; left:' . ($tooltipLeft) . 'px">' . $tooltipText . '</span>';
-                             
-                            $html.='</div>';
+                            $html .= '<span class="line" style="position: absolute;background-color: #2B35AF;top:' . $top + 1  . ';right:' . $left . 'px;width:' . $lineWidth . 'px;height:1px;"></span>';
 
-                        
+                            $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $top . 'px; right:' . ($tooltipLeft) . 'px">' . $tooltipText . '</span>';
+
+                        } else {
+                            $lineWidth = $left + 50;
+                            $tooltipLeft = $width + 40;
+                            $html .= '<div class="dot" style="top:' . $top . 'px; left:' . $left . 'px; position: absolute;border: 2px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
+                            $html .= '<span class="line" style="position: absolute;background-color: #2B35AF;top:' . $top + 1  . ';left:' . $left . 'px;width:' . $lineWidth . 'px;height:1px;"></span>';
+
+                            $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $top . 'px; left:' . ($tooltipLeft) . 'px">' . $tooltipText . '</span>';
+
                         }
                     }
-                    $html .= '     
-                           </div> 
-                        </div></div>';
+                    $html .= '</div>';
+                    $html .= '</div>';
+                    $html .= '</div>';
                     return $html;
                 }
 
