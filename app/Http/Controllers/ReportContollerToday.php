@@ -118,8 +118,8 @@ class ReportContoller extends Controller
                 'jpeg_quality' => 75, // Set the JPEG quality (0-100)
                 'shrink_tables_to_fit' => 1, // Shrink tables to fit the page width
                 'tempDir' => __DIR__ . '/tmp', // Set a temporary directory for mPDF
-    
-    
+
+
                 'allow_output_buffering' => true,
             ]);
             $mpdf->defaultPageNumStyle = '1';
@@ -167,10 +167,10 @@ class ReportContoller extends Controller
                     $html = $this->drawDigarm($value);
                     $fileNameDiagram = $this->genrateDompdf($html, 'le');
                     $mpdf->setSourceFile($fileNameDiagram);
-    
+
                     $pageCount = $mpdf->setSourceFile($fileNameDiagram);
                     for ($i = 1; $i <= $pageCount; $i++) {
-    
+
                         $mpdf->AddPage('L');
                         if ($key == 0) {
                             $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h2><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
@@ -178,7 +178,6 @@ class ReportContoller extends Controller
                         $templateId = $mpdf->importPage($i);
                         $mpdf->useTemplate($templateId, 0, 5, null, null);
                     }
-
                 }
             }
             return response()->make($mpdf->Output('summeryReport.pdf', 'D'), 200, [
@@ -236,12 +235,12 @@ class ReportContoller extends Controller
             ->where('project_id', $project_id)
             ->get();
 
-            $decks = Deck::with(['checks' => function ($query) {
-                $query->whereHas('check_hazmats', function ($query) {
-                    $query->where('type', 'PCHM')->orWhere('type', 'Contained');
-                });
-            }])->where('project_id', $project_id)->get();
-        $ChecksListImage = Checks::with(['check_image','labResults'])->where('project_id', $project_id)->get();
+        $decks = Deck::with(['checks' => function ($query) {
+            $query->whereHas('check_hazmats', function ($query) {
+                $query->where('type', 'PCHM')->orWhere('type', 'Contained');
+            });
+        }])->where('project_id', $project_id)->get();
+        $ChecksListImage = Checks::with(['check_image', 'labResults'])->where('project_id', $project_id)->get();
 
         $sampleImage = $ChecksListImage->filter(function ($item) {
             return $item->type == 'sample';
@@ -380,7 +379,7 @@ class ReportContoller extends Controller
                     $templateId = $mpdf->importPage($i);
                     $mpdf->useTemplate($templateId, 0, 5, null, null);
                 }
-                unlink( $fileNameDiagram );
+                unlink($fileNameDiagram);
             }
         }
         $mpdf->AddPage('p');
@@ -392,27 +391,27 @@ class ReportContoller extends Controller
 
         foreach ($ChecksList as $key => $value) {
             $html = $this->drawDigarm($value);
-            echo $html;
-            // $fileNameDiagram = $this->genrateDompdf($html, 'le');
-            // $mpdf->setSourceFile($fileNameDiagram);
+        //    echo $html;
+            $fileNameDiagram = $this->genrateDompdf($html, 'le');
+            $mpdf->setSourceFile($fileNameDiagram);
 
-            // $pageCount = $mpdf->setSourceFile($fileNameDiagram);
-            // for ($i = 1; $i <= $pageCount; $i++) {
+            $pageCount = $mpdf->setSourceFile($fileNameDiagram);
+            for ($i = 1; $i <= $pageCount; $i++) {
 
-            //     $mpdf->AddPage('L');
-            //     if ($key == 0) {
-            //         $mpdf->WriteHTML('<h3 style="font-size:14px">3.4 VSCP Preparation</h2>');
-            //     }
-            //     $templateId = $mpdf->importPage($i);
-            //     $mpdf->useTemplate($templateId, 0, 5, null, null);
-            // }
-            // $mpdf->AddPage('L');
-            // $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks']]));
-            // unlink( $fileNameDiagram );
+                $mpdf->AddPage('L');
+                if ($key == 0) {
+                    $mpdf->WriteHTML('<h3 style="font-size:14px">3.4 VSCP Preparation</h2>');
+                }
+                $templateId = $mpdf->importPage($i);
+                $mpdf->useTemplate($templateId, 0, 5, null, null);
+            }
+            $mpdf->AddPage('L');
+            $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks']]));
+            unlink( $fileNameDiagram );
 
         }
-
-exit();
+        //
+      //  exit();
         $mpdf->AddPage('P');
         $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
         $mpdf->AddPage('L');
@@ -582,6 +581,18 @@ exit();
     }
     public function drawDigarm($decks)
     {
+        //     $svg = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 36 36" class="circular-chart">
+        //     <path class="circle-bg"
+        //           stroke-width="1"
+        //           fill="none"
+        //           stroke="#ddd"
+        //           d="M18 2.0845
+        //              a 15.9155 15.9155 0 0 1 0 31.831
+        //              a 15.9155 15.9155 0 0 1 0 -31.831"
+        //           />
+        // </svg>';
+
+        // $html = '<img src="data:image/svg+xml;base64,'.base64_encode($svg).'"  width="100" height="100" />';
         $i = 1;
         $html = "";
         if (count($decks['checks']) > 0) {
@@ -598,20 +609,22 @@ exit();
 
             if ($width > 1000) {
                 $image_height = ($image_width * $height) / $width;
-                $html.='<svg width="'.$image_width.'" height="'.$image_height.'" style="position: absolute;">';
+                $html .= '<svg width="' . $image_width . '" height="' . $image_height . '" style="position: absolute;">';
 
                 $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px" />';
             } else {
                 $image_height = $height;
-                $html.='<svg width="'.$image_width.'" height="'.$image_height.'" style="position: absolute;">';
+                $html .= '<svg width="' . $image_width . '" height="' . $image_height . '" style="position: absolute;">';
 
                 $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
             }
-            // dump( $image_height);
             $html .= $newImage;
             $k = 1;
             $oddTop = 0;
             $evenTop = 0;
+            $grouping = 0;
+            $groupingEven = 0;
+            $lineSameGap = 0;
 
             foreach ($decks['checks'] as $key => $value) {
                 $top = $value->position_top;
@@ -639,69 +652,101 @@ exit();
                     $topshow = $top;
                     $leftshow = $left;
                 }
+
+
+
+
+                $lineLeftPosition =  ($leftshow + 2);
                 $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;
-                    width: 1px;
-                    height: 1px;
-                    border: 2px solid #BF0A30;
-                    background: #BF0A30;
-                    border-radius: 50%;
-                    text-align: center;
-                    line-height: 20px;"></div>';
-
-
+                width: 1px;
+                height: 1px;
+                border: 2px solid #4052d6;
+                background: #4052d6;
+                border-radius: 50%;
+                text-align: center;
+                line-height: 20px;"></div>';
 
                 if ($k % 2 == 1) {
+                    $grouping++;
+                    $lineSameGap++;
+
                     if (abs($oddTop - $topshow) < 50) {
-                        $gap = 10 * $k;
+
+
+                        if ($grouping % 3 == 0) {
+
+                            $line_height = $image_height * 1;
+                            $line_width = 1;
+                            $svgVerticalLine = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="none" viewBox="0 0 100 100"><line x1="0" y1="0" x2="20" y2="100" stroke="#4052d6" vector-effect="non-scaling-stroke"/></svg>';
+                        }
+                        if ($grouping % 3 == 1) {
+
+                            $line_height = $image_height + $grouping * 10;
+                            $line_width = 10 * $grouping;
+                            $svgVerticalLine = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="none" viewBox="0 0 100 100"><line x1="0" y1="0" x2="100" y2="100" stroke="#4052d6" vector-effect="non-scaling-stroke"/></svg>';
+                        }
+                        if ($grouping % 3 == 2) {
+                            $lineSameGap += 25 + 1;
+                            $line_height = $image_height * 2 + $lineSameGap;
+                            $line_width = 1;
+                            $svgVerticalLine = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="none" viewBox="0 0 100 100"><line x1="0" y1="0" x2="20" y2="100" stroke="#4052d6" vector-effect="non-scaling-stroke"/></svg>';
+                        }
+                        $encodedSvgVerticalLine = 'data:image/svg+xml;base64,' . base64_encode($svgVerticalLine);
+
+                        $tooltipLeft =  $leftshow + $line_width - 20;
+                        $tooltipTop = $topshow +  $line_height;
+                        $html .= '<img src='.$encodedSvgVerticalLine.' style="position: absolute; left:' . $lineLeftPosition . '; top:' . $topshow . '; width: ' . $line_width . 'px; height: ' . $line_height . 'px;"/>';
+                        $html .= '<span style="border:1px solid #4052d6; top:' . $tooltipTop . 'px; position:absolute; padding:3px; left:' . $tooltipLeft . 'px;font-size:12px;">' . $tooltipText . '</span>';
                     } else {
-                        $gap = 10;
+
+                        $line_height = $image_height * 1;
+
+                        $line_width = 1;
+                        $tooltipLeft =  $leftshow + $line_width - 20;
+                        $tooltipTop = $topshow +  $image_height;
+
+                        $svgVerticalLine = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="none" viewBox="0 0 100 100"><line x1="0" y1="0" x2="20" y2="100" stroke="#4052d6" vector-effect="non-scaling-stroke"/></svg>';
+                        $encodedSvgVerticalLine = 'data:image/svg+xml;base64,' . base64_encode($svgVerticalLine);
+
+                        $html .= '<img src='.$encodedSvgVerticalLine.' style="position: absolute; left:' . $lineLeftPosition . '; top:' . $topshow . '; width: ' . $line_width . 'px; height: ' . $line_height . 'px;"/>';
+                        $html .= '<span style="border:1px solid #4052d6; top:' . $tooltipTop . 'px; position:absolute; padding:3px; left:' . $tooltipLeft . 'px;font-size:12px;">' . $tooltipText . '</span>';
                     }
-
-                    $lineTopPosition = "-" . $gap . "px";
-
-                    $lineHeight = ($topshow + $gap) . "px";
-                    $lineLeftPosition =  ($leftshow + 2) . "px";
-                    $tooltipStart = ($topshow + $gap) - $topshow;
-
-                    $html .= '<span class="tooltip" style="position: absolute;
-                        background-color: #fff;
-                        border: 1px solid #BF0A30;
-                        padding: 1px;
-                        border-radius: 5px;
-                        white-space: nowrap;
-                        z-index: 1; 
-                        color:#BF0A30;font-size:10px;';
-                    $tooltipwidth = ($leftshow + 2);
-                    $html .= 'top:' . "-" . ($gap + 26) . 'px; left:' . ($tooltipwidth - 12) . 'px';
-                    $html .= '">' . $tooltipText . '</span>';
-                    $html .= '<span class="line" style="position: absolute;background-color: #BF0A30;top:' . $lineTopPosition  . ';left:' . $lineLeftPosition . ';height:' . $lineHeight . ';width:1px;"></span>';
-
                     $oddTop = $topshow;
                 } else {
+                    $groupingEven++;
                     if (abs($evenTop - $topshow) < 50) {
-                        $gap = 15 * $k;
+                        if ($groupingEven % 3 == 0) {
+                            $line_height = $image_height + $grouping * 10;
+                            $line_width = 10 * $grouping;
+
+                            $svgVerticalLine = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="none" viewBox="0 0 100 100"><line x1="100" y1="0" x2="0" y2="100" stroke="#4052d6" vector-effect="non-scaling-stroke"/></svg>';
+                            $encodedSvgVerticalLine = 'data:image/svg+xml;utf8,' . rawurlencode($svgVerticalLine);
+
+                            $tooltipLeft = $leftshow + $line_width - 20;
+                            $tooltipTop = $topshow + $line_height;
+
+                            // $html.= '<div style="background: url(\'' . $encodedSvgVerticalLine . '\'); background-repeat: no-repeat; background-position: center center; background-size: 100% 100%; position: absolute; left:' . $lineLeftPosition . 'px; top:-' . $topshow . 'px; width: ' . $line_width . 'px; height: ' . $line_height . 'px;"></div>';
+                            // $html .= '<span style="border:1px solid #4052d6; top:' . $tooltipTop . 'px; position:absolute; padding:3px; left:' . $tooltipLeft . 'px; font-size:12px;">' . $tooltipText . '</span>';
+
+                            
+
+
+                        }
                     } else {
-                        $gap = 15;
+                        $line_height = $image_height * 1;
+
+                        $line_width = 1;
+                        $tooltipLeft =  $leftshow + $line_width - 20;
+                        $tooltipTop = $topshow + 35;
+
+
+                        $svgVerticalLine = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="none" viewBox="0 0 100 100"><line x1="0" y1="0" x2="0" y2="100" stroke="#4052d6" vector-effect="non-scaling-stroke"/></svg>';
+
+                        $encodedSvgVerticalLine = 'data:image/svg+xml;base64,' . base64_encode($svgVerticalLine);
+
+                       // $html .= '<img src='.$encodedSvgVerticalLine.' style="position: absolute; left:' . $lineLeftPosition . '; top:' . $topshow . '; width: ' . $line_width . 'px; height: ' . $line_height . 'px;"/>';
+                     //   $html .= '<span style="border:1px solid #4052d6; top:-' . $tooltipTop . 'px; position:absolute; padding:3px; left:' . $tooltipLeft . 'px;font-size:12px;">' . $tooltipText . '</span>';
                     }
-                    $lineTopPosition =   $topshow . "px";
-
-                    $lineHeight = ($image_height - $topshow + $gap) . "px";
-                    $lineLeftPosition =  ($leftshow + 2) . "px";
-                    $html .= '<span class="tooltip" style="position: absolute;
-                        background-color: #fff;
-                        border: 1px solid #BF0A30;
-                        padding: 1px;
-                        border-radius: 5px;
-                        white-space: nowrap;
-                        z-index: 1; 
-                        color:#BF0A30;font-size:10px;';
-                    $tooltipwidth = ($leftshow + 2);
-
-                    $html .= 'top:' . ($image_height + $gap) . 'px; left:' . ($tooltipwidth - 12) . 'px';
-                    $html .= '">' . $tooltipText . '</span>';
-
-                    $html .= '<span class="line" style="position: absolute;background-color: #BF0A30;top:' . $lineTopPosition  . ';left:' . $lineLeftPosition . ';height:' . $lineHeight . ';width:1px;">' . $k . '</span>';
-
                     $evenTop = $topshow;
                 }
             }

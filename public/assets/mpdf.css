@@ -1,15 +1,19 @@
-body {
-    font-family: 'Arial';
-}
 
+body {
+    font-weight: normal;
+    font-style: normal;
+}
+.bookmark-text {
+    font-weight: normal !important;
+    font-style: normal !important;
+}
 .container {
-    padding: 10px;
+    padding: 15px;
 }
 
 /* Styles for section 1.1 */
 
 .section-1-1 h3 {
-    font-weight: bold;
     font-size: 14px;
     color: #000;
 }
@@ -31,7 +35,6 @@ body {
 }
 
 .section-1-2 h3 {
-    font-weight: bold;
     font-size: 14px;
     color: #000;
 }
@@ -92,13 +95,11 @@ body {
 
 
 .section-1-3 h3 {
-    font-weight: bold;
     font-size: 14px;
     color: #000;
 }
 
 .section-1-4 h3 {
-    font-weight: bold;
     font-size: 14px;
     color: #000;
 }
@@ -216,39 +217,11 @@ th {
 .density-column {
     width: 40%;
 }
-.maincontnt {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+
+.toc h2, .toc h3 {
+    font-weight: normal;
+    font-style: normal;
 }
-.image-container {
-    position: relative;
-    display: inline-block;
-    margin: 20px;
-}
-.dot {
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    border: 2px solid red;
-    background: red;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 20px;
-}
-.tooltip {
-    position: absolute;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 5px;
-    border-radius: 5px;
-    white-space: nowrap;
-    z-index: 1; /* Ensure tooltip is above the dots and lines */
-    color:blue;
-}
-.line {
-    position: absolute;
-    width: 1px;
-    background-color: red;
+h3{
+    font-size:8px;
 }

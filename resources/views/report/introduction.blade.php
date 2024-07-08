@@ -5,7 +5,7 @@
         <h2>1. Introduction to Project</h2>
         <div class="section-1-1">
             <section id="section1.1">
-                <h3>1.1 Scope, Exemption and Exclusions</h3>
+                <h3 class="bookmark-text">1.1 Scope, Exemption and Exclusions</h3>
                 <p>The Scope of this document is to prepare an Inventory of Hazardous Materials as per IMO HKC- MEPC 379(80) and EUSRR-EMSA guidelines for the vessel <b>{{$projectDetail['ship_name']}}</b> on behalf of <b>{{$projectDetail['client']['manager_name']}}</b>.</p>
                 <p>The scope of this IHM report is delimited by the availability of documentation, acknowledging that certain records may not be accessible. Additionally, due to operational constraints, there are limitations on inspecting all spaces and equipment aboard the vessel while it remains in operation.</p>
 

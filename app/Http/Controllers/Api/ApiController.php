@@ -303,7 +303,7 @@ class ApiController extends Controller
 
             if ($currentUserRoleLevel == 1 || $currentUserRoleLevel == 2) {
                 $projects = Projects::select(
-                    '*',
+                    'projects.*',
                     'clients.manager_name',
                     'clients.owner_name',
                     'clients.owner_address',

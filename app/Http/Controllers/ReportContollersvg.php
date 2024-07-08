@@ -118,8 +118,8 @@ class ReportContoller extends Controller
                 'jpeg_quality' => 75, // Set the JPEG quality (0-100)
                 'shrink_tables_to_fit' => 1, // Shrink tables to fit the page width
                 'tempDir' => __DIR__ . '/tmp', // Set a temporary directory for mPDF
-    
-    
+
+
                 'allow_output_buffering' => true,
             ]);
             $mpdf->defaultPageNumStyle = '1';
@@ -167,10 +167,10 @@ class ReportContoller extends Controller
                     $html = $this->drawDigarm($value);
                     $fileNameDiagram = $this->genrateDompdf($html, 'le');
                     $mpdf->setSourceFile($fileNameDiagram);
-    
+
                     $pageCount = $mpdf->setSourceFile($fileNameDiagram);
                     for ($i = 1; $i <= $pageCount; $i++) {
-    
+
                         $mpdf->AddPage('L');
                         if ($key == 0) {
                             $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h2><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
@@ -178,7 +178,6 @@ class ReportContoller extends Controller
                         $templateId = $mpdf->importPage($i);
                         $mpdf->useTemplate($templateId, 0, 5, null, null);
                     }
-
                 }
             }
             return response()->make($mpdf->Output('summeryReport.pdf', 'D'), 200, [
@@ -236,12 +235,12 @@ class ReportContoller extends Controller
             ->where('project_id', $project_id)
             ->get();
 
-            $decks = Deck::with(['checks' => function ($query) {
-                $query->whereHas('check_hazmats', function ($query) {
-                    $query->where('type', 'PCHM')->orWhere('type', 'Contained');
-                });
-            }])->where('project_id', $project_id)->get();
-        $ChecksListImage = Checks::with(['check_image','labResults'])->where('project_id', $project_id)->get();
+        $decks = Deck::with(['checks' => function ($query) {
+            $query->whereHas('check_hazmats', function ($query) {
+                $query->where('type', 'PCHM')->orWhere('type', 'Contained');
+            });
+        }])->where('project_id', $project_id)->get();
+        $ChecksListImage = Checks::with(['check_image', 'labResults'])->where('project_id', $project_id)->get();
 
         $sampleImage = $ChecksListImage->filter(function ($item) {
             return $item->type == 'sample';
@@ -380,7 +379,7 @@ class ReportContoller extends Controller
                     $templateId = $mpdf->importPage($i);
                     $mpdf->useTemplate($templateId, 0, 5, null, null);
                 }
-                unlink( $fileNameDiagram );
+                unlink($fileNameDiagram);
             }
         }
         $mpdf->AddPage('p');
@@ -393,26 +392,25 @@ class ReportContoller extends Controller
         foreach ($ChecksList as $key => $value) {
             $html = $this->drawDigarm($value);
             echo $html;
-            // $fileNameDiagram = $this->genrateDompdf($html, 'le');
-            // $mpdf->setSourceFile($fileNameDiagram);
+            //     $fileNameDiagram = $this->genrateDompdf($html, 'le');
+            //     $mpdf->setSourceFile($fileNameDiagram);
 
-            // $pageCount = $mpdf->setSourceFile($fileNameDiagram);
-            // for ($i = 1; $i <= $pageCount; $i++) {
+            //     $pageCount = $mpdf->setSourceFile($fileNameDiagram);
+            //     for ($i = 1; $i <= $pageCount; $i++) {
 
-            //     $mpdf->AddPage('L');
-            //     if ($key == 0) {
-            //         $mpdf->WriteHTML('<h3 style="font-size:14px">3.4 VSCP Preparation</h2>');
+            //         $mpdf->AddPage('L');
+            //         if ($key == 0) {
+            //             $mpdf->WriteHTML('<h3 style="font-size:14px">3.4 VSCP Preparation</h2>');
+            //         }
+            //         $templateId = $mpdf->importPage($i);
+            //         $mpdf->useTemplate($templateId, 0, 5, null, null);
             //     }
-            //     $templateId = $mpdf->importPage($i);
-            //     $mpdf->useTemplate($templateId, 0, 5, null, null);
-            // }
-            // $mpdf->AddPage('L');
-            // $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks']]));
-            // unlink( $fileNameDiagram );
+            //     $mpdf->AddPage('L');
+            //     $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks']]));
+            //    unlink( $fileNameDiagram );
 
         }
-
-exit();
+        exit();
         $mpdf->AddPage('P');
         $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
         $mpdf->AddPage('L');
@@ -483,7 +481,7 @@ exit();
             $filePath = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult1'];
             if (file_exists($filePath) && @$projectDetail['leb1LaboratoryResult1']) {
                 $attachmentCount++;
-                $titleHtml = '<h2 style="text-align:center;font_size:12px;" id="lebResult">Attachment ' . $attachmentCount . ' Leb Result1 for leb1</h2>';
+                $titleHtml = '<h2 style="text-align:center;font_size:12px;" id="lebResult">Attachment ' . $attachmentCount . ' Lab Result1 for leb1</h2>';
                 $this->mergePdf($filePath, $titleHtml, $mpdf);
             }
         }
@@ -525,12 +523,13 @@ exit();
         }
         foreach ($attechments as $value) {
 
-            $titleattach = '<h2 style="text-align:center;font-size:12px;">Attachment ' . $attachmentCount . " " . $value['heading'] . '</h2>';
 
             $filePath = public_path('images/attachment') . "/" . $projectDetail['id'] . "/" . $value['documents'];
             if (file_exists($filePath) && @$value['documents']) {
                 $fileExtension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
                 $attachmentCount++;
+                $titleattach = '<h2 style="text-align:center;font-size:12px;">Attachment ' . $attachmentCount . " " . $value['heading'] . '</h2>';
+
                 if ($fileExtension === 'pdf') {
                     $this->mergePdf($filePath, $titleattach, $mpdf);
                 } elseif (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
@@ -568,9 +567,11 @@ exit();
         $dompdf->loadHtml($html);
         if (@$page) {
             $dompdf->setPaper('A4', 'landscape');
+            $dompdf->set_option('isPhpEnabled', true);
         } else {
 
             $dompdf->setPaper('A4', 'portrait');
+            $dompdf->set_option('isPhpEnabled', true);
         }
         $dompdf->render();
         $mainContentPdf = $dompdf->output();
@@ -592,120 +593,113 @@ exit();
 
             list($width, $height) = getimagesize($imagePath);
             $html .= '<div style="margin-top:25%">';
-
             $html .= '<div class="image-container" id="imgc' . $i . '" style="position: relative; display: inline-block; width:100%;">';
             $image_width  = 1024;
 
             if ($width > 1000) {
                 $image_height = ($image_width * $height) / $width;
-                $html.='<svg width="'.$image_width.'" height="'.$image_height.'" style="position: absolute;">';
 
                 $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px" />';
             } else {
                 $image_height = $height;
-                $html.='<svg width="'.$image_width.'" height="'.$image_height.'" style="position: absolute;">';
-
                 $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
             }
             // dump( $image_height);
-            $html .= $newImage;
+            $html .=  $newImage;
+            $html .= '<div style="position:absolute;top:0px;">';
+            $html .= '<svg width="' . $image_width . '" height="500" xmlns="http://www.w3.org/2000/svg" version="1.1" style="position:absolute">';
             $k = 1;
             $oddTop = 0;
             $evenTop = 0;
+            $flag = 0;
+            $lineheight = 0;
 
             foreach ($decks['checks'] as $key => $value) {
                 $top = $value->position_top;
                 $left = $value->position_left;
 
-                $explode = explode("#", $value['name']);
-                $tooltipText = ($value['type'] == 'sample' ? 's' : 'v') . $explode[1] . "<br/>";
-                $hazmatCount = count($value['check_hazmats']); // Get the total number of elements
-
-                foreach ($value['check_hazmats'] as $index => $hazmet) {
-                    $tooltipText .= '<span style="font-size:10px;color:' . $hazmet->hazmat->color . '">' . $hazmet->hazmat->short_name . '</span>';
-
-                    // Append a comma if it's not the last element
-                    if ($index < $hazmatCount - 1) {
-                        $tooltipText .= ',';
-                    }
-                }
 
 
                 $k++;
+
                 if ($width > 1000) {
+
                     $topshow = ($image_width * $top) / $width;
                     $leftshow = ($image_width * $left) / $width;
                 } else {
                     $topshow = $top;
                     $leftshow = $left;
                 }
-                $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;
-                    width: 1px;
-                    height: 1px;
-                    border: 2px solid #BF0A30;
-                    background: #BF0A30;
-                    border-radius: 50%;
-                    text-align: center;
-                    line-height: 20px;"></div>';
+                $html .= '<circle cx="' . $leftshow . '" cy="' . $topshow . '"    r="2" fill="#BF0A30" stroke="#BF0A30" />';
+                $explode = explode("#", $value['name']);
+                $tooltipText = ($value['type'] == 'sample' ? 's' : 'v') . $explode[1];
 
-
-
+             
+                $tooltipWidth = strlen($tooltipText) * 3;
                 if ($k % 2 == 1) {
+                    //below
+                    $flag++;
                     if (abs($oddTop - $topshow) < 50) {
-                        $gap = 10 * $k;
+                        $gap = 12 * $k;
+                        $x2 = $leftshow + $gap;
+                        $y2 = $topshow +  100;
+                        $rectx = $x2 -  10;
+                        $html .= '<line x1="' . $leftshow . '" y1="' . $topshow . '" x2="' . $leftshow . '" y2="' . $y2 . '" style="stroke:red;stroke-width:1" />';
+                        // if ($flag == 1) {
+                        //     $html .= '<line x1="' . $leftshow . '" y1="' . $topshow . '" x2="' . $x2 . '" y2="' . $y2 . '" style="stroke:red;stroke-width:1" />';
+                        // } else if ($flag == 2) {
+
+                        //     $html .= '<line x1="' . $leftshow . '" y1="' . $topshow . '" x2="' . $x2 . '" y2="' . $y2 . '" style="stroke:red;stroke-width:1" />';
+                        // } else {
+                        //     $html .= '<line x1="' . $leftshow . '" y1="' . $topshow . '" x2="' . $x2 . '" y2="' . $y2 . '" style="stroke:red;stroke-width:1" />';
+                        // }
+                     /*   $html .= ' <rect x="' . $rectx . '" y="' . $y2 . '" width="20" height="20" 
+                        style="stroke-width:3;stroke:rgb(0,0,0);
+                        stroke-opacity:0.5;opacity:0.5"></rect>';*/
+
+                       
                     } else {
-                        $gap = 10;
+                        $flag = 0;
+                        $gap = 12 ;
+                        $x2 = $leftshow + $gap;
+                        $rectx = $x2 - 50;
+                        $y2 = $topshow + 180;
+                        
+                    //     $html .= '<line x1="' . $leftshow . '" y1="' . $topshow . '" x2="' . $x2 . '" y2="' . $y2 . '" style="stroke:blue;stroke-width:1" />';
+                    //     $rectx = $x2 - 10;
+                    //     $html .= ' <rect x="' . $rectx . '" y="' . $y2 . '" width="20" height="20" 
+                    //    style="stroke-width:3;stroke:rgb(0,0,0);
+                    //    stroke-opacity:0.5;opacity:0.5"> </rect>';
                     }
-
-                    $lineTopPosition = "-" . $gap . "px";
-
-                    $lineHeight = ($topshow + $gap) . "px";
-                    $lineLeftPosition =  ($leftshow + 2) . "px";
-                    $tooltipStart = ($topshow + $gap) - $topshow;
-
-                    $html .= '<span class="tooltip" style="position: absolute;
-                        background-color: #fff;
-                        border: 1px solid #BF0A30;
-                        padding: 1px;
-                        border-radius: 5px;
-                        white-space: nowrap;
-                        z-index: 1; 
-                        color:#BF0A30;font-size:10px;';
-                    $tooltipwidth = ($leftshow + 2);
-                    $html .= 'top:' . "-" . ($gap + 26) . 'px; left:' . ($tooltipwidth - 12) . 'px';
-                    $html .= '">' . $tooltipText . '</span>';
-                    $html .= '<span class="line" style="position: absolute;background-color: #BF0A30;top:' . $lineTopPosition  . ';left:' . $lineLeftPosition . ';height:' . $lineHeight . ';width:1px;"></span>';
-
                     $oddTop = $topshow;
                 } else {
+                    //above
                     if (abs($evenTop - $topshow) < 50) {
-                        $gap = 15 * $k;
+
+                        $gap = 5 * $k;
+                        $y2 = $topshow - 100;
+                        $rectx = $leftshow - 10;
+                        $recty = $topshow - 99;
+                         // $html .= '<line x1="'.$leftshow.'" y1="'.$topshow.'" x2="'.$leftshow.'" y2="'.$y2.'" style="stroke:red;stroke-width:1" />';
+                      /* $html.=' <rect x="'.$rectx.'" y="'.$recty.'" width="20" height="20" 
+                       style="stroke-width:3;stroke:rgb(0,0,0);
+                       stroke-opacity:0.5;opacity:0.5"> </rect>';*/
                     } else {
-                        $gap = 15;
+                        $gap = 7 * $k;
+
+                        $x2 = $leftshow - $gap;
+                        $y2 = $topshow - 100;
+                        $rectx = $x2 - 10;
+
+                       //  $html .= '<line x1="'.$leftshow.'" y1="'.$topshow.'" x2="'.$x2.'" y2="'.$y2.'" style="stroke:red;stroke-width:1" />';
+                   /*   $html.=' <rect x="'.$rectx.'" y="'.$y2.'" width="20" height="20" 
+                      style="stroke-width:3;stroke:rgb(0,0,0);
+                      stroke-opacity:0.5;opacity:0.5"> </rect>';*/
                     }
-                    $lineTopPosition =   $topshow . "px";
-
-                    $lineHeight = ($image_height - $topshow + $gap) . "px";
-                    $lineLeftPosition =  ($leftshow + 2) . "px";
-                    $html .= '<span class="tooltip" style="position: absolute;
-                        background-color: #fff;
-                        border: 1px solid #BF0A30;
-                        padding: 1px;
-                        border-radius: 5px;
-                        white-space: nowrap;
-                        z-index: 1; 
-                        color:#BF0A30;font-size:10px;';
-                    $tooltipwidth = ($leftshow + 2);
-
-                    $html .= 'top:' . ($image_height + $gap) . 'px; left:' . ($tooltipwidth - 12) . 'px';
-                    $html .= '">' . $tooltipText . '</span>';
-
-                    $html .= '<span class="line" style="position: absolute;background-color: #BF0A30;top:' . $lineTopPosition  . ';left:' . $lineLeftPosition . ';height:' . $lineHeight . ';width:1px;">' . $k . '</span>';
-
                     $evenTop = $topshow;
                 }
             }
-
+            $html .= '</svg>';
             $html .= '</div>';
             $html .= '</div>';
             $html .= '</div>';

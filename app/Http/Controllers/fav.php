@@ -118,8 +118,8 @@ class ReportContoller extends Controller
                 'jpeg_quality' => 75, // Set the JPEG quality (0-100)
                 'shrink_tables_to_fit' => 1, // Shrink tables to fit the page width
                 'tempDir' => __DIR__ . '/tmp', // Set a temporary directory for mPDF
-    
-    
+
+
                 'allow_output_buffering' => true,
             ]);
             $mpdf->defaultPageNumStyle = '1';
@@ -167,10 +167,10 @@ class ReportContoller extends Controller
                     $html = $this->drawDigarm($value);
                     $fileNameDiagram = $this->genrateDompdf($html, 'le');
                     $mpdf->setSourceFile($fileNameDiagram);
-    
+
                     $pageCount = $mpdf->setSourceFile($fileNameDiagram);
                     for ($i = 1; $i <= $pageCount; $i++) {
-    
+
                         $mpdf->AddPage('L');
                         if ($key == 0) {
                             $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h2><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
@@ -178,7 +178,6 @@ class ReportContoller extends Controller
                         $templateId = $mpdf->importPage($i);
                         $mpdf->useTemplate($templateId, 0, 5, null, null);
                     }
-
                 }
             }
             return response()->make($mpdf->Output('summeryReport.pdf', 'D'), 200, [
@@ -236,12 +235,12 @@ class ReportContoller extends Controller
             ->where('project_id', $project_id)
             ->get();
 
-            $decks = Deck::with(['checks' => function ($query) {
-                $query->whereHas('check_hazmats', function ($query) {
-                    $query->where('type', 'PCHM')->orWhere('type', 'Contained');
-                });
-            }])->where('project_id', $project_id)->get();
-        $ChecksListImage = Checks::with(['check_image','labResults'])->where('project_id', $project_id)->get();
+        $decks = Deck::with(['checks' => function ($query) {
+            $query->whereHas('check_hazmats', function ($query) {
+                $query->where('type', 'PCHM')->orWhere('type', 'Contained');
+            });
+        }])->where('project_id', $project_id)->get();
+        $ChecksListImage = Checks::with(['check_image', 'labResults'])->where('project_id', $project_id)->get();
 
         $sampleImage = $ChecksListImage->filter(function ($item) {
             return $item->type == 'sample';
@@ -373,14 +372,14 @@ class ReportContoller extends Controller
                 $pageCount = $mpdf->setSourceFile($fileNameDiagram);
                 for ($i = 1; $i <= $pageCount; $i++) {
 
-                    $mpdf->AddPage('L');
+                    $mpdf->AddPage('P');
                     if ($key == 0) {
                         $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h2><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
                     }
                     $templateId = $mpdf->importPage($i);
                     $mpdf->useTemplate($templateId, 0, 5, null, null);
                 }
-                unlink( $fileNameDiagram );
+                unlink($fileNameDiagram);
             }
         }
         $mpdf->AddPage('p');
@@ -392,27 +391,25 @@ class ReportContoller extends Controller
 
         foreach ($ChecksList as $key => $value) {
             $html = $this->drawDigarm($value);
-            echo $html;
-            // $fileNameDiagram = $this->genrateDompdf($html, 'le');
-            // $mpdf->setSourceFile($fileNameDiagram);
+          //  echo $html;
+            $fileNameDiagram = $this->genrateDompdf($html, 'le');
+            $mpdf->setSourceFile($fileNameDiagram);
 
-            // $pageCount = $mpdf->setSourceFile($fileNameDiagram);
-            // for ($i = 1; $i <= $pageCount; $i++) {
+            $pageCount = $mpdf->setSourceFile($fileNameDiagram);
+            for ($i = 1; $i <= $pageCount; $i++) {
 
-            //     $mpdf->AddPage('L');
-            //     if ($key == 0) {
-            //         $mpdf->WriteHTML('<h3 style="font-size:14px">3.4 VSCP Preparation</h2>');
-            //     }
-            //     $templateId = $mpdf->importPage($i);
-            //     $mpdf->useTemplate($templateId, 0, 5, null, null);
-            // }
-            // $mpdf->AddPage('L');
-            // $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks']]));
-            // unlink( $fileNameDiagram );
-
+                $mpdf->AddPage('L');
+                if ($key == 0) {
+                    $mpdf->WriteHTML('<h3 style="font-size:14px">3.4 VSCP Preparation</h2>');
+                }
+                $templateId = $mpdf->importPage($i);
+                $mpdf->useTemplate($templateId, 0, 5, null, null);
+            }
+            $mpdf->AddPage('L');
+            $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks']]));
+            unlink($fileNameDiagram);
         }
-
-exit();
+       // exit();
         $mpdf->AddPage('P');
         $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
         $mpdf->AddPage('L');
@@ -567,7 +564,7 @@ exit();
 
         $dompdf->loadHtml($html);
         if (@$page) {
-            $dompdf->setPaper('A4', 'landscape');
+            $dompdf->setPaper('A4', 'lendscape');
         } else {
 
             $dompdf->setPaper('A4', 'portrait');
@@ -598,12 +595,12 @@ exit();
 
             if ($width > 1000) {
                 $image_height = ($image_width * $height) / $width;
-                $html.='<svg width="'.$image_width.'" height="'.$image_height.'" style="position: absolute;">';
+                $html .= '<svg width="' . $image_width . '" height="' . $image_height . '" style="position: absolute;">';
 
                 $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px" />';
             } else {
                 $image_height = $height;
-                $html.='<svg width="'.$image_width.'" height="'.$image_height.'" style="position: absolute;">';
+                $html .= '<svg width="' . $image_width . '" height="' . $image_height . '" style="position: absolute;">';
 
                 $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
             }
@@ -612,7 +609,21 @@ exit();
             $k = 1;
             $oddTop = 0;
             $evenTop = 0;
+            $grouping = 0;
 
+
+            $lastOne = 0;
+            $lastTwo = 0;
+            $lastThree = 0;
+
+            $oddlastOne = 0;
+            $oddlastTwo = 0;
+            $oddlastThree = 0;
+
+
+            $oddrouping = 0;
+
+         
             foreach ($decks['checks'] as $key => $value) {
                 $top = $value->position_top;
                 $left = $value->position_left;
@@ -642,65 +653,169 @@ exit();
                 $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;
                     width: 1px;
                     height: 1px;
-                    border: 2px solid #BF0A30;
-                    background: #BF0A30;
+                    border: 2px solid #4052d6;
+                    background: #4052d6;
                     border-radius: 50%;
                     text-align: center;
-                    line-height: 20px;"></div>';
+                    "></div>';
 
 
 
                 if ($k % 2 == 1) {
+                    $oddrouping++;
                     if (abs($oddTop - $topshow) < 50) {
-                        $gap = 10 * $k;
-                    } else {
-                        $gap = 10;
-                    }
+                        $lineHeight = $topshow + $grouping;
+                        $tooltipTop = $lineHeight;
+                        $lineLeftPosition =  ($leftshow+ 2) . "px";
+                        $lineTopPosition = $grouping;
 
-                    $lineTopPosition = "-" . $gap . "px";
+                        if ($oddrouping % 3 == 0) {
 
-                    $lineHeight = ($topshow + $gap) . "px";
-                    $lineLeftPosition =  ($leftshow + 2) . "px";
-                    $tooltipStart = ($topshow + $gap) - $topshow;
+                            if (abs($oddlastOne - $tooltipTop) < 50) {
+                                $lineHeight = $topshow + $grouping + 30;
+                                $lineTopPosition = $grouping - 50;
+                            }else{
+                                $lineHeight = $topshow + $grouping + 30;
+                                $lineTopPosition = $grouping - 50;
+                            }
+                            $oddlastOne =   $lineTopPosition;
+                            $html .= '<span class="line" style="position: absolute;background-color: #4052d6;top:' . $lineTopPosition  . 'px;left:' . $lineLeftPosition . ';height:' . $lineHeight . 'px;width:1px;"></span>';
 
-                    $html .= '<span class="tooltip" style="position: absolute;
-                        background-color: #fff;
-                        border: 1px solid #BF0A30;
-                        padding: 1px;
-                        border-radius: 5px;
-                        white-space: nowrap;
-                        z-index: 1; 
-                        color:#BF0A30;font-size:10px;';
-                    $tooltipwidth = ($leftshow + 2);
-                    $html .= 'top:' . "-" . ($gap + 26) . 'px; left:' . ($tooltipwidth - 12) . 'px';
-                    $html .= '">' . $tooltipText . '</span>';
-                    $html .= '<span class="line" style="position: absolute;background-color: #BF0A30;top:' . $lineTopPosition  . ';left:' . $lineLeftPosition . ';height:' . $lineHeight . ';width:1px;"></span>';
+                            $html .= '<span class="tooltip" style="position: absolute;
+                            background-color: #fff;
+                            border: 1px solid #4052d6;
+                            padding: 4px;
+                            border-radius: 5px;
+                            white-space: nowrap;
+                            z-index: 1; 
+                            color:#4052d6;font-size:10px;';
+                            $tooltipwidth = ($leftshow + 2);
+    
+                            $html .= 'top:' . ($lineTopPosition) . 'px; left:' . ($tooltipwidth - 25) . 'px';
+                            $html .= '">' . $tooltipText . '</span>';
+                        }
+                        if ($oddrouping % 3 == 1) {
+
+
+                            if (abs($oddlastTwo - $tooltipTop) > 50) {
+                                $lineHeight = $topshow + $grouping + 190;
+                                $lineTopPosition =  $grouping - 170 ;
+
+                            }
+                            $oddlastTwo =   $lineTopPosition;
+                            $html .= '<span class="line" style="position: absolute;background-color: #4052d6;top:' . $lineTopPosition  . 'px;left:' . $lineLeftPosition . ';height:' . $lineHeight . 'px;width:1px;"></span>';
+
+                            $html .= '<span class="tooltip" style="position: absolute;
+                            background-color: #fff;
+                            border: 1px solid #4052d6;
+                            padding: 2px;
+                            border-radius: 5px;
+                            white-space: nowrap;
+                            z-index: 1; 
+                            color:#4052d6;font-size:10px;';
+                            $tooltipwidth = ($leftshow + 2);
+    
+                            $html .= 'top:' . ($lineTopPosition) . 'px; left:' . ($tooltipwidth - 25) . 'px';
+                            $html .= '">' . $tooltipText . '</span>';
+                        }
+                        if ($oddrouping % 3 == 2) {
+                            $lineHeight = $topshow + $grouping;
+                            $tooltipTop = $topshow +  $lineHeight;
+                            if (abs($oddlastThree - $tooltipTop) < 50) {
+                                $lineHeight = $topshow + $grouping + 180;
+                                $lineTopPosition =  $grouping - 200 ;
+                            }else{
+                                $lineHeight = $topshow + $grouping + 180;
+                                $lineTopPosition =  $grouping - 200 ;
+                            }
+                            $oddlastThree =   $lineTopPosition;
+                            $html .= '<span class="line" style="position: absolute;background-color: #4052d6;top:' . $lineTopPosition  . 'px;left:' . $lineLeftPosition . ';height:' . $lineHeight . 'px;width:1px;"></span>';
+
+                            $html .= '<span class="tooltip" style="position: absolute;
+                            background-color: #fff;
+                            border: 1px solid #4052d6;
+                            padding: 4px;
+                            border-radius: 5px;
+                            white-space: nowrap;
+                            z-index: 1; 
+                            color:#4052d6;font-size:10px;';
+                            $tooltipwidth = ($leftshow + 2);
+    
+                            $html .= 'top:' . ($lineTopPosition) . 'px; left:' . ($tooltipwidth - 25) . 'px';
+                            $html .= '">' . $tooltipText . '</span>';
+                        }
+                       
+                    } 
+
+
+
+
+
 
                     $oddTop = $topshow;
                 } else {
+                    $grouping++;
                     if (abs($evenTop - $topshow) < 50) {
-                        $gap = 15 * $k;
-                    } else {
-                        $gap = 15;
-                    }
-                    $lineTopPosition =   $topshow . "px";
+                        $lineHeight = $image_height - $topshow + $grouping;
+                        $tooltipTop = $topshow +  $lineHeight;
+                        $lineLeftPosition =  ($leftshow) . "px";
 
-                    $lineHeight = ($image_height - $topshow + $gap) . "px";
-                    $lineLeftPosition =  ($leftshow + 2) . "px";
-                    $html .= '<span class="tooltip" style="position: absolute;
+                        if ($grouping % 3 == 0) {
+
+                            if (abs($lastOne - $tooltipTop) > 50) {
+                                $lineHeight = $image_height - $topshow + $grouping + 50;
+                                $tooltipTop = $topshow +  $lineHeight;
+                            }
+                            $lastOne =   $tooltipTop;
+                        }
+                        if ($grouping % 3 == 1) {
+
+
+                            if (abs($lastTwo - $tooltipTop) > 50) {
+                                $lineHeight = $image_height - $topshow + $grouping + 110;
+                                $tooltipTop = $topshow +  $lineHeight;
+                            }
+                            $lastTwo =   $tooltipTop;
+                        }
+                        if ($grouping % 3 == 2) {
+                            $lineHeight = $image_height - $topshow + $grouping;
+                            $tooltipTop = $topshow +  $lineHeight;
+                            if (abs($lastThree - $tooltipTop) > 50) {
+                                $lineHeight = $image_height - $topshow + $grouping + 160;
+                                $tooltipTop = $topshow +  $lineHeight;
+                            }
+                            $lastThree =   $tooltipTop;
+                        }
+                        $html .= '<span class="line" style="position: absolute;background-color: #4052d6;top:' . $topshow  . ';left:' . $lineLeftPosition . ';height:' . $lineHeight . 'px;width:1px;"></span>';
+
+                        $html .= '<span class="tooltip" style="position: absolute;
                         background-color: #fff;
-                        border: 1px solid #BF0A30;
-                        padding: 1px;
+                        border: 1px solid #4052d6;
+                        padding: 4px;
                         border-radius: 5px;
                         white-space: nowrap;
                         z-index: 1; 
-                        color:#BF0A30;font-size:10px;';
-                    $tooltipwidth = ($leftshow + 2);
+                        color:#4052d6;font-size:10px;';
+                        $tooltipwidth = ($leftshow + 2);
 
-                    $html .= 'top:' . ($image_height + $gap) . 'px; left:' . ($tooltipwidth - 12) . 'px';
-                    $html .= '">' . $tooltipText . '</span>';
+                        $html .= 'top:' . $tooltipTop . 'px; left:' . ($tooltipwidth - 25) . 'px';
+                        $html .= '">' . $tooltipText . '</span>';
+                    } else {
+                        // $html .= '<span class="line" style="position: absolute;background-color: #4052d6;top:' . $topshow  . ';left:' . $leftshow . ';height:' . $image_height . 'px;width:1px;"></span>';
+                        // $html .= '<span class="tooltip" style="position: absolute;
+                        // background-color: #fff;
+                        // border: 1px solid #4052d6;
+                        // padding: 4px;
+                        // border-radius: 5px;
+                        // white-space: nowrap;
+                        // z-index: 1; 
+                        // color:#4052d6;font-size:10px;';
+                        // $tooltipwidth = ($leftshow + 2);
+                        // $tooltipTop = $topshow +  $image_height;
 
-                    $html .= '<span class="line" style="position: absolute;background-color: #BF0A30;top:' . $lineTopPosition  . ';left:' . $lineLeftPosition . ';height:' . $lineHeight . ';width:1px;">' . $k . '</span>';
+                        // $html .= 'top:' . $tooltipTop . 'px; left:' . ($tooltipwidth - 25) . 'px';
+                        // $html .= '">' . $tooltipText . '</span>';
+                    }
 
                     $evenTop = $topshow;
                 }
