@@ -465,6 +465,7 @@
             <tbody>
 
                 @php
+
                 $ex_boiler = @$foundItems['Transformer']['component']??[];
                 $json_boiler = @$foundItems['Transformer']['make']?? [];
 
@@ -516,7 +517,9 @@
                         <td>Thermometers, sensors, indicators</td>
                     </tr>
                     @php
-                    $extraField = json_decode($foundItems['Transformer']['extraField'], true);
+                    $transfomerValue = @$foundItems['Transformer']['extraField']??[];
+
+                    $extraField = json_decode($transfomerValue, true);
                     @endphp
 
                     @if(is_array($extraField))
