@@ -395,7 +395,7 @@ class ReportContoller extends Controller
 
         foreach ($ChecksList as $key => $value) {
             $html = $this->drawDigarm($value);
-            echo $html;
+            //  echo $html;
             $fileNameDiagram = $this->genrateDompdf($html, 'le');
 
             $mpdf->setSourceFile($fileNameDiagram);
@@ -417,7 +417,7 @@ class ReportContoller extends Controller
             unlink($fileNameDiagram);
         }
 
-        exit();
+        // exit();
         $mpdf->AddPage('P');
         $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
         $mpdf->AddPage('L');
@@ -606,54 +606,13 @@ class ReportContoller extends Controller
                 list($width, $height) = getimagesize($imagePath);
 
                 if ($height >= $width) {
+                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:40%;top:10%;position:absolute;'>";
+                } else {
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
-                    $html .= '<div style="margin-top:20%">';
-                    $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
-                    $html .= '<div class="image-container " id="imgc' . $i . '" style="position: relative;">';
-                    $html .= $newImage;
-                    foreach ($chunk as $key => $value) {
-                        $center++;
-                        $top = $value['position_top'];
-                        $left = $value['position_left'];
-
-                        $explode = explode("#", $value['name']);
-                        $tooltipText = ($value['type'] == 'sample' ? 's' : 'v') . $explode[1] . "<br/>";
-                        if (@$value['check_hazmats']) {
-                            $hazmatCount = count($value['check_hazmats']); // Get the total number of elements
-                            foreach ($value['check_hazmats'] as $index => $hazmet) {
-                                $tooltipText .= '<span style="font-size:8px;color:' . $hazmet['hazmat']['color']   . '">' . $hazmet['hazmat']['short_name'] . '</span>';
-                                if ($index < $hazmatCount - 1) {
-                                    $tooltipText .= ',';
-                                }
-                            }
-                        }
-                        if ($center % 2 == 0) {
-                            $lineWidth = $left + 50;
-                            $tooltipLeft = $left + $lineWidth;
-                            $html .= '<div class="dot" style="top:' . $top . 'px; left:' . $left . 'px; position: absolute;border: 2px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
-                            $html .= '<span class="line" style="position: absolute;background-color: #2B35AF;top:' . $top + 1  . ';right:' . $left . 'px;width:' . $lineWidth . 'px;height:1px;"></span>';
-
-                            $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $top . 'px; right:' . ($tooltipLeft) . 'px">' . $tooltipText . '</span>';
-
-                        } else {
-                            $lineWidth = $left + 50;
-                            $tooltipLeft = $left + $lineWidth;
-                            $html .= '<div class="dot" style="top:' . $top . 'px; left:' . $left . 'px; position: absolute;border: 2px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
-                            $html .= '<span class="line" style="position: absolute;background-color: #2B35AF;top:' . $top + 1  . ';left:' . $left . 'px;width:' . $lineWidth . 'px;height:1px;"></span>';
-
-                            $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $top . 'px; left:' . ($tooltipLeft) . 'px">' . $tooltipText . '</span>';
-
-                        }
-                    }
-                    $html .= '</div>';
-                    $html .= '</div>';
-                    $html .= '</div>';
-                    return $html;
                 }
 
 
 
-                $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
                 $html .= '<div style="margin-top:20%">';
 
                 $html .= '<div class="image-container " id="imgc' . $i . '" style="position: relative;">';
@@ -664,10 +623,14 @@ class ReportContoller extends Controller
 
                     $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px;" />';
                 } else {
-
-                    $image_height = $height;
-
-                    $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
+                    if ($height >= 600) {
+                        $image_height = 450;
+                        $image_width = ($image_height * $width) / $height;
+                        $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"  style="width:' . $image_width . 'px;"/>';
+                    } else {
+                        $image_height = $height;
+                        $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
+                    }
                 }
                 // dump( $image_height);
                 $html .= $newImage;
@@ -698,7 +661,7 @@ class ReportContoller extends Controller
                         }
                     }
                     $k++;
-                    if ($width > 1000) {
+                    if ($width > 1000 || $height >= 600) {
                         $topshow = ($image_width * $top) / $width;
                         $leftshow = ($image_width * $left) / $width;
                     } else {

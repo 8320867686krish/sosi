@@ -166,6 +166,7 @@ class ReportContoller extends Controller
                 if (count($value['checks']) > 0) {
                     $html = $this->drawDigarm($value);
                     $fileNameDiagram = $this->genrateDompdf($html, 'le');
+                    //    $mpdf = new Mpdf(['orientation' => 'L']); // Ensure landscape mode
                     $mpdf->setSourceFile($fileNameDiagram);
 
                     $pageCount = $mpdf->setSourceFile($fileNameDiagram);
@@ -176,7 +177,9 @@ class ReportContoller extends Controller
                             $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h2><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
                         }
                         $templateId = $mpdf->importPage($i);
-                        $mpdf->useTemplate($templateId, 0, 5, null, null);
+                        $mpdf->useTemplate($templateId, 0, 0, 1000, 500); // Use the template with appropriate dimensions
+
+                        //  $mpdf->useTemplate($templateId, 0, 5, null, null);
                     }
                 }
             }
@@ -231,7 +234,7 @@ class ReportContoller extends Controller
 
         $attechments = Attechments::where('project_id', $project_id)->where('attachment_type', '!=', 'shipBrifPlan')->get();
         $brifPlan = Attechments::where('project_id', $project_id)->where('attachment_type', '=', 'shipBrifPlan')->first();
-        $ChecksList = Deck::with(['checks.check_hazmats'])
+        $ChecksList = Deck::with(['checks.check_hazmats.hazmat'])
             ->where('project_id', $project_id)
             ->get();
 
@@ -364,25 +367,25 @@ class ReportContoller extends Controller
         $mpdf->AddPage('L'); // Set landscape mode for the inventory page
 
         $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
-        // foreach ($decks as $key => $value) {
-        //     if (count($value['checks']) > 0) {
-        //         $html = $this->drawDigarm($value);
-        //         $fileNameDiagram = $this->genrateDompdf($html, 'le');
-        //         $mpdf->setSourceFile($fileNameDiagram);
+        foreach ($decks as $key => $value) {
+            if (count($value['checks']) > 0) {
+                $html = $this->drawDigarm($value);
+                $fileNameDiagram = $this->genrateDompdf($html, null);
+                $mpdf->setSourceFile($fileNameDiagram);
 
-        //         $pageCount = $mpdf->setSourceFile($fileNameDiagram);
-        //         for ($i = 1; $i <= $pageCount; $i++) {
+                $pageCount = $mpdf->setSourceFile($fileNameDiagram);
+                for ($i = 1; $i <= $pageCount; $i++) {
 
-        //             $mpdf->AddPage('L');
-        //             if ($key == 0) {
-        //                 $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h2><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
-        //             }
-        //             $templateId = $mpdf->importPage($i);
-        //             $mpdf->useTemplate($templateId, 0, 5, null, null);
-        //         }
-        //         unlink($fileNameDiagram);
-        //     }
-        // }
+                    $mpdf->AddPage('P');
+                    if ($key == 0) {
+                        $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h3><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
+                    }
+                    $templateId = $mpdf->importPage($i);
+                    $mpdf->useTemplate($templateId, 0, 5, null, null);
+                }
+                unlink($fileNameDiagram);
+            }
+        }
         $mpdf->AddPage('p');
         if ($projectDetail['ihm_table'] == 'IHM Part 1') {
             $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechmentsResult', 'foundItems')));
@@ -394,17 +397,20 @@ class ReportContoller extends Controller
             $html = $this->drawDigarm($value);
             echo $html;
             $fileNameDiagram = $this->genrateDompdf($html, 'le');
+
             $mpdf->setSourceFile($fileNameDiagram);
 
             $pageCount = $mpdf->setSourceFile($fileNameDiagram);
             for ($i = 1; $i <= $pageCount; $i++) {
 
-                $mpdf->AddPage('P');
+                $mpdf->AddPage('L');
                 if ($key == 0) {
-                    $mpdf->WriteHTML('<h3 style="font-size:14px">3.4 VSCP Preparation</h2>');
+                    $mpdf->WriteHTML('<h3 style="font-size:14px">3.4 VSCP Preparation.' . $mpdf->w . '</h3>');
                 }
                 $templateId = $mpdf->importPage($i);
-                $mpdf->useTemplate($templateId, 0, 5, null, null);
+                //$mpdf->useTemplate($templateId, 0, 0, null, null);
+                $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
+
             }
             $mpdf->AddPage('L');
             $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks']]));
@@ -566,7 +572,7 @@ class ReportContoller extends Controller
 
         $dompdf->loadHtml($html);
         if (@$page) {
-            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->setPaper('A4', 'landscape');
         } else {
 
             $dompdf->setPaper('A4', 'portrait');
@@ -579,107 +585,132 @@ class ReportContoller extends Controller
         file_put_contents($filePath, $mainContentPdf);
         return $filePath;
     }
+
     public function drawDigarm($decks)
     {
         $i = 1;
         $html = "";
-
+        $lineCss = 'position:absolute;background-color:#4052d6;width:1px;';
+        $tooltipCss = 'position: absolute;background-color: #fff;border: 1px solid #4052d6;padding: 1px;border-radius: 2px;
+                white-space: nowrap;z-index: 1;color:#4052d6;font-size:8px;text-align:center;';
         if (count($decks['checks']) > 0) {
-            $imagePath = $decks['image'];
-            $imageData = base64_encode(file_get_contents($imagePath));
-            $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
-            list($width, $height) = getimagesize($imagePath);
-            $lineCss1 = 'position: absolute;background-color: #BF0A30;';
-            $tooltipCss1 = 'position: absolute;background-color: #fff;border: 1px solid #BF0A30;padding: 2px;border-radius: 5px;
-            white-space: nowrap;z-index: 1;color:#BF0A30;font-size:10px;';
+            $chunks = array_chunk($decks['checks']->toArray(), 15);
+            $k = 0;
+            $center = 0;
+            $gap = 1;
+            $increaseGap = 30;
+            foreach ($chunks as $chunkIndex => $chunk) {
+                $imagePath = $decks['image'];
+                $imageData = base64_encode(file_get_contents($imagePath));
+                $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
+                list($width, $height) = getimagesize($imagePath);
 
-            if ($width < 600) {
-                $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column;'>";
-                 $html .= "<div class='image-container' style=' position: relative;
-            display: inline-block;
-            margin: 20px;'><img src=" . $imageBase64 . " />";
-                 
-                foreach ($decks['checks'] as $key => $value) {
-                    $top1 = $value->position_top;
-                    $left1 = $value->position_left;
-                    $explode = explode("#", $value['name']);
-                    $tooltipText = ($value['type'] == 'sample' ? 's' : 'v') . $explode[1] . "<br/>";
-                    $hazmatCount = count($value['check_hazmats']); // Get the total number of elements
+                if ($height >= $width) {
+                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
+                    $html .= '<div style="margin-top:20%">';
+                    $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
+                    $html .= '<div class="image-container " id="imgc' . $i . '" style="position: relative;">';
+                    $html .= $newImage;
 
-                    foreach ($value['check_hazmats'] as $index => $hazmet) {
-                        $tooltipText .= '<span style="font-size:10px;color:' . $hazmet->hazmat->color . '">' . $hazmet->hazmat->short_name . '</span>';
 
-                        // Append a comma if it's not the last element
-                        if ($index < $hazmatCount - 1) {
-                            $tooltipText .= ',';
+                    $centerevenarray = [];
+                    $centerevenarrayTop = [];
+                    $centersameLocationevenarray = [];
+                    $centersameLocationoddarray = [];
+
+                    $centeroddarrayLeft = [];
+                    $centeroddarrayTop = [];
+
+                    foreach ($chunk as $key => $value) {
+                        $center++;
+                        $top = $value['position_top'];
+                        $left = $value['position_left'];
+
+                        $explode = explode("#", $value['name']);
+                        $tooltipText = ($value['type'] == 'sample' ? 's' : 'v') . $explode[1] . "<br/>";
+                        if (@$value['check_hazmats']) {
+                            $hazmatCount = count($value['check_hazmats']); // Get the total number of elements
+                            foreach ($value['check_hazmats'] as $index => $hazmet) {
+                                $tooltipText .= '<span style="font-size:8px;color:' . $hazmet['hazmat']['color']   . '">' . $hazmet['hazmat']['short_name'] . '</span>';
+                                if ($index < $hazmatCount - 1) {
+                                    $tooltipText .= ',';
+                                }
+                            }
+                        }
+                        $lineWidth = $left + 50;
+                        $tooltipLeft = $left + $lineWidth;
+                        if ($center % 2 == 0) {
+                           
+                            $html .= '<div class="dot" style="top:' . $top . 'px; left:' . $left . 'px; position: absolute;border: 2px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
+                            $html .= '<span class="line" style="position: absolute;background-color: #2B35AF;top:' . $top + 1  . ';right:' . $left . 'px;width:' . $lineWidth . 'px;height:1px;"></span>';
+
+                            $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $top . 'px; right:' . ($tooltipLeft) . 'px">' . $tooltipText . '</span>';
+
+                            $centeoddarrayLeft[$value['id']] =  $left;
+                            $centeroddarrayTop[$value['id']] =  $top;
+                        } else {
+                          
+                            $html .= '<div class="dot" style="top:' . $top . 'px; left:' . $left . 'px; position: absolute;border: 2px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
+                            $html .= '<span class="line" style="position: absolute;background-color: #2B35AF;top:' . $top + 1  . ';left:' . $left . 'px;width:' . $lineWidth . 'px;height:1px;"></span>';
+
+                            $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $top . 'px; left:' . ($tooltipLeft) . 'px">' . $tooltipText . '</span>';
+
+                            $evenarrayLeft[$value['id']] = $left;
+                            $evenarrayTop[$value['id']] =  $top;
                         }
                     }
-                    if (abs($left1 < $width / 2)) {
-                // $lineWidth = $width - $left + 50;
-                // $tooltipLeft = $width + 50;
-                // $html .= '<div class="dot" style="top:' . $top . 'px; left:' . $left . 'px; position: absolute;border: 2px solid #BF0A30;background: #BF0A30;border-radius: 50%;"></div>';
-                // $html .= '<span class="line" style="position: absolute;background-color: #BF0A30;top:' . $top+1  . ';left:' . $left . 'px;width:'.$lineWidth.'px;height:1px;' . $lineCss1 . '"></span>';
-                // $html .= '<span class="tooltip" style="' . $tooltipCss1 . 'top:' . $top . 'px; left:' . $tooltipLeft . 'px">' . $tooltipText . '</span></div>';
-                    }else{
-                        $lineWidth = $left1 + 50;
-                        $tooltipLeft = $width + 50;
-                        $html .= '<div class="dot" style="top:' . $top1 . 'px; left:' . $left1 . 'px; position: absolute;border: 2px solid #BF0A30;background: #BF0A30;border-radius: 50%;"></div>';
-                        $html .= '<span class="line" style="position: absolute;background-color: #BF0A30;top:' . $top1+1  . ';left:' . $left1 . 'px;width:'.$lineWidth.'px;height:1px;' . $lineCss1 . '"></span>';
-                         $html .= '<span class="tooltip" style="' . $tooltipCss1 . 'top:' . $top1 . 'px; left:' . $tooltipLeft . 'px">' . $tooltipText . '</span></div>';
-                        $html.='</div>';
-                    }
-               
+                    $html .= '</div>';
+                    $html .= '</div>';
+                    $html .= '</div>';
+                    return $html;
                 }
-                $html .= '</div>';
-                $html .= '</div>';
-            } else {
+
+
 
                 $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
+                $html .= '<div style="margin-top:20%">';
 
-
-                $html .= '<div style="margin-top:25%">';
-
-                $html .= '<div class="image-container" id="imgc' . $i . '" style="position: relative; display: inline-block; width:100%;">';
+                $html .= '<div class="image-container " id="imgc' . $i . '" style="position: relative;">';
                 $image_width  = 1024;
 
                 if ($width > 1000) {
                     $image_height = ($image_width * $height) / $width;
 
-                    $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px" />';
+                    $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px;" />';
                 } else {
+
                     $image_height = $height;
 
                     $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
                 }
                 // dump( $image_height);
                 $html .= $newImage;
-                $k = 1;
-                $gap = 5;
-                $increaseGap = 30;
-                $evenarray = [];
-                $oddarray = [];
-                $lineCss = 'position: absolute;background-color: #BF0A30;width:1px;';
-                $tooltipCss = 'position: absolute;background-color: #fff;border: 1px solid #BF0A30;padding: 2px;border-radius: 5px;
-                        white-space: nowrap;z-index: 1;color:#BF0A30;font-size:10px;';
 
-                foreach ($decks['checks'] as $key => $value) {
-                    $top = $value->position_top;
-                    $left = $value->position_left;
+                $evenarrayLeft = [];
+                $evenarrayTop = [];
+                $sameLocationevenarray = [];
+                $sameLocationoddarray = [];
+
+                $oddarrayLeft = [];
+                $oddarrayTop = [];
+
+
+
+                foreach ($chunk as $key => $value) {
+                    $top = $value['position_top'];
+                    $left = $value['position_left'];
 
                     $explode = explode("#", $value['name']);
                     $tooltipText = ($value['type'] == 'sample' ? 's' : 'v') . $explode[1] . "<br/>";
-                    $hazmatCount = count($value['check_hazmats']); // Get the total number of elements
-
-                    foreach ($value['check_hazmats'] as $index => $hazmet) {
-                        $tooltipText .= '<span style="font-size:10px;color:' . $hazmet->hazmat->color . '">' . $hazmet->hazmat->short_name . '</span>';
-
-                        // Append a comma if it's not the last element
-                        if ($index < $hazmatCount - 1) {
-                            $tooltipText .= ',';
+                    if (@$value['check_hazmats']) {
+                        $hazmatCount = count($value['check_hazmats']); // Get the total number of elements
+                        foreach ($value['check_hazmats'] as $index => $hazmet) {
+                            $tooltipText .= '<span style="font-size:8px;color:' . $hazmet['hazmat']['color']   . '">' . $hazmet['hazmat']['short_name'] . '</span>';
+                            if ($index < $hazmatCount - 1) {
+                                $tooltipText .= ',';
+                            }
                         }
                     }
-
-
                     $k++;
                     if ($width > 1000) {
                         $topshow = ($image_width * $top) / $width;
@@ -693,41 +724,66 @@ class ReportContoller extends Controller
                     if ($k % 2 == 1) {
                         $lineTopPosition = "-" . $gap;
                         $lineHeight = ($topshow + $gap);
-                        $tooltipStart = $lineTopPosition - 28;
-                        foreach ($oddarray as $value) {
-                            if (abs($lineLeftPosition - $value) < 100) {
-
-
+                        $tooltipStart = $lineTopPosition - $increaseGap;
+                        $oddsameLocation = 0;
+                        foreach ($oddarrayLeft as $key => $oddvalue) {
+                            if (abs($lineLeftPosition - $oddvalue) < 100 && abs($topshow - $oddarrayTop[$key]) < 100) {
+                                $oddsameLocation++;
                                 $tooltipStart = $tooltipStart - $increaseGap;
-                                $lineTopPosition = $lineTopPosition -  $increaseGap;
-                                $lineHeight = $lineHeight +  $increaseGap;
+                                $lineHeight = $lineHeight + $increaseGap;
+                                $lineTopPosition = $lineTopPosition - $increaseGap;
                             }
                         }
-                        $oddarray[] =  $lineLeftPosition;
+                        if ($oddsameLocation > 1) {
+                            foreach ($sameLocationoddarray as $sameLocationoddValue) {
+                                if ($sameLocationoddValue == $tooltipStart) {
+                                    $tooltipStart = $tooltipStart - $increaseGap;
+                                    $lineHeight =  $topshow +  abs($tooltipStart);
+                                    $lineTopPosition = $tooltipStart;
+                                }
+                            }
+                            $sameLocationoddarray[] = $tooltipStart;
+                        }
+                        $oddarrayLeft[$value['id']] =  $lineLeftPosition;
+                        $oddarrayTop[$value['id']] =  $topshow;
                     } else {
-                        $lineTopPosition =   $topshow . "px";
+                        $lineTopPosition =   $topshow;
                         $lineHeight = ($image_height - $topshow + $gap);
                         $tooltipStart = $image_height + $gap;
-                        foreach ($evenarray as $value) {
-                            if (abs($lineLeftPosition - $value) < 100) {
+                        $sameLocation = 0;
+                        foreach ($evenarrayLeft as $key => $evenvalue) {
+                            if (abs($lineLeftPosition - $evenvalue) < 100 && abs($topshow - $evenarrayTop[$key]) < 100) {
+                                $sameLocation++;
                                 $tooltipStart = $tooltipStart +  $increaseGap;
                                 $lineHeight = $lineHeight +  $increaseGap;
                             }
                         }
-                        $evenarray[] = $lineLeftPosition;
+                        if ($sameLocation > 1) {
+                            foreach ($sameLocationevenarray as $sameLocationValue) {
+                                if ($sameLocationValue == $tooltipStart) {
+                                    $tooltipStart = $tooltipStart +  $increaseGap;
+                                    $lineHeight = $lineHeight +  $increaseGap;
+                                }
+                            }
+                            $sameLocationevenarray[] = $tooltipStart;
+                        }
+                        $evenarrayLeft[$value['id']] = $lineLeftPosition;
+                        $evenarrayTop[$value['id']] =  $topshow;
                     }
-                    $html .= '<div class="text" style="position:static;top:' . $topshow . 'px;left:' . $leftshow . 'px;"><div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 2px solid #BF0A30;background: #BF0A30;border-radius: 50%;"></div>';
+                    $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 2px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
 
-                    $html .= '<span class="line" style="position: absolute;background-color: #BF0A30;top:' . $lineTopPosition  . ';left:' . $lineLeftPosition . 'px;height:' . $lineHeight . 'px;' . $lineCss . '"></span>';
+                    $html .= '<span class="line" style="top:' . $lineTopPosition  . 'px;left:' . $lineLeftPosition . 'px;height:' . $lineHeight . 'px;' . $lineCss . '"></span>';
 
 
-                    $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $tooltipStart . 'px; left:' . ($lineLeftPosition - 12) . 'px">' . $tooltipText . '</span></div>';
+                    $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $tooltipStart . 'px; left:' . ($lineLeftPosition - 15) . 'px">' . $tooltipText . '</span>';
                 }
+
                 $html .= '</div>';
                 $html .= '</div>';
                 $html .= '</div>';
 
                 $i++; // Increment the counter for the next image ID
+
             }
         }
 
