@@ -204,7 +204,7 @@
 
                         @php
                         $ex_boiler = @$foundItems['Incinerator']['component'] ?? [];
-                        $json_boiler = @$foundItems['Incinerator']['make'];
+                        $json_boiler = @$foundItems['Incinerator']['make'] ?? [];
 
                         @endphp
                         <tr>
