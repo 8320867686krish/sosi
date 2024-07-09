@@ -195,16 +195,15 @@ class ReportContoller extends Controller
 
     public function genratePdf(Request $request)
     {
-
-        $pdfFiles = [];
+        try {
         $post = $request->input();
         $project_id = $post['project_id'];
         $version = $post['version'];
         $date = date('d-m-Y', strtotime($post['date']));
         $projectDetail = Projects::with('client')->find($project_id);
-        if ($post['action'] == 'summery') {
-            $this->summeryReport($post);
-        }
+        // if ($post['action'] == 'summery') {
+        //     $this->summeryReport($post);
+        // }
         $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
             $query->where('project_id', $project_id);
         }])->withCount(['checkHasHazmatsSample as sample_count' => function ($query) use ($project_id) {
@@ -421,24 +420,24 @@ class ReportContoller extends Controller
         $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
 
         $mpdf->WriteHTML(view('report.riskAssessments'));
-        $sampleImageChunks = $sampleImage->chunk(50);
-        foreach ($sampleImageChunks as $index => $chunk) {
-            if ($index == 0) {
-                $show = true;
-            } else {
-                $show = false;
-            }
-            $title = "Sample Records";
+        // $sampleImageChunks = $sampleImage->chunk(50);
+        // foreach ($sampleImageChunks as $index => $chunk) {
+        //     if ($index == 0) {
+        //         $show = true;
+        //     } else {
+        //         $show = false;
+        //     }
+        //     $title = "Sample Records";
 
-            $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
-            $mpdf->WriteHTML($html);
-        }
-        $sampleImageChunks = $visualImage->chunk(50);
-        foreach ($sampleImageChunks as $index => $chunk) {
-            $title = "Visual Records";
-            $html = view('report.sampleImage', compact('chunk', 'title'))->render();
-            $mpdf->WriteHTML($html);
-        }
+        //     $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
+        //     $mpdf->WriteHTML($html);
+        // }
+        // $sampleImageChunks = $visualImage->chunk(50);
+        // foreach ($sampleImageChunks as $index => $chunk) {
+        //     $title = "Visual Records";
+        //     $html = view('report.sampleImage', compact('chunk', 'title'))->render();
+        //     $mpdf->WriteHTML($html);
+        // }
 
 
         $titleattach = '<h2 style="text-align:center">Appendix-4 Supporting Documents/plans from Ship</h2>';
@@ -540,10 +539,25 @@ class ReportContoller extends Controller
                 }
             }
         }
-        return response()->make($mpdf->Output('project_report.pdf', 'D'), 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="project_report.pdf"'
-        ]);
+        $pdfContent = $mpdf->Output('', 'S');
+       $filePath = public_path('pdfs/filename.pdf'); // Adjust the directory and file name as needed
+
+    // Output the PDF to the file path
+    $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
+
+    // Return the PDF content with a custom header
+    return response(['filePath'=>$filePath],200);
+        // ->header('Content-Type', 'application/pdf')
+        // ->header('Content-Disposition', 'attachment; filename="project_report.pdf"')
+        // ->header('X-Ajax-Download', 'true');
+    } catch (\Exception $e) {
+        // Handle exception
+        return response()->json(['error' => 'Failed to generate PDF: ' . $e->getMessage()], 500);
+    }
+        // return response()->make($mpdf->Output('project_report.pdf', 'D'), 200, [
+        //     'Content-Type' => 'application/pdf',
+        //     'Content-Disposition' => 'attachment; filename="project_report.pdf"'
+        // ]);
     }
 
 

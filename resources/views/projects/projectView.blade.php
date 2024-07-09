@@ -495,7 +495,7 @@
             </div>
             <div class="row mt-2">
                 <div class="col-12">
-                    <form method="post" action="{{ url('genratePdf') }}">
+                    <form method="post" action="{{ url('genratePdf') }}" id="genratePdf">
                         @csrf
                         <input type="hidden" name="project_id" value="{{ $project->id }}" />
                         <div class="form-group">
@@ -507,9 +507,9 @@
                                     <input type="date" name="date" class="form-control form-control-lg">
                                 </div>
                                 <div class="col-4">
-                                    <button type="submit" name="action" class="btn btn-primary" value="submit">Full Report</button>
+                                    <button type="button" name="action" class="btn btn-primary fullreport" value="submit">Full Report</button>
                                         @if($project->ihm_table == 'IHM Part 1')
-                                    <button type="submit" name="action" class="btn btn-primary" value="summery" >Summery</button>
+                                    <button type="button" name="action" class="btn btn-primary" value="summery" >Summery</button>
                                     @endif
                                 </div>
                             </div>
@@ -858,7 +858,25 @@
 
     <script>
         let rotationState = 0;
+        $('.fullreport').click(function(){
+            let formData = new FormData($("#genratePdf")[0]);
 
+                $.ajax({
+                    url: "{{ url('genratePdf') }}",
+                    type: 'POST',
+                    data: formData,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        console.log(response);
+                        let filePath = response.filePath; // Adjust according to your server response
+            
+            // Triggering the download
+            window.location.href = filePath; // This initiates the download of the PDF
+                    }
+                });
+        });
         function previewFile(input) {
             let file = $("input[type=file]").get(0).files[0];
 
