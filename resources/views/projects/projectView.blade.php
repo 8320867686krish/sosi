@@ -871,6 +871,16 @@
                     success: function(response) {
                         console.log(response);
                         let filePath = response.filePath; // Adjust according to your server response
+                        let downloadLink = document.createElement('a');
+            downloadLink.href = filePath;
+            downloadLink.target = '_blank'; // Open in new tab
+            downloadLink.textContent = 'Click here to download or open the PDF';
+
+            // Append the link to the document body (optional)
+            document.body.appendChild(downloadLink);
+
+            // Simulate click on the link to trigger download or open in new tab
+            downloadLink.click();
             
             // Triggering the download
             window.location.href = filePath; // This initiates the download of the PDF
