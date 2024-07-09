@@ -402,7 +402,9 @@ class ReportContoller extends Controller
             for ($i = 1; $i <= $pageCount; $i++) {
                 $mpdf->AddPage('L');
                 if ($key == 0) {
-                    $mpdf->WriteHTML('<h3 style="font-size:14px">3.4 VSCP Preparation.</h3>');
+                    $heading = '<h3 style="font-size:14px">3.4 VSCP Preparation. ' . $mpdf->w . '</h3>';
+
+                    $mpdf->WriteHTML( $heading);
                 }
                 $templateId = $mpdf->importPage($i);
                 $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
@@ -419,24 +421,24 @@ class ReportContoller extends Controller
         $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
 
         $mpdf->WriteHTML(view('report.riskAssessments'));
-        $sampleImageChunks = $sampleImage->chunk(50);
-        foreach ($sampleImageChunks as $index => $chunk) {
-            if ($index == 0) {
-                $show = true;
-            } else {
-                $show = false;
-            }
-            $title = "Sample Records";
+        // $sampleImageChunks = $sampleImage->chunk(50);
+        // foreach ($sampleImageChunks as $index => $chunk) {
+        //     if ($index == 0) {
+        //         $show = true;
+        //     } else {
+        //         $show = false;
+        //     }
+        //     $title = "Sample Records";
 
-            $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
-            $mpdf->WriteHTML($html);
-        }
-        $sampleImageChunks = $visualImage->chunk(50);
-        foreach ($sampleImageChunks as $index => $chunk) {
-            $title = "Visual Records";
-            $html = view('report.sampleImage', compact('chunk', 'title'))->render();
-            $mpdf->WriteHTML($html);
-        }
+        //     $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
+        //     $mpdf->WriteHTML($html);
+        // }
+        // $sampleImageChunks = $visualImage->chunk(50);
+        // foreach ($sampleImageChunks as $index => $chunk) {
+        //     $title = "Visual Records";
+        //     $html = view('report.sampleImage', compact('chunk', 'title'))->render();
+        //     $mpdf->WriteHTML($html);
+        // }
 
 
         $titleattach = '<h2 style="text-align:center">Appendix-4 Supporting Documents/plans from Ship</h2>';
@@ -585,14 +587,21 @@ class ReportContoller extends Controller
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
 
                 } else {
-                    $leftPosition = (1024 - $width) / 2; // Replace 800 with the container width
+                    if ($height >= 600) {
+                        $image_height = 450;
+                        $image_width = ($image_height * $width) / $height;
+                    }else{
+                        $image_width = $width;
+                    }
+                    $leftPositionPixels = (1024 - $image_width) / 2;
+                    $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
 
-                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:40%;top:10%;position:absolute;'>";
+                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:{$leftPositionPercent}%;top:0%;position:absolute;width: 100%; height: 100%'>";
 
                 }
                 $html .= '<div style="margin-top:20%">';
 
-                $html .= '<div class="image-container " id="imgc' . $i . '" style="position: relative;">';
+                $html .= '<div class="image-container " id="imgc' . $i . '" style="position: relative;width: 100%">';
                 $image_width  = 1024;
 
                 if ($width > 1000) {
