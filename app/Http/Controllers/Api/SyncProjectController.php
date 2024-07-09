@@ -72,8 +72,9 @@ class SyncProjectController extends Controller
     {
         $projectId = $request->input('projectId');
         $user = Auth::user();
-        $currentUserRoleLevel = $user->roles->first()->level;
-        $client_id = Projects::select('client_id')->find($projectId);
+       // $currentUserRoleLevel = $user->roles->first()->level;
+       // $client_id = Projects::select('client_id')->find($projectId);
+       // $client = Client::find($client_id)->toArray();
         $decks = Deck::where('project_id', $projectId)->get();
         $checks = Checks::with(['hazmats' => function ($query) {
             $query->with('hazmat:id,name');
