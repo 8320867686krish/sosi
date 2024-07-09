@@ -581,7 +581,7 @@ class ReportContoller extends Controller
                 $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
                 list($width, $height) = getimagesize($imagePath);
 
-                if ($width >= $height) {
+                if ($width >= 1000) {
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
 
                 } else {
