@@ -1798,7 +1798,7 @@ $('#summery, #fullreport').click(function() {
                             text: response.message,
                             timer: 4000
                         });
-
+alert("ggggg");
                         $('#checkimagePreviewContainer').empty();
                         $('#checkImageAddForm')[0].reset();
                         $submitButton.html(originalText);
