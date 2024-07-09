@@ -587,7 +587,7 @@ class ReportContoller extends Controller
                 } else {
                     $leftPosition = (1024 - $width) / 2; // Replace 800 with the container width
 
-                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:'.$leftPosition.'px;top:10%;position:absolute;'>";
+                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:40%;top:10%;position:absolute;'>";
 
                 }
                 $html .= '<div style="margin-top:20%">';
