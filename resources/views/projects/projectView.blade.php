@@ -1708,7 +1708,7 @@ $('#summery, #fullreport').click(function() {
                 $("#checkImageAddFromCheck_id").val(checkId);
                 $("#checkImageAddForm").find("#project_id").val(projectId);
                 $('#checkImageListPreview').empty(); // Clear previous previews
-                $("#checkimagePreviewContainer").empty();
+                $("#checkimagePreviewContainer").html('');
 
                 $.ajax({
                     type: 'GET',
@@ -1731,7 +1731,7 @@ $('#summery, #fullreport').click(function() {
 
             $('#checkImages').on('change', function(event) {
                 const files = Array.from(event.target.files);
-                $('#checkimagePreviewContainer').empty(); // Clear previous previews
+                $('#checkimagePreviewContainer').html(''); // Clear previous previews
                 selectedFiles = files; // Update selectedFiles array
 
                 files.forEach((file, index) => {
@@ -1799,7 +1799,7 @@ $('#summery, #fullreport').click(function() {
                             text: response.message,
                             timer: 4000
                         });
-                        $('#checkimagePreviewContainer').empty();
+                        $('#checkimagePreviewContainer').html('');
                         $('#checkImageAddForm')[0].reset();
                         $submitButton.html(originalText);
                         $submitButton.prop('disabled', false);
@@ -1818,7 +1818,7 @@ $('#summery, #fullreport').click(function() {
             });
 
             $("#checkDataImageCloseBtn").click(function() {
-                $('#checkimagePreviewContainer').empty();
+                $('#checkimagePreviewContainer').html('');
                 $('#checkImageAddForm')[0].reset();
             });
 
