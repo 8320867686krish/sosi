@@ -1707,8 +1707,8 @@ $('#summery, #fullreport').click(function() {
                 let projectId = $(this).attr('data-projectId');
                 $("#checkImageAddFromCheck_id").val(checkId);
                 $("#checkImageAddForm").find("#project_id").val(projectId);
-                $('#checkimagePreviewContainer').empty(); // Clear previous previews
-                
+                $('#checkImageListPreview').empty(); // Clear previous previews
+                $("#checkimagePreviewContainer").empty();
 
                 $.ajax({
                     type: 'GET',
