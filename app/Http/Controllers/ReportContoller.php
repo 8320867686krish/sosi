@@ -421,24 +421,24 @@ class ReportContoller extends Controller
         $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
 
         $mpdf->WriteHTML(view('report.riskAssessments'));
-        // $sampleImageChunks = $sampleImage->chunk(50);
-        // foreach ($sampleImageChunks as $index => $chunk) {
-        //     if ($index == 0) {
-        //         $show = true;
-        //     } else {
-        //         $show = false;
-        //     }
-        //     $title = "Sample Records";
+        $sampleImageChunks = $sampleImage->chunk(50);
+        foreach ($sampleImageChunks as $index => $chunk) {
+            if ($index == 0) {
+                $show = true;
+            } else {
+                $show = false;
+            }
+            $title = "Sample Records";
 
-        //     $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
-        //     $mpdf->WriteHTML($html);
-        // }
-        // $sampleImageChunks = $visualImage->chunk(50);
-        // foreach ($sampleImageChunks as $index => $chunk) {
-        //     $title = "Visual Records";
-        //     $html = view('report.sampleImage', compact('chunk', 'title'))->render();
-        //     $mpdf->WriteHTML($html);
-        // }
+            $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
+            $mpdf->WriteHTML($html);
+        }
+        $sampleImageChunks = $visualImage->chunk(50);
+        foreach ($sampleImageChunks as $index => $chunk) {
+            $title = "Visual Records";
+            $html = view('report.sampleImage', compact('chunk', 'title'))->render();
+            $mpdf->WriteHTML($html);
+        }
 
 
         $titleattach = '<h2 style="text-align:center">Appendix-4 Supporting Documents/plans from Ship</h2>';
@@ -457,9 +457,9 @@ class ReportContoller extends Controller
 
                     if (file_exists($filePath)) {
                         if ($i == 1) {
-                            //   $this->mergePdf($filePath, $titleattach, $mpdf);
+                               $this->mergePdf($filePath, $titleattach, $mpdf);
                         } else {
-                            // $this->mergePdf($filePath, null, $mpdf);
+                             $this->mergePdf($filePath, null, $mpdf);
                         }
                     }
                 }
@@ -596,7 +596,7 @@ class ReportContoller extends Controller
                     $leftPositionPixels = (1024 - $image_width) / 2;
                     $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
 
-                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:{$leftPositionPercent}%;top:0%;position:absolute;'>";
+                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:{$leftPositionPercent}%;top:5%;position:absolute;'>";
 
                 }
                 $html .= '<div style="margin-top:20%">';
