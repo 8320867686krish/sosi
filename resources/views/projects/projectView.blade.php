@@ -1742,7 +1742,7 @@ $('#summery, #fullreport').click(function() {
                             "<a href='javascript:;' class='ml-2 delete'>" +
                             "<i class='fas fa-trash-alt text-danger' style='font-size: 1rem;'></i>" +
                             "</a>" +
-                            "</div>").appendTo("#checkimagePreviewContainer");
+                            "</div>").html("#checkimagePreviewContainer");
                     }
                     reader.readAsDataURL(file);
                 });
