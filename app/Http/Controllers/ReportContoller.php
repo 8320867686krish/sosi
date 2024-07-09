@@ -352,6 +352,7 @@ class ReportContoller extends Controller
         $mpdf->TOCpagebreakByArray([
             'links' => true,
             'toc-preHTML' => '',
+            'font-size'=>'5',
             'toc-bookmarkText' => 'Table of Contents',
             'level' => 0,
             'page-break-inside' => 'avoid',
@@ -581,7 +582,7 @@ class ReportContoller extends Controller
                 $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
                 list($width, $height) = getimagesize($imagePath);
 
-                if ($height >= $width) {
+                if ($width >= $height) {
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:40%;top:10%;position:absolute;'>";
                 } else {
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
