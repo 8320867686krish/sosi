@@ -402,7 +402,7 @@ class ReportContoller extends Controller
             for ($i = 1; $i <= $pageCount; $i++) {
                 $mpdf->AddPage('L');
                 if ($key == 0) {
-                    $heading = '<h3 style="font-size:14px">3.4 VSCP Preparation. ' . $mpdf->w . '</h3>';
+                    $heading = '<h3 style="font-size:14px">3.4 VSCP Preparation.</h3>';
 
                     $mpdf->WriteHTML( $heading);
                 }
@@ -596,7 +596,7 @@ class ReportContoller extends Controller
                     $leftPositionPixels = (1024 - $image_width) / 2;
                     $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
 
-                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:{$leftPositionPercent}%;top:0%;position:absolute;width: 100%; height: 100%'>";
+                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:{$leftPositionPercent}%;top:0%;position:absolute;'>";
 
                 }
                 $html .= '<div style="margin-top:20%">';
