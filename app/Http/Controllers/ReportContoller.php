@@ -546,7 +546,7 @@ class ReportContoller extends Controller
     $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
 
     // Return the PDF content with a custom header
-    return response(['filePath'=>$filePath],200);
+    return response(['filePath'=>asset('pdfs/filename.pdf')],200);
         // ->header('Content-Type', 'application/pdf')
         // ->header('Content-Disposition', 'attachment; filename="project_report.pdf"')
         // ->header('X-Ajax-Download', 'true');
