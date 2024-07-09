@@ -22,7 +22,7 @@ class MakeModel extends Model
     {
         return [
             'name' => $value,
-            'path' => env('APP_URL') . "/images/modelDocument/{$value}",
+            'path' => env('ASSET_URL') . "/images/modelDocument/{$value}",
         ];
     }
 
@@ -30,7 +30,7 @@ class MakeModel extends Model
     {
         return [
             'name' => $value,
-            'path' => env('APP_URL') . "/images/modelDocument/{$value}",
+            'path' => env('ASSET_URL') . "/images/modelDocument/{$value}",
         ];
     }
 }
