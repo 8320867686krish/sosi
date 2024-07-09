@@ -1707,7 +1707,8 @@ $('#summery, #fullreport').click(function() {
                 let projectId = $(this).attr('data-projectId');
                 $("#checkImageAddFromCheck_id").val(checkId);
                 $("#checkImageAddForm").find("#project_id").val(projectId);
-                $('#checkImageListPreview').empty(); // Clear previous previews
+                $('#checkimagePreviewContainer').empty(); // Clear previous previews
+                
 
                 $.ajax({
                     type: 'GET',
@@ -1798,7 +1799,6 @@ $('#summery, #fullreport').click(function() {
                             text: response.message,
                             timer: 4000
                         });
-alert("ggggg");
                         $('#checkimagePreviewContainer').empty();
                         $('#checkImageAddForm')[0].reset();
                         $submitButton.html(originalText);
