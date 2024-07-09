@@ -495,7 +495,7 @@
             </div>
             <div class="row mt-2">
                 <div class="col-12">
-                    <form method="post" action="{{ url('genratePdf') }}" id="genratePdf">
+                    <form method="post" action="{{ url('genratePdf') }}" id="generatePdfForm">
                         @csrf
                         <input type="hidden" name="project_id" value="{{ $project->id }}" />
                         <div class="form-group">
@@ -507,7 +507,7 @@
                                     <input type="date" name="date" class="form-control form-control-lg">
                                 </div>
                                 <div class="col-4">
-                                    <button type="button" name="action" class="btn btn-primary fullreport" value="submit">Full Report</button>
+                                    <button type="submit" name="action" class="btn btn-primary fullreport" value="submit">Full Report</button>
                                         @if($project->ihm_table == 'IHM Part 1')
                                     <button type="button" name="action" class="btn btn-primary" value="summery" >Summery</button>
                                     @endif
@@ -858,42 +858,61 @@
 
     <script>
         let rotationState = 0;
-        $('.fullreport').click(function(){
-            let formData = new FormData($("#genratePdf")[0]);
+      
+     
 
-                $.ajax({
-                    url: "{{ url('genratePdf') }}",
-                    type: 'POST',
-                    data: formData,
-                    dataType: 'json',
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        const blob = new Blob([response], { type: 'application/pdf' });
+            $('#generatePdfForm').submit(function(event) {
+        event.preventDefault(); // Prevent default form submission
 
-// Create a temporary URL for the blob object
-const blobUrl = URL.createObjectURL(blob);
+        let $submitButton = $(this).find('button[type="submit"]');
+        let originalText = $submitButton.html();
 
-// Create a link element
-const downloadLink = document.createElement('a');
-downloadLink.href = blobUrl;
-downloadLink.download = 'filename.pdf'; // Set the default filename for download
-downloadLink.textContent = 'Click here to download the PDF';
+        // Show loading spinner and disable the submit button
+        $('#loadingSpinner').show();
+        $submitButton.text('Wait...');
+        $submitButton.prop('disabled', true);
 
-// Append the link to the document body (optional)
-document.body.appendChild(downloadLink);
+        let formData = new FormData(this);
 
-// Simulate click on the link to trigger download
-downloadLink.click();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            xhrFields: {
+                responseType: 'blob' // Important
+            },
+            success: function(response) {
+                // Create a Blob from the response
+                let blob = new Blob([response], { type: 'application/pdf' });
+                let url = URL.createObjectURL(blob);
 
-// Clean up: Remove the temporary URL and link element
-URL.revokeObjectURL(blobUrl);
-document.body.removeChild(downloadLink);
-            
-            // Triggering the download
-         //   window.location.href = filePath; // This initiates the download of the PDF
-                    }
-                });
+                // Create a link element and trigger a download
+                let a = document.createElement('a');
+                a.href = url;
+                a.download = 'filename.pdf'; // Set the file name
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                // Hide loading spinner and re-enable the submit button
+                $('#loadingSpinner').hide();
+                $submitButton.text(originalText);
+                $submitButton.prop('disabled', false);
+
+                // Revoke the object URL after the download
+                URL.revokeObjectURL(url);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                // Handle errors or show an error message
+                $('#loadingSpinner').hide();
+                $submitButton.text(originalText);
+                $submitButton.prop('disabled', false);
+            }
+        
+    });
         });
         function previewFile(input) {
             let file = $("input[type=file]").get(0).files[0];

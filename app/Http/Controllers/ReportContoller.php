@@ -195,7 +195,8 @@ class ReportContoller extends Controller
 
     public function genratePdf(Request $request)
     {
-        try {
+
+        $pdfFiles = [];
         $post = $request->input();
         $project_id = $post['project_id'];
         $version = $post['version'];
@@ -539,25 +540,22 @@ class ReportContoller extends Controller
                 }
             }
         }
-        $pdfContent = $mpdf->Output('', 'S');
-       $filePath = public_path('pdfs/filename.pdf'); // Adjust the directory and file name as needed
+        $filePath = tempnam(sys_get_temp_dir(), 'pdf_');
+        $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
+        $fileName = $project_id.'.pdf';
+        $filePath = public_path('pdfs/'.$fileName); // Adjust the directory and file name as needed
+ 
+     // Output the PDF to the file path
+     $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
+ 
+     return response()->download($filePath,$fileName)->deleteFileAfterSend(true);
 
-    // Output the PDF to the file path
-    $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
-
-    // Return the PDF content with a custom header
-    $response = [
-        'success' => true,
-        'filePath' => $filePath, // Send the path to the generated PDF
-    ];
-
-    // Return response as JSON
-    return response()->json($response);
-       
-    } catch (\Exception $e) {
-        // Handle exception
-        return response()->json(['error' => 'Failed to generate PDF: ' . $e->getMessage()], 500);
-    }
+    //    return response()->file($filePath, [
+    //     'Content-Type' => 'application/pdf',
+    //     'Content-Disposition' => 'attachment; filename="filename.pdf"',
+    // ]);
+     // Return response as JSON
+  
         // return response()->make($mpdf->Output('project_report.pdf', 'D'), 200, [
         //     'Content-Type' => 'application/pdf',
         //     'Content-Disposition' => 'attachment; filename="project_report.pdf"'
