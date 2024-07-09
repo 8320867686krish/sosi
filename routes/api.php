@@ -47,6 +47,8 @@ Route::controller(ApiController::class)->group(function () {
         // User Api
         Route::get('refresh_token', 'refreshSanctumToken');
         Route::post('verify/code', 'verifyCode');
+        Route::post('location', 'saveLocation');
+
         Route::get('logout', 'logout');
         Route::post('change_password', 'changePassword');
 

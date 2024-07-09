@@ -183,10 +183,13 @@ class ReportContoller extends Controller
                     }
                 }
             }
-            return response()->make($mpdf->Output('summeryReport.pdf', 'D'), 200, [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'attachment; filename="project_report.pdf"'
-            ]);
+            $fileName = "su".$project_id.'.pdf';
+            $filePath = public_path('pdfs/'.$fileName); // Adjust the directory and file name as needed
+     
+         // Output the PDF to the file path
+         $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
+     
+         return response()->download($filePath,$fileName)->deleteFileAfterSend(true);
         } catch (\Mpdf\MpdfException $e) {
             // Handle mPDF exception
             echo $e->getMessage();
@@ -196,15 +199,15 @@ class ReportContoller extends Controller
     public function genratePdf(Request $request)
     {
 
-        $pdfFiles = [];
+       
         $post = $request->input();
         $project_id = $post['project_id'];
         $version = $post['version'];
         $date = date('d-m-Y', strtotime($post['date']));
         $projectDetail = Projects::with('client')->find($project_id);
-        // if ($post['action'] == 'summery') {
-        //     $this->summeryReport($post);
-        // }
+        if ($post['action'] == 'summery') {
+            $this->summeryReport($post);
+        }
         $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
             $query->where('project_id', $project_id);
         }])->withCount(['checkHasHazmatsSample as sample_count' => function ($query) use ($project_id) {
@@ -540,8 +543,7 @@ class ReportContoller extends Controller
                 }
             }
         }
-        $filePath = tempnam(sys_get_temp_dir(), 'pdf_');
-        $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
+       
         $fileName = $project_id.'.pdf';
         $filePath = public_path('pdfs/'.$fileName); // Adjust the directory and file name as needed
  
@@ -612,7 +614,7 @@ class ReportContoller extends Controller
                     $leftPositionPixels = (1024 - $image_width) / 2;
                     $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
 
-                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:{$leftPositionPercent}%;top:5%;position:absolute;'>";
+                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:{$leftPositionPercent}%;height:100vh;position:absolute;'>";
 
                 }
                 $html .= '<div style="margin-top:20%">';

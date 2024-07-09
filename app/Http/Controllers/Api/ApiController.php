@@ -185,7 +185,21 @@ class ApiController extends Controller
             ]);
         }
     }
+    public function saveLocation(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            $user->update([
+                'location' => $request->location,
+            ]);
+            return response()->json(['isStatus' => true, 'message' => 'address saved successfully.']);
 
+        } catch (ValidationException $e) {
+            return response()->json(['isStatus' => false, 'message' => $e->validator->errors()->first()]);
+        } catch (Throwable $th) {
+            return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
+        }
+    }
     public function changePassword(Request $request)
     {
         try {
@@ -441,7 +455,7 @@ class ApiController extends Controller
                 $suspectedHazmat = explode(',', $request->input('suspected_hazmat'));
                 $logArray = array_map('trim', $suspectedHazmat);
 
-                $hazmatIds = Hazmat::whereIn('name',$logArray)->pluck('id')->toArray();
+                $hazmatIds = Hazmat::whereIn('name', $logArray)->pluck('id')->toArray();
 
                 CheckHasHazmat::where([
                     "project_id" => $inputData['project_id'],
@@ -456,11 +470,10 @@ class ApiController extends Controller
                         "type" => "Unknown",
                         "check_type" => $inputData['type']
                     ];
-                    $checkhasData = CheckHasHazmat::where('hazmat_id',$hazmatId)->where('check_id',$inputData['id'])->first();
-                    if(!@$checkhasData){
+                    $checkhasData = CheckHasHazmat::where('hazmat_id', $hazmatId)->where('check_id', $inputData['id'])->first();
+                    if (!@$checkhasData) {
                         CheckHasHazmat::create($hazmatData);
                     }
-
                 }
             }
 
@@ -501,7 +514,7 @@ class ApiController extends Controller
             $inputData = $request->input();
             $inputData['isApp'] = 1;
             $projectDetail = Projects::find($inputData['project_id']);
-            $lastCheck = Checks::where('project_id',$projectId)->latest()->first();
+            $lastCheck = Checks::where('project_id', $projectId)->latest()->first();
             if (!$lastCheck) {
                 $projectCount = "0";
             } else {

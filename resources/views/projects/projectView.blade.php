@@ -507,9 +507,9 @@
                                     <input type="date" name="date" class="form-control form-control-lg">
                                 </div>
                                 <div class="col-4">
-                                    <button type="submit" name="action" class="btn btn-primary fullreport" value="submit">Full Report</button>
+                                    <button type="submit" name="fullreport" class="btn btn-primary fullreport" value="submit" id="fullreport">Full Report</button>
                                         @if($project->ihm_table == 'IHM Part 1')
-                                    <button type="button" name="action" class="btn btn-primary" value="summery" >Summery</button>
+                                    <button type="submit" name="summery" class="btn btn-primary" value="summery" id="summery">Summery</button>
                                     @endif
                                 </div>
                             </div>
@@ -859,13 +859,21 @@
     <script>
         let rotationState = 0;
       
-     
+        let clickedButton = null;
+
+// Attach click event to both buttons
+$('#summery, #fullreport').click(function() {
+    clickedButton = $(this).attr('id');
+});
+
 
             $('#generatePdfForm').submit(function(event) {
+                console.log(event);
         event.preventDefault(); // Prevent default form submission
 
-        let $submitButton = $(this).find('button[type="submit"]');
+        let $submitButton = $('#' + clickedButton);
         let originalText = $submitButton.html();
+
 
         // Show loading spinner and disable the submit button
         $('#loadingSpinner').show();
@@ -873,6 +881,7 @@
         $submitButton.prop('disabled', true);
 
         let formData = new FormData(this);
+        formData.append('action', clickedButton); // Add action to formData
 
         $.ajax({
             url: $(this).attr('action'),
@@ -891,7 +900,7 @@
                 // Create a link element and trigger a download
                 let a = document.createElement('a');
                 a.href = url;
-                a.download = 'filename.pdf'; // Set the file name
+                a.download = 'su12.pdf'; // Set the file name
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
