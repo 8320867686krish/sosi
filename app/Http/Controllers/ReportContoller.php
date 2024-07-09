@@ -426,24 +426,24 @@ class ReportContoller extends Controller
         $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
 
         $mpdf->WriteHTML(view('report.riskAssessments'));
-        // $sampleImageChunks = $sampleImage->chunk(50);
-        // foreach ($sampleImageChunks as $index => $chunk) {
-        //     if ($index == 0) {
-        //         $show = true;
-        //     } else {
-        //         $show = false;
-        //     }
-        //     $title = "Sample Records";
+        $sampleImageChunks = $sampleImage->chunk(50);
+        foreach ($sampleImageChunks as $index => $chunk) {
+            if ($index == 0) {
+                $show = true;
+            } else {
+                $show = false;
+            }
+            $title = "Sample Records";
 
-        //     $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
-        //     $mpdf->WriteHTML($html);
-        // }
-        // $sampleImageChunks = $visualImage->chunk(50);
-        // foreach ($sampleImageChunks as $index => $chunk) {
-        //     $title = "Visual Records";
-        //     $html = view('report.sampleImage', compact('chunk', 'title'))->render();
-        //     $mpdf->WriteHTML($html);
-        // }
+            $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
+            $mpdf->WriteHTML($html);
+        }
+        $sampleImageChunks = $visualImage->chunk(50);
+        foreach ($sampleImageChunks as $index => $chunk) {
+            $title = "Visual Records";
+            $html = view('report.sampleImage', compact('chunk', 'title'))->render();
+            $mpdf->WriteHTML($html);
+        }
 
 
         $titleattach = '<h2 style="text-align:center">Appendix-4 Supporting Documents/plans from Ship</h2>';
