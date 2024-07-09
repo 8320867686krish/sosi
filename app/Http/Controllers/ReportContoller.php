@@ -546,10 +546,14 @@ class ReportContoller extends Controller
     $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
 
     // Return the PDF content with a custom header
-    return response(['filePath'=>asset('pdfs/filename.pdf')],200);
-        // ->header('Content-Type', 'application/pdf')
-        // ->header('Content-Disposition', 'attachment; filename="project_report.pdf"')
-        // ->header('X-Ajax-Download', 'true');
+    $response = [
+        'success' => true,
+        'filePath' => $filePath, // Send the path to the generated PDF
+    ];
+
+    // Return response as JSON
+    return response()->json($response);
+       
     } catch (\Exception $e) {
         // Handle exception
         return response()->json(['error' => 'Failed to generate PDF: ' . $e->getMessage()], 500);

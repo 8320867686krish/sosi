@@ -869,21 +869,29 @@
                     contentType: false,
                     processData: false,
                     success: function(response) {
-                        console.log(response);
-                        let filePath = response.filePath; // Adjust according to your server response
-                        let downloadLink = document.createElement('a');
-            downloadLink.href = filePath;
-            downloadLink.target = '_blank'; // Open in new tab
-            downloadLink.textContent = 'Click here to download or open the PDF';
+                        const blob = new Blob([response], { type: 'application/pdf' });
 
-            // Append the link to the document body (optional)
-            document.body.appendChild(downloadLink);
+// Create a temporary URL for the blob object
+const blobUrl = URL.createObjectURL(blob);
 
-            // Simulate click on the link to trigger download or open in new tab
-            downloadLink.click();
+// Create a link element
+const downloadLink = document.createElement('a');
+downloadLink.href = blobUrl;
+downloadLink.download = 'filename.pdf'; // Set the default filename for download
+downloadLink.textContent = 'Click here to download the PDF';
+
+// Append the link to the document body (optional)
+document.body.appendChild(downloadLink);
+
+// Simulate click on the link to trigger download
+downloadLink.click();
+
+// Clean up: Remove the temporary URL and link element
+URL.revokeObjectURL(blobUrl);
+document.body.removeChild(downloadLink);
             
             // Triggering the download
-            window.location.href = filePath; // This initiates the download of the PDF
+         //   window.location.href = filePath; // This initiates the download of the PDF
                     }
                 });
         });
