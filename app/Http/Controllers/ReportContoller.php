@@ -402,7 +402,7 @@ class ReportContoller extends Controller
             for ($i = 1; $i <= $pageCount; $i++) {
                 $mpdf->AddPage('L');
                 if ($key == 0) {
-                    $mpdf->WriteHTML('<h3 style="font-size:14px">3.4 VSCP Preparation.' . $mpdf->w . '</h3>');
+                    $mpdf->WriteHTML('<h3 style="font-size:14px">3.4 VSCP Preparation.</h3>');
                 }
                 $templateId = $mpdf->importPage($i);
                 $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
@@ -585,7 +585,9 @@ class ReportContoller extends Controller
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
 
                 } else {
-                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:40%;top:10%;position:absolute;'>";
+                    $leftPosition = (1024 - $width) / 2; // Replace 800 with the container width
+
+                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:'.$leftPosition.'px;top:10%;position:absolute;'>";
 
                 }
                 $html .= '<div style="margin-top:20%">';
