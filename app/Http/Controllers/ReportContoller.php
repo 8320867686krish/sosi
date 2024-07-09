@@ -183,8 +183,8 @@ class ReportContoller extends Controller
                     }
                 }
             }
-            $fileName = "su".$project_id.'.pdf';
-            $filePath = public_path('pdfs/'.$fileName); // Adjust the directory and file name as needed
+            $fileName = $project_id.'.pdf';
+            $filePath = public_path('pdfs1/'.$fileName); // Adjust the directory and file name as needed
      
          // Output the PDF to the file path
          $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
@@ -201,13 +201,15 @@ class ReportContoller extends Controller
 
        
         $post = $request->input();
+      
         $project_id = $post['project_id'];
         $version = $post['version'];
         $date = date('d-m-Y', strtotime($post['date']));
         $projectDetail = Projects::with('client')->find($project_id);
         if ($post['action'] == 'summery') {
-            $this->summeryReport($post);
+         return  $this->summeryReport($post);
         }
+      
         $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
             $query->where('project_id', $project_id);
         }])->withCount(['checkHasHazmatsSample as sample_count' => function ($query) use ($project_id) {

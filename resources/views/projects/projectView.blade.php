@@ -900,7 +900,7 @@ $('#summery, #fullreport').click(function() {
                 // Create a link element and trigger a download
                 let a = document.createElement('a');
                 a.href = url;
-                a.download = 'su12.pdf'; // Set the file name
+                a.download = '12.pdf'; // Set the file name
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
