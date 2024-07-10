@@ -165,6 +165,7 @@ class ReportContoller extends Controller
             foreach ($decks as $key => $value) {
                 if (count($value['checks']) > 0) {
                     $html = $this->drawDigarm($value);
+                    echo $html;
                     $fileNameDiagram = $this->genrateDompdf($html, 'le');
                     //    $mpdf = new Mpdf(['orientation' => 'L']); // Ensure landscape mode
                     $mpdf->setSourceFile($fileNameDiagram);
@@ -183,6 +184,7 @@ class ReportContoller extends Controller
                     }
                 }
             }
+            exit();
             $fileName = $project_id.'.pdf';
             $filePath = public_path('pdfs1/'.$fileName); // Adjust the directory and file name as needed
      
@@ -594,6 +596,7 @@ class ReportContoller extends Controller
                 white-space: nowrap;z-index: 1;color:#4052d6;font-size:8px;text-align:center;';
         if (count($decks['checks']) > 0) {
             $chunks = array_chunk($decks['checks']->toArray(), 15);
+
             $k = 0;
             $gap = 1;
             $increaseGap = 30;
