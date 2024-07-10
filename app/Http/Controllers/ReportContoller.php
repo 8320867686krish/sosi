@@ -403,7 +403,6 @@ class ReportContoller extends Controller
 
         foreach ($ChecksList as $key => $value) {
             $html = $this->drawDigarm($value);
-            echo $html;
             $fileNameDiagram = $this->genrateDompdf($html, 'le');
             $mpdf->setSourceFile($fileNameDiagram);
             $pageCount = $mpdf->setSourceFile($fileNameDiagram);
@@ -422,7 +421,6 @@ class ReportContoller extends Controller
             $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks']]));
             unlink($fileNameDiagram);
         }
-exit();
         $mpdf->AddPage('P');
         $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
         $mpdf->AddPage('L');
