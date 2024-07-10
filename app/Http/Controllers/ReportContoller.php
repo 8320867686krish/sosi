@@ -613,7 +613,7 @@ class ReportContoller extends Controller
                     $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
 
                     // $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:{$leftPositionPercent}%;height:100vh;position:absolute;top:10%'>";
-                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
+                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;width:".$image_width."px;'>";
 
                 }
                 $html .= '<div style="margin-top:20%">';
