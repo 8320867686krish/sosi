@@ -403,8 +403,7 @@ class ReportContoller extends Controller
 
         foreach ($ChecksList as $key => $value) {
             $html = $this->drawDigarm($value);
-           
-
+        //   echo $html;
             $fileNameDiagram = $this->genrateDompdf($html, 'le');
             $mpdf->setSourceFile($fileNameDiagram);
             $pageCount = $mpdf->setSourceFile($fileNameDiagram);
@@ -423,31 +422,31 @@ class ReportContoller extends Controller
             $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks']]));
             unlink($fileNameDiagram);
         }
-     //   exit();
+   //     exit();
         $mpdf->AddPage('P');
         $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
         $mpdf->AddPage('L');
         $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
 
         $mpdf->WriteHTML(view('report.riskAssessments'));
-        $sampleImageChunks = $sampleImage->chunk(50);
-        foreach ($sampleImageChunks as $index => $chunk) {
-            if ($index == 0) {
-                $show = true;
-            } else {
-                $show = false;
-            }
-            $title = "Sample Records";
+        // $sampleImageChunks = $sampleImage->chunk(50);
+        // foreach ($sampleImageChunks as $index => $chunk) {
+        //     if ($index == 0) {
+        //         $show = true;
+        //     } else {
+        //         $show = false;
+        //     }
+        //     $title = "Sample Records";
 
-            $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
-            $mpdf->WriteHTML($html);
-        }
-        $sampleImageChunks = $visualImage->chunk(50);
-        foreach ($sampleImageChunks as $index => $chunk) {
-            $title = "Visual Records";
-            $html = view('report.sampleImage', compact('chunk', 'title'))->render();
-            $mpdf->WriteHTML($html);
-        }
+        //     $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
+        //     $mpdf->WriteHTML($html);
+        // }
+        // $sampleImageChunks = $visualImage->chunk(50);
+        // foreach ($sampleImageChunks as $index => $chunk) {
+        //     $title = "Visual Records";
+        //     $html = view('report.sampleImage', compact('chunk', 'title'))->render();
+        //     $mpdf->WriteHTML($html);
+        // }
 
 
         $titleattach = '<h2 style="text-align:center">Appendix-4 Supporting Documents/plans from Ship</h2>';
@@ -603,7 +602,9 @@ class ReportContoller extends Controller
                 list($width, $height) = getimagesize($imagePath);
 
                 if ($width >= 1000) {
+                    $html.='<div>';
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
+                    $leftPositionPercent = 50;
 
                 } else {
                     if ($height >= 600) {
@@ -615,13 +616,13 @@ class ReportContoller extends Controller
                     $leftPositionPixels = (1024 - $image_width) / 2;
                     $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
 
-                    // $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:{$leftPositionPercent}%;height:100vh;position:absolute;top:10%'>";
-                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;width:100%'>";
+                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column;margin-left:{$leftPositionPercent}%;height:100vh;'>";
+                   
 
                 }
-                $html .= '<div style="margin-top:20%">';
+                $html .= '<div style="margin-top:20%;">';
 
-                $html .= '<div class="image-container " id="imgc' . $i . '" style="position: relative;width: 100%">';
+                $html .= '<div class="image-container " id="imgc' . $i . '" style="position: relative;width: 100%; ">';
                 $image_width  = 1024;
 
                 if ($width > 1000) {
@@ -730,7 +731,7 @@ class ReportContoller extends Controller
 
                     $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $tooltipStart . 'px; left:' . ($lineLeftPosition - 15) . 'px">' . $tooltipText . '</span>';
                 }
-
+                $html .= '</div>';
                 $html .= '</div>';
                 $html .= '</div>';
                 $html .= '</div>';
