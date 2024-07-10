@@ -183,13 +183,18 @@ class ReportContoller extends Controller
                     }
                 }
             }
-            $fileName = $project_id.'.pdf';
+            $fileName = "summery_".$project_id.'.pdf';
             $filePath = public_path('pdfs1/'.$fileName); // Adjust the directory and file name as needed
      
          // Output the PDF to the file path
          $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
      
-         return response()->download($filePath,$fileName)->deleteFileAfterSend(true);
+      //   return response()->download($filePath,$fileName)->deleteFileAfterSend(true);
+         $response = response()->download($filePath, $fileName)->deleteFileAfterSend(true);
+
+         // Add custom header for the file name
+         $response->headers->set('X-File-Name', $fileName);
+    return $response; 
         } catch (\Mpdf\MpdfException $e) {
             // Handle mPDF exception
             echo $e->getMessage();
