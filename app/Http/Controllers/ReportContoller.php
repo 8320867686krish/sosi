@@ -464,12 +464,24 @@ class ReportContoller extends Controller
                 if (@$imageValue) {
                     $i++;
                     $filePath = public_path('images/hazmat') . "/" . $projectDetail['id'] . "/" . $imageValue;
+                    $fileExtension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
 
                     if (file_exists($filePath)) {
                         if ($i == 1) {
-                              // $this->mergePdf($filePath, $titleattach, $mpdf);
+                            if ($fileExtension === 'pdf') {
+                                $this->mergePdf($filePath, $titleattach, $mpdf);
+
+                            }else{
+                                $this->mergeImageToPdf($filePath, $titleattach, $mpdf);
+
+                            }
                         } else {
-                           //  $this->mergePdf($filePath, null, $mpdf);
+                            if ($fileExtension === 'pdf') {
+                             $this->mergePdf($filePath, null, $mpdf);
+                            }else{
+                                $this->mergeImageToPdf($filePath, null, $mpdf);
+
+                            }
                         }
                     }
                 }
@@ -481,8 +493,15 @@ class ReportContoller extends Controller
                 $imageDocValue = basename($checkvalue->imadocge);
                 if (@$imageDocValue) {
                     $filePathDoc = public_path('images/hazmat') . "/" . $projectDetail['id'] . "/" . $imageDocValue;
+                    $fileExtension = strtolower(pathinfo($filePathDoc, PATHINFO_EXTENSION));
+
                     if (file_exists($filePathDoc)) {
-                      //  $this->mergePdf($filePathDoc, null, $mpdf);
+                        if ($fileExtension === 'pdf') {
+                        $this->mergePdf($filePathDoc, null, $mpdf);
+                        }else{
+                            $this->mergeImageToPdf($filePath, null, $mpdf);
+
+                        }
                     }
                 }
             }
