@@ -186,7 +186,7 @@
                 </div>
                 <form method="post" class="needs-validation" novalidate id="projectForm" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="id" value="{{ $project->id ?? '' }}">
+                    <input type="hidden" name="id" value="{{ $project->id ?? '' }}" id="projectId">
                     <div class="row mb-5">
                         <div class="col-sm-6 col-md-8 col-lg-3">
                             <div class="preview-image-container">
@@ -868,7 +868,7 @@ $('#summery, #fullreport').click(function() {
 
 
             $('#generatePdfForm').submit(function(event) {
-                console.log(event);
+               var projectId = $('#projectId').val();
         event.preventDefault(); // Prevent default form submission
 
         let $submitButton = $('#' + clickedButton);
@@ -900,7 +900,7 @@ $('#summery, #fullreport').click(function() {
                 // Create a link element and trigger a download
                 let a = document.createElement('a');
                 a.href = url;
-                a.download = '12.pdf'; // Set the file name
+                a.download = projectId+'.pdf'; // Set the file name
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
