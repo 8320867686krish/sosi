@@ -304,7 +304,6 @@ class ProjectsController extends Controller
                 ProjectTeam::where('project_id', $inputData['project_id'])->delete();
                 foreach ($inputData['user_id'] as $user_id) {
                     $email = User::where('id',$user_id)->pluck('email')->first();
-                    print_r( $email );
                     ProjectTeam::create([
                         'user_id' => $user_id,
                         'project_id' => $inputData['project_id'],
