@@ -165,7 +165,6 @@ class ReportContoller extends Controller
             foreach ($decks as $key => $value) {
                 if (count($value['checks']) > 0) {
                     $html = $this->drawDigarm($value);
-                    echo $html;
                     $fileNameDiagram = $this->genrateDompdf($html, 'le');
                     //    $mpdf = new Mpdf(['orientation' => 'L']); // Ensure landscape mode
                     $mpdf->setSourceFile($fileNameDiagram);
@@ -184,7 +183,6 @@ class ReportContoller extends Controller
                     }
                 }
             }
-            exit();
             $fileName = $project_id.'.pdf';
             $filePath = public_path('pdfs1/'.$fileName); // Adjust the directory and file name as needed
      
@@ -403,7 +401,6 @@ class ReportContoller extends Controller
 
         foreach ($ChecksList as $key => $value) {
             $html = $this->drawDigarm($value);
-        //   echo $html;
             $fileNameDiagram = $this->genrateDompdf($html, 'le');
             $mpdf->setSourceFile($fileNameDiagram);
             $pageCount = $mpdf->setSourceFile($fileNameDiagram);
@@ -422,7 +419,7 @@ class ReportContoller extends Controller
             $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks']]));
             unlink($fileNameDiagram);
         }
-   //     exit();
+ 
         $mpdf->AddPage('P');
         $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
         $mpdf->AddPage('L');
@@ -549,18 +546,19 @@ class ReportContoller extends Controller
             }
         }
        
-    //     $fileName = $project_id.'.pdf';
-    //     $filePath = public_path('pdfs/'.$fileName); // Adjust the directory and file name as needed
+        $fileName = $project_id.'.pdf';
+        $filePath = public_path('pdf/'.$fileName); // Adjust the directory and file name as needed
  
-    //  // Output the PDF to the file path
-    //  $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
+     // Output the PDF to the file path
+     $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
  
+     return response()->download($filePath,$fileName)->deleteFileAfterSend(true);
     
   
-        return response()->make($mpdf->Output('project_report.pdf', 'D'), 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="project_report.pdf"'
-        ]);
+        // return response()->make($mpdf->Output('project_report.pdf', 'D'), 200, [
+        //     'Content-Type' => 'application/pdf',
+        //     'Content-Disposition' => 'attachment; filename="project_report.pdf"'
+        // ]);
     }
 
 
