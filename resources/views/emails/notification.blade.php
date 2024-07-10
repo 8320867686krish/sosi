@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Authentication code</title>
+    <title>Assigned Project</title>
 </head>
 <body>
     <p>Hi</p>
-    <p>Auth code is new  {{$details['code']}}.</p>
+    <p>New project assigned by sos team </p>
     <strong>Thank you</strong>
 </body>
 </html>

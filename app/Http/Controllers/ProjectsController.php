@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Jobs\sendNotificationToUser;
 
 use App\Http\Requests\AssignProjectRequest;
 use App\Http\Requests\ProjectDetailRequest;
@@ -302,6 +303,7 @@ class ProjectsController extends Controller
             if (@$inputData['user_id']) {
                 ProjectTeam::where('project_id', $inputData['project_id'])->delete();
                 foreach ($inputData['user_id'] as $user_id) {
+                    $email = User::where('id',$user_id)->pluck('email')->first();
                     ProjectTeam::create([
                         'user_id' => $user_id,
                         'project_id' => $inputData['project_id'],
@@ -309,6 +311,8 @@ class ProjectsController extends Controller
                         'end_date' => $inputData['end_date'],
                         'isExpire' => 0
                     ]);
+                    $details['email'] =$email ;
+                    dispatch(new sendNotificationToUser($details));
                 }
             }
             if (@$inputData['project']) {
