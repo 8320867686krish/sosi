@@ -602,7 +602,6 @@ class ReportContoller extends Controller
                 list($width, $height) = getimagesize($imagePath);
 
                 if ($width >= 1000) {
-                    $html.='<div>';
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
                     $leftPositionPercent = 50;
 
@@ -731,7 +730,6 @@ class ReportContoller extends Controller
 
                     $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $tooltipStart . 'px; left:' . ($lineLeftPosition - 15) . 'px">' . $tooltipText . '</span>';
                 }
-                $html .= '</div>';
                 $html .= '</div>';
                 $html .= '</div>';
                 $html .= '</div>';
