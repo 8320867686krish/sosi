@@ -549,24 +549,18 @@ exit();
             }
         }
        
-        $fileName = $project_id.'.pdf';
-        $filePath = public_path('pdfs/'.$fileName); // Adjust the directory and file name as needed
+    //     $fileName = $project_id.'.pdf';
+    //     $filePath = public_path('pdfs/'.$fileName); // Adjust the directory and file name as needed
  
-     // Output the PDF to the file path
-     $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
+    //  // Output the PDF to the file path
+    //  $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
  
-     return response()->download($filePath,$fileName)->deleteFileAfterSend(true);
-
-    //    return response()->file($filePath, [
-    //     'Content-Type' => 'application/pdf',
-    //     'Content-Disposition' => 'attachment; filename="filename.pdf"',
-    // ]);
-     // Return response as JSON
+    
   
-        // return response()->make($mpdf->Output('project_report.pdf', 'D'), 200, [
-        //     'Content-Type' => 'application/pdf',
-        //     'Content-Disposition' => 'attachment; filename="project_report.pdf"'
-        // ]);
+        return response()->make($mpdf->Output('project_report.pdf', 'D'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="project_report.pdf"'
+        ]);
     }
 
 
@@ -621,7 +615,7 @@ exit();
                     $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
 
                     // $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:{$leftPositionPercent}%;height:100vh;position:absolute;top:10%'>";
-                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;position:relative;left:{$leftPositionPercent}%'>";
+                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;position:absolute;left:{$leftPositionPercent}%'>";
 
                 }
                 $html .= '<div style="margin-top:20%">';
