@@ -892,7 +892,12 @@ $('#summery, #fullreport').click(function() {
             xhrFields: {
                 responseType: 'blob' // Important
             },
-            success: function(response) {
+            success: function(response, status, xhr) {
+                let fileName = xhr.getResponseHeader('X-File-Name');
+            if (!fileName) {
+                console.log("dd");
+                fileName = projectId + '.pdf';
+            }
                 // Create a Blob from the response
                 let blob = new Blob([response], { type: 'application/pdf' });
                 let url = URL.createObjectURL(blob);
@@ -900,7 +905,7 @@ $('#summery, #fullreport').click(function() {
                 // Create a link element and trigger a download
                 let a = document.createElement('a');
                 a.href = url;
-                a.download = projectId+'.pdf'; // Set the file name
+                a.download = fileName; // Set the file name
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
