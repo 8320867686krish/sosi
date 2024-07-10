@@ -552,11 +552,11 @@ class ReportContoller extends Controller
      // Output the PDF to the file path
      $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
  
-     return response()->download($filePath, $fileName)
-     ->deleteFileAfterSend(true)
-     ->withHeaders([
-         'X-File-Name' => $fileName,
-     ]);
+     $response = response()->download($filePath, $fileName)->deleteFileAfterSend(true);
+
+     // Add custom header for the file name
+     $response->headers->set('X-File-Name', $fileName);
+return $response; 
     
     
   
