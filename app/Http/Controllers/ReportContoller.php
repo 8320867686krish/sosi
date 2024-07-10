@@ -208,9 +208,9 @@ class ReportContoller extends Controller
         $version = $post['version'];
         $date = date('d-m-Y', strtotime($post['date']));
         $projectDetail = Projects::with('client')->find($project_id);
-        if ($post['action'] == 'summery') {
-         return  $this->summeryReport($post);
-        }
+        // if ($post['action'] == 'summery') {
+        //  return  $this->summeryReport($post);
+        // }
       
         $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
             $query->where('project_id', $project_id);
@@ -403,6 +403,8 @@ class ReportContoller extends Controller
 
         foreach ($ChecksList as $key => $value) {
             $html = $this->drawDigarm($value);
+           
+
             $fileNameDiagram = $this->genrateDompdf($html, 'le');
             $mpdf->setSourceFile($fileNameDiagram);
             $pageCount = $mpdf->setSourceFile($fileNameDiagram);
@@ -421,6 +423,7 @@ class ReportContoller extends Controller
             $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks']]));
             unlink($fileNameDiagram);
         }
+     //   exit();
         $mpdf->AddPage('P');
         $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
         $mpdf->AddPage('L');
@@ -613,7 +616,7 @@ class ReportContoller extends Controller
                     $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
 
                     // $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; left:{$leftPositionPercent}%;height:100vh;position:absolute;top:10%'>";
-                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;width:".$image_width."px;'>";
+                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;width:100%'>";
 
                 }
                 $html .= '<div style="margin-top:20%">';
