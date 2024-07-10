@@ -410,7 +410,7 @@ class ReportContoller extends Controller
             for ($i = 1; $i <= $pageCount; $i++) {
                 $mpdf->AddPage('L');
                 if ($key == 0) {
-                    $heading = '<h3 style="font-size:14px">3.4 VSCP Preparation.'. $pageCount.'</h3>';
+                    $heading = '<h3 style="font-size:14px">3.4 VSCP Preparation.</h3>';
 
                     $mpdf->WriteHTML( $heading);
                 }
@@ -429,24 +429,24 @@ class ReportContoller extends Controller
         $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
 
         $mpdf->WriteHTML(view('report.riskAssessments'));
-        // $sampleImageChunks = $sampleImage->chunk(50);
-        // foreach ($sampleImageChunks as $index => $chunk) {
-        //     if ($index == 0) {
-        //         $show = true;
-        //     } else {
-        //         $show = false;
-        //     }
-        //     $title = "Sample Records";
+        $sampleImageChunks = $sampleImage->chunk(50);
+        foreach ($sampleImageChunks as $index => $chunk) {
+            if ($index == 0) {
+                $show = true;
+            } else {
+                $show = false;
+            }
+            $title = "Sample Records";
 
-        //     $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
-        //     $mpdf->WriteHTML($html);
-        // }
-        // $sampleImageChunks = $visualImage->chunk(50);
-        // foreach ($sampleImageChunks as $index => $chunk) {
-        //     $title = "Visual Records";
-        //     $html = view('report.sampleImage', compact('chunk', 'title'))->render();
-        //     $mpdf->WriteHTML($html);
-        // }
+            $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
+            $mpdf->WriteHTML($html);
+        }
+        $sampleImageChunks = $visualImage->chunk(50);
+        foreach ($sampleImageChunks as $index => $chunk) {
+            $title = "Visual Records";
+            $html = view('report.sampleImage', compact('chunk', 'title'))->render();
+            $mpdf->WriteHTML($html);
+        }
 
 
         $titleattach = '<h2 style="text-align:center">Appendix-4 Supporting Documents/plans from Ship</h2>';
