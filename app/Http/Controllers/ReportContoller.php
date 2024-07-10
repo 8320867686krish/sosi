@@ -462,9 +462,9 @@ class ReportContoller extends Controller
 
                     if (file_exists($filePath)) {
                         if ($i == 1) {
-                               $this->mergePdf($filePath, $titleattach, $mpdf);
+                              // $this->mergePdf($filePath, $titleattach, $mpdf);
                         } else {
-                             $this->mergePdf($filePath, null, $mpdf);
+                           //  $this->mergePdf($filePath, null, $mpdf);
                         }
                     }
                 }
@@ -477,7 +477,7 @@ class ReportContoller extends Controller
                 if (@$imageDocValue) {
                     $filePathDoc = public_path('images/hazmat') . "/" . $projectDetail['id'] . "/" . $imageDocValue;
                     if (file_exists($filePathDoc)) {
-                        $this->mergePdf($filePathDoc, null, $mpdf);
+                      //  $this->mergePdf($filePathDoc, null, $mpdf);
                     }
                 }
             }
