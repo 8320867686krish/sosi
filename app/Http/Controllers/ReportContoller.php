@@ -211,9 +211,9 @@ class ReportContoller extends Controller
         $version = $post['version'];
         $date = date('d-m-Y', strtotime($post['date']));
         $projectDetail = Projects::with('client')->find($project_id);
-        // if ($post['action'] == 'summery') {
-        //  return  $this->summeryReport($post);
-        // }
+        if ($post['action'] == 'summery') {
+         return  $this->summeryReport($post);
+        }
       
         $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
             $query->where('project_id', $project_id);
