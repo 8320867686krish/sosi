@@ -42,7 +42,8 @@
         <div class="card">
             <div class="card-header text-center"><a href="#"><img class="logo-img" src="{{ asset('assets/images/logo.png') }}" alt="logo"></a></div>
             <div class="card-body">
-                <form method="POST" action="#" id="loginForm">
+                <form method="POST" id="otpForm">
+                      @csrf
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 
@@ -53,7 +54,7 @@
                     </div>
                    
 
-                    <button type="button" class="btn btn-primary btn-lg btn-block signIn">Verify</button>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block signIn">Verify</button>
                 </form>
             </div>
             
@@ -67,14 +68,30 @@
     <script src="{{ asset('assets/vendor/jquery/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.js') }}"></script>
     <script>
-        $(".signIn").click(function() {
-            $.ajax({
-                type: "POST",
-                url: "{{ url('verify/otp') }}",
-                data: $("#loginForm").serialize(),
-               
-                success: function(response) {
-                    console.log(response.message);
+        $('#otpForm').submit(function(e) {
+          
+                e.preventDefault();
+                $('.text-danger').text("");
+                var $submitButton = $(this).find('button[type="submit"]');
+                var originalText = $submitButton.html();
+                $submitButton.text('Wait...');
+                $submitButton.prop('disabled', true);
+
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: "{{ url('verify/otp') }}",
+                    type: 'POST',
+                    data: formData,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        // Handle success response
+                      console.log(response.message);
 
                   if(response.status == true){
                     window.location.href = "{{ url('dashboard') }}";
@@ -83,10 +100,20 @@
                             el.after($('<span class="error-message" style="color: red;">' +
                             response.message + '</span>'));
                 }
+                    },
+                    error: function(err) {
+                        $.each(err.responseJSON.errors, function(i, error) {
+                            console.log(i);
+                         //   $(".error-message").text(error);
+                         $('.'+i+'Msg').text(error);
+                        })
 
-                }
+                        $submitButton.html(originalText);
+                        $submitButton.prop('disabled', false);
+                    },
                 
             });
+            
         });
     </script>
 </body>
