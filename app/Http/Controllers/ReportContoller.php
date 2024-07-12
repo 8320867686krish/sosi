@@ -183,18 +183,12 @@ class ReportContoller extends Controller
                     }
                 }
             }
-            $fileName = "summery_".$project_id.'.pdf';
+            $fileName = "summery_".$projectDetail['project_no'].'.pdf';
             $filePath = public_path('pdfs1/'.$fileName); // Adjust the directory and file name as needed
-     
-         // Output the PDF to the file path
-         $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
-     
-      //   return response()->download($filePath,$fileName)->deleteFileAfterSend(true);
-         $response = response()->download($filePath, $fileName)->deleteFileAfterSend(true);
-
-         // Add custom header for the file name
-         $response->headers->set('X-File-Name', $fileName);
-    return $response; 
+            $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
+            $response = response()->download($filePath, $fileName)->deleteFileAfterSend(true);
+             $response->headers->set('X-File-Name', $fileName);
+            return $response; 
         } catch (\Mpdf\MpdfException $e) {
             // Handle mPDF exception
             echo $e->getMessage();
@@ -295,8 +289,6 @@ class ReportContoller extends Controller
         }
 
         $mpdf = new Mpdf([
-            'mode' => 'c',
-            'mode' => 'utf-8',
             'format' => 'A4',
             'margin_left' => 10,
             'margin_right' => 10,
@@ -309,18 +301,14 @@ class ReportContoller extends Controller
             'jpeg_quality' => 75, // Set the JPEG quality (0-100)
             'shrink_tables_to_fit' => 1, // Shrink tables to fit the page width
             'tempDir' => __DIR__ . '/tmp', // Set a temporary directory for mPDF
+            'default_font' => 'dejavusans',
 
 
             'allow_output_buffering' => true,
         ]);
-        $mpdf->falseBoldWeight = 0;
-
-        $mpdf->defaultPageNumStyle = '1';
-        $mpdf->SetDisplayMode('fullpage');
-
-        // Add each page of the Dompdf-generated PDF to the mPDF document
-
+      
         $mpdf->use_kwt = true;
+
         $mpdf->defaultPageNumStyle = '1';
         $mpdf->SetDisplayMode('fullpage');
 
@@ -373,23 +361,25 @@ class ReportContoller extends Controller
         } else {
             $mpdf->WriteHTML(view('report.gapAnaylisis', compact('hazmets', 'projectDetail')));
         }
-
+      
+       
         $mpdf->AddPage('L'); // Set landscape mode for the inventory page
 
         $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
         foreach ($decks as $key => $value) {
             if (count($value['checks']) > 0) {
                 $html = $this->drawDigarm($value);
-                $fileNameDiagram = $this->genrateDompdf($html, null);
+                $fileNameDiagram = $this->genrateDompdf($html, 'le');
                 $mpdf->setSourceFile($fileNameDiagram);
 
                 $pageCount = $mpdf->setSourceFile($fileNameDiagram);
                 for ($i = 1; $i <= $pageCount; $i++) {
 
-                    $mpdf->AddPage('P');
+                    $mpdf->AddPage('L');
                     if ($key == 0) {
                         $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h3><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
                     }
+                    $mpdf->WriteHTML('<h5 style="font-size:16px;">Deck Name:'.$value['name'].'</h5>');
                     $templateId = $mpdf->importPage($i);
                     $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
 
@@ -397,6 +387,7 @@ class ReportContoller extends Controller
                 unlink($fileNameDiagram);
             }
         }
+      
         $mpdf->AddPage('p');
         if ($projectDetail['ihm_table'] == 'IHM Part 1') {
             $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechmentsResult', 'foundItems')));
@@ -416,15 +407,17 @@ class ReportContoller extends Controller
 
                     $mpdf->WriteHTML( $heading);
                 }
+                $mpdf->WriteHTML('<h5 style="font-size:16px;">Deck Name:'.$value['name'].'</h5>');
+
                 $templateId = $mpdf->importPage($i);
                 $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
 
             }
             $mpdf->AddPage('L');
-            $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks']]));
+            $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks'],'name'=>$value['name']]));
             unlink($fileNameDiagram);
         }
- 
+      
         $mpdf->AddPage('P');
         $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
         $mpdf->AddPage('L');
@@ -570,17 +563,12 @@ class ReportContoller extends Controller
             }
         }
        
-        $fileName = $project_id.'.pdf';
+        $fileName = $projectDetail['project_no'].'.pdf';
         $filePath = public_path('pdf/'.$fileName); // Adjust the directory and file name as needed
- 
-     // Output the PDF to the file path
-     $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
- 
-     $response = response()->download($filePath, $fileName)->deleteFileAfterSend(true);
-
-     // Add custom header for the file name
-     $response->headers->set('X-File-Name', $fileName);
-return $response; 
+        $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
+        $response = response()->download($filePath, $fileName)->deleteFileAfterSend(true);
+        $response->headers->set('X-File-Name', $fileName);
+         return $response; 
     
     
   
@@ -627,7 +615,6 @@ return $response;
                 $imageData = base64_encode(file_get_contents($imagePath));
                 $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
                 list($width, $height) = getimagesize($imagePath);
-
                 if ($width >= 1000) {
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
                     
@@ -646,6 +633,8 @@ return $response;
                    
 
                 }
+              
+
                 $html .= '<div style="margin-top:20%;">';
 
                 $html .= '<div class="image-container " id="imgc' . $i . '" style="position: relative;width: 100%; ">';

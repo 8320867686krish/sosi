@@ -509,7 +509,7 @@
                                 <div class="col-4">
                                     <button type="submit" name="fullreport" class="btn btn-primary fullreport" value="submit" id="fullreport">Full Report</button>
                                         @if($project->ihm_table == 'IHM Part 1')
-                                    <button type="submit" name="summery" class="btn btn-primary" value="summery" id="summery">Summery</button>
+                                    <button type="submit" name="summery" class="btn btn-primary" value="summery" id="summery">Summary</button>
                                     @endif
                                 </div>
                             </div>

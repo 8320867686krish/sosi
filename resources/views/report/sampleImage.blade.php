@@ -14,12 +14,14 @@
         text-align: left;
         font-size: 14px;
     }
-
+    .section-1-1 table td{
+        height:100px;
+    }
     .next {
         page-break-before: always;
     }
 
-    .section-1-1 tbody tr:nth-child(5n) {
+    .section-1-1 tbody tr:nth-child(4n) {
         page-break-after: always;
     }
 </style>

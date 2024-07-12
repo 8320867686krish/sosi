@@ -3,14 +3,14 @@
         border: 1px solid #000;
         width: 100%;
         border-collapse: collapse;
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .section-1-1 table td, th {
         border: 1px solid black;
         padding: 4px;
         text-align: left;
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .next {
@@ -26,15 +26,16 @@
     
 </style>
 <div class="section-1-1">
+    <h4>Deck Name: {{$name}}</h4>
     <table>
         <thead>
             <tr>
                 <th>S.N</th>
-                <th style="width:5%">HazMat</th>
+                <th style="width:8%">HazMat</th>
                 <th>Location</th>
                 <th>Equipment</th>
                 <th>Component</th>
-                <th style="width:5%">Document Analysis</th>
+                <th style="width:12%">Sample Type</th>
                 <th>Remarks</th>
             </tr>
 

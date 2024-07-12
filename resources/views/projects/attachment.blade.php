@@ -36,7 +36,7 @@
                         <label for="name">Attachment Type</label>
                         <select name="attachment_type" id="attachment_type" class="form-control">
                             <option value="">Selet Attachment Type</option>
-                            <option value="genral">Genral</option>
+                            <option value="genral">General</option>
                             <option value="shipPlan">Ship Plan</option>
                             <option value="shipBrifPlan">Ship Brief Plan</option>
 

@@ -11,7 +11,7 @@
             <h4 style="text-align: center;">Hazardous materials contained in the ship's structure and equipment</h4>
 
         @if(@$filteredResults1)
-        <h5>I-1 – Paints and coating systems containing materials listed in table A and table B of appendix 1 of these guidelines</h4>
+        <h5>I-1 – Paints and coating systems containing materials listed in table A and table B of appendix 1 of these guidelines</h5>
 
             <table  style="page-break-inside:avoid">
                 <thead>
@@ -69,7 +69,7 @@
             @endif
             @if(@$filteredResults2)
             <div style="padding-top: 20px;">
-                <h4>I-2 Equipment and machinery containing materials listed in table A and table B of appendix 1 of these guidelines</h4>
+                <h5>I-2 Equipment and machinery containing materials listed in table A and table B of appendix 1 of these guidelines</h5>
 
                 <table  style="page-break-inside:avoid">
                     <thead>
@@ -129,7 +129,7 @@
             @if(@$filteredResults3)
 
             <div style="padding-top: 20px;">
-                <h4>I-3 Structure and hull containing materials listed in table A and table B of appendix 1 of these guidelines</h4>
+                <h5>I-3 Structure and hull containing materials listed in table A and table B of appendix 1 of these guidelines</h5>
 
                 <table  style="page-break-inside:avoid">
                     <thead>

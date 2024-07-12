@@ -4,13 +4,11 @@
         <!-- Section 1.1 -->
         <h2>1. Introduction to Project</h2>
         <div class="section-1-1">
-            <section id="section1.1">
-                <h3 class="bookmark-text">1.1 Scope, Exemption and Exclusions</h3>
+                <h3>1.1 Scope, Exemption and Exclusions</h3>
                 <p>The Scope of this document is to prepare an Inventory of Hazardous Materials as per IMO HKC- MEPC 379(80) and EUSRR-EMSA guidelines for the vessel <b>{{$projectDetail['ship_name']}}</b> on behalf of <b>{{$projectDetail['client']['manager_name']}}</b>.</p>
                 <p>The scope of this IHM report is delimited by the availability of documentation, acknowledging that certain records may not be accessible. Additionally, due to operational constraints, there are limitations on inspecting all spaces and equipment aboard the vessel while it remains in operation.</p>
 
                 <p>SOS India Pvt Ltd does not warrant or assume any kind of liability for the up-to-date nature, accuracy, completeness or quality of the HazMat weight calculation provided. Liability claims against any member of SOS India Pvt Ltd in relation to any loss or damage arising out of or in connection with the use or non-use of HazMat weight calculation provided, including the use of incorrect or incomplete HazMat weight calculation data, are excluded to the fullest extent permissible by law. All weight calculation data may be subject to alteration and are non-binding. Each SOS India Pvt Ltd member expressly reserves the right without notice to change, supplement or delete parts of the HazMat weight calculation data or to stop the publication and usage temporarily or definitively.</p>
-            </section>
         </div>
 
         <!-- Section 1.2 -->
@@ -19,20 +17,20 @@
             <p>Abbreviation :</p>
             <ul>
                 @foreach($hazmets as $value)
-                <li>{{$value['id']}}. {{$value['short_name']}} = {{$value['name']}}</li>
+                <li> {{$value['short_name']}} = {{$value['name']}}</li>
                 @endforeach
             </ul>
             <br />
             <p style="padding-top:10px;">Normative Reference:</p>
             <ul>
-                <li>1. Hong Kong International Convention for the Safe and Environmentally Sound Recycling of Ships, 2009 (SR/CONF/45)</li>
-                <li>2. 2023 Guidelines for the Development of the Inventory of Hazardous Materials (MEPC. 379(80)) </li>
-                <li>3. EU Regulation on Ship Recycling, Regulation (EU) No1257/2013</li>
-                <li>4. EMSA’s Best Practice Guidance on the Inventory of Hazardous Material, 2016-10-28</li>
-                <li>5. SOLAS regulation II -1/3-5 new amendments concerning the new installation of asbestos-containing material, MSC.282(86)</li>
-                <li>6. MSC. 1/Circ. 1426 Unified Interpretation of SOLAS Regulation II- 1/3-5</li>
-                <li>7. MSC. 1/Circ.1374 Information on Prohibiting the use of asbestos onboard ships</li>
-                <li>8. MSC. 1/Circ.1379 Unified Interpretation of SOLAS Regulation II- 1/3-5</li>
+                <li> Hong Kong International Convention for the Safe and Environmentally Sound Recycling of Ships, 2009 (SR/CONF/45)</li>
+                <li> 2023 Guidelines for the Development of the Inventory of Hazardous Materials (MEPC. 379(80)) </li>
+                <li> EU Regulation on Ship Recycling, Regulation (EU) No1257/2013</li>
+                <li> EMSA’s Best Practice Guidance on the Inventory of Hazardous Material, 2016-10-28</li>
+                <li> SOLAS regulation II -1/3-5 new amendments concerning the new installation of asbestos-containing material, MSC.282(86)</li>
+                <li> MSC. 1/Circ. 1426 Unified Interpretation of SOLAS Regulation II- 1/3-5</li>
+                <li> MSC. 1/Circ.1374 Information on Prohibiting the use of asbestos onboard ships</li>
+                <li> MSC. 1/Circ.1379 Unified Interpretation of SOLAS Regulation II- 1/3-5</li>
             </ul>
         </section>
 
@@ -59,7 +57,7 @@
                     <td> {{$projectDetail['ship_type']}}</td>
                 </tr>
                 <tr>
-                    <td>Port of Registry Kunching</td>
+                    <td>Port of Registry</td>
                     <td> {{$projectDetail['port_of_registry']}}</td>
                 </tr>
                 <tr>
