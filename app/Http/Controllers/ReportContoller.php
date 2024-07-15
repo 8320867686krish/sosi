@@ -682,7 +682,7 @@ exit();
                         }
                     }
                     $k++;
-                    if ($width > 1000 || $height >= 600) {
+                    if ($width > 1000 || $height >= 400) {
                         $topshow = ($image_width * $top) / $width;
                         $leftshow = ($image_width * $left) / $width;
                     } else {
