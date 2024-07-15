@@ -192,11 +192,11 @@
                     </tr>
                     <tr>
                         <th valign="middle"><b>Table</b></th>
-                        <th valign="middle"><b>HM</b></th>
+                        <th valign="middle"><b>Key</b></th>
                         <th valign="middle" style="width: 10%"><b>Colour</b></th>
 
                         <th valign="middle"><b>Name</b></th>
-                        <th valign="middle"><b>Sampleing</b></th>
+                        <th valign="middle"><b>Sampling</b></th>
                         <th valign="middle"><b>Visual</b></th>
                         <th valign="middle"><b>Total</b></th>
                     </tr>

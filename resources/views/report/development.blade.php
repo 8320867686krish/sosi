@@ -22,7 +22,7 @@
         <h3 style="padding-top:20px;">3.2 Indicative List</h3>
 
         <h3>Materials to be listed from Table-A</h3>
-        <p>Table A lists the following four materials</p>
+        <p>Table A lists the following six materials</p>
         <ul>
             <li>1. Asbestos </li>
             <li>2. Polychlorinated biphenyls (PCBs) </li>
@@ -796,7 +796,7 @@
         </table>
     </div>
 
-    <div id="section3.3" class="next" style="margin-top:20px;">
+    <div id="section3.3" class="next section-1-1" style="margin-top:20px;">
         <h3>3.3 Working Procedure </h3>
         <p>In order to create checks for the Visual Sampling Check Plan (VSCP) the following flow chart is referenced which is provided in MEPC 379(80) guidelines for preparation of the IHM.</p>
 
