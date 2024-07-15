@@ -77,7 +77,7 @@
                 @php $hazmatsCount = count($check->check_hazmats); @endphp
                 @if ($hazmatsCount == 0)
                 <tr>
-                    <td>{{$count}}</td>
+                    <td>{{$chek->name}}{{$color}}</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>{{ $check->location }} @if($check->sub_location){{ ',' . $check->sub_location }}
@@ -93,15 +93,15 @@
                 @foreach ($check->check_hazmats as $index => $hazmat)
                 @php
                 if($hazmat->type == 'Contained' || $hazmat->type == 'PCHM'){
-                $color="style=color:#FF0000";
+                $color="style='color':'#FF0000'";
                 }else{
-                $color="style=color:blck";
+                    $color="style='color':'#000'";
                 }
                 @endphp
                 <tr>
 
-                    <td {{$color}}>{{$count}}</td>
-                    <td {{$color}}>{{ $hazmat->hazmat->table_type }}</td>
+                <td>{{$chek->name}}{{$color}}</td>
+                <td {{$color}}>{{ $hazmat->hazmat->table_type }}</td>
                     <td {{$color}}>{{ $hazmat->hazmat->short_name }}</td>
                     <td {{$color}}>{{ $check->location }} @if($check->sub_location){{ ',' . $check->sub_location }}
                         @endif</td>
