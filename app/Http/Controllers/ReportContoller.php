@@ -690,8 +690,14 @@ class ReportContoller extends Controller
                         $topshow = ($image_width * $top) / $width;
                         $leftshow = ($image_width * $left) / $width;
                     } else {
-                        $topshow = $top;
-                        $leftshow = $left;
+                        if( $image_height == 400){
+                            $topshow = ($image_width * $top) / $width;
+                            $leftshow = ($image_width * $left) / $width;
+                        }else{
+                            $topshow = $top;
+                            $leftshow = $left;
+                        }
+                      
                     }
                     $lineLeftPosition =  ($leftshow + 2);
 
