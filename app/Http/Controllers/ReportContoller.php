@@ -621,8 +621,9 @@ exit();
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
                 } else {
                     if ($height >= 500) {
-                        $image_height = 400;
-                        $image_width = ($image_height * $width) / $height;
+                        $image_height = $height;
+                        $image_width = $width;
+                     //   $image_width = ($image_height * $width) / $height;
                     } else {
                         $image_width = $width;
                     }
@@ -644,8 +645,10 @@ exit();
                     $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px;" />';
                 } else {
                     if ($height >= 500) {
-                        $image_height = 400;
-                        $image_width = ($image_height * $width) / $height;
+                     //   $image_height = 400;
+                     //   $image_width = ($image_height * $width) / $height;
+                     $image_height = $height;
+                     $image_width = $width;
                         $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"  style="width:' . $image_width . 'px;"/>';
                     } else {
                         $image_height = $height;
