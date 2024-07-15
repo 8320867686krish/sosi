@@ -802,6 +802,7 @@
 
 
         <img src="https://sosindi.com/IHM/public/assets/images/procedure.jpg">
+        <div class="next">
         <h4 style="font-weight: bold;text-align:center;padding-top:10px">Figure-1 Flowchart for IHM Checks</h4>
         <div style="text-align:justify;padding:10px">
             <p>1. Documents may include certificates, manuals, ship’s plans drawings, technical specifications and information from sister and/or similar ships.</p>
@@ -813,6 +814,7 @@
             <p>4. When assessing pieces that incorporate sampling identification badges/documents can also take into account age and tech state by comparing materials used in Appendix 1 List for classification systems with those currently present. In the prerequisite for this assessment method are described how best testing techniques are made more comprehensive by checking history records required hazardous material’s disposal documentation contained in appendix systems should also consider current “as is” position or any changes that have been made since last checked.</p>
 
             <p>5. When equipment, systems and/or area of ship are not accessible for visual check or sampling checks, this equipment system and/or area is classified as ‘Potentially Containing Hazardous Materials (PCHM)’</p>
+        </div>
         </div>
 
     </div>
