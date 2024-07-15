@@ -448,7 +448,7 @@ class ReportContoller extends Controller
         }
 
 
-        $titleattach = '<h2 style="text-align:center">Appendix-4 Supporting Documents/plans from Ship</h2>';
+        $titleattach = '<h2 style="text-align:center;font-size:14px;">Appendix-4 Supporting Documents/plans from Ship</h2>';
         $check_has_hazmats = CheckHasHazmat::where('project_id', $project_id)->get();
 
         $i = 0;

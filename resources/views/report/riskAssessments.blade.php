@@ -212,9 +212,9 @@
                         <p class="sufont">Community</p>
                         <p class="sufont">Assets</p>
                     </td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>8</td>
                     <td>
                         <p class="sufont">a) Marking labelling to be in place using the IHM for identification,</p>
                         <p class="sufont">b) No direct contact with the skin of body parts</p>
@@ -228,9 +228,9 @@
                         <p class="sufont">b)Eyewash and first aid kit always on standby
                             The absorbent material is always to be kept near the site to control any kind of spillage in case of liquids</p>
                     </td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>2</td>
                 </tr>
                 <tr>
                     <td>PFOS</td>
