@@ -6,7 +6,8 @@
         font-size: 14px;
     }
 
-    .section-1-1 table td, th {
+    .section-1-1 table td,
+    th {
         border: 1px solid black;
         padding: 4px;
         text-align: left;
@@ -20,10 +21,6 @@
     .section-1-1 tbody tr:nth-child(10n) {
         page-break-after: always;
     }
-
-
-    
-    
 </style>
 <div class="section-1-1">
     <h4>Deck Name: {{$name}}</h4>
@@ -72,15 +69,12 @@
                 <td>{{ $check->type }}</td>
                 @if(@$check->remarks)
                 <td>{{ $check->remarks }}</td>
-                @else
-                @if($hazmat->type == 'PCHM')
-                    <td>{{$hazmat->remarks}}</td>
+                @elseif($hazmat->type == 'PCHM')
+                <td>{{ $hazmat->remarks }}</td>
                 @else
                 <td>&nbsp;</td>
                 @endif
-                @else 
-                <td>&nbsp;</td>
-                @endif
+
 
             </tr>
             @endforeach
