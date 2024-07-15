@@ -378,10 +378,10 @@ class ReportContoller extends Controller
                 for ($i = 1; $i <= $pageCount; $i++) {
 
                     $mpdf->AddPage('L');
-                    if ($key == 0) {
+                    if ($i == 1) {
                         $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h3><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
                     }
-                    $mpdf->WriteHTML('<h5 style="font-size:16px;">Deck Name:'.$value['name'].'</h5>');
+                    $mpdf->WriteHTML('<h5 style="font-size:14px;">Deck Name:'.$value['name'].'</h5>');
                     $templateId = $mpdf->importPage($i);
                     $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
 
