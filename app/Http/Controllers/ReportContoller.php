@@ -369,28 +369,28 @@ class ReportContoller extends Controller
 
         $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
         $newDiagram = 0;
-        // foreach ($decks as $key => $value) {
-        //     if (count($value['checks']) > 0) {
-        //         $html = $this->drawDigarm($value);
-        //         $fileNameDiagram = $this->genrateDompdf($html, 'le');
-        //         $mpdf->setSourceFile($fileNameDiagram);
+        foreach ($decks as $key => $value) {
+            if (count($value['checks']) > 0) {
+                $html = $this->drawDigarm($value);
+                $fileNameDiagram = $this->genrateDompdf($html, 'le');
+                $mpdf->setSourceFile($fileNameDiagram);
 
-        //         $pageCount = $mpdf->setSourceFile($fileNameDiagram);
-        //         for ($i = 1; $i <= $pageCount; $i++) {
+                $pageCount = $mpdf->setSourceFile($fileNameDiagram);
+                for ($i = 1; $i <= $pageCount; $i++) {
 
-        //             $mpdf->AddPage('L');
-        //             if ($newDiagram  == 0) {
-        //                 $mpdf->WriteHTML('<h3 style="font-size:14px">2.1 Location Diagram of Contained HazMat & PCHM</h3><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
-        //             }
-        //             $mpdf->WriteHTML('<h5 style="font-size:14px;">Deck Name:'.$value['name'].'</h5>');
-        //             $templateId = $mpdf->importPage($i);
-        //             $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
+                    $mpdf->AddPage('L');
+                    if ($newDiagram  == 0) {
+                        $mpdf->WriteHTML('<h3 style="font-size:14px">2.1 Location Diagram of Contained HazMat & PCHM</h3><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
+                    }
+                    $mpdf->WriteHTML('<h5 style="font-size:14px;">Deck Name:'.$value['name'].'</h5>');
+                    $templateId = $mpdf->importPage($i);
+                    $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
 
-        //         }
-        //         $newDiagram++;
-        //         unlink($fileNameDiagram);
-        //     }
-        // }
+                }
+                $newDiagram++;
+                unlink($fileNameDiagram);
+            }
+        }
       
         $mpdf->AddPage('p');
         if ($projectDetail['ihm_table'] == 'IHM Part 1') {
