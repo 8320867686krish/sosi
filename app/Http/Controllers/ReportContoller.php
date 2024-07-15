@@ -368,6 +368,7 @@ class ReportContoller extends Controller
         $mpdf->AddPage('L'); // Set landscape mode for the inventory page
 
         $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
+        $newDiagram = 0;
         foreach ($decks as $key => $value) {
             if (count($value['checks']) > 0) {
                 $html = $this->drawDigarm($value);
@@ -378,7 +379,7 @@ class ReportContoller extends Controller
                 for ($i = 1; $i <= $pageCount; $i++) {
 
                     $mpdf->AddPage('L');
-                    if ($i == 1) {
+                    if ($newDiagram  == 0) {
                         $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h3><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
                     }
                     $mpdf->WriteHTML('<h5 style="font-size:14px;">Deck Name:'.$value['name'].'</h5>');
@@ -386,6 +387,7 @@ class ReportContoller extends Controller
                     $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
 
                 }
+                $newDiagram++;
                 unlink($fileNameDiagram);
             }
         }
