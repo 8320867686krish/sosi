@@ -448,7 +448,7 @@ class ReportContoller extends Controller
         }
 
 
-        $titleattach = '<h2 style="text-align:center;font-size:12px;">Appendix-4 Supporting Documents/plans from Ship</h2>';
+        $titleattach = '<h2 style="text-align:center;font-size:14px;">Appendix-4 Supporting Documents/plans from Ship</h2>';
         $check_has_hazmats = CheckHasHazmat::where('project_id', $project_id)->get();
 
         $i = 0;
@@ -785,10 +785,12 @@ class ReportContoller extends Controller
             if ($i === 1 && @$title) {
                 $mpdf->WriteHTML($title);
                 $lmargin = 25;
+                $tMargin = 15;
             } else {
                 $lmargin = $mpdf->lMargin;
+                $tMargin = $mpdf->tMargin;
             }
-            $mpdf->useTemplate($templateId, $lmargin, $mpdf->tMargin, $size['width'] * $scale, $size['height'] * $scale);
+            $mpdf->useTemplate($templateId, $lmargin, $tMargin, $size['width'] * $scale, $size['height'] * $scale);
         }
     }
 }
