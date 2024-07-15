@@ -100,9 +100,9 @@
                 @endphp
                 <tr>
 
-                <td>{{$check['name']}}{{$hazmat->type}}</td>
+                <td>{{$check['name']}}</td>
 
-             
+             <td {{$color}}>{{ $hazmat->hazmat->table_type}}</td>
                     <td {{$color}}>{{ $hazmat->hazmat->short_name }}</td>
                     <td {{$color}}>{{ $check->location }} @if($check->sub_location){{ ',' . $check->sub_location }}
                         @endif</td>
