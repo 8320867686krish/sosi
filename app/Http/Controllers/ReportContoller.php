@@ -96,7 +96,7 @@ class ReportContoller extends Controller
             return $item->IHM_part == 'IHMPart1-3';
         });
         $decks = Deck::with(['checks' => function ($query) {
-            $query->whereHas('check_hazmats', function ($query) {
+            $query->whereHas('labResults', function ($query) {
                 $query->where('type', 'PCHM')->orWhere('type', 'Contained');
             });
         }])->where('project_id', $project_id)->get();
