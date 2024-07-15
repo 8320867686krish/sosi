@@ -54,7 +54,7 @@
                 <td>{{ $check->equipment }}</td>
                 <td> {{ $check->component }}</td>
                 <td>{{ $check->type }}</td>
-                <td>&nbsp;</td>
+                <td>{{$check->remarks}}</td>
 
             </tr>
             @endif
