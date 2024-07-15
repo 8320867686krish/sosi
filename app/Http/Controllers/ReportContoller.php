@@ -184,13 +184,13 @@ class ReportContoller extends Controller
                 }
             }
             $safeProjectNo = str_replace('/', '_', $projectDetail['project_no']);
-            $fileName = "summery_" . $safeProjectNo . '.pdf';
+            $fileName ="summery_".$safeProjectNo . '.pdf';
 
-            $filePath = public_path('pdfs1/' . $fileName); // Adjust the directory and file name as needed
+            $filePath = public_path('pdfs1/'.$fileName); // Adjust the directory and file name as needed
             $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
             $response = response()->download($filePath, $fileName)->deleteFileAfterSend(true);
-            $response->headers->set('X-File-Name', $fileName);
-            return $response;
+             $response->headers->set('X-File-Name', $fileName);
+            return $response; 
         } catch (\Mpdf\MpdfException $e) {
             // Handle mPDF exception
             echo $e->getMessage();
@@ -200,17 +200,17 @@ class ReportContoller extends Controller
     public function genratePdf(Request $request)
     {
 
-
+       
         $post = $request->input();
-
+      
         $project_id = $post['project_id'];
         $version = $post['version'];
         $date = date('d-m-Y', strtotime($post['date']));
         $projectDetail = Projects::with('client')->find($project_id);
-        // if ($post['action'] == 'summery') {
-        //     return  $this->summeryReport($post);
-        // }
-
+        if ($post['action'] == 'summery') {
+         return  $this->summeryReport($post);
+        }
+      
         $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
             $query->where('project_id', $project_id);
         }])->withCount(['checkHasHazmatsSample as sample_count' => function ($query) use ($project_id) {
@@ -308,7 +308,7 @@ class ReportContoller extends Controller
 
             'allow_output_buffering' => true,
         ]);
-
+      
         $mpdf->use_kwt = true;
 
         $mpdf->defaultPageNumStyle = '1';
@@ -363,8 +363,8 @@ class ReportContoller extends Controller
         } else {
             $mpdf->WriteHTML(view('report.gapAnaylisis', compact('hazmets', 'projectDetail')));
         }
-
-
+      
+       
         $mpdf->AddPage('L'); // Set landscape mode for the inventory page
 
         $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
@@ -381,7 +381,7 @@ class ReportContoller extends Controller
                     if ($key == 0) {
                         $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h3><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
                     }
-                    $mpdf->WriteHTML('<h5 style="font-size:14px;">Deck Name:' . $value['name'] . '</h5>');
+                    $mpdf->WriteHTML('<h5 style="font-size:16px;">Deck Name:'.$value['name'].'</h5>');
                     $templateId = $mpdf->importPage($i);
                     $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
 
@@ -389,7 +389,7 @@ class ReportContoller extends Controller
                 unlink($fileNameDiagram);
             }
         }
-
+      
         $mpdf->AddPage('p');
         if ($projectDetail['ihm_table'] == 'IHM Part 1') {
             $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechmentsResult', 'foundItems')));
@@ -398,31 +398,28 @@ class ReportContoller extends Controller
         }
 
         foreach ($ChecksList as $key => $value) {
-            if (count($value['checks']) > 0) {
-                $html = $this->drawDigarm($value);
-                echo $html;
-                // $fileNameDiagram = $this->genrateDompdf($html, 'le');
-                // $mpdf->setSourceFile($fileNameDiagram);
-                // $pageCount = $mpdf->setSourceFile($fileNameDiagram);
-                // for ($i = 1; $i <= $pageCount; $i++) {
-                //     $mpdf->AddPage('L');
-                //     if ($key == 0) {
-                //         $heading = '<h3 style="font-size:14px">3.4 VSCP Preparation.</h3>';
+            $html = $this->drawDigarm($value);
+            $fileNameDiagram = $this->genrateDompdf($html, 'le');
+            $mpdf->setSourceFile($fileNameDiagram);
+            $pageCount = $mpdf->setSourceFile($fileNameDiagram);
+            for ($i = 1; $i <= $pageCount; $i++) {
+                $mpdf->AddPage('L');
+                if ($key == 0) {
+                    $heading = '<h3 style="font-size:14px">3.4 VSCP Preparation.</h3>';
 
-                //         $mpdf->WriteHTML($heading);
-                //     }
-                //     $mpdf->WriteHTML('<h5 style="font-size:14px;">Deck Name:' . $value['name'] . '</h5>');
+                    $mpdf->WriteHTML( $heading);
+                }
+                $mpdf->WriteHTML('<h5 style="font-size:16px;">Deck Name:'.$value['name'].'</h5>');
 
-                //     $templateId = $mpdf->importPage($i);
-                //     $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
+                $templateId = $mpdf->importPage($i);
+                $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
 
-                // }
-                // $mpdf->AddPage('L');
-                // $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks'], 'name' => $value['name']]));
-                // unlink($fileNameDiagram);
             }
+            $mpdf->AddPage('L');
+            $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks'],'name'=>$value['name']]));
+            unlink($fileNameDiagram);
         }
-exit();
+      
         $mpdf->AddPage('P');
         $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
         $mpdf->AddPage('L');
@@ -468,14 +465,17 @@ exit();
                         if ($i == 1) {
                             if ($fileExtension === 'pdf') {
                                 $this->mergePdf($filePath, $titleattach, $mpdf);
-                            } else {
+
+                            }else{
                                 $this->mergeImageToPdf($filePath, $titleattach, $mpdf);
+
                             }
                         } else {
                             if ($fileExtension === 'pdf') {
-                                $this->mergePdf($filePath, null, $mpdf);
-                            } else {
+                             $this->mergePdf($filePath, null, $mpdf);
+                            }else{
                                 $this->mergeImageToPdf($filePath, null, $mpdf);
+
                             }
                         }
                     }
@@ -492,9 +492,10 @@ exit();
 
                     if (file_exists($filePathDoc)) {
                         if ($fileExtension === 'pdf') {
-                            $this->mergePdf($filePathDoc, null, $mpdf);
-                        } else {
+                        $this->mergePdf($filePathDoc, null, $mpdf);
+                        }else{
                             $this->mergeImageToPdf($filePath, null, $mpdf);
+
                         }
                     }
                 }
@@ -566,14 +567,14 @@ exit();
         $safeProjectNo = str_replace('/', '_', $projectDetail['project_no']);
 
         $fileName = $safeProjectNo . '.pdf';
-        $filePath = public_path('pdf/' . $fileName); // Adjust the directory and file name as needed
+        $filePath = public_path('pdf/'.$fileName); // Adjust the directory and file name as needed
         $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
         $response = response()->download($filePath, $fileName)->deleteFileAfterSend(true);
         $response->headers->set('X-File-Name', $fileName);
-        return $response;
-
-
-
+         return $response; 
+    
+    
+  
         // return response()->make($mpdf->Output('project_report.pdf', 'D'), 200, [
         //     'Content-Type' => 'application/pdf',
         //     'Content-Disposition' => 'attachment; filename="project_report.pdf"'
@@ -619,20 +620,23 @@ exit();
                 list($width, $height) = getimagesize($imagePath);
                 if ($width >= 1000) {
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
+                    
+
                 } else {
                     if ($height >= 500) {
-                        $image_height = $height;
-                        $image_width = $width;
-                     //   $image_width = ($image_height * $width) / $height;
-                    } else {
+                        $image_height = 400;
+                        $image_width = ($image_height * $width) / $height;
+                    }else{
                         $image_width = $width;
                     }
                     $leftPositionPixels = (1024 - $image_width) / 2;
                     $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
 
-                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column;margin-left:{$leftPositionPercent}%;'>";
-                }
+                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column;margin-left:{$leftPositionPercent}%;'>";
+                   
 
+                }
+              
 
                 $html .= '<div style="margin-top:20%;">';
 
@@ -645,10 +649,8 @@ exit();
                     $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px;" />';
                 } else {
                     if ($height >= 500) {
-                     //   $image_height = 400;
-                     //   $image_width = ($image_height * $width) / $height;
-                     $image_height = $height;
-                     $image_width = $width;
+                        $image_height = 400;
+                        $image_width = ($image_height * $width) / $height;
                         $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"  style="width:' . $image_width . 'px;"/>';
                     } else {
                         $image_height = $height;
@@ -682,7 +684,7 @@ exit();
                         }
                     }
                     $k++;
-                    if ($width > 1000 || $height >= 400) {
+                    if ($width > 1000 || $image_height >= 350) {
                         $topshow = ($image_width * $top) / $width;
                         $leftshow = ($image_width * $left) / $width;
                     } else {
