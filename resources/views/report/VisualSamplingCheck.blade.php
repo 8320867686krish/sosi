@@ -109,7 +109,7 @@
                     <td {{$color}}>{{ $check->equipment }}</td>
                     <td {{$color}}> {{ $check->component }}</td>
                     @if($hazmat->image)
-                    <td><a href="{{$hazmat-image}}" target="_blank">{{$hazmat-image}}</a></td>
+                    <td><a href="{{$hazmat->image}}" target="_blank">{{$hazmat->image}}</a></td>
                     @else
                     <td {{$color}}>UnKnown</td>
                     @endif
