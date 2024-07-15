@@ -70,7 +70,13 @@
                 <td> {{ $check->component }}</td>
 
                 <td>{{ $check->type }}</td>
-                <td>{{ $hazmat->remarks }}</td>
+                @if(@$check->remarks)
+                <td>{{ $check->remarks }}</td>
+                @else
+                @if($hazmat->type == 'PCHM')
+                    <td>{{$hazmat->remarks}}</td>
+                @endif
+                @endif
 
             </tr>
             @endforeach
