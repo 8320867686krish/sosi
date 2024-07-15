@@ -448,7 +448,7 @@ class ReportContoller extends Controller
         }
 
 
-        $titleattach = '<h2 style="text-align:center;font-size:14px;">Appendix-4 Supporting Documents/plans from Ship</h2>';
+        $titleattach = '<h2 style="text-align:center;font-size:12px;">Appendix-4 Supporting Documents/plans from Ship</h2>';
         $check_has_hazmats = CheckHasHazmat::where('project_id', $project_id)->get();
 
         $i = 0;
@@ -511,7 +511,7 @@ class ReportContoller extends Controller
             $filePath = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult1'];
             if (file_exists($filePath) && @$projectDetail['leb1LaboratoryResult1']) {
                 $attachmentCount++;
-                $titleHtml = '<h2 style="text-align:center;font_size:12px;" id="lebResult">Attachment ' . $attachmentCount . ' Leb Result1 for leb1</h2>';
+                $titleHtml = '<h2 style="text-align:center;font_size:12px;" id="labResult">Attachment ' . $attachmentCount . ' Lab Result</h2>';
                 $this->mergePdf($filePath, $titleHtml, $mpdf);
             }
         }
@@ -520,7 +520,7 @@ class ReportContoller extends Controller
             $filePath1 = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult2'];
             if (file_exists($filePath1) && @$projectDetail['leb1LaboratoryResult2']) {
                 $attachmentCount++;
-                $titleHtml = '<h2 style="text-align:center;font_size:12px;padding-bottom:10px;" id="lebResult">Attachment ' . $attachmentCount . ' Leb Result1 for leb2</h2>';
+                $titleHtml = '<h2 style="text-align:center;font_size:12px;padding-bottom:10px;" id="lebResult">Attachment ' . $attachmentCount . ' Lab Result</h2>';
                 $this->mergePdf($filePath1, $titleHtml, $mpdf);
             }
         }
@@ -530,7 +530,7 @@ class ReportContoller extends Controller
             $filePath2 = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult1'];
             if (file_exists($filePath2) && @$projectDetail['leb2LaboratoryResult1']) {
                 $attachmentCount++;
-                $titleHtml = '<h2 style="text-align:center;font_size:12px;padding-bottom:10px;" id="lebResult">Attachment ' . $attachmentCount . ' Leb Result1 for leb2</h2>';
+                $titleHtml = '<h2 style="text-align:center;font_size:12px;padding-bottom:10px;" id="lebResult">Attachment ' . $attachmentCount . ' Lab Result</h2>';
                 $this->mergePdf($filePath2, $titleHtml, $mpdf);
             }
         }
@@ -540,7 +540,7 @@ class ReportContoller extends Controller
             $filePath3 = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult2'];
             if (file_exists($filePath) && @$projectDetail['leb2LaboratoryResult2']) {
                 $attachmentCount++;
-                $titleHtml = '<h2 style="text-align:center;font_size:12px;" id="lebResult">Attachment ' . $attachmentCount . ' Leb Result2 for leb2</h2>';
+                $titleHtml = '<h2 style="text-align:center;font_size:12px;" id="lebResult">Attachment ' . $attachmentCount . ' Lab Result</h2>';
                 $this->mergePdf($filePath3, $titleHtml, $mpdf);
             }
         }
@@ -548,7 +548,7 @@ class ReportContoller extends Controller
         $gaPlan = public_path('images/projects') . "/" . $projectDetail['id'] . "/" . $projectDetail['deck_image'];
         if (file_exists($gaPlan) && @$projectDetail['ga_plan']) {
             $attachmentCount++;
-            $titleattach = '<h2 style="text-align:center;font-size:12px;">AttachMent ' . $attachmentCount . ' Ga Plan </h2>';
+            $titleattach = '<h2 style="text-align:center;font-size:12px;">Attachment ' . $attachmentCount . ' Ga Plan </h2>';
             $this->mergeImageToPdf($gaPlan, $titleattach, $mpdf, $page = 'L');
         }
         foreach ($attechments as $value) {
