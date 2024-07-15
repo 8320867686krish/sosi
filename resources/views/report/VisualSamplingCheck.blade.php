@@ -102,14 +102,14 @@
 
                 <td>{{$check['name']}}{{$hazmat->type}}</td>
 
-                <td {{$color}}>{{ $hazmat->hazmat->table_type }}</td>
+                <td> {{$color}}></td>
                     <td {{$color}}>{{ $hazmat->hazmat->short_name }}</td>
                     <td {{$color}}>{{ $check->location }} @if($check->sub_location){{ ',' . $check->sub_location }}
                         @endif</td>
                     <td {{$color}}>{{ $check->equipment }}</td>
                     <td {{$color}}> {{ $check->component }}</td>
                     @if($hazmat->image)
-                    <td {{$color}}>Known</td>
+                    <td><a href="{{$hazmat-image}}" target="_blank">{{$hazmat-image}}</a></td>
                     @else
                     <td {{$color}}>UnKnown</td>
                     @endif
