@@ -219,11 +219,11 @@ class ReportContoller extends Controller
             $query->where('project_id', $project_id);
         }])->get();
 
-        $decksval = Deck::with(['checks' => function ($query) {
-            $query->whereHas('check_hazmats', function ($query) {
-                $query->where('type', 'PCHM')->orWhere('type', 'Contained');
-            });
-        }])->where('project_id', $project_id)->get();
+        // $decksval = Deck::with(['checks' => function ($query) {
+        //     $query->whereHas('check_hazmats', function ($query) {
+        //         $query->where('type', 'PCHM')->orWhere('type', 'Contained');
+        //     });
+        // }])->where('project_id', $project_id)->get();
 
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
@@ -245,7 +245,7 @@ class ReportContoller extends Controller
             ->get();
 
         $decks = Deck::with(['checks' => function ($query) {
-            $query->whereHas('check_hazmats', function ($query) {
+            $query->whereHas('labResults', function ($query) {
                 $query->where('type', 'PCHM')->orWhere('type', 'Contained');
             });
         }])->where('project_id', $project_id)->get();
