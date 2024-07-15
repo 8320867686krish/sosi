@@ -59,14 +59,14 @@
             </ul>
             <p>Do not touch any sample with your bare hands. Change boiler suits, disposable suits, and gloves, and take a proper shower.</p>
 
-            <p><b>2.Precaution for Others’ Safety:</b></p>
+            <p><b>2.Precaution for Others'Safety:</b></p>
             <p>Do not put other people at risk. Cordon off the area if required while sampling, especially for asbestos sampling. Inform people in the vicinity & advise safety precautions Check for the people before closing the space. Clean the area after work; make sure any spillage is removed. Seal the sample area to avoid scattering or spillage.</p>
 
             <p><b>3.Precaution against Contaminations of Ship & Environment: </b></p>
             <p>Sampling precautions must be taken to avoid spillage and contamination of the surrounding spaces. While sampling indoors, avoid strong ventilation but vent afterward. While sampling lubricants and hydraulic oil take care that the system is not under pressure. Cover the space under the sampling area for easy cleaning afterwards Prepare the material against spreading before sampling: moisten solids before breaking or cutting, and use water, oil, or a polymer. Use drill- bags when drilling dry material Re-install the cover after sampling Cover open edges and holes with tape, mastic, or a polymeric coating agent on board, a ship the options to reduce spillage, debris and airborne dust are limited, due to the requirements of the operation. But sampling naturally doesn't cause the same level of contamination as dismantling or large-scale works, for which it is commonly known that safety precautions should be taken. All hazardous materials in coatings are strongly bound in the matrix or incorporated in such a low concentration that release while sampling is normally insignificant. </p>
         </div>
 
-        <div style="margin-top:10px">
+        <div style="margin-top:10px" class="next">
             <h3>4.2 Safety general precautions against individual HazMat:</h3>
             <p><b>1.Safety precautions for Asbestos (Asbestos-containing materials) sampling: </b></p>
             <p>
@@ -100,7 +100,6 @@
             <p><b>3.Safety precautions for PCB sampling:</b></p>
             <p>People handling PCBs or people that can be potentially exposed to PCBs have to use adequate protective equipment. The level of protection and the choice of protective equipment depend highly on the tasks carried out.</p>
             <p><b>Example: A sampling of Liquid PCB:</b>
-            <p></p>
             <ul>
                 <li>Gloves Vinyl or latex (oil resistant)</li>
                 <li>Light respiratory Mask</li>
