@@ -686,7 +686,7 @@ class ReportContoller extends Controller
                         }
                     }
                     $k++;
-                    if ($width > 1000 || $image_height >= 350) {
+                    if ($width > 1000 || $height >= 600) {
                         $topshow = ($image_width * $top) / $width;
                         $leftshow = ($image_width * $left) / $width;
                     } else {
