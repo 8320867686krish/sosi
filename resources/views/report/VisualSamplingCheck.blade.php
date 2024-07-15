@@ -77,7 +77,7 @@
                 @php $hazmatsCount = count($check->check_hazmats); @endphp
                 @if ($hazmatsCount == 0)
                 <tr>
-                    <td>{{$chek->name}}{{$color}}</td>
+                    <td>{{$value->name}}{{$color}}</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>{{ $check->location }} @if($check->sub_location){{ ',' . $check->sub_location }}
@@ -100,7 +100,7 @@
                 @endphp
                 <tr>
 
-                <td>{{$chek->name}}{{$color}}</td>
+                <td>{{$value->name}}{{$color}}</td>
                 <td {{$color}}>{{ $hazmat->hazmat->table_type }}</td>
                     <td {{$color}}>{{ $hazmat->hazmat->short_name }}</td>
                     <td {{$color}}>{{ $check->location }} @if($check->sub_location){{ ',' . $check->sub_location }}
