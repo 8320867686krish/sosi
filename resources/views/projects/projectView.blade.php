@@ -867,67 +867,67 @@ $('#summery, #fullreport').click(function() {
 });
 
 
-            $('#generatePdfForm').submit(function(event) {
-               var projectId = $('#projectId').val();
-        event.preventDefault(); // Prevent default form submission
+    //         $('#generatePdfForm').submit(function(event) {
+    //            var projectId = $('#projectId').val();
+    //     event.preventDefault(); // Prevent default form submission
 
-        let $submitButton = $('#' + clickedButton);
-        let originalText = $submitButton.html();
+    //     let $submitButton = $('#' + clickedButton);
+    //     let originalText = $submitButton.html();
 
 
-        // Show loading spinner and disable the submit button
-        $('#loadingSpinner').show();
-        $submitButton.text('Wait...');
-        $submitButton.prop('disabled', true);
+    //     // Show loading spinner and disable the submit button
+    //     $('#loadingSpinner').show();
+    //     $submitButton.text('Wait...');
+    //     $submitButton.prop('disabled', true);
 
-        let formData = new FormData(this);
-        formData.append('action', clickedButton); // Add action to formData
+    //     let formData = new FormData(this);
+    //     formData.append('action', clickedButton); // Add action to formData
 
-        $.ajax({
-            url: $(this).attr('action'),
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            xhrFields: {
-                responseType: 'blob' // Important
-            },
-            success: function(response, status, xhr) {
-                let fileName = xhr.getResponseHeader('X-File-Name');
-            if (!fileName) {
-                console.log("dd");
-                fileName = projectId + '.pdf';
-            }
-                // Create a Blob from the response
-                let blob = new Blob([response], { type: 'application/pdf' });
-                let url = URL.createObjectURL(blob);
+    //     $.ajax({
+    //         url: $(this).attr('action'),
+    //         type: 'POST',
+    //         data: formData,
+    //         contentType: false,
+    //         processData: false,
+    //         xhrFields: {
+    //             responseType: 'blob' // Important
+    //         },
+    //         success: function(response, status, xhr) {
+    //             let fileName = xhr.getResponseHeader('X-File-Name');
+    //         if (!fileName) {
+    //             console.log("dd");
+    //             fileName = projectId + '.pdf';
+    //         }
+    //             // Create a Blob from the response
+    //             let blob = new Blob([response], { type: 'application/pdf' });
+    //             let url = URL.createObjectURL(blob);
 
-                // Create a link element and trigger a download
-                let a = document.createElement('a');
-                a.href = url;
-                a.download = fileName; // Set the file name
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+    //             // Create a link element and trigger a download
+    //             let a = document.createElement('a');
+    //             a.href = url;
+    //             a.download = fileName; // Set the file name
+    //             document.body.appendChild(a);
+    //             a.click();
+    //             document.body.removeChild(a);
 
-                // Hide loading spinner and re-enable the submit button
-                $('#loadingSpinner').hide();
-                $submitButton.text(originalText);
-                $submitButton.prop('disabled', false);
+    //             // Hide loading spinner and re-enable the submit button
+    //             $('#loadingSpinner').hide();
+    //             $submitButton.text(originalText);
+    //             $submitButton.prop('disabled', false);
 
-                // Revoke the object URL after the download
-                URL.revokeObjectURL(url);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-                // Handle errors or show an error message
-                $('#loadingSpinner').hide();
-                $submitButton.text(originalText);
-                $submitButton.prop('disabled', false);
-            }
+    //             // Revoke the object URL after the download
+    //             URL.revokeObjectURL(url);
+    //         },
+    //         error: function(xhr, status, error) {
+    //             console.error('Error:', error);
+    //             // Handle errors or show an error message
+    //             $('#loadingSpinner').hide();
+    //             $submitButton.text(originalText);
+    //             $submitButton.prop('disabled', false);
+    //         }
         
-    });
-        });
+    // });
+    //     });
         function previewFile(input) {
             let file = $("input[type=file]").get(0).files[0];
 
