@@ -15,7 +15,7 @@
         font-size: 14px;
     }
     .section-1-1 table td{
-        height:100px;
+        height:130px;
     }
     .next {
         page-break-before: always;
@@ -100,7 +100,7 @@
                     <td>
                         @if($hasImage)
                         <a href="{{ $imagePath1 ?? '#' }}">
-                            <img src="{{ $imagePath }}" width="100px" height="100px" />
+                            <img src="{{ $imagePath }}" width="130px" height="130px" />
                         </a> @else
                         &nbsp;
                         @endif
