@@ -174,7 +174,7 @@ class ReportContoller extends Controller
 
                         $mpdf->AddPage('L');
                         if ($key == 0) {
-                            $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h3><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
+                            $mpdf->WriteHTML('<h3 style="font-size:14px">2.1 Location Diagram of Contained HazMat & PCHM</h3><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
                         }
                         $templateId = $mpdf->importPage($i);
                         $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
@@ -380,7 +380,7 @@ class ReportContoller extends Controller
 
                     $mpdf->AddPage('L');
                     if ($newDiagram  == 0) {
-                        $mpdf->WriteHTML('<h3 style="font-size:14px">2.2 Location Diagram of Contained HazMat & PCHM</h3><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
+                        $mpdf->WriteHTML('<h3 style="font-size:14px">2.1 Location Diagram of Contained HazMat & PCHM</h3><p>Location marking of only the CONTAINED AND PCHM ITEMS </p>');
                     }
                     $mpdf->WriteHTML('<h5 style="font-size:14px;">Deck Name:'.$value['name'].'</h5>');
                     $templateId = $mpdf->importPage($i);
