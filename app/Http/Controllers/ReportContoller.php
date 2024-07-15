@@ -513,7 +513,7 @@ class ReportContoller extends Controller
             $filePath = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult1'];
             if (file_exists($filePath) && @$projectDetail['leb1LaboratoryResult1']) {
                 $attachmentCount++;
-                $titleHtml = '<h2 style="text-align:center;font_size:12px;" id="labResult">Attachment ' . $attachmentCount . ' Lab Result</h2>';
+                $titleHtml = '<h2 style="text-align:center;font_size:14px;" id="labResult">Attachment ' . $attachmentCount . ' Lab Result</h2>';
                 $this->mergePdf($filePath, $titleHtml, $mpdf);
             }
         }
@@ -550,12 +550,12 @@ class ReportContoller extends Controller
         $gaPlan = public_path('images/projects') . "/" . $projectDetail['id'] . "/" . $projectDetail['deck_image'];
         if (file_exists($gaPlan) && @$projectDetail['ga_plan']) {
             $attachmentCount++;
-            $titleattach = '<h2 style="text-align:center;font-size:12px;">Attachment ' . $attachmentCount . ' Ga Plan </h2>';
+            $titleattach = '<h2 style="text-align:center;font-size:14px;">Attachment ' . $attachmentCount . ' Ga Plan </h2>';
             $this->mergeImageToPdf($gaPlan, $titleattach, $mpdf, $page = 'L');
         }
         foreach ($attechments as $value) {
 
-            $titleattach = '<h2 style="text-align:center;font-size:12px;">Attachment ' . $attachmentCount . " " . $value['heading'] . '</h2>';
+            $titleattach = '<h2 style="text-align:center;font-size:14px;">Attachment ' . $attachmentCount . " " . $value['heading'] . '</h2>';
 
             $filePath = public_path('images/attachment') . "/" . $projectDetail['id'] . "/" . $value['documents'];
             if (file_exists($filePath) && @$value['documents']) {
@@ -792,7 +792,7 @@ class ReportContoller extends Controller
             );
             if ($i === 1 && @$title) {
                 $mpdf->WriteHTML($title);
-                $lmargin = 25;
+                $lmargin = 50;
                 $tMargin = 15;
             } else {
                 $lmargin = $mpdf->lMargin;
