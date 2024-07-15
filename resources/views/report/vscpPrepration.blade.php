@@ -75,7 +75,11 @@
                 @else
                 @if($hazmat->type == 'PCHM')
                     <td>{{$hazmat->remarks}}</td>
+                @else
+                <td>&nbsp;</td>
                 @endif
+                @else 
+                <td>&nbsp;</td>
                 @endif
 
             </tr>
