@@ -176,7 +176,7 @@ class ReportContoller extends Controller
                         if ($key == 0) {
                             $mpdf->WriteHTML('<h3 style="font-size:14px">2.1 Location Diagram of Contained HazMat & PCHM</h3>');
                         }
-                        $mpdf->WriteHTML('<h5 style="font-size:14px;">Deck Name:'.$value['name'].'</h5>');
+                        $mpdf->WriteHTML('<h5 style="font-size:14px;">Deck Name:' . $value['name'] . '</h5>');
 
                         $templateId = $mpdf->importPage($i);
                         $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
@@ -186,13 +186,13 @@ class ReportContoller extends Controller
                 }
             }
             $safeProjectNo = str_replace('/', '_', $projectDetail['project_no']);
-            $fileName ="summery_".$safeProjectNo . '.pdf';
+            $fileName = "summery_" . $safeProjectNo . '.pdf';
 
-            $filePath = public_path('pdfs1/'.$fileName); // Adjust the directory and file name as needed
+            $filePath = public_path('pdfs1/' . $fileName); // Adjust the directory and file name as needed
             $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
             $response = response()->download($filePath, $fileName)->deleteFileAfterSend(true);
-             $response->headers->set('X-File-Name', $fileName);
-            return $response; 
+            $response->headers->set('X-File-Name', $fileName);
+            return $response;
         } catch (\Mpdf\MpdfException $e) {
             // Handle mPDF exception
             echo $e->getMessage();
@@ -202,9 +202,9 @@ class ReportContoller extends Controller
     public function genratePdf(Request $request)
     {
 
-       
+
         $post = $request->input();
-      
+
         $project_id = $post['project_id'];
         $version = $post['version'];
         $date = date('d-m-Y', strtotime($post['date']));
@@ -212,7 +212,7 @@ class ReportContoller extends Controller
         // if ($post['action'] == 'summery') {
         //  return  $this->summeryReport($post);
         // }
-      
+
         $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
             $query->where('project_id', $project_id);
         }])->withCount(['checkHasHazmatsSample as sample_count' => function ($query) use ($project_id) {
@@ -310,7 +310,7 @@ class ReportContoller extends Controller
 
             'allow_output_buffering' => true,
         ]);
-      
+
         $mpdf->use_kwt = true;
 
         $mpdf->defaultPageNumStyle = '1';
@@ -365,8 +365,8 @@ class ReportContoller extends Controller
         } else {
             $mpdf->WriteHTML(view('report.gapAnaylisis', compact('hazmets', 'projectDetail')));
         }
-      
-       
+
+
         $mpdf->AddPage('L'); // Set landscape mode for the inventory page
 
         $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3')));
@@ -384,7 +384,7 @@ class ReportContoller extends Controller
                     if ($newDiagram  == 0) {
                         $mpdf->WriteHTML('<h3 style="font-size:14px">2.1 Location Diagram of Contained HazMat & PCHM</h3>');
                     }
-                    $mpdf->WriteHTML('<h5 style="font-size:14px;">Deck Name:'.$value['name'].'</h5>');
+                    $mpdf->WriteHTML('<h5 style="font-size:14px;">Deck Name:' . $value['name'] . '</h5>');
                     $templateId = $mpdf->importPage($i);
                     $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
 
@@ -393,7 +393,7 @@ class ReportContoller extends Controller
                 unlink($fileNameDiagram);
             }
         }
-      
+
         $mpdf->AddPage('p');
         if ($projectDetail['ihm_table'] == 'IHM Part 1') {
             $mpdf->WriteHTML(view('report.development', compact('projectDetail', 'attechmentsResult', 'foundItems')));
@@ -411,16 +411,16 @@ class ReportContoller extends Controller
                 if ($key == 0) {
                     $heading = '<h3 style="font-size:14px">3.4 VSCP Preparation.</h3>';
 
-                    $mpdf->WriteHTML( $heading);
+                    $mpdf->WriteHTML($heading);
                 }
-                $mpdf->WriteHTML('<h5 style="font-size:16px;">Deck Name:'.$value['name'].'</h5>');
+                $mpdf->WriteHTML('<h5 style="font-size:16px;">Deck Name:' . $value['name'] . '</h5>');
 
                 $templateId = $mpdf->importPage($i);
                 $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
 
             }
             $mpdf->AddPage('L');
-            $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks'],'name'=>$value['name']]));
+            $mpdf->writeHTML(view('report.vscpPrepration', ['checks' => $value['checks'], 'name' => $value['name']]));
             unlink($fileNameDiagram);
         }
         $mpdf->AddPage('P');
@@ -468,17 +468,14 @@ class ReportContoller extends Controller
                         if ($i == 1) {
                             if ($fileExtension === 'pdf') {
                                 $this->mergePdf($filePath, $titleattach, $mpdf);
-
-                            }else{
+                            } else {
                                 $this->mergeImageToPdf($filePath, $titleattach, $mpdf);
-
                             }
                         } else {
                             if ($fileExtension === 'pdf') {
-                             $this->mergePdf($filePath, null, $mpdf);
-                            }else{
+                                $this->mergePdf($filePath, null, $mpdf);
+                            } else {
                                 $this->mergeImageToPdf($filePath, null, $mpdf);
-
                             }
                         }
                     }
@@ -495,10 +492,9 @@ class ReportContoller extends Controller
 
                     if (file_exists($filePathDoc)) {
                         if ($fileExtension === 'pdf') {
-                        $this->mergePdf($filePathDoc, null, $mpdf);
-                        }else{
+                            $this->mergePdf($filePathDoc, null, $mpdf);
+                        } else {
                             $this->mergeImageToPdf($filePath, null, $mpdf);
-
                         }
                     }
                 }
@@ -570,14 +566,14 @@ class ReportContoller extends Controller
         $safeProjectNo = str_replace('/', '_', $projectDetail['project_no']);
 
         $fileName = $safeProjectNo . '.pdf';
-        $filePath = public_path('pdf/'.$fileName); // Adjust the directory and file name as needed
+        $filePath = public_path('pdf/' . $fileName); // Adjust the directory and file name as needed
         $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
         $response = response()->download($filePath, $fileName)->deleteFileAfterSend(true);
         $response->headers->set('X-File-Name', $fileName);
-         return $response; 
-    
-    
-  
+        return $response;
+
+
+
         // return response()->make($mpdf->Output('project_report.pdf', 'D'), 200, [
         //     'Content-Type' => 'application/pdf',
         //     'Content-Disposition' => 'attachment; filename="project_report.pdf"'
@@ -615,8 +611,8 @@ class ReportContoller extends Controller
 
             $k = 0;
             $gap = 1;
-            $oddincreaseGap = 23;
-            $evenincreaseGap=30;
+            $oddincreaseGap = 25;
+            $evenincreaseGap = 30;
             foreach ($chunks as $chunkIndex => $chunk) {
                 $imagePath = $decks['image'];
                 $imageData = base64_encode(file_get_contents($imagePath));
@@ -624,24 +620,20 @@ class ReportContoller extends Controller
                 list($width, $height) = getimagesize($imagePath);
                 if ($width >= 1000) {
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
-                    
-
                 } else {
                     if ($height >= 500) {
-                       // $image_width = $width;
-                       $image_height = 400;
-                       $image_width = ($image_height * $width) / $height;
-                    }else{
+                        // $image_width = $width;
+                        $image_height = 400;
+                        $image_width = ($image_height * $width) / $height;
+                    } else {
                         $image_width = $width;
                     }
                     $leftPositionPixels = (1024 - $image_width) / 2;
                     $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
 
-                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column;margin-left:{$leftPositionPercent}%;'>";
-                   
-
+                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column;margin-left:{$leftPositionPercent}%;'>";
                 }
-              
+
 
                 $html .= '<div style="margin-top:20%;">';
 
@@ -693,12 +685,14 @@ class ReportContoller extends Controller
                         $topshow = ($image_width * $top) / $width;
                         $leftshow = ($image_width * $left) / $width;
                     } else {
-                        
-                       
+
+                        if ($image_height == 400) {
+                            $topshow = ($image_width * $top) / $width;
+                            $leftshow = ($image_width * $left) / $width;
+                        } else {
                             $topshow = $top;
                             $leftshow = $left;
-                        
-                      
+                        }
                     }
                     $lineLeftPosition =  ($leftshow + 4);
 
