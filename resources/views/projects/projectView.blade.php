@@ -9,6 +9,14 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatables/css/fixedHeader.bootstrap4.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/fancybox/fancybox.min.css') }}">
     <style>
+        .bg-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #0f0f0fd1;
+    z-index: 3;
+    display: none;
+}
         #pdf-container {
             position: relative;
             width: 100%;
@@ -123,7 +131,9 @@
 @endsection
 
 @section('content')
+
     <div class="container-fluid dashboard-content" id="projectViewContent">
+
         <aside class="page-aside" id="page-aside">
             <div class="aside-content">
                 <div class="aside-header">
@@ -868,6 +878,7 @@ $('#summery, #fullreport').click(function() {
 
 
             $('#generatePdfForm').submit(function(event) {
+                $(".bg-overlay").show();
                var projectId = $('#projectId').val();
         event.preventDefault(); // Prevent default form submission
 
@@ -894,6 +905,7 @@ $('#summery, #fullreport').click(function() {
             },
             success: function(response, status, xhr) {
                 let fileName = xhr.getResponseHeader('X-File-Name');
+                $(".bg-overlay").hide();
             if (!fileName) {
                 console.log("dd");
                 fileName = projectId + '.pdf';
