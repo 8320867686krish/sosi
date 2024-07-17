@@ -209,9 +209,9 @@ class ReportContoller extends Controller
         $version = $post['version'];
         $date = date('d-m-Y', strtotime($post['date']));
         $projectDetail = Projects::with('client')->find($project_id);
-        if ($post['action'] == 'summery') {
-         return  $this->summeryReport($post);
-        }
+        // if ($post['action'] == 'summery') {
+        //  return  $this->summeryReport($post);
+        // }
       
         $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
             $query->where('project_id', $project_id);
@@ -702,7 +702,7 @@ class ReportContoller extends Controller
                         
                       
                     }
-                    $lineLeftPosition =  ($leftshow + 2);
+                    $lineLeftPosition =  ($leftshow + 4);
 
                     if ($k % 2 == 1) {
                         $lineTopPosition = "-" . $gap;
@@ -753,7 +753,7 @@ class ReportContoller extends Controller
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
                     }
-                    $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 2px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
+                    $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 4px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
 
                     $html .= '<span class="line" style="top:' . $lineTopPosition  . 'px;left:' . $lineLeftPosition . 'px;height:' . $lineHeight . 'px;' . $lineCss . '"></span>';
 
