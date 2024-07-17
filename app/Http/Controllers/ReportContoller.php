@@ -617,7 +617,7 @@ class ReportContoller extends Controller
 
             $k = 0;
             $gap = 1;
-            $increaseGap = 30;
+            $increaseGap = 23;
             foreach ($chunks as $chunkIndex => $chunk) {
                 $imagePath = $decks['image'];
                 $imageData = base64_encode(file_get_contents($imagePath));
@@ -713,7 +713,7 @@ class ReportContoller extends Controller
                                 $oddsameLocation++;
                                 $tooltipStart = $tooltipStart - $increaseGap;
                                 $lineHeight = $lineHeight + $increaseGap;
-                                $lineTopPosition = $lineHeight - $increaseGap;
+                                $lineTopPosition = $lineTopPosition - $increaseGap;
                             }
                         }
                         if ($oddsameLocation > 1) {
@@ -721,7 +721,7 @@ class ReportContoller extends Controller
                                 if ($sameLocationoddValue == $tooltipStart) {
                                     $tooltipStart = $tooltipStart - $increaseGap;
                                     $lineHeight =  $topshow +  abs($tooltipStart);
-                                    $lineTopPosition = $lineHeight - $increaseGap;
+                                    $lineTopPosition = $tooltipStart;
                                 }
                             }
                             $sameLocationoddarray[] = $tooltipStart;
