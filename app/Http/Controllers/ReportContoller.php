@@ -615,7 +615,8 @@ class ReportContoller extends Controller
 
             $k = 0;
             $gap = 1;
-            $increaseGap = 23;
+            $oddincreaseGap = 23;
+            $evenincreaseGap=30;
             foreach ($chunks as $chunkIndex => $chunk) {
                 $imagePath = $decks['image'];
                 $imageData = base64_encode(file_get_contents($imagePath));
@@ -653,7 +654,7 @@ class ReportContoller extends Controller
                     $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px;" />';
                 } else {
                     if ($height >= 500) {
-                        $image_height = $height;
+                        $image_height = 400;
                         $image_width = ($image_height * $width) / $height;
                         $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"  style="width:' .  $image_width . 'px;"/>';
                     } else {
@@ -704,20 +705,20 @@ class ReportContoller extends Controller
                     if ($k % 2 == 1) {
                         $lineTopPosition = "-" . $gap;
                         $lineHeight = ($topshow + $gap);
-                        $tooltipStart = $lineTopPosition - $increaseGap;
+                        $tooltipStart = $lineTopPosition - $oddincreaseGap;
                         $oddsameLocation = 0;
                         foreach ($oddarrayLeft as $key => $oddvalue) {
                             if (abs($lineLeftPosition - $oddvalue) < 100 && abs($topshow - $oddarrayTop[$key]) < 100) {
                                 $oddsameLocation++;
-                                $tooltipStart = $tooltipStart - $increaseGap;
-                                $lineHeight = $lineHeight + $increaseGap;
-                                $lineTopPosition = $lineTopPosition - $increaseGap;
+                                $tooltipStart = $tooltipStart - $oddincreaseGap;
+                                $lineHeight = $lineHeight + $oddincreaseGap;
+                                $lineTopPosition = $lineTopPosition - $oddincreaseGap;
                             }
                         }
                         if ($oddsameLocation > 1) {
                             foreach ($sameLocationoddarray as $sameLocationoddValue) {
                                 if ($sameLocationoddValue == $tooltipStart) {
-                                    $tooltipStart = $tooltipStart - $increaseGap;
+                                    $tooltipStart = $tooltipStart - 25;
                                     $lineHeight =  $topshow +  abs($tooltipStart);
                                     $lineTopPosition = $tooltipStart;
                                 }
@@ -734,15 +735,15 @@ class ReportContoller extends Controller
                         foreach ($evenarrayLeft as $key => $evenvalue) {
                             if (abs($lineLeftPosition - $evenvalue) < 100 && abs($topshow - $evenarrayTop[$key]) < 100) {
                                 $sameLocation++;
-                                $tooltipStart = $tooltipStart +  $increaseGap;
-                                $lineHeight = $lineHeight +  $increaseGap;
+                                $tooltipStart = $tooltipStart +  $evenincreaseGap;
+                                $lineHeight = $lineHeight +  $evenincreaseGap;
                             }
                         }
                         if ($sameLocation > 1) {
                             foreach ($sameLocationevenarray as $sameLocationValue) {
                                 if ($sameLocationValue == $tooltipStart) {
-                                    $tooltipStart = $tooltipStart +  $increaseGap;
-                                    $lineHeight = $lineHeight +  $increaseGap;
+                                    $tooltipStart = $tooltipStart +  $evenincreaseGap;
+                                    $lineHeight = $lineHeight +  $evenincreaseGap;
                                 }
                             }
                             $sameLocationevenarray[] = $tooltipStart;
