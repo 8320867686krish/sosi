@@ -144,7 +144,7 @@
                     <th colspan="2">Current & Planned Measures to reduce</th>
                 </tr>
                 <tr>
-                    <th>Prevention Likelihood</th>
+                    <th style="width:50%">Prevention Likelihood</th>
                     <th>Mitigation Severity</th>
                 </tr>
                 <tr>
