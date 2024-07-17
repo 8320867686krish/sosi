@@ -215,7 +215,7 @@
                     <td>2</td>
                     <td>3</td>
                     <td>8</td>
-                    <td style="width:10%">
+                    <td style="width:8%">
                         <p class="sufont">a) Marking labelling to be in place using the IHM for identification,</p>
                         <p class="sufont">b) No direct contact with the skin of body parts</p>
                         <p class="sufont">c) The surrounding area is to be barricaded and work stopped in the vicinity.</p>
@@ -234,7 +234,7 @@
                 </tr>
                 <tr>
                     <td>PFOS</td>
-                    <td>
+                    <td  style="width:8%">
                         <p class="sufont">In humans,</p>
                         <p class="sufont">a)Occupational exposures have been linked to Bladder and kidney cancers.</p>
                         <p class="sufont">b) Diabetesn</p>
@@ -253,7 +253,7 @@
                     <td>2</td>
                     <td>4</td>
                     <td>8</td>
-                    <td>
+                    <td  style="width:8%">
                         <p class="sufont">a) Marking labelling to be in place using the IHM for identification,</p>
                         <p class="sufont">b) No direct contact with the skin of body parts</p>
                         <p class="sufont">c) The surrounding area is to be barricaded and work stopped in the vicinity.</p>
@@ -365,7 +365,7 @@
                     <td>2</td>
                     <td>3</td>
                     <td>6</td>
-                    <td>
+                    <td  style="width:8%">
                         <p class="sufont">a)Wear PPEs during the removal process</p>
                         <p class="sufont">b)Avoid direct contact with the skin or any body parts.</p>
                         <p class="sufont">c)Barricade the area to restrict any unauthorized entry.</p>
@@ -405,7 +405,7 @@
                     <td>2</td>
                     <td>3</td>
                     <td>6</td>
-                    <td>
+                    <td  style="width:8%">
                         <p class="sufont">a)Wear PPEs during the removal process</p>
                         <p class="sufont">b)Avoid direct contact with the skin or any body parts.</p>
                         <p class="sufont">c)Barricade the area to restrict any unauthorized entry.</p>
@@ -442,7 +442,7 @@
                     <td>2</td>
                     <td>3</td>
                     <td>6</td>
-                    <td>
+                    <td  style="width:8%">
                         <p class="sufont">a)Wear PPEs during the removal process</p>
                         <p class="sufont">b)Avoid direct contact with the skin or any body parts.</p>
                         <p class="sufont">c)Barricade the area to restrict any unauthorized entry.</p>
@@ -461,7 +461,7 @@
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
-                    <td>
+                    <td  style="width:8%">
                         <p class="sufont">Lead:</p>
                         <p class="sufont">Health effects from short-term exposure to lead:</p>
                         <p class="sufont">a) Abdominal pain,</p>
@@ -487,7 +487,7 @@
                     <td>2</td>
                     <td>3</td>
                     <td>6</td>
-                    <td>
+                    <td  style="width:8%">
                         <p class="sufont">a)Wear PPEs during the removal process</p>
                         <p class="sufont">b)Avoid direct contact with the skin or any body parts.</p>
                         <p class="sufont">c)Barricade the area to restrict any unauthorized entry.</p>
