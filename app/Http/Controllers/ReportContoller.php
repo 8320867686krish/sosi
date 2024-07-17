@@ -609,7 +609,7 @@ class ReportContoller extends Controller
     {
         $i = 1;
         $html = "";
-        $lineCss = 'position:absolute;background-color:#4052d6;width:1px;';
+        $lineCss = 'position:absolute;background-color:#4052d6;border:solid #4052d6 1px;';
         $tooltipCss = 'position: absolute;background-color: #fff;border: 1px solid #4052d6;padding: 1px;border-radius: 2px;
                 white-space: nowrap;z-index: 1;color:#4052d6;font-size:8px;text-align:center;';
         if (count($decks['checks']) > 0) {
