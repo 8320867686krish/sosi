@@ -713,7 +713,7 @@ class ReportContoller extends Controller
                                 $oddsameLocation++;
                                 $tooltipStart = $tooltipStart - $increaseGap;
                                 $lineHeight = $lineHeight + $increaseGap;
-                                $lineTopPosition = $lineTopPosition - $increaseGap;
+                                $lineTopPosition = $lineHeight - $increaseGap;
                             }
                         }
                         if ($oddsameLocation > 1) {
@@ -721,7 +721,7 @@ class ReportContoller extends Controller
                                 if ($sameLocationoddValue == $tooltipStart) {
                                     $tooltipStart = $tooltipStart - $increaseGap;
                                     $lineHeight =  $topshow +  abs($tooltipStart);
-                                    $lineTopPosition = $tooltipStart - $increaseGap;
+                                    $lineTopPosition = $lineHeight - $increaseGap;
                                 }
                             }
                             $sameLocationoddarray[] = $tooltipStart;
