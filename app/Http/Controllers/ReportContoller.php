@@ -546,7 +546,7 @@ class ReportContoller extends Controller
         if (file_exists($gaPlan) && @$projectDetail['ga_plan']) {
             $attachmentCount++;
             $titleattach = '<h2 style="text-align:center;font-size:14px;">Attachment ' . $attachmentCount . ' Ga Plan </h2>';
-            $this->mergeImageToPdf($gaPlan, $titleattach, $mpdf, $page = 'L');
+            $this->mergeImageToPdf($gaPlan, $titleattach, $mpdf, $page = 'P');
         }
         foreach ($attechments as $value) {
 
