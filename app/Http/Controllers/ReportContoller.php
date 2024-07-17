@@ -617,7 +617,7 @@ class ReportContoller extends Controller
 
             $k = 0;
             $gap = 1;
-            $increaseGap = 30;
+            $increaseGap = 28;
             foreach ($chunks as $chunkIndex => $chunk) {
                 $imagePath = $decks['image'];
                 $imageData = base64_encode(file_get_contents($imagePath));
@@ -629,9 +629,9 @@ class ReportContoller extends Controller
 
                 } else {
                     if ($height >= 500) {
-                        $image_width = $width;
-                       // $image_height = 400;
-                      //  $image_width = ($image_height * $width) / $height;
+                       // $image_width = $width;
+                       $image_height = 400;
+                       $image_width = ($image_height * $width) / $height;
                     }else{
                         $image_width = $width;
                     }
@@ -656,9 +656,8 @@ class ReportContoller extends Controller
                 } else {
                     if ($height >= 500) {
                         $image_height = $height;
-                      //  $image_height = 400;
-                     //   $image_width = ($image_height * $width) / $height;
-                        $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"/>';
+                        $image_width = ($image_height * $width) / $height;
+                        $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"  style="width:' .  $image_width . 'px;"/>';
                     } else {
                         $image_height = $height;
                         $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
