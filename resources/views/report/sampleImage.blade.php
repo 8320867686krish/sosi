@@ -27,7 +27,7 @@
 </style>
 
 <div class="container">
-    <div class="section-1-1">
+    <div class="section-1-1 next">
         @if(@$show && $show == true)
         <h2>Appendix-3 Onboard Sampling & Lab Analysis Record</h2>
         @endif
