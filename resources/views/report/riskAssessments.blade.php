@@ -144,7 +144,7 @@
                     <th colspan="2">Current & Planned Measures to reduce</th>
                 </tr>
                 <tr>
-                    <th style="width:50%">Prevention Likelihood</th>
+                    <th>Prevention Likelihood</th>
                     <th>Mitigation Severity</th>
                 </tr>
                 <tr>
@@ -215,7 +215,7 @@
                     <td>2</td>
                     <td>3</td>
                     <td>8</td>
-                    <td>
+                    <td style="width:25%">
                         <p class="sufont">a) Marking labelling to be in place using the IHM for identification,</p>
                         <p class="sufont">b) No direct contact with the skin of body parts</p>
                         <p class="sufont">c) The surrounding area is to be barricaded and work stopped in the vicinity.</p>
