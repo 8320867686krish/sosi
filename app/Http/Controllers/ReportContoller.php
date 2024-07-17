@@ -628,8 +628,9 @@ class ReportContoller extends Controller
 
                 } else {
                     if ($height >= 500) {
-                        $image_height = 400;
-                        $image_width = ($image_height * $width) / $height;
+                        $image_width = $width;
+                       // $image_height = 400;
+                      //  $image_width = ($image_height * $width) / $height;
                     }else{
                         $image_width = $width;
                     }
@@ -653,9 +654,9 @@ class ReportContoller extends Controller
                     $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px;" />';
                 } else {
                     if ($height >= 500) {
-                        $image_height = 400;
-                        $image_width = ($image_height * $width) / $height;
-                        $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"  style="width:' . $image_width . 'px;"/>';
+                      //  $image_height = 400;
+                     //   $image_width = ($image_height * $width) / $height;
+                        $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"/>';
                     } else {
                         $image_height = $height;
                         $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
@@ -692,13 +693,11 @@ class ReportContoller extends Controller
                         $topshow = ($image_width * $top) / $width;
                         $leftshow = ($image_width * $left) / $width;
                     } else {
-                        if( $image_height == 400){
-                            $topshow = ($image_width * $top) / $width;
-                            $leftshow = ($image_width * $left) / $width;
-                        }else{
+                        
+                       
                             $topshow = $top;
                             $leftshow = $left;
-                        }
+                        
                       
                     }
                     $lineLeftPosition =  ($leftshow + 2);
