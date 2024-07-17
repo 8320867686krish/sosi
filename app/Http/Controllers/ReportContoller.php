@@ -711,7 +711,7 @@ class ReportContoller extends Controller
                         foreach ($oddarrayLeft as $key => $oddvalue) {
                             if (abs($lineLeftPosition - $oddvalue) < 100 && abs($topshow - $oddarrayTop[$key]) < 100) {
                                 $oddsameLocation++;
-                                $tooltipStart = $tooltipStart - 23;
+                                $tooltipStart = $tooltipStart - 50;
                                 $lineHeight = $lineHeight + $increaseGap;
                                 $lineTopPosition = $lineTopPosition - $increaseGap;
                             }
@@ -719,7 +719,7 @@ class ReportContoller extends Controller
                         if ($oddsameLocation > 1) {
                             foreach ($sameLocationoddarray as $sameLocationoddValue) {
                                 if ($sameLocationoddValue == $tooltipStart) {
-                                    $tooltipStart = $tooltipStart - 23;
+                                    $tooltipStart = $tooltipStart - 50;
                                     $lineHeight =  $topshow +  abs($tooltipStart);
                                     $lineTopPosition = $tooltipStart;
                                 }
