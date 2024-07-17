@@ -611,7 +611,7 @@ class ReportContoller extends Controller
 
             $k = 0;
             $gap = 1;
-            $oddincreaseGap = 28;
+            $oddincreaseGap = 30;
             $evenincreaseGap = 30;
             foreach ($chunks as $chunkIndex => $chunk) {
                 $imagePath = $decks['image'];
@@ -712,7 +712,7 @@ class ReportContoller extends Controller
                         if ($oddsameLocation > 1) {
                             foreach ($sameLocationoddarray as $sameLocationoddValue) {
                                 if ($sameLocationoddValue == $tooltipStart) {
-                                    $tooltipStart = $tooltipStart - 28;
+                                    $tooltipStart = $tooltipStart - 30;
                                     $lineHeight =  $topshow +  abs($tooltipStart);
                                     $lineTopPosition = $tooltipStart;
                                 }
@@ -750,7 +750,7 @@ class ReportContoller extends Controller
                     $html .= '<span class="line" style="top:' . $lineTopPosition  . 'px;left:' . $lineLeftPosition . 'px;height:' . $lineHeight . 'px;' . $lineCss . '"></span>';
 
 
-                    $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $tooltipStart . 'px; left:' . ($lineLeftPosition - 12) . 'px">' . $tooltipText . '</span>';
+                    $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $tooltipStart . 'px; left:' . ($lineLeftPosition - 15) . 'px">' . $tooltipText . '</span>';
                 }
                 $html .= '</div>';
                 $html .= '</div>';
