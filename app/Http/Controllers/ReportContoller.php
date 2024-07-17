@@ -792,8 +792,8 @@ class ReportContoller extends Controller
             );
             if ($i === 1 && @$title) {
                 $mpdf->WriteHTML($title);
-                $lmargin = 50;
-                $tMargin = 15;
+                $lmargin = 25;
+                $tMargin = 50;
             } else {
                 $lmargin = $mpdf->lMargin;
                 $tMargin = $mpdf->tMargin;
