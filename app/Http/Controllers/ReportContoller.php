@@ -768,7 +768,7 @@ class ReportContoller extends Controller
     {
         $mpdf->AddPage($page);
         $mpdf->WriteHTML('<h1>' . $title . '</h1>');
-        $mpdf->Image($imagePath, 0, 35,  $mpdf->w, null, 'png', '', true, false);
+        $mpdf->Image($imagePath, 0, 20,  $mpdf->w, null, 'png', '', true, false);
     }
     protected function mergePdf($filePath, $title, $mpdf, $page = null)
     {
