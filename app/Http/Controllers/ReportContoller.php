@@ -541,13 +541,6 @@ class ReportContoller extends Controller
                 $this->mergePdf($filePath3, $titleHtml, $mpdf);
             }
         }
-
-        $gaPlan = public_path('images/projects') . "/" . $projectDetail['id'] . "/" . $projectDetail['deck_image'];
-        if (file_exists($gaPlan) && @$projectDetail['ga_plan']) {
-            $attachmentCount++;
-            $titleattach = '<h2 style="text-align:center;font-size:14px;">Attachment ' . $attachmentCount . ' Ga Plan </h2>';
-            $this->mergeImageToPdf($gaPlan, $titleattach, $mpdf, $page = 'P');
-        }
         foreach ($attechments as $value) {
 
             $titleattach = '<h2 style="text-align:center;font-size:14px;">Attachment ' . $attachmentCount . " " . $value['heading'] . '</h2>';
