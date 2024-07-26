@@ -459,7 +459,7 @@
                 </tr>
                 <tr>
                     <td><b>Total</b></td>
-                    <td colspan="3">{{$value['Total']}}</td>
+                    <td colspan="3">{{$value['total']}}</td>
 
 
                 </tr>
