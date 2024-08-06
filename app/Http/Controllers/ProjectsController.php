@@ -979,12 +979,14 @@ class ProjectsController extends Controller
     {
         $attachment =  Attechments::find($id);
         $proid = $attachment['project_id'];
+        if(@$attachment['documents']){
         $imagePath =  public_path("images/attachment" . "/" . $proid . "/" . $attachment['documents']);
         // Check if the image file exists before attempting to delete
 
         if (file_exists($imagePath)) {
             unlink($imagePath);
         }
+    }
         $attachment->delete();
         $attachment = Attechments::where('project_id', $proid)->get();
         $html = view('projects.attachmentAjax', compact('attachment'))->render();
