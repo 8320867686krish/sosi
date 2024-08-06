@@ -7,7 +7,7 @@
         <p>After arrival onboard the vessel {{$projectDetail['ship_name']}} , a safety briefing was carried out with ship staff to explain the purpose and scope of the IHM survey explaining the various check points & location from where the visuals/samples must be taken along with safety precaution measures taken while taking samples and marking places as Potentially hazardous materials.</p>
         @if(@$brifimage)
        
-            <img src="{{$brifimage}}" style="max-width:100%">
+            <img src="{{$brifimage}}" style="max-width:50%">
         @endif
         <p>Our experts are trained and certified see attachment: IHM expert Certificate.</p>
 

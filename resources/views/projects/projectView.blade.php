@@ -509,6 +509,7 @@
                         @csrf
                         <input type="hidden" name="project_id" value="{{ $project->id }}" />
                         <div class="form-group">
+                        <span class="dashboard-spinner spinner-sm" id="spinShow" style="display: none;"></span>
                             <div class="row">
                                 <div class="col-4">
                                     <input type="number" name="version" placeholder="Version Number..." class="form-control form-control-lg">
@@ -516,7 +517,7 @@
                                 <div class="col-4">
                                     <input type="date" name="date" class="form-control form-control-lg">
                                 </div>
-                                <span class="dashboard-spinner spinner-sm"></span>
+                              
                                 <div class="col-4">
                                     <button type="submit" name="fullreport" class="btn btn-primary fullreport" value="submit" id="fullreport">Full Report</button>
                                         @if($project->ihm_table == 'IHM Part 1')
@@ -888,7 +889,7 @@ $('#summery, #fullreport').click(function() {
 
 
         // Show loading spinner and disable the submit button
-        $('#loadingSpinner').show();
+        $('#spinShow').show();
         $submitButton.text('Wait...');
         $submitButton.prop('disabled', true);
 
@@ -924,7 +925,7 @@ $('#summery, #fullreport').click(function() {
                 document.body.removeChild(a);
 
                 // Hide loading spinner and re-enable the submit button
-                $('#loadingSpinner').hide();
+                $('#spinShow').hide();
                 $submitButton.text(originalText);
                 $submitButton.prop('disabled', false);
 
@@ -934,7 +935,7 @@ $('#summery, #fullreport').click(function() {
             error: function(xhr, status, error) {
                 console.error('Error:', error);
                 // Handle errors or show an error message
-                $('#loadingSpinner').hide();
+                $('#spinShow').hide();
                 $submitButton.text(originalText);
                 $submitButton.prop('disabled', false);
             }
