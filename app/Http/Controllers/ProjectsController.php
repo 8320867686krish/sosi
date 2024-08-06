@@ -13,7 +13,7 @@ use App\Models\Client;
 use App\Models\Deck;
 use App\Models\Hazmat;
 use App\Models\Attechments;
-use App\Models\LabResult;a
+use App\Models\LabResult;
 use App\Models\MakeModel;
 use App\Models\Projects;
 use App\Models\ProjectTeam;
