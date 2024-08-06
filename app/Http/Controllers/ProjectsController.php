@@ -13,7 +13,7 @@ use App\Models\Client;
 use App\Models\Deck;
 use App\Models\Hazmat;
 use App\Models\Attechments;
-use App\Models\LabResult;
+use App\Models\LabResult;a
 use App\Models\MakeModel;
 use App\Models\Projects;
 use App\Models\ProjectTeam;
@@ -91,7 +91,9 @@ class ProjectsController extends Controller
             $project->markAsChangeCount = $project->checks()->where('markAsChange', 1)->count();
         }
 
-        $attachment = Attechments::where('project_id', $project_id)->get();
+        $
+        
+        = Attechments::where('project_id', $project_id)->get();
 
         $project['imagePath'] = $project->image != null ? $project->image : asset('assets/images/giphy.gif');
 
@@ -126,7 +128,9 @@ class ProjectsController extends Controller
         }
         unset($project->materials);
 
-        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id, 'isBack' =>  $isBack, "hazmats" => $hazmats, 'attachment' => $attachment, 'foundItems' => $foundItems]);
+        return view('projects.projectView', ['head_title' => 'Ship Particulars', 'button' => 'View', 'users' => $users, 'clients' => $clients, 'project' => $project, 'readonly' => $readonly, 'project_id' => $project_id, 'isBack' =>  $isBack, "hazmats" => $hazmats, '
+        
+        ' => $attachment, 'foundItems' => $foundItems]);
     }
 
     public function projectInfo($project_id)
@@ -979,11 +983,13 @@ class ProjectsController extends Controller
     {
         $attachment =  Attechments::find($id);
         $proid = $attachment['project_id'];
+        if($attachment['documents']){
         $imagePath =  public_path("images/attachment" . "/" . $proid . "/" . $attachment['documents']);
         // Check if the image file exists before attempting to delete
 
         if (file_exists($imagePath)) {
             unlink($imagePath);
+        }
         }
         $attachment->delete();
         $attachment = Attechments::where('project_id', $proid)->get();
