@@ -176,7 +176,7 @@ class ReportContoller extends Controller
                         if ($key == 0) {
                             $mpdf->WriteHTML('<h3 style="font-size:14px">2.1 Location Diagram of Contained HazMat & PCHM</h3>');
                         }
-                        $mpdf->WriteHTML('<h5 style="font-size:14px;">Area:' . $value['name'] . '</h5>');
+                        $mpdf->WriteHTML('<h5 style="font-size:14px;">Area: ' . $value['name'] . '</h5>');
 
                         $templateId = $mpdf->importPage($i);
                         $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
@@ -360,6 +360,8 @@ class ReportContoller extends Controller
             'suppress' => false, // This should prevent a new page from being created before and after TOC
             'toc-resetpagenum' => 1,
         ]);
+        $mpdf->SetCompression(true);
+
         if ($projectDetail['ihm_table'] == 'IHM Part 1') {
             $mpdf->WriteHTML(view('report.introduction', compact('hazmets', 'projectDetail')));
         } else {
@@ -384,7 +386,7 @@ class ReportContoller extends Controller
                     if ($newDiagram  == 0) {
                         $mpdf->WriteHTML('<h3 style="font-size:14px">2.1 Location Diagram of Contained HazMat & PCHM</h3>');
                     }
-                    $mpdf->WriteHTML('<h5 style="font-size:14px;">Area:' . $value['name'] . '</h5>');
+                    $mpdf->WriteHTML('<h5 style="font-size:14px;">Area: ' . $value['name'] . '</h5>');
                     $templateId = $mpdf->importPage($i);
                     $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
 
@@ -413,7 +415,7 @@ class ReportContoller extends Controller
 
                     $mpdf->WriteHTML($heading);
                 }
-                $mpdf->WriteHTML('<h5 style="font-size:16px;">Area:' . $value['name'] . '</h5>');
+                $mpdf->WriteHTML('<h5 style="font-size:16px;">Area: ' . $value['name'] . '</h5>');
 
                 $templateId = $mpdf->importPage($i);
                 $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
@@ -508,7 +510,7 @@ class ReportContoller extends Controller
             $filePath = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult1'];
             if (file_exists($filePath) && @$projectDetail['leb1LaboratoryResult1']) {
                 $attachmentCount++;
-                $titleHtml = '<h2 style="text-align:center;font-size:12px;" id="labResult">Attachment ' . $attachmentCount . ' Lab Result</h2>';
+                $titleHtml = '<h2 style="text-align:center;font-size:14px;" id="labResult">Attachment ' . $attachmentCount . ' Lab Result</h2>';
                 $this->mergePdf($filePath, $titleHtml, $mpdf);
             }
         }
@@ -517,7 +519,7 @@ class ReportContoller extends Controller
             $filePath1 = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult2'];
             if (file_exists($filePath1) && @$projectDetail['leb1LaboratoryResult2']) {
                 $attachmentCount++;
-                $titleHtml = '<h2 style="text-align:center;font-size:12px;padding-bottom:10px;" id="lebResult">Attachment ' . $attachmentCount . ' Lab Result</h2>';
+                $titleHtml = '<h2 style="text-align:center;font-size:14px;padding-bottom:10px;" id="lebResult">Attachment ' . $attachmentCount . ' Lab Result</h2>';
                 $this->mergePdf($filePath1, $titleHtml, $mpdf);
             }
         }
@@ -527,7 +529,7 @@ class ReportContoller extends Controller
             $filePath2 = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult1'];
             if (file_exists($filePath2) && @$projectDetail['leb2LaboratoryResult1']) {
                 $attachmentCount++;
-                $titleHtml = '<h2 style="text-align:center;font-size:12px;padding-bottom:10px;" id="lebResult">Attachment ' . $attachmentCount . ' Lab Result</h2>';
+                $titleHtml = '<h2 style="text-align:center;font-size:14px;padding-bottom:10px;" id="lebResult">Attachment ' . $attachmentCount . ' Lab Result</h2>';
                 $this->mergePdf($filePath2, $titleHtml, $mpdf);
             }
         }
@@ -537,7 +539,7 @@ class ReportContoller extends Controller
             $filePath3 = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb2LaboratoryResult2'];
             if (file_exists($filePath) && @$projectDetail['leb2LaboratoryResult2']) {
                 $attachmentCount++;
-                $titleHtml = '<h2 style="text-align:center;font-size:12px;" id="lebResult">Attachment ' . $attachmentCount . ' Lab Result</h2>';
+                $titleHtml = '<h2 style="text-align:center;font-size:14px;" id="lebResult">Attachment ' . $attachmentCount . ' Lab Result</h2>';
                 $this->mergePdf($filePath3, $titleHtml, $mpdf);
             }
         }
@@ -548,7 +550,7 @@ class ReportContoller extends Controller
             if (file_exists($filePath) && @$value['documents']) {
                 $fileExtension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
                 $attachmentCount++;
-                $titleattach = '<h2 style="text-align:center;font-size:12px;">Attachment ' . $attachmentCount . " " . $value['heading'] . '</h2>';
+                $titleattach = '<h2 style="text-align:center;font-size:14px;">Attachment ' . $attachmentCount . " " . $value['heading'] . '</h2>';
 
                 if ($fileExtension === 'pdf') {
                     $this->mergePdf($filePath, $titleattach, $mpdf);
@@ -762,7 +764,7 @@ class ReportContoller extends Controller
     {
         $mpdf->AddPage($page);
         $mpdf->WriteHTML('<h1>' . $title . '</h1>');
-        $mpdf->Image($imagePath, 0, 20,  $mpdf->w, null, 'png', '', true, false);
+        $mpdf->Image($imagePath, 0, 10,  $mpdf->w, null, 'png', '', true, false);
     }
     protected function mergePdf($filePath, $title, $mpdf, $page = null)
     {
@@ -780,7 +782,7 @@ class ReportContoller extends Controller
             if ($i === 1 && @$title) {
                 $mpdf->WriteHTML($title);
                 $lmargin = 10;
-                $tMargin = 20;
+                $tMargin = 10;
             } else {
                 $lmargin = $mpdf->lMargin;
                 $tMargin = $mpdf->tMargin;

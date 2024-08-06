@@ -6,8 +6,8 @@
     <div class="section-1-1">
         <p>After arrival onboard the vessel {{$projectDetail['ship_name']}} , a safety briefing was carried out with ship staff to explain the purpose and scope of the IHM survey explaining the various check points & location from where the visuals/samples must be taken along with safety precaution measures taken while taking samples and marking places as Potentially hazardous materials.</p>
         @if(@$brifimage)
-        <div style="margin-top:20px">
-            <img src="{{$brifimage}}">
+        <div style="margin-top:10px">
+            <img src="{{$brifimage}}" height="200">
         </div>
         @endif
         <p>Our experts are trained and certified see attachment: IHM expert Certificate.</p>
@@ -188,7 +188,7 @@
     </section>
     <section class=" section-1-1" id="section4.3">
         <h3>4.4 Laboratory Analysis</h3>
-        <p>Once the samples are collected & sorted, are to be sent to the ISO17025 or equally credited laboratory.laboratory name Certificate : see attachment . the test results are recorded see: <a href="#lebResult" style="cursor:pointer">attachment lab test results</a> </p>
+        <p>Once the samples are collected & sorted, are to be sent to the ISO17025 or equally credited laboratory.please find laboratory certificats & laboratory test results of samples taken in the attachments section of the report.</a> </p>
         <h3><b>4.4.1 Threshold Values & Testing Standards</b></h3>
         <p>The below cumulative list is its threshold values and test standard to follow:</p>
         <div class="test">
