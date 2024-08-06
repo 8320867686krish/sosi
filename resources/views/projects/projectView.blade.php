@@ -509,7 +509,10 @@
                         @csrf
                         <input type="hidden" name="project_id" value="{{ $project->id }}" />
                         <div class="form-group">
-                        <span class="dashboard-spinner spinner-sm" id="spinShow" style="display: none;"></span>
+                        <span class="dashboard-spinner spinner-sm" id="spinShow" style="display: none;  position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);"></span>
                             <div class="row">
                                 <div class="col-4">
                                     <input type="number" name="version" placeholder="Version Number..." class="form-control form-control-lg">
