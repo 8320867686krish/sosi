@@ -511,7 +511,7 @@
                         <div class="form-group">
                         <span class="dashboard-spinner spinner-sm" id="spinShow" style="display: none;  position: absolute;
         top: 50%;
-        left: 40%;
+        left: 35%;
         transform: translate(-50%, -50%);z-index:999999"></span>
                             <div class="row">
                                 <div class="col-4">
