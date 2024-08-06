@@ -516,6 +516,7 @@
                                 <div class="col-4">
                                     <input type="date" name="date" class="form-control form-control-lg">
                                 </div>
+                                <span class="dashboard-spinner spinner-sm"></span>
                                 <div class="col-4">
                                     <button type="submit" name="fullreport" class="btn btn-primary fullreport" value="submit" id="fullreport">Full Report</button>
                                         @if($project->ihm_table == 'IHM Part 1')
