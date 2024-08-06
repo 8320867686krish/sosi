@@ -310,6 +310,7 @@ class ReportContoller extends Controller
 
             'allow_output_buffering' => true,
         ]);
+        $mpdf->SetCompression(true);
 
         $mpdf->use_kwt = true;
 
@@ -360,7 +361,6 @@ class ReportContoller extends Controller
             'suppress' => false, // This should prevent a new page from being created before and after TOC
             'toc-resetpagenum' => 1,
         ]);
-        $mpdf->SetCompression(true);
 
         if ($projectDetail['ihm_table'] == 'IHM Part 1') {
             $mpdf->WriteHTML(view('report.introduction', compact('hazmets', 'projectDetail')));
