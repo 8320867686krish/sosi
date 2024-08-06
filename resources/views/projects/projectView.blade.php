@@ -14,7 +14,7 @@
     width: 100%;
     height: 100%;
     background: #0f0f0fd1;
-    z-index: 3;
+    z-index: 999999999999;
     display: none;
 }
         #pdf-container {
