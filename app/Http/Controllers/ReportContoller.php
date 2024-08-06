@@ -176,7 +176,7 @@ class ReportContoller extends Controller
                         if ($key == 0) {
                             $mpdf->WriteHTML('<h3 style="font-size:14px">2.1 Location Diagram of Contained HazMat & PCHM</h3>');
                         }
-                        $mpdf->WriteHTML('<h5 style="font-size:14px;">Deck Name:' . $value['name'] . '</h5>');
+                        $mpdf->WriteHTML('<h5 style="font-size:14px;">Area:' . $value['name'] . '</h5>');
 
                         $templateId = $mpdf->importPage($i);
                         $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
@@ -413,7 +413,7 @@ class ReportContoller extends Controller
 
                     $mpdf->WriteHTML($heading);
                 }
-                $mpdf->WriteHTML('<h5 style="font-size:16px;">Deck Name:' . $value['name'] . '</h5>');
+                $mpdf->WriteHTML('<h5 style="font-size:16px;">Area:' . $value['name'] . '</h5>');
 
                 $templateId = $mpdf->importPage($i);
                 $mpdf->useTemplate($templateId, null, null, $mpdf->w, null); // Use the template with appropriate dimensions
@@ -508,7 +508,7 @@ class ReportContoller extends Controller
             $filePath = public_path('images/labResult') . "/" . $projectDetail['id'] . "/" . $projectDetail['leb1LaboratoryResult1'];
             if (file_exists($filePath) && @$projectDetail['leb1LaboratoryResult1']) {
                 $attachmentCount++;
-                $titleHtml = '<h2 style="text-align:center;font_size:14px;" id="labResult">Attachment ' . $attachmentCount . ' Lab Result</h2>';
+                $titleHtml = '<h2 style="text-align:center;font_size:12px;" id="labResult">Attachment ' . $attachmentCount . ' Lab Result</h2>';
                 $this->mergePdf($filePath, $titleHtml, $mpdf);
             }
         }
@@ -543,12 +543,13 @@ class ReportContoller extends Controller
         }
         foreach ($attechments as $value) {
 
-            $titleattach = '<h2 style="text-align:center;font-size:14px;">Attachment ' . $attachmentCount . " " . $value['heading'] . '</h2>';
 
             $filePath = public_path('images/attachment') . "/" . $projectDetail['id'] . "/" . $value['documents'];
             if (file_exists($filePath) && @$value['documents']) {
                 $fileExtension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
                 $attachmentCount++;
+                $titleattach = '<h2 style="text-align:center;font-size:12px;">Attachment ' . $attachmentCount . " " . $value['heading'] . '</h2>';
+
                 if ($fileExtension === 'pdf') {
                     $this->mergePdf($filePath, $titleattach, $mpdf);
                 } elseif (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
