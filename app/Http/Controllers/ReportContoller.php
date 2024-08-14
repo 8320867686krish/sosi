@@ -57,12 +57,15 @@ class ReportContoller extends Controller
         $checks = Checks::with('deck:id,name')->with('check_hazmats.hazmat')->where('project_id', $id);
         $ship_name = $project["ship_name"];
         $imo_number = $project["imo_number"];
+        $project_no = $project['project_no'];
+        $safeProjectNo = str_replace('/', '_', $project_no);
 
         if ($isSample) {
             $checks = $checks->where('type', 'sample');
-            $filename = "Lab-Test-List-{$ship_name}" . "." . $fileExt;
+
+            $filename = "Lab-Test-List-{$safeProjectNo}" . "." . $fileExt;
         } else {
-            $filename = "VSCP-{$ship_name}-{$imo_number}" . "." . $fileExt;
+            $filename = "VSCP-{$safeProjectNo}" . "." . $fileExt;
         }
 
         $checks = $checks->get();
