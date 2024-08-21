@@ -19,6 +19,7 @@ use Mpdf\Mpdf;
 use Smalot\PdfParser\Parser;
 
 ini_set("pcre.backtrack_limit", "1000000");
+ini_set('exif.decode_jpeg', '0');
 
 
 class ReportContoller extends Controller
@@ -57,7 +58,7 @@ class ReportContoller extends Controller
         $checks = Checks::with('deck:id,name')->with('check_hazmats.hazmat')->where('project_id', $id);
         $ship_name = $project["ship_name"];
         $imo_number = $project["imo_number"];
-        $project_no = $project['project_no'];
+  $project_no = $project['project_no'];
         $safeProjectNo = str_replace('/', '_', $project_no);
 
         if ($isSample) {
@@ -67,6 +68,7 @@ class ReportContoller extends Controller
         } else {
             $filename = "VSCP-{$safeProjectNo}" . "." . $fileExt;
         }
+       
 
         $checks = $checks->get();
 
