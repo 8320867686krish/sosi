@@ -193,7 +193,6 @@ class ApiController extends Controller
                 'location' => $request->location,
             ]);
             return response()->json(['isStatus' => true, 'message' => 'address saved successfully.']);
-
         } catch (ValidationException $e) {
             return response()->json(['isStatus' => false, 'message' => $e->validator->errors()->first()]);
         } catch (Throwable $th) {
@@ -541,7 +540,7 @@ class ApiController extends Controller
                 $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") .  $projectId), $imageName);
                 $checkData['image'] = $imageName;
-                 $checkData['project_id'] = $inputData['project_id'];
+                $checkData['project_id'] = $inputData['project_id'];
                 $checkData['check_id'] = $checkId;
                 CheckImage::create($checkData);
             }
@@ -705,8 +704,35 @@ class ApiController extends Controller
             $inputData = $request->only(['check_id']);
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
+                $imagePath = $image->getPathName();
+
+                $source_image = imagecreatefromjpeg($imagePath);
+
+                list($width, $height) = getimagesize($imagePath);
+
                 $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $check['project_id']), $imageName);
+
+                if ($width > $height) {
+                    $aspect_ratio = $width / $height;
+                    $new_width = $width;
+                    $new_height = $width;
+
+                    if ($new_width / $new_height > $aspect_ratio) {
+                        $new_width = $new_height * $aspect_ratio;
+                    } else {
+                        $new_height = $new_width / $aspect_ratio;
+                    }
+
+                    $resized_image = imagecreatetruecolor($new_width, $new_height);
+
+                    imagecopyresampled($resized_image, $source_image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+
+                    imagejpeg($resized_image, public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $check['project_id']) . "/" . $imageName, 90); // 90 is the quality of the image
+
+                } else {
+                    $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $check['project_id']), $imageName);
+                }
+
                 $inputData['image'] = $imageName;
                 $inputData['project_id'] = $check['project_id'];
                 $check->isCompleted = 1;
@@ -719,6 +745,7 @@ class ApiController extends Controller
         } catch (ValidationException $e) {
             return response()->json(['isStatus' => false, 'message' => $e->validator->errors()->first()]);
         } catch (Throwable $th) {
+            Log::info("Check Image Error", ["error" => $th->getMessage()]);
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
     }
