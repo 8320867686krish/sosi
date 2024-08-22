@@ -520,7 +520,7 @@
                                 <div class="col-4">
                                     <input type="date" name="date" class="form-control form-control-lg">
                                 </div>
-                              
+
                                 <div class="col-4">
                                     <button type="submit" name="fullreport" class="btn btn-primary fullreport" value="submit" id="fullreport">Full Report</button>
                                         @if($project->ihm_table == 'IHM Part 1')
@@ -873,7 +873,7 @@
 
     <script>
         let rotationState = 0;
-      
+
         let clickedButton = null;
 
 // Attach click event to both buttons
@@ -942,7 +942,7 @@ $('#summery, #fullreport').click(function() {
                 $submitButton.text(originalText);
                 $submitButton.prop('disabled', false);
             }
-        
+
     });
         });
         function previewFile(input) {
