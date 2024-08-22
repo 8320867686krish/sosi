@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Jobs\sendNotificationToUser;
 
 use App\Http\Requests\AssignProjectRequest;
@@ -303,7 +304,7 @@ class ProjectsController extends Controller
             if (@$inputData['user_id']) {
                 ProjectTeam::where('project_id', $inputData['project_id'])->delete();
                 foreach ($inputData['user_id'] as $user_id) {
-                    $email = User::where('id',$user_id)->pluck('email')->first();
+                    $email = User::where('id', $user_id)->pluck('email')->first();
                     ProjectTeam::create([
                         'user_id' => $user_id,
                         'project_id' => $inputData['project_id'],
@@ -311,7 +312,7 @@ class ProjectsController extends Controller
                         'end_date' => $inputData['end_date'],
                         'isExpire' => 0
                     ]);
-                    $details['email'] =$email ;
+                    $details['email'] = $email;
                     dispatch(new sendNotificationToUser($details));
                 }
             }
@@ -979,14 +980,14 @@ class ProjectsController extends Controller
     {
         $attachment =  Attechments::find($id);
         $proid = $attachment['project_id'];
-        if(@$attachment['documents']){
-        $imagePath =  public_path("images/attachment" . "/" . $proid . "/" . $attachment['documents']);
-        // Check if the image file exists before attempting to delete
+        if (@$attachment['documents']) {
+            $imagePath =  public_path("images/attachment" . "/" . $proid . "/" . $attachment['documents']);
+            // Check if the image file exists before attempting to delete
 
-        if (file_exists($imagePath)) {
-            unlink($imagePath);
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
         }
-    }
         $attachment->delete();
         $attachment = Attechments::where('project_id', $proid)->get();
         $html = view('projects.attachmentAjax', compact('attachment'))->render();
@@ -1094,7 +1095,84 @@ class ProjectsController extends Controller
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
                     $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
-                    $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") .  $projectId), $imageName);
+                    $imagePath = $image->getPathName();
+
+                    // Get the dimensions, considering EXIF orientation
+                    if (function_exists('exif_read_data')) {
+                        $exif = @exif_read_data($imagePath);
+                        if ($exif && isset($exif['Orientation'])) {
+                            $orientation = $exif['Orientation'];
+                            // Swap width and height if necessary
+                            if (in_array($orientation, [6, 8])) {
+                                list($height1, $width1) = getimagesize($imagePath);
+                            } else {
+                                list($width1, $height1) = getimagesize($imagePath);
+                            }
+                        } else {
+                            list($width1, $height1) = getimagesize($imagePath);
+                        }
+                    } else {
+                        list($width1, $height1) = getimagesize($imagePath);
+                    }
+
+                    if ($height1 > $width1) {
+                        list($width, $height) = getimagesize($imagePath);
+
+                        if (function_exists('exif_read_data')) {
+                            $exif = @exif_read_data($imagePath);
+                            $orientation = isset($exif['Orientation']) ? $exif['Orientation'] : 1;
+
+                            switch ($orientation) {
+                                case 3:
+                                    $source_image = imagecreatefromjpeg($imagePath);
+                                    $source_image = imagerotate($source_image, 180, 0);
+                                    break;
+
+                                case 6:
+                                    $source_image = imagecreatefromjpeg($imagePath);
+                                    $source_image = imagerotate($source_image, -90, 0);
+                                    list($width, $height) = [$height, $width]; // Swap dimensions
+                                    break;
+
+                                case 8:
+                                    $source_image = imagecreatefromjpeg($imagePath);
+                                    $source_image = imagerotate($source_image, 90, 0);
+                                    list($width, $height) = [$height, $width]; // Swap dimensions
+                                    break;
+
+                                default:
+                                    $source_image = imagecreatefromjpeg($imagePath);
+                                    break;
+                            }
+                        } else {
+                            $source_image = imagecreatefromjpeg($imagePath);
+                        }
+
+                        $new_size = max($width, $height);
+
+                        $resized_image = imagecreatetruecolor($new_size, $new_size);
+
+                        $white = imagecolorallocate($resized_image, 255, 255, 255);
+
+                        imagefill($resized_image, 0, 0, $white);
+
+                        $x_offset = ($new_size - $width) / 2;
+                        $y_offset = ($new_size - $height) / 2;
+
+                        imagecopyresampled($resized_image, $source_image, $x_offset, $y_offset, 0, 0, $width, $height, $width, $height);
+
+                        if (!file_exists(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId))) {
+                            mkdir(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId), 0755, true);
+                        }
+
+                        imagejpeg($resized_image, public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $projectId) . "/" . $imageName);
+
+                        imagedestroy($resized_image);
+                        imagedestroy($source_image);
+                    } else {
+                        $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") .  $projectId), $imageName);
+                    }
+
                     $checkData['image'] = $imageName;
                     $checkData['check_id'] = $checkId;
                     $checkData['project_id'] = $projectId;
@@ -1227,12 +1305,13 @@ class ProjectsController extends Controller
         }
     }
 
-    public function addGapAnalysisReport(Request  $request){
+    public function addGapAnalysisReport(Request  $request)
+    {
         try {
             $productId = $request->input('project_id');
             $analysisData = $request->input('gapAnalysis');
 
-            if(isset($analysisData)){
+            if (isset($analysisData)) {
                 $insertAnalysisData = [
                     'project_id' => $productId,
                     'structure' => 'gapAnalysis',

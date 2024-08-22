@@ -193,7 +193,6 @@ class ApiController extends Controller
                 'location' => $request->location,
             ]);
             return response()->json(['isStatus' => true, 'message' => 'address saved successfully.']);
-
         } catch (ValidationException $e) {
             return response()->json(['isStatus' => false, 'message' => $e->validator->errors()->first()]);
         } catch (Throwable $th) {
@@ -541,7 +540,7 @@ class ApiController extends Controller
                 $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") .  $projectId), $imageName);
                 $checkData['image'] = $imageName;
-                 $checkData['project_id'] = $inputData['project_id'];
+                $checkData['project_id'] = $inputData['project_id'];
                 $checkData['check_id'] = $checkId;
                 CheckImage::create($checkData);
             }
@@ -703,10 +702,93 @@ class ApiController extends Controller
             }
 
             $inputData = $request->only(['check_id']);
+
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
+                $imagePath = $image->getPathName();
+
+                // Get the dimensions, considering EXIF orientation
+                if (function_exists('exif_read_data')) {
+                    $exif = @exif_read_data($imagePath);
+                    if ($exif && isset($exif['Orientation'])) {
+                        $orientation = $exif['Orientation'];
+                        // Swap width and height if necessary
+                        if (in_array($orientation, [6, 8])) {
+                            list($height1, $width1) = getimagesize($imagePath);
+                        } else {
+                            list($width1, $height1) = getimagesize($imagePath);
+                        }
+                    } else {
+                        list($width1, $height1) = getimagesize($imagePath);
+                    }
+                } else {
+                    list($width1, $height1) = getimagesize($imagePath);
+                }
+
+                // Generate a unique image name
                 $imageName = time() . rand(10, 99) . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $check['project_id']), $imageName);
+
+                // Resize the image if it's taller than it is wide
+                if ($height1 > $width1) {
+                    list($width, $height) = getimagesize($imagePath);
+
+                    if (function_exists('exif_read_data')) {
+                        $exif = @exif_read_data($imagePath);
+                        $orientation = isset($exif['Orientation']) ? $exif['Orientation'] : 1;
+
+                        switch ($orientation) {
+                            case 3:
+                                $source_image = imagecreatefromjpeg($imagePath);
+                                $source_image = imagerotate($source_image, 180, 0);
+                                break;
+
+                            case 6:
+                                $source_image = imagecreatefromjpeg($imagePath);
+                                $source_image = imagerotate($source_image, -90, 0);
+                                list($width, $height) = [$height, $width]; // Swap dimensions
+                                break;
+
+                            case 8:
+                                $source_image = imagecreatefromjpeg($imagePath);
+                                $source_image = imagerotate($source_image, 90, 0);
+                                list($width, $height) = [$height, $width]; // Swap dimensions
+                                break;
+
+                            default:
+                                $source_image = imagecreatefromjpeg($imagePath);
+                                break;
+                        }
+                    } else {
+                        $source_image = imagecreatefromjpeg($imagePath);
+                    }
+
+                    $new_size = max($width, $height);
+
+                    $resized_image = imagecreatetruecolor($new_size, $new_size);
+
+                    $white = imagecolorallocate($resized_image, 255, 255, 255);
+
+                    imagefill($resized_image, 0, 0, $white);
+
+                    $x_offset = ($new_size - $width) / 2;
+                    $y_offset = ($new_size - $height) / 2;
+
+                    imagecopyresampled($resized_image, $source_image, $x_offset, $y_offset, 0, 0, $width, $height, $width, $height);
+
+                    if (!file_exists(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $check['project_id']))) {
+                        mkdir(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $check['project_id']), 0755, true);
+                    }
+
+                    imagejpeg($resized_image, public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $check['project_id']) . "/" . $imageName);
+
+                    imagedestroy($resized_image);
+                    imagedestroy($source_image);
+                } else {
+                    // Move the original image without resizing
+                    $image->move(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $check['project_id']), $imageName);
+                }
+
+                // Store the image name and update the project status
                 $inputData['image'] = $imageName;
                 $inputData['project_id'] = $check['project_id'];
                 $check->isCompleted = 1;
@@ -719,6 +801,7 @@ class ApiController extends Controller
         } catch (ValidationException $e) {
             return response()->json(['isStatus' => false, 'message' => $e->validator->errors()->first()]);
         } catch (Throwable $th) {
+            Log::info("Check Image Error", ["error" => $th->getMessage()]);
             return response()->json(['isStatus' => false, 'message' => 'An error occurred while processing your request.']);
         }
     }
