@@ -15,13 +15,13 @@
         font-size: 14px;
     }
     .section-1-1 table td{
-        height:130px;
+        height:150px;
     }
     .next {
         page-break-before: always;
     }
 
-    .section-1-1 tbody tr:nth-child(4n) {
+    .section-1-1 tbody tr:nth-child(3n) {
         page-break-after: always;
     }
 </style>
