@@ -126,7 +126,7 @@ class ApiController extends Controller
             $existingToken = PersonalAccessToken::where('tokenable_id', $user->id)->first();
 
             if ($existingToken) {
-                $isOtpSend = true;
+                $isOtpSend = false;
                 $code = random_int(100000, 999999);
                 $details['email'] = $request['email'];
                 $details['code'] = $code;

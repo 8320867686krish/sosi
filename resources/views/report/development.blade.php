@@ -37,7 +37,7 @@
             $json = @$foundItems['Propeller shafting']['make'] ?? [];
 
             @endphp
-            @if(!empty($json))
+            @if(!empty($exasbo))
             <table>
                 <thead>
                     <tr>
@@ -113,6 +113,7 @@
                         $json_boiler = @$foundItems['Diesel engine']['make']?? [];
 
                         @endphp
+                        @if(count($ex) > 1)
                         <tr>
                             <td rowspan="{{(@$ex)?count($ex):1}}">Diesel engine<br />
                                 @foreach($json_boiler as $value)
@@ -128,6 +129,7 @@
                             </td>
                             <td>{{@$ex[0]}}</td>
                         </tr>
+                        @endif
                         @if (!empty($ex))
 
                         @for($i = 1; $i < count($ex); $i++) <tr>
