@@ -33,6 +33,8 @@
         </ul>
         <div style="margin-top:20px;">
             <h4><b>1.Asbestos</b></h4>
+            $exasbo = @$foundItems['Propeller shafting']['component'] ?? 0;
+            @if(count($exasbo) > 0)
             <table>
                 <thead>
                     <tr>
@@ -44,20 +46,19 @@
 
 
                     @php
-                    $ex = @$foundItems['Propeller shafting']['component'] ?? 0;
 
                     $json = @$foundItems['Propeller shafting']['make'] ?? 0;
                     @endphp
                     <tr>
-                        <td rowspan="{{(@$ex)?count($ex):1}}">Propeller shafting<br />
+                        <td rowspan="{{(@$exasbo)?count($exasbo):1}}">Propeller shafting<br />
                             Make/Model : {{@$json[0]['model']}}<br />
                             Manufacturer: {{@$json[0]['manufacturer']}}
                         </td>
                         <td>{{@$ex[0]}}</td>
                     </tr>
-                    @if(@$ex)
-                    @for($i = 1; $i < count($ex); $i++) <tr>
-                        <td>{{ $ex[$i] }}</td>
+                    @if(@$exasbo)
+                    @for($i = 1; $i < count($exasbo); $i++) <tr>
+                        <td>{{ $exasbo[$i] }}</td>
                         </tr>
                         @endfor
                         @endif
@@ -67,6 +68,7 @@
                 </tbody>
             </table>
             <br /></br>
+            @endif
             <table>
                 <thead>
                     <tr>
