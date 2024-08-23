@@ -58,7 +58,7 @@
                     <td>{{ $value->hazmat->name ?? '' }}</td>
                     <td>{{ $value->total }}</td>
                     <td>{{ $value->unit }}</td>
-                    <td>{{ $value->lab_remarks }}</td>
+                    <td>Check No:{{$value->check->name}}; {{ $value->lab_remarks }}</td>
                 </tr>
                 @endforeach
                 @endif
@@ -117,7 +117,8 @@
 
                         <td>{{ $value->total }}</td>
                         <td>{{ $value->unit }}</td>
-                        <td>{{ $value->lab_remarks }}</td>
+                        <td>Check No:{{$value->check->name}}; {{ $value->lab_remarks }}</td>
+
                     </tr>
                     @endforeach
                     @endif
@@ -178,7 +179,8 @@
                         <td>{{ $value->hazmat->name ?? '' }}</td>
                         <td>{{ $value->total }}</td>
                         <td>{{ $value->unit }}</td>
-                        <td>{{ $value->lab_remarks }}</td>
+                        <td>Check No:{{$value->check->name}}; {{ $value->lab_remarks }}</td>
+
                     </tr>
                     @endforeach
                     @endif
