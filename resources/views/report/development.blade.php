@@ -216,6 +216,7 @@
                             $json_boiler = @$foundItems['Incinerator']['make'] ?? [];
 
                             @endphp
+                            @if(count($ex_boiler) > 1)
                             <tr>
                                 <td rowspan="{{count($ex_boiler)}}">Incinerator<br />
                                     @foreach($json_boiler as $value)
@@ -230,6 +231,7 @@
                                     @endforeach
                                 <td>{{@$ex_boiler[0]}}</td>
                             </tr>
+                            @endif
                             @if(@$ex_boiler)
                             @for($i = 1; $i < count($ex_boiler); $i++) <tr>
                                 <td>{{ $ex_boiler[$i] }}</td>
