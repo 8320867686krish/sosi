@@ -178,7 +178,7 @@
                         <td>{{ $value->hazmat->name ?? '' }}</td>
                         <td>{{ $value->total }}</td>
                         <td>{{ $value->unit }}</td>
-                        <td>check No:{{$value->check->name}}; {{ $value->lab_remarks }}</td>
+                        <td>{{ $value->lab_remarks }}</td>
                     </tr>
                     @endforeach
                     @endif
