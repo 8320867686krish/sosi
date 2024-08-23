@@ -103,6 +103,7 @@
 
             </tbody>
         </table>
+        <div class="next">
         <p class="sufont">Assessing the risk of a particular scenario should be done in sequence, i.e., first, the potential consequences are estimated, and only thereafter the likelihood of such consequences occurring is assigned. After assessing the consequences, the likelihood is estimated based on historical evidence or experience that such consequences occurred.</p>
         <p class="sufont">Ensure that the exercise involves people at all levels who are involved in the tasks being discussed as they will understand the problems and know which solutions will and will not work. But remember, you need to include those responsible for planning activities (managers and supervisors) otherwise changes may not happen.</p>
 
@@ -111,7 +112,7 @@
         <p class="sufont"><span class="highRisk">High Risk: Action (9-12)</span></p>
         <p class="sufont"><span class="modirateRisk">Moderate Risk: Monitor (48)</span></p>
         <p class="sufont"><span class="light-green">Low Risk: No Action (1-3)</span></p>
-
+        </div>
     </div>
     <div class="section-1-1">
         <table>
