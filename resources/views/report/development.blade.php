@@ -33,7 +33,7 @@
         </ul>
         <div style="margin-top:20px;">
             <h4><b>1.Asbestos</b></h4>
-            $exasbo = @$foundItems['Propeller shafting']['component'] ?? 0;
+            @php $exasbo = @$foundItems['Propeller shafting']['component'] ?? 0;@endphp
             @if(@$exasbo)
             <table>
                 <thead>
