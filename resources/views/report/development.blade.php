@@ -33,8 +33,11 @@
         </ul>
         <div style="margin-top:20px;">
             <h4><b>1.Asbestos</b></h4>
-            @php $exasbo = @$foundItems['Propeller shafting']['component'] ?? [];@endphp
-            @if(!empty($exasbo))
+            @php $exasbo = @$foundItems[' ']['component'] ?? [];
+            $json = @$foundItems['Propeller shafting']['make'] ?? [];
+
+            @endphp
+            @if(!empty($json))
             <table>
                 <thead>
                     <tr>
@@ -47,7 +50,6 @@
 
                     @php
 
-                    $json = @$foundItems['Propeller shafting']['make'] ?? 0;
                     @endphp
                     <tr>
                         <td rowspan="{{(@$exasbo)?count($exasbo):1}}">Propeller shafting<br />
@@ -69,6 +71,11 @@
             </table>
             <br /></br>
             @endif
+            @php
+                    $exMain = @$foundItems['Main engine']['component']?? [];
+                    $json_boiler = @$foundItems['Main engine']['make']?? [];
+
+                    @endphp
             <table>
                 <thead>
                     <tr>
@@ -77,13 +84,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php
-                    $ex = @$foundItems['Main engine']['component']?? [];
-                    $json_boiler = @$foundItems['Main engine']['make']?? [];
-
-                    @endphp
+                   
                     <tr>
-                        <td rowspan="{{(@$ex)?count($ex):1}}">Main engine<br />
+                        <td rowspan="{{(@$exMain)?count($exMain):1}}">Main engine<br />
                             @foreach($json_boiler as $value)
 
                             @if(@$value['model'])
@@ -95,12 +98,12 @@
                             @endif
                             @endforeach
                         </td>
-                        <td>{{@$ex[0]}}</td>
+                        <td>{{@$exMain[0]}}</td>
                     </tr>
-                    @if (!empty($ex))
+                    @if (!empty($exMain))
 
-                    @for($i = 1; $i < count($ex); $i++) <tr>
-                        <td>{{ $ex[$i] }}</td>
+                    @for($i = 1; $i < count($exMain); $i++) <tr>
+                        <td>{{ $exMain[$i] }}</td>
                         </tr>
                         @endfor
                         @endif
