@@ -34,7 +34,7 @@
         <div style="margin-top:20px;">
             <h4><b>1.Asbestos</b></h4>
             $exasbo = @$foundItems['Propeller shafting']['component'] ?? 0;
-            @if(count($exasbo) > 0)
+            @if(@$exasbo)
             <table>
                 <thead>
                     <tr>
