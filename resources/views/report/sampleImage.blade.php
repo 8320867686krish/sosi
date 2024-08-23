@@ -100,7 +100,7 @@
                     <td>
                         @if($hasImage)
                         <a href="{{ $imagePath1 ?? '#' }}">
-                            <img src="{{ $imagePath }}" width="200px" height="200px" />
+                            <img src="{{ $imagePath }}" width="150px" height="150px" />
                         </a> @else
                         &nbsp;
                         @endif
