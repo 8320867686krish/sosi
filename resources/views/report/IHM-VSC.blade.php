@@ -8,7 +8,7 @@
                 @if(@$brifimage)
 
                 <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                    <img src="{{$brifimage}}" style="max-width:60%;">
+                    <img src="{{$brifimage}}">
                 </div> @endif
                 <p>Our experts are trained and certified see attachment: IHM expert Certificate.</p>
 
