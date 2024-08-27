@@ -16,6 +16,9 @@
             max-width: 100%;
             height: auto;
         }
+        .qr-code p{
+            font-size:14px;
+        }
     </style>
 </head>
 <body>
@@ -25,7 +28,7 @@
             @foreach ($checks as $check)
             <div class="col-md-4 mb-4">
                 <div class="qr-code">
-                    <img src="{{ $check['qr_code_url'] }}" alt="QR Code for Check {{ $check['id'] }}" class="img-fluid">
+                    <img src="{{ $check['qr_code_url'] }}" alt="QR Code for Check {{ $check['id'] }}" class="img-fluid" height="100">
                     <p>{{ $check['name'] }}</p>
                 </div>
             </div>
