@@ -462,21 +462,27 @@
 
 
                 </tr>
+                @if(@$value['sample_weight'])
                 <tr>
                     <td><b>Sample Weight</b></td>
                     <td colspan="3">{{$value['sample_weight']}}</td>
 
                 </tr>
+                @endif
+                @if(@$value['sample_area'])
                 <tr>
                     <td><b>Sample Area</b></td>
                     <td colspan="3">{{$value['sample_area']}}</td>
 
                 </tr>
+                @endif
+                @if(@$value['density'])
                 <tr>
                     <td><b>Density</b></td>
                     <td colspan="3">{{$value['density']}}</td>
 
                 </tr>
+                @endif
                 <tr>
                     <td><b>Affected Area</b></td>
                     <td colspan="3">{{$value['affected_area']}}</td>
