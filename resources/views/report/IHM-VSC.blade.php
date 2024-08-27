@@ -6,9 +6,9 @@
             <div class="section-1-1">
                 <p>After arrival onboard the vessel {{$projectDetail['ship_name']}} , a safety briefing was carried out with ship staff to explain the purpose and scope of the IHM survey explaining the various check points & location from where the visuals/samples must be taken along with safety precaution measures taken while taking samples and marking places as Potentially hazardous materials.</p>
                 @if(!empty($brifimage))
-                <table width="100%"  border="0" style="text-align: center;">
+                <table width="100%"  border="0" style="text-align: center;border:none !important">
                     <tr>
-                        <td align="center">
+                        <td align="center" style="border:none !important;">
                             <img src="{{$brifimage}}" style="max-width:60%;">
                         </td>
                     </tr>
