@@ -8,7 +8,7 @@
                 @if(!empty($brifimage))
                 <table width="100%" style="text-align: center;">
                     <tr>
-                        <td bgcolor="red">
+                        <td bgcolor="red" align="center">
                             <img src="{{$brifimage}}" style="max-width:60%;">
                         </td>
                     </tr>
