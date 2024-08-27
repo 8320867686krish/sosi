@@ -564,6 +564,7 @@ class ReportContoller extends Controller
                 }
             }
         }
+        $mpdf->WriteHTML('<p>...End Of The Report...</p>');
         $safeProjectNo = str_replace('/', '_', $projectDetail['project_no']);
 
         $fileName = $safeProjectNo . '.pdf';
