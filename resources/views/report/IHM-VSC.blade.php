@@ -459,28 +459,23 @@
                 <tr>
                     <td><b>Total</b></td>
                     <td colspan="3">{{$value['total']}}</td>
-
-
                 </tr>
                 @if(@$value['sample_weight'])
                 <tr>
                     <td><b>Sample Weight</b></td>
                     <td colspan="3">{{$value['sample_weight']}}</td>
-
                 </tr>
                 @endif
                 @if(@$value['sample_area'])
                 <tr>
                     <td><b>Sample Area</b></td>
                     <td colspan="3">{{$value['sample_area']}}</td>
-
                 </tr>
                 @endif
                 @if(@$value['density'])
                 <tr>
                     <td><b>Density</b></td>
                     <td colspan="3">{{$value['density']}}</td>
-
                 </tr>
                 @endif
                 <tr>
@@ -488,12 +483,19 @@
                     <td colspan="3">{{$value['affected_area']}}</td>
 
                 </tr>
-
+                @if($value['lab_remarks'])
                 <tr>
                     <td><b>Remarks:</b></td>
-
                     <td colspan="3">{{$value['lab_remarks']}}</td>
                 </tr>
+                @endif
+                @if($value['check']['recommendation'])
+                <tr>
+                    <td><b>Recommendations:</b></td>
+                    <td colspan="3">{{$value['check']['recommendation']}}</td>
+
+                </tr>
+                @endif
             </tbody>
         </table>
         <br />
