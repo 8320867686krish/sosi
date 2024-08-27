@@ -5,11 +5,15 @@
             <h2>4.IHM-VSC Onboard Survey</h2>
             <div class="section-1-1">
                 <p>After arrival onboard the vessel {{$projectDetail['ship_name']}} , a safety briefing was carried out with ship staff to explain the purpose and scope of the IHM survey explaining the various check points & location from where the visuals/samples must be taken along with safety precaution measures taken while taking samples and marking places as Potentially hazardous materials.</p>
-                @if(@$brifimage)
-
-                <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                    <img src="{{$brifimage}}">
-                </div> @endif
+                @if(!empty($brifimage))
+                <table width="100%" style="text-align: center;">
+                    <tr>
+                        <td bgcolor="red">
+                            <img src="{{$brifimage}}" style="max-width:60%;">
+                        </td>
+                    </tr>
+                </table>
+                @endif
                 <p>Our experts are trained and certified see attachment: IHM expert Certificate.</p>
 
                 <p>Adequate safety measures were taken to prevent the spreading of materials, cross-contamination, or the spreading of fibres. At all times these measures are designed to prevent exposure to hazardous materials of workers, our team members, and/or others onboard. The onboard sampling was carried out as per the visual and sampling plan, the equipment, system, and the area selected for sampling were marked in the ship's plan and photographs are recorded.</p>
