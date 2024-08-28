@@ -39,13 +39,13 @@
                             <option value="genral">General</option>
                             <option value="shipPlan">Ship Plan</option>
                             <option value="shipBrifPlan">Ship Brief Plan</option>
-
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="name">Attachment File</label>
                         <input type="file" class="form-control" name="details" id="details" required>
                         <label class="documentsValue" style="display: none;"></label>
+                        <div class="invalid-feedback error" id="detailsError" style="display: block;"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -58,8 +58,57 @@
 @push('js')
     <!-- Include your JavaScript code here -->
     <script>
+        function uploadFileCheck(fileInputId, errorMsgId) {
+            var fileInput = $(`#${fileInputId}`)[0];
+            var file = fileInput.files[0];
+
+            if (!file) {
+                console.log('Please select a file.');
+                return;
+            }
+
+            $("#detailsError").text("");
+
+            let formData = new FormData();
+            formData.append(fileInputId, file);
+
+            $.ajax({
+                url: "{{ route('checkLaboratoryFile') }}",
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    $("#attachSubmitBtn").prop('disabled', false);
+                    $(".documentsValue").text("");
+                    console.log(response.isStatus);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    let errorMessage = 'An error occurred: ';
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                        errorMessage += jqXHR.responseJSON.message;
+                    } else {
+                        errorMessage += errorThrown;
+                    }
+                    // $("#attachSubmitBtn").prop('disabled', true);
+                    $(`#${errorMsgId}`).empty().text(errorMessage).show();
+
+                    fileInput.value = '';
+                }
+            });
+        }
+
         $("#AddAttachment").click(function() {
+            $("#detailsError").text("");
+            $("#attachSubmitBtn").prop('disabled', true);
             $("#attachmentModel").modal('show');
+        });
+
+        $('#details').on('change', function() {
+            uploadFileCheck("details", "detailsError");
         });
 
         $('#attachmentForm').submit(function(e) {
