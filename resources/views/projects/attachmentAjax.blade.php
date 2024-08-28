@@ -54,9 +54,8 @@
         $(".documentsValue").show();
         $(".documentsValue").text(attachment.documents);
         $("#attachment_type").val(attachment.attachment_type);
+        $("#detailsError").text("");
         $("#attachmentModel").modal('show');
-
-        console.log(attachment.id);
     });
 
     function removeLab(id) {
