@@ -88,16 +88,24 @@
                 </tr>
                 @else
                 @foreach($value['labResults'] as $hazmat)
+                @php
+                if($hazmat->type == 'Contained' || $hazmat->type == 'PCHM'){
+                $color = 'style="color:#FF0000"';
+
+                }else{
+                    $color = 'style="color:#000000"';
+                }
+                @endphp
                 <tr>
-                    <td>{{ $value->name }}</td>
-                    <td>{{ $hazmat->hazmat->short_name }}</td>
-                    <td>{{ $value->location }}</td>
-                    <td>{{ $value->sub_location }}</td>
-                    <td>{{ $value->equipment }}</td>
-                    <td>{{ $value->component }}</td>
-                    <td>{{ $hazmat['sample_weight'] }}</td>
-                    <td>{{ $hazmat['lab_remarks'] }}</td>
-                    <td>
+                <td {!! $color !!}>{{ $value->name }}</td>
+                <td {!! $color !!}>{{ $hazmat->hazmat->short_name }}</td>
+                <td {!! $color !!}>{{ $value->location }}</td>
+                <td {!! $color !!}>{{ $value->sub_location }}</td>
+                <td {!! $color !!}>{{ $value->equipment }}</td>
+                <td {!! $color !!}>{{ $value->component }}</td>
+                <td {!! $color !!}>{{ $hazmat['sample_weight'] }}</td>
+                <td {!! $color !!}>{{ $hazmat['lab_remarks'] }}</td>
+                <td {!! $color !!}>
                         @if($hasImage)
                         <a href="{{ $imagePath1 ?? '#' }}">
                             <img src="{{ $imagePath }}" width="150px" height="150px" />
