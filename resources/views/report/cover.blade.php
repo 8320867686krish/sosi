@@ -1,6 +1,9 @@
 <div>
     <div style="text-align: center;">
-    <h1 style="padding-top: 10px;">{{$projectDetail['ihm_table']}} {{@$summery ?? $summery : ''}}Report</h1>
+    <h1 style="padding-top: 10px;">
+    {{$projectDetail['ihm_table']}} {{ $summery ?? '' }} Report
+</h1>
+
 
 
     <div>
