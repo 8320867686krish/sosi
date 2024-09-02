@@ -161,8 +161,8 @@ class ReportContoller extends Controller
 
             $stylesheet = file_get_contents('public/assets/mpdf.css');
             $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
-
-            $mpdf->WriteHTML(view('report.cover', compact('projectDetail')));
+            $summery = 'Summery';
+            $mpdf->WriteHTML(view('report.cover', compact('projectDetail','summery')));
             $mpdf->WriteHTML(view('report.shipParticular', compact('projectDetail')));
             $mpdf->AddPage('L'); // Set landscape mode for the inventory page
 
