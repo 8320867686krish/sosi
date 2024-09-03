@@ -798,7 +798,7 @@ class ReportContoller extends Controller
     }
 
     public function demoTest(){
-        $ChecksList = Deck::with(['checks.check_hazmats.FinalLebResult'])
+        $ChecksList = checks::with(['check_hazmats.FinalLebResult'])
         ->where('project_id', 15)
         ->get();
         dd($ChecksList);
