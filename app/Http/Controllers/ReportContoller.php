@@ -802,14 +802,14 @@ class ReportContoller extends Controller
         foreach($ChecksList as $value){
             $check_id = $value['check_id'];
             $hazmat_id = $value['hazmat_id '];
-            $lebResurt = LabResult::select('type')->where('check_id',$check_id)->where('hazmat_id', $hazmat_id)->first();
-            if(@$lebResurt){
+            $lebResurt = LabResult::select('type')->where('check_id',$check_id)->where('hazmat_id',$hazmat_id)->first();
+            print_r( $lebResurt);
+            if($lebResurt){
                 $type = $lebResurt['type'];
             }else{
                 $type = 'Not Contained';
             }
            CheckHasHazmat::where('id',$value['id'])->update(['final_lab_result'=>$type]);
         }
-        dd($ChecksList);
     }
 }
