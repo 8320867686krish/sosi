@@ -151,7 +151,7 @@ class ReportContoller extends Controller
             $footer = '
             <table width="100%" style="vertical-align: bottom; font-family: serif; font-size: 8pt; color: #000000;">
                 <tr>
-                    <td width="33%" style="text-align: left;">' . $projectDetail['ihm_table'] . '</td>
+                    <td width="33%" style="text-align: left;">' . $projectDetail['ihm_table'] . 'Summary</td>
                     <td width="33%" style="text-align: center;">Revision:' . $version . '</td>
                     <td width="33%" style="text-align: right;">{PAGENO}/{nbpg}</td>
                 </tr>
@@ -161,7 +161,7 @@ class ReportContoller extends Controller
 
             $stylesheet = file_get_contents('public/assets/mpdf.css');
             $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
-            $summery = 'Summery';
+            $summery = 'Summary';
             $mpdf->WriteHTML(view('report.cover', compact('projectDetail','summery')));
             $mpdf->WriteHTML(view('report.shipParticular', compact('projectDetail')));
             $mpdf->AddPage('L'); // Set landscape mode for the inventory page
