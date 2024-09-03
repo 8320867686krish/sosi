@@ -18,7 +18,6 @@ class CheckHasHazmat extends Model
         }else{
             return false;
         }
-        
     }
 
     public function getDocAttribute($value){
