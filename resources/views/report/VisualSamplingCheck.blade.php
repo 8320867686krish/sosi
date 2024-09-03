@@ -116,7 +116,7 @@
                     @endif
 
                     <td {{$color}}>{{ ($check->type == 'visual') ? 'V' : 'S' }}</td>
-                    <td {!! $color !!}>{{ $hazmat->FinalLebResult->type }}</td>
+                    <td {!! $color !!}>{{ $hazmat->type }}</td>
 
                 </tr>
                 @php $count++; @endphp
