@@ -808,7 +808,7 @@ class ReportContoller extends Controller
             }else{
                 $type = 'Not Contained';
             }
-          //  CheckHasHazmat::where('id',$value['id'])->update(['check_has_hazmats'])
+           CheckHasHazmat::where('id',$value['id'])->update(['final_lab_result'=>$type]);
         }
         dd($ChecksList);
     }
