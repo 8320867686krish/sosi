@@ -9,7 +9,7 @@ class CheckHasHazmat extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["project_id", "check_id", "hazmat_id", "image", "type", "check_type","doc","remarks"];
+    protected $fillable = ["project_id", "check_id", "hazmat_id", "image", "type", "check_type","doc","remarks","final_lab_result"];
 
     public function getImageAttribute($value){
         if($value){
