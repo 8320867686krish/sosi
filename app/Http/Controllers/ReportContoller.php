@@ -247,7 +247,7 @@ class ReportContoller extends Controller
 
         $attechments = Attechments::where('project_id', $project_id)->where('attachment_type', '!=', 'shipBrifPlan')->get();
         $brifPlan = Attechments::where('project_id', $project_id)->where('attachment_type', '=', 'shipBrifPlan')->first();
-        $ChecksList = Deck::with(['checks.check_hazmats.hazmat'])
+        $ChecksList = Deck::with(['checks.check_hazmats.FinalLebResult.hazmat'])
             ->where('project_id', $project_id)
             ->get();
 

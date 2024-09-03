@@ -29,4 +29,8 @@ class CheckHasHazmat extends Model
     {
         return $this->belongsTo(Hazmat::class, 'hazmat_id', 'id');
     }
+    public function FinalLebResult(){
+        return $this->belongsTo(LabResult::class, 'check_id', 'check_id');
+
+    }
 }
