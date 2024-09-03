@@ -798,9 +798,18 @@ class ReportContoller extends Controller
     }
 
     public function demoTest(){
-        $ChecksList = checks::with(['check_hazmats.FinalLebResult'])
-        ->where('project_id', 15)
-        ->get();
+        $ChecksList = CheckHasHazmat::get();
+        foreach($ChecksList as $value){
+            $check_id = $value['check_id'];
+            $hazmat_id = $value['hazmat_id '];
+            $lebResurt = LabResult::select('type')->where('check_id',$check_id)->where('hazmat_id', $hazmat_id)->first();
+            if(@$lebResurt){
+                $type = $lebResurt['type'];
+            }else{
+                $type = 'Not Contained';
+            }
+          //  CheckHasHazmat::where('id',$value['id'])->update(['check_has_hazmats'])
+        }
         dd($ChecksList);
     }
 }

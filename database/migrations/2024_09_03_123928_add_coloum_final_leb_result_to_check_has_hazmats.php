@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('lab_results', function (Blueprint $table) {
+        Schema::table('check_has_hazmats', function (Blueprint $table) {
             //
             $table->string('final_lab_result',100)->nullable();
 
@@ -23,7 +23,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('lab_results', function (Blueprint $table) {
+        Schema::table('check_has_hazmats', function (Blueprint $table) {
             //
         });
     }
