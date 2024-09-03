@@ -664,10 +664,14 @@ class ProjectsController extends Controller
                         $hazmatData['remarks'] = $remarks[$value];
                     }
 
+                    $hazmatIdForLabResult = null;
+
                     if (!empty($suspectedHazmatId[$value])) {
-                        CheckHasHazmat::updateOrCreate(['id' => $suspectedHazmatId[$value]], $hazmatData);
+                        $insertHazmat = CheckHasHazmat::updateOrCreate(['id' => $suspectedHazmatId[$value]], $hazmatData);
+                        $hazmatIdForLabResult = $insertHazmat['id'];
                     } else {
-                        CheckHasHazmat::create($hazmatData);
+                        $insertHazmat = CheckHasHazmat::create($hazmatData);
+                        $hazmatIdForLabResult = $insertHazmat['id'];
                     }
 
                     if (isset($IHM_type[$value])) {
@@ -696,6 +700,8 @@ class ProjectsController extends Controller
                         } else {
                             LabResult::create($labResultData);
                         }
+
+                        CheckHasHazmat::where('id', $hazmatIdForLabResult)->update(['final_lab_result'=>isset($IHM_type[$value]) ? $IHM_type[$value] : null]);
                     }
                 }
             }
