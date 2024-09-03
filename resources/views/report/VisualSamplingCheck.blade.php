@@ -92,7 +92,7 @@
                 @endif
                 @foreach ($check->check_hazmats as $index => $hazmat)
                 @php
-                if($hazmat->type == 'Contained' || $hazmat->type == 'PCHM'){
+                if($hazmat->final_lab_result == 'Contained' || $hazmat->final_lab_result == 'PCHM'){
                 $color = 'style="color:#FF0000"';
 
                 }else{
@@ -116,7 +116,7 @@
                     @endif
 
                     <td {{$color}}>{{ ($check->type == 'visual') ? 'V' : 'S' }}</td>
-                    <td {!! $color !!}>{{ $hazmat->type }}</td>
+                    <td {!! $color !!}>{{ $hazmat->final_lab_result }}</td>
 
                 </tr>
                 @php $count++; @endphp
