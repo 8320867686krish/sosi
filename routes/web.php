@@ -126,6 +126,7 @@ Route::middleware('auth')->group(function () {
         Route::get('generatorQRcode/{deckId}', [QrCodeController::class, 'show'])->name('generatorQRcode')->middleware('can:projects.edit');
          Route::get('reintialCheckIndex/{projectId}',[ProjectsController::class,'reintialCheckIndex'])->name('reintialCheckIndex')->middleware('can:projects.edit');
     });
+    Route::post('demoTest', [ReportContoller::class, 'demotest']);
 
     Route::middleware('can:users')->group(function () {
         Route::controller(UserController::class)->group(function () {

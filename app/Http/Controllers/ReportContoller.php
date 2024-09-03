@@ -796,4 +796,11 @@ class ReportContoller extends Controller
             $mpdf->useTemplate($templateId, $lmargin, $tMargin, $size['width'] * $scale, $size['height'] * $scale);
         }
     }
+
+    public function demoTest(){
+        $ChecksList = Deck::with(['checks.check_hazmats.FinalLebResult'])
+        ->where('project_id', 15)
+        ->get();
+        dd($ChecksList);
+    }
 }
