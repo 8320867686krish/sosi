@@ -800,17 +800,16 @@ class ReportContoller extends Controller
     public function demoTest(){
         $ChecksList = CheckHasHazmat::get();
         foreach($ChecksList as $value){
-            print_r($value);
-        //     $check_id = $value['check_id'];
-        //     $hazmat_id = $value['hazmat_id '];
-        //     $lebResurt = LabResult::where('check_id',$check_id)->where('hazmat_id',$hazmat_id)->first();
-        //     print_r( $lebResurt);
-        //     if($lebResurt){
-        //         $type = $lebResurt['type'];
-        //     }else{
-        //         $type = 'Not Contained';
-        //     }
-        //    CheckHasHazmat::where('id',$value['id'])->update(['final_lab_result'=>$type]);
+             $check_id = $value['check_id'];
+             $hazmat_id = $value['hazmat_id'];
+            $lebResurt = LabResult::where('check_id',$check_id)->where('hazmat_id',$hazmat_id)->first();
+            print_r( $lebResurt);
+            if($lebResurt){
+                $type = $lebResurt['type'];
+            }else{
+                $type = 'Not Contained';
+            }
+           CheckHasHazmat::where('id',$value['id'])->update(['final_lab_result'=>$type]);
         }
     }
 }
