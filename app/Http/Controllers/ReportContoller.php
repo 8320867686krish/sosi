@@ -191,7 +191,7 @@ class ReportContoller extends Controller
                 }
             }
             $safeProjectNo = str_replace('/', '_', $projectDetail['project_no']);
-            $fileName = "summery_" . $safeProjectNo . '.pdf';
+            $fileName = "summary_" . $safeProjectNo . '.pdf';
 
             $filePath = public_path('pdfs1/' . $fileName); // Adjust the directory and file name as needed
             $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
