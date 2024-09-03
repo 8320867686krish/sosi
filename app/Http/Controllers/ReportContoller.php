@@ -803,7 +803,6 @@ class ReportContoller extends Controller
              $check_id = $value['check_id'];
              $hazmat_id = $value['hazmat_id'];
             $lebResurt = LabResult::where('check_id',$check_id)->where('hazmat_id',$hazmat_id)->first();
-            print_r( $lebResurt);
             if($lebResurt){
                 $type = $lebResurt['type'];
             }else{
