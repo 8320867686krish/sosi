@@ -446,7 +446,7 @@ class ApiController extends Controller
             $inputData = $request->input();
             // $suspected_hazmat = $request->input('suspected_hazmat');
             unset($inputData['suspected_hazmat']);
-
+            $inputData['type'] = strtolower($inputData['type']);
             Checks::where('id', $id)->update($inputData);
 
             if ($request->filled('suspected_hazmat')) {
@@ -531,7 +531,7 @@ class ApiController extends Controller
             $name = $projectDetail['ship_initials'] . "VSC#" . $projectCount;
             $inputData['name'] = $name;
             $inputData['initialsChekId'] =  $projectCount;
-
+            $inputData['type'] = strtolower($inputData['type']);
             $checkAdd =  Checks::create($inputData);
 
             $checkId = $checkAdd->id;
