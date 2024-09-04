@@ -129,8 +129,8 @@
     <table>
         <thead>
             <tr>
-                <th>S.N</th>
-                <th width="15%">Initial Method Of Check</th>
+                <th width="15%">S.N</th>
+                <th width="20%">Initial Method Of Check</th>
                 <th width="15%">Changed To</th>
                 <th>Remark</th>
             </tr>
