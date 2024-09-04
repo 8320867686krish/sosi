@@ -251,6 +251,10 @@ class ReportContoller extends Controller
             ->where('project_id', $project_id)
             ->get();
 
+        $ChangeCheckList = Checks::with('labResultsChange')->where('markAsChange')
+            ->where('project_id', $project_id)
+            ->get();
+
         $decks = Deck::with(['checks' => function ($query) {
             $query->whereHas('labResults', function ($query) {
                 $query->where('type', 'PCHM')->orWhere('type', 'Contained');
@@ -433,7 +437,7 @@ class ReportContoller extends Controller
         $mpdf->AddPage('P');
         $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
         $mpdf->AddPage('L');
-        $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList')));
+        $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList','ChangeCheckList')));
 
         $mpdf->WriteHTML(view('report.riskAssessments'));
         $sampleImageChunks = $sampleImage->chunk(50);
