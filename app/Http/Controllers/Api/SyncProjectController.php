@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use App\Models\Client;
 use App\Models\CheckHasHazmat;
 use App\Models\Hazmat;
+use App\Models\LabResult;
 use Illuminate\Support\Facades\Log;
 use PDO;
 
@@ -313,6 +314,10 @@ class SyncProjectController extends Controller
                 if(@$value['position_top'] || $value['position_left']){
                     $updateData['isApp'] = 1;
                 }
+                if($inputData['markAsChange'] == 1){
+                    LabResult::where('check_id',$value['id'])->update(['lab_remarks'=>$updateData['remarks']]);
+                    unset($updateData['remarks']);
+                } 
                 Checks::where('id',$value['id'])->update($updateData);
                 if ($value['suspected_hazmat']) {
                     Log::info($value['suspected_hazmat']);
