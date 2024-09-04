@@ -38,10 +38,9 @@
                 <tr>
                     <td rowspan="2">Assumption</td>
                     <td rowspan="2">Assumptions based on referred guidelines/reports</td>
-                    <td rowspan="2">VSNP</td>
-                    <td rowspan="2">Visual /Sample Not Possible</td>
-                    <td>PCHM</td>
-                    <td>Potentially Contained Hazardous material</td>
+                 
+                    <td  rowspan="2">PCHM</td>
+                    <td  rowspan="2">Potentially Contained Hazardous material</td>
                 </tr>
                 <tr>
                     
@@ -101,21 +100,21 @@
                 @endphp
                 <tr>
 
-                <td>{{$check['name']}}</td>
+                <td  {!! $color !!}>{{$check['name']}}</td>
 
-             <td {{$color}}>{{ $hazmat->hazmat->table_type}}</td>
-                    <td {{$color}}>{{ $hazmat->hazmat->short_name }}</td>
-                    <td {{$color}}>{{ $check->location }} @if($check->sub_location){{ ',' . $check->sub_location }}
+             <td  {!! $color !!}>{{ $hazmat->hazmat->table_type}}</td>
+                    <td  {!! $color !!}>{{ $hazmat->hazmat->short_name }}</td>
+                    <td {!! $color !!}>{{ $check->location }} @if($check->sub_location){{ ',' . $check->sub_location }}
                         @endif</td>
-                    <td {{$color}}>{{ $check->equipment }}</td>
-                    <td {{$color}}> {{ $check->component }}</td>
+                    <td {!! $color !!}>{{ $check->equipment }}</td>
+                    <td  {!! $color !!}> {{ $check->component }}</td>
                     @if($hazmat->image)
-                    <td><a href="{{$hazmat->image}}" target="_blank">Known</a></td>
+                    <td  {!! $color !!}><a href="{{$hazmat->image}}" target="_blank">Known</a></td>
                     @else
-                    <td {{$color}}>UnKnown</td>
+                    <td  {!! $color !!}>UnKnown</td>
                     @endif
 
-                    <td {{$color}}>{{ ($check->type == 'visual') ? 'V' : 'S' }}</td>
+                    <td {!! $color !!}>{{ ($check->type == 'visual') ? 'V' : 'S' }}</td>
                     <td {!! $color !!}>{{ $hazmat->final_lab_result }}</td>
 
                 </tr>
