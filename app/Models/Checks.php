@@ -36,6 +36,11 @@ class Checks extends Model
         return $this->hasMany(LabResult::class, 'check_id', 'id');
     }
 
+    public function labResultsChange()
+    {
+        return $this->hasone(LabResult::class, 'check_id', 'id');
+    }
+
     public function deck()
     {
         return $this->belongsTo(Deck::class);
