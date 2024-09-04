@@ -671,7 +671,7 @@
                                 <option value="">Select Type</option>
                                 <option value="Contained">Contained</option>
                                 <option value="PCHM">PCHM</option>
-                                <option value="Not Contained">Not Contained</option>
+                                <option value="Not Contained" selected>Not Contained</option>
                                 <option value="Below Threshold">Below Threshold</option>
                             </select>
                         </div>

@@ -107,8 +107,22 @@
             $("#attachmentModel").modal('show');
         });
 
+        $("#attachment_type").on('change', function(){
+            var fileInput = $(`#details`)[0];
+            $("#detailsError").text("");
+            $("#attachSubmitBtn").prop('disabled', true);
+            fileInput.value = '';
+        });
+
         $('#details').on('change', function() {
-            uploadFileCheck("details", "detailsError");
+            let attachment_type = $("#attachment_type").val();
+
+            if(attachment_type != "shipBrifPlan"){
+                uploadFileCheck("details", "detailsError");
+            } else {
+                $("#detailsError").text("");
+                $("#attachSubmitBtn").prop('disabled', false);
+            }
         });
 
         $('#attachmentForm').submit(function(e) {

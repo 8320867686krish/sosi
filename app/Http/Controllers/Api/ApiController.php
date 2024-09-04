@@ -447,11 +447,11 @@ class ApiController extends Controller
             $inputData = $request->input();
             // $suspected_hazmat = $request->input('suspected_hazmat');
             unset($inputData['suspected_hazmat']);
-            $inputData['type'] = strtolower($inputData['type']);  
+            $inputData['type'] = strtolower($inputData['type']);
             if($inputData['markAsChange'] == 1){
                 LabResult::where('check_id',$id)->update(['lab_remarks'=>$inputData['remarks']]);
                 unset($inputData['remarks']);
-            } 
+            }
             Checks::where('id', $id)->update($inputData);
 
             if ($request->filled('suspected_hazmat')) {
