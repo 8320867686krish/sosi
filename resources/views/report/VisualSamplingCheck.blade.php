@@ -41,12 +41,10 @@
                  
                     <td  rowspan="2">PCHM</td>
                     <td  rowspan="2">Potentially Contained Hazardous material</td>
-                </tr>
-                <tr>
-                    
                     <td>BTV</td>
                     <td>Below Threshold Value</td>
                 </tr>
+              
             </tbody>
 
         </table>
