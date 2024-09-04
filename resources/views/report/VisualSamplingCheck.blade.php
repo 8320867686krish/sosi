@@ -124,4 +124,33 @@
             </tbody>
         </table>
     </div>
+    <h2>Record of Changes in Checks During Onboard Survey</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>S.N</th>
+                <th>Initial Method Of Check</th>
+                <th>Changed To</th>
+                <th>Remark</th>
+            </tr>
+            <tbody>
+                @foreach($ChangeCheckList as $value)
+                <tr>
+                    <td>{{$value['name']}}</td>
+                    <td>{{$value['type']}}</td>
+                    <td>
+                    @if($value->markAsChange == 1)
+                    {{ $value->type == 'smaple' ? 'visual' : 'sample' }}
+                    @else
+                    {{ $value->type }}
+                    @endif
+                </td>
+                <td>
+                    {{$value->labResultsChange}}
+                </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </thead>
+    </table>
 </div>
