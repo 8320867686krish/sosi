@@ -113,7 +113,7 @@
                     @endif
 
                     <td {!! $color !!}>{{ ($check->type == 'visual') ? 'V' : 'S' }}</td>
-                    <td {!! $color !!}>{{ $hazmat->final_lab_result }}</td>
+                    <td {!! $color !!}>{{ $hazmat->final_lab_result ? $hazmat->final_lab_result :'Not Contained' }}</td>
 
                 </tr>
                 @php $count++; @endphp
