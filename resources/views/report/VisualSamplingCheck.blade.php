@@ -130,8 +130,8 @@
         <thead>
             <tr>
                 <th>S.N</th>
-                <th>Initial Method Of Check</th>
-                <th>Changed To</th>
+                <th width="15%">Initial Method Of Check</th>
+                <th width="15%">Changed To</th>
                 <th>Remark</th>
             </tr>
         <tbody>
