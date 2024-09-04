@@ -124,7 +124,7 @@
             </tbody>
         </table>
     </div>
-    <h2>Recored of changes in checks during onboard survey</h2>
+    <h2>Record of Changes in Checks During Onboard Survey</h2>
     <table>
         <thead>
             <tr>
