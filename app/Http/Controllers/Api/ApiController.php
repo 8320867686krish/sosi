@@ -732,54 +732,61 @@ class ApiController extends Controller
                 if ($height1 > $width1) {
                     list($width, $height) = getimagesize($imagePath);
 
+                    $source_image = imagecreatefromjpeg($imagePath);
+
                     if (function_exists('exif_read_data')) {
                         $exif = @exif_read_data($imagePath);
-                        $orientation = isset($exif['Orientation']) ? $exif['Orientation'] : 1;
+                        $orientation = $exif['Orientation'] ?? 1;
 
                         switch ($orientation) {
                             case 3:
-                                $source_image = imagecreatefromjpeg($imagePath);
                                 $source_image = imagerotate($source_image, 180, 0);
                                 break;
-
                             case 6:
-                                $source_image = imagecreatefromjpeg($imagePath);
                                 $source_image = imagerotate($source_image, -90, 0);
                                 list($width, $height) = [$height, $width]; // Swap dimensions
                                 break;
-
                             case 8:
-                                $source_image = imagecreatefromjpeg($imagePath);
                                 $source_image = imagerotate($source_image, 90, 0);
                                 list($width, $height) = [$height, $width]; // Swap dimensions
                                 break;
-
-                            default:
-                                $source_image = imagecreatefromjpeg($imagePath);
-                                break;
                         }
-                    } else {
-                        $source_image = imagecreatefromjpeg($imagePath);
                     }
 
-                    $new_size = max($width, $height);
+                    // Set new dimensions with equal width and height
+                    $new_size = $height;
 
+                    // Calculate the scale factor to resize the image based on its height
+                    $scale_factor = $new_size / $height;
+                    $scaled_width = $height;
+
+                    // Create a new true color image with the desired size
                     $resized_image = imagecreatetruecolor($new_size, $new_size);
 
-                    $white = imagecolorallocate($resized_image, 255, 255, 255);
+                    // Calculate the x offset to crop the excess width
+                    $x_offset = ($scaled_width - $new_size) / 2;
 
-                    imagefill($resized_image, 0, 0, $white);
+                    // Resize and crop the image
+                    imagecopyresampled(
+                        $resized_image,
+                        $source_image,
+                        -$x_offset,
+                        0,   // Destination x (negative to crop), y coordinates
+                        0,
+                        0,            // Source x, y coordinates
+                        $scaled_width,
+                        $new_size, // Destination width, height
+                        $width,
+                        $height  // Source width, height
+                    );
 
-                    $x_offset = ($new_size - $width) / 2;
-                    $y_offset = ($new_size - $height) / 2;
-
-                    imagecopyresampled($resized_image, $source_image, $x_offset, $y_offset, 0, 0, $width, $height, $width, $height);
-
-                    if (!file_exists(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $check['project_id']))) {
-                        mkdir(public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $check['project_id']), 0755, true);
+                    $projectPath = public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $check['project_id']);
+                    if (!file_exists($projectPath)) {
+                        mkdir($projectPath, 0755, true);
                     }
 
-                    imagejpeg($resized_image, public_path(env('IMAGE_COMMON_PATH', "images/projects/") . $check['project_id']) . "/" . $imageName);
+                    $outputPath = $projectPath . "/" . $imageName;
+                    imagejpeg($resized_image, $outputPath);
 
                     imagedestroy($resized_image);
                     imagedestroy($source_image);
