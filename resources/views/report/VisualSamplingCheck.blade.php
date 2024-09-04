@@ -1,6 +1,6 @@
 <div class="container">
     <!-- Section 1.1 -->
-    <h2>Appendix-1 Visual Sampling Check Plan</h2>
+    <h2>Appendix-1 Visual Sampling Check Plan & Summary</h2>
 
     <div class="section-1-1">
         <h4>Abbreviation Used</h4>

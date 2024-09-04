@@ -50,7 +50,13 @@
                     @endif</td>
                 <td>{{ $check->equipment }}</td>
                 <td> {{ $check->component }}</td>
-                <td>{{ $check->type }}</td>
+                <td>
+                    @if($check->markAsChange == 1)
+                    {{ $check->type == 'smaple' ? 'visual' : 'sample' }}
+                    @else
+                    {{ $check->type }}
+                    @endif
+                </td>
                 <td>{{$check->remarks}}</td>
 
             </tr>
@@ -66,7 +72,13 @@
                 <td>{{ $check->equipment }}</td>
                 <td> {{ $check->component }}</td>
 
-                <td>{{ $check->type }}</td>
+                <td>
+                    @if($check->markAsChange == 1)
+                    {{ $check->type == 'smaple' ? 'visual' : 'sample' }}
+                    @else
+                    {{ $check->type }}
+                    @endif
+                </td>
                 @if(@$check->remarks)
                 <td>{{ $check->remarks }}</td>
                 @elseif($hazmat->type == 'PCHM')

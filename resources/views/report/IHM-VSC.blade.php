@@ -553,7 +553,7 @@
     </div>
 </div>
 <div class="next">
-    <h4>Record of Changes:</h4>
+    <h4>Record of Changes In IHM Manual:</h4>
     <div class=" section-1-1">
         <table>
             <thead>
