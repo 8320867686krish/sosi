@@ -142,7 +142,7 @@
                 @foreach($ChangeCheckList as $value)
                 <tr>
                     <td>{{$value['name']}}</td>
-                    <td {!! $color !!}>{{ $value->hazmat->short_name }}</td>
+                    <td {!! $color !!}>{{ $value->labResultsChange->hazmat->short_name }}</td>
                     <td {!! $color !!}>{{ $check->location }} @if($check->sub_location){{ ',' . $check->sub_location }}
                         @endif</td>
                     <td {!! $color !!}>{{ $check->equipment }}</td>
