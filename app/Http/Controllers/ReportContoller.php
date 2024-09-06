@@ -443,7 +443,7 @@ class ReportContoller extends Controller
         $sampleImageChunks = $sampleImage->chunk(50);
         foreach ($sampleImageChunks as $index => $chunk) {
             if ($index == 0) {
-                $title = "Sample Records".$index;
+                $title = "Sample Records";
                 $show = true;
             } else {
                 $show = false;
