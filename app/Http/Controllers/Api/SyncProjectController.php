@@ -314,7 +314,7 @@ class SyncProjectController extends Controller
                 if(@$value['position_top'] || $value['position_left']){
                     $updateData['isApp'] = 1;
                 }
-                if($inputData['markAsChange'] == 1){
+                if($value['markAsChange'] == 1){
                     LabResult::where('check_id',$value['id'])->update(['lab_remarks'=>$updateData['remarks']]);
                     unset($updateData['remarks']);
                 } 
