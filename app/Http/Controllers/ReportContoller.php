@@ -443,19 +443,24 @@ class ReportContoller extends Controller
         $sampleImageChunks = $sampleImage->chunk(50);
         foreach ($sampleImageChunks as $index => $chunk) {
             if ($index == 0) {
+                $title = "Sample Records";
                 $show = true;
             } else {
                 $show = false;
             }
-            $title = "Sample Records";
+            $numberColoum = "Sample No";
 
-            $html = view('report.sampleImage', compact('chunk', 'title', 'show'))->render();
+
+            $html = view('report.sampleImage', compact('chunk', 'title', 'show','numberColoum'))->render();
             $mpdf->WriteHTML($html);
         }
         $sampleImageChunks = $visualImage->chunk(50);
         foreach ($sampleImageChunks as $index => $chunk) {
-            $title = "Visual Records";
-            $html = view('report.sampleImage', compact('chunk', 'title'))->render();
+            if ($index == 0) {
+                $title = "Visual Records";
+                $numberColoum = "Check No";
+            }
+            $html = view('report.sampleImage', compact('chunk', 'title','numberColoum'))->render();
             $mpdf->WriteHTML($html);
         }
 

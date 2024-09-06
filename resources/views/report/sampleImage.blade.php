@@ -35,7 +35,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>Sample No</th>
+                    <th>{{$numberColoum}}</th>
                     <th>Material</th>
                     <th colspan="2">Location</th>
                     <th>Equipment</th>
