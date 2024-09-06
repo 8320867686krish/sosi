@@ -574,9 +574,9 @@ class ReportContoller extends Controller
             }
         }
         $mpdf->WriteHTML('
-        <div style="text-align:center; position:absolute; bottom:100px; width:100%;">
+        <p  align="center" style="position:absolute; bottom:100px; width:100%;">
             <b>...End Of The IHM Report...</b>
-        </div>
+        </p>
     ');
     
         $safeProjectNo = str_replace('/', '_', $projectDetail['project_no']);
