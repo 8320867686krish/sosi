@@ -457,7 +457,7 @@ class ReportContoller extends Controller
         $sampleImageChunks = $visualImage->chunk(50);
         foreach ($sampleImageChunks as $index => $chunk) {
             if ($index == 0) {
-                $title = "Visual Records".$index;
+                $title = "Visual Records";
                 $numberColoum = "Check No";
             }
             $html = view('report.sampleImage', compact('chunk', 'title','numberColoum'))->render();
@@ -573,7 +573,12 @@ class ReportContoller extends Controller
                 }
             }
         }
-        $mpdf->WriteHTML('<p align="center" style="margin-top:50px;margin-bottom:50px;"><b>...End Of The Report...</b></p>');
+        $mpdf->WriteHTML('
+        <div style="text-align:center; position:absolute; bottom:50px; width:100%;">
+            <b>...End Of The IHM Report...</b>
+        </div>
+    ');
+    
         $safeProjectNo = str_replace('/', '_', $projectDetail['project_no']);
 
         $fileName = $safeProjectNo . '.pdf';
