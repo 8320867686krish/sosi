@@ -459,6 +459,7 @@ class ReportContoller extends Controller
             if ($index == 0) {
                 $title = "Visual Records";
                 $numberColoum = "Check No";
+                $show = true;
             }
             $html = view('report.sampleImage', compact('chunk', 'title','numberColoum'))->render();
             $mpdf->WriteHTML($html);
@@ -573,8 +574,7 @@ class ReportContoller extends Controller
                 }
             }
         }
-        $mpdf->WriteHTML('<div  style="text-align:center;position:absolute; bottom:100px; width:100%;"><b>...End Of The IHM Report...</b>
-        </div>');
+        $mpdf->WriteHTML('<table width="100%"><tr><td style="text-align:center">... End of the IHM Report...</td></tr></table>');
     
         $safeProjectNo = str_replace('/', '_', $projectDetail['project_no']);
 
