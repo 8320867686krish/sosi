@@ -455,13 +455,15 @@ class ReportContoller extends Controller
             $mpdf->WriteHTML($html);
         }
         $sampleImageChunks = $visualImage->chunk(50);
+        $k=0;
         foreach ($sampleImageChunks as $index => $chunk) {
-            if ($index == 0) {
+            if ($k == 0) {
                 $title = "Visual Records";
                 $numberColoum = "Check No";
-                $show = true;
+                $visualShow = true;
             }
-            $html = view('report.sampleImage', compact('chunk', 'title','numberColoum'))->render();
+            $k++;
+            $html = view('report.visualImage', compact('chunk', 'title','visualShow','numberColoum'))->render();
             $mpdf->WriteHTML($html);
         }
 
