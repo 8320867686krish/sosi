@@ -251,7 +251,7 @@ class ReportContoller extends Controller
             ->where('project_id', $project_id)
             ->get();
 
-        $ChangeCheckList = Checks::with('labResultsChange')->where('markAsChange',1)
+        $ChangeCheckList = Checks::with('labResultsChange.hazmat')->where('markAsChange',1)
             ->where('project_id', $project_id)
             ->get();
 

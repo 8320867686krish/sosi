@@ -567,7 +567,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Materials</th>
+                        <th>System</th>
                         <th>Name</th>
                         <th>Make/Model</th>
                     </tr>
