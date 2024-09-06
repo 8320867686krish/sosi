@@ -573,15 +573,20 @@ class ReportContoller extends Controller
                 }
             }
         }
-        $end='<table width="100%" style="border-bottom: 1px solid #000000; vertical-align: middle; font-family: serif; font-size: 9pt; color: #000088;">
-        <tr>
-            <td width="10%"></td>
-            <td width="80%" align="center"><b>...End Of The IHM Report...</b></td>
-            <td width="10%" style="text-align: right;"></td>
-        </tr>
-    </table>';
-        $mpdf->WriteHTML($end);
-   
+        $end = '
+        <table width="100%" style="border-bottom: 1px solid #000000; vertical-align: middle; font-family: serif; font-size: 9pt; color: #000088; margin-top: 20px;">
+            <tr>
+                <td width="10%"></td>
+                <td width="80%" align="center">
+                    <b>...End Of The IHM Report...</b>
+                </td>
+                <td width="10%" style="text-align: right;"></td>
+            </tr>
+        </table>
+    ';
+    
+    $mpdf->WriteHTML($end);
+    
     
         $safeProjectNo = str_replace('/', '_', $projectDetail['project_no']);
 
