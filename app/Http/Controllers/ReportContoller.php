@@ -443,7 +443,7 @@ class ReportContoller extends Controller
         $sampleImageChunks = $sampleImage->chunk(50);
         foreach ($sampleImageChunks as $index => $chunk) {
             if ($index == 0) {
-                $title = "Sample Records";
+                $title = "Sample Records".$index;
                 $show = true;
             } else {
                 $show = false;
@@ -457,7 +457,7 @@ class ReportContoller extends Controller
         $sampleImageChunks = $visualImage->chunk(50);
         foreach ($sampleImageChunks as $index => $chunk) {
             if ($index == 0) {
-                $title = "Visual Records";
+                $title = "Visual Records".$index;
                 $numberColoum = "Check No";
             }
             $html = view('report.sampleImage', compact('chunk', 'title','numberColoum'))->render();
