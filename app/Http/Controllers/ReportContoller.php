@@ -735,7 +735,7 @@ class ReportContoller extends Controller
                             $sameLocationoddarray[] = $tooltipStart + $k;
                         }
                         $oddarrayLeft[$value['id']] =  $lineLeftPosition;
-                        $oddarrayTop[$value['id']] =  $topshow;
+                        $oddarrayTop[$value['id']] =  $topshow + $k;
                     } else {
                         $lineTopPosition =   $topshow;
                         $lineHeight = ($image_height - $topshow + $gap);
