@@ -678,14 +678,15 @@ class ReportContoller extends Controller
                 $oddarrayLeft = [];
                 $oddarrayTop = [];
 
-            $simpleValue = "";
-
+        
                 foreach ($chunk as $key => $value) {
                     $top = $value['position_top'];
                     $left = $value['position_left'];
 
                     $explode = explode("#", $value['name']);
                     $tooltipText = ($value['type'] == 'sample' ? 's' : 'v') . $explode[1] . "<br/>";
+                    $simpleValue = $tooltipText;
+
                     if (@$value['check_hazmats']) {
                         $hazmatCount = count($value['check_hazmats']); // Get the total number of elements
                         foreach ($value['check_hazmats'] as $index => $hazmet) {
@@ -739,6 +740,9 @@ class ReportContoller extends Controller
                                     $simpleValue="ifoddelse";
                                 }else{
                                     $simpleValue="ifoddelseelse";
+                                    $tooltipStart = $tooltipStart - 29;
+                                    $lineHeight =  $topshow +  abs($tooltipStart);
+                                    $lineTopPosition = $tooltipStart;
                                 }
                             }
                             $sameLocationoddarray[] = $tooltipStart;
@@ -755,7 +759,7 @@ class ReportContoller extends Controller
                                 $sameLocation++;
                                 $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                 $lineHeight = $lineHeight +  $evenincreaseGap;
-                                $simpleValue="ifeven";
+                                $simpleValue=$tooltipText;
                             }
                         }
                         if ($sameLocation > 1) {
