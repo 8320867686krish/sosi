@@ -724,8 +724,8 @@ class ReportContoller extends Controller
                                 $lineTopPosition = $lineTopPosition - $oddincreaseGap;
                                 $simpleValue="ifodd";
                             }else{
-                                $simpleValue="ifoddif";
-                                $lineHeight = $lineHeight + $oddincreaseGap + $k;
+                                $simpleValue="ifoddif111";
+                                $lineHeight = $lineHeight + 40 + $k;
 
                             }
                         }
