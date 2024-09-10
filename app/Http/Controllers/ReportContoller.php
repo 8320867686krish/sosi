@@ -724,7 +724,7 @@ class ReportContoller extends Controller
                                 $lineTopPosition = $lineTopPosition - $oddincreaseGap;
                                 $simpleValue="ifodd";
                             }else{
-                                $simpleValue="111";
+                                $simpleValue=$tooltipText;
                                 $tooltipStart = $tooltipStart - 29;
                                 $lineHeight =  $topshow +  abs($tooltipStart);
                                 $lineTopPosition = $tooltipStart;
