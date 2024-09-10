@@ -722,6 +722,7 @@ class ReportContoller extends Controller
                                 $tooltipStart = $tooltipStart - $oddincreaseGap;
                                 $lineHeight = $lineHeight + $oddincreaseGap;
                                 $lineTopPosition = $lineTopPosition - $oddincreaseGap;
+                                $simpleValue="ifodd";
                             }
                         }
                         if ($oddsameLocation > 1) {
@@ -730,6 +731,7 @@ class ReportContoller extends Controller
                                     $tooltipStart = $tooltipStart - 29;
                                     $lineHeight =  $topshow +  abs($tooltipStart);
                                     $lineTopPosition = $tooltipStart;
+                                    $simpleValue="ifoddelse";
                                 }
                             }
                             $sameLocationoddarray[] = $tooltipStart;
@@ -746,6 +748,7 @@ class ReportContoller extends Controller
                                 $sameLocation++;
                                 $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                 $lineHeight = $lineHeight +  $evenincreaseGap;
+                                $simpleValue="ifeven";
                             }
                         }
                         if ($sameLocation > 1) {
@@ -753,6 +756,7 @@ class ReportContoller extends Controller
                                 if ($sameLocationValue == $tooltipStart) {
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
+                                    $simpleValue="ifevenelse";
                                 }
                             }
                             $sameLocationevenarray[] = $tooltipStart;
@@ -765,7 +769,7 @@ class ReportContoller extends Controller
                     $html .= '<span class="line" style="top:' . $lineTopPosition  . 'px;left:' . $lineLeftPosition . 'px;height:' . $lineHeight . 'px;' . $lineCss . '"></span>';
 
 
-                    $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $tooltipStart +25 . 'px; left:' . ($lineLeftPosition) . 'px">' . $tooltipText . '</span>';
+                    $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $tooltipStart . 'px; left:' . ($lineLeftPosition) . 'px">' . $simpleValue . '</span>';
                 }
                 $html .= '</div>';
                 $html .= '</div>';
