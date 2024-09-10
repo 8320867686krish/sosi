@@ -752,7 +752,7 @@ class ReportContoller extends Controller
                                 $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                 $lineHeight = $lineHeight +  $evenincreaseGap;
                             }else{
-                                $tooltipText = "overlap";
+                                $lineHeight = $lineHeight + 10;
                             }
                         }
                         if ($sameLocation > 1) {
