@@ -720,7 +720,7 @@ class ReportContoller extends Controller
                             if (abs($lineLeftPosition - $oddvalue) < 100 && abs($topshow - $oddarrayTop[$key]) < 100) {
                                 $oddsameLocation++;
                                 $tooltipStart = $tooltipStart - $oddincreaseGap;
-                                $lineHeight = $lineHeight + $oddincreaseGap + $k;
+                                $lineHeight = $lineHeight + $oddincreaseGap;
                                 $lineTopPosition = $lineTopPosition - $oddincreaseGap;
                             }
                         }
@@ -728,7 +728,7 @@ class ReportContoller extends Controller
                             foreach ($sameLocationoddarray as $sameLocationoddValue) {
                                 if ($sameLocationoddValue == $tooltipStart) {
                                     $tooltipStart = $tooltipStart - 29;
-                                    $lineHeight =  $topshow +  abs($tooltipStart) + $k;
+                                    $lineHeight =  $topshow +  abs($tooltipStart);
                                     $lineTopPosition = $tooltipStart;
                                 }
                             }
@@ -765,7 +765,7 @@ class ReportContoller extends Controller
                     $html .= '<span class="line" style="top:' . $lineTopPosition  . 'px;left:' . $lineLeftPosition . 'px;height:' . $lineHeight . 'px;' . $lineCss . '"></span>';
 
 
-                    $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $tooltipStart . 'px; left:' . ($lineLeftPosition - 15) . 'px">' . "5" . '</span>';
+                    $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $tooltipStart . 'px; left:' . ($lineLeftPosition - 15) . 'px">' . $tooltipText . '</span>';
                 }
                 $html .= '</div>';
                 $html .= '</div>';
