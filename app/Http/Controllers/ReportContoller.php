@@ -719,8 +719,8 @@ class ReportContoller extends Controller
                         foreach ($oddarrayLeft as $key => $oddvalue) {
                             if (abs($lineLeftPosition - $oddvalue) < 100 && abs($topshow - $oddarrayTop[$key]) < 100) {
                                 $oddsameLocation++;
-                                $tooltipStart = $tooltipStart - $oddincreaseGap + $k;
-                                $lineHeight = $lineHeight + $oddincreaseGap + $k;
+                                $tooltipStart = $tooltipStart - $oddincreaseGap;
+                                $lineHeight = $lineHeight + $oddincreaseGap;
                                 $lineTopPosition = $lineTopPosition - $oddincreaseGap + $k;
                             }
                         }
@@ -729,10 +729,10 @@ class ReportContoller extends Controller
                                 if ($sameLocationoddValue == $tooltipStart) {
                                     $tooltipStart = $tooltipStart - 29;
                                     $lineHeight =  $topshow +  abs($tooltipStart);
-                                    $lineTopPosition = $tooltipStart;
+                                    $lineTopPosition = $tooltipStart + $k;
                                 }
                             }
-                            $sameLocationoddarray[] = $tooltipStart;
+                            $sameLocationoddarray[] = $tooltipStart + $k;
                         }
                         $oddarrayLeft[$value['id']] =  $lineLeftPosition;
                         $oddarrayTop[$value['id']] =  $topshow;
@@ -765,7 +765,7 @@ class ReportContoller extends Controller
                     $html .= '<span class="line" style="top:' . $lineTopPosition  . 'px;left:' . $lineLeftPosition . 'px;height:' . $lineHeight . 'px;' . $lineCss . '"></span>';
 
 
-                    $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $tooltipStart . 'px; left:' . ($lineLeftPosition - 45) . 'px">' . $tooltipText . '</span>';
+                    $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $tooltipStart . 'px; left:' . ($lineLeftPosition - 15) . 'px">' . $tooltipText . '</span>';
                 }
                 $html .= '</div>';
                 $html .= '</div>';
