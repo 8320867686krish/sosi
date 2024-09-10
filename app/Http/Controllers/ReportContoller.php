@@ -723,6 +723,7 @@ class ReportContoller extends Controller
                                 $lineHeight = $lineHeight + $oddincreaseGap;
                                 $lineTopPosition = $lineTopPosition - $oddincreaseGap;
                             }else{
+                                //for else odd i mean line in same place
                                 $tooltipStart = $tooltipStart - 29;
                                 $lineHeight =  $topshow +  abs($tooltipStart);
                                 $lineTopPosition = $tooltipStart;
@@ -751,6 +752,7 @@ class ReportContoller extends Controller
                                 $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                 $lineHeight = $lineHeight +  $evenincreaseGap;
                             }else{
+                                //for else evene line same
                                 $tooltipStart = $tooltipStart +  $evenincreaseGap;
                             }
                         }
