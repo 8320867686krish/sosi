@@ -720,8 +720,8 @@ class ReportContoller extends Controller
                             if (abs($lineLeftPosition - $oddvalue) < 100 && abs($topshow - $oddarrayTop[$key]) < 100) {
                                 $oddsameLocation++;
                                 $tooltipStart = $tooltipStart - $oddincreaseGap + $k;
-                                $lineHeight = $lineHeight + $oddincreaseGap;
-                                $lineTopPosition = $lineTopPosition - $oddincreaseGap;
+                                $lineHeight = $lineHeight + $oddincreaseGap + $k;
+                                $lineTopPosition = $lineTopPosition - $oddincreaseGap + $k;
                             }
                         }
                         if ($oddsameLocation > 1) {
