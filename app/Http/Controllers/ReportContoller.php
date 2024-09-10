@@ -678,7 +678,7 @@ class ReportContoller extends Controller
                 $oddarrayLeft = [];
                 $oddarrayTop = [];
 
-
+            $simpleValue = "";
 
                 foreach ($chunk as $key => $value) {
                     $top = $value['position_top'];
