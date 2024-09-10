@@ -727,7 +727,7 @@ class ReportContoller extends Controller
                         if ($oddsameLocation > 1) {
                             foreach ($sameLocationoddarray as $sameLocationoddValue) {
                                 if ($sameLocationoddValue == $tooltipStart) {
-                                    $tooltipStart = $tooltipStart - 29;
+                                    $tooltipStart = $tooltipStart - 50;
                                     $lineHeight =  $topshow +  abs($tooltipStart);
                                     $lineTopPosition = $tooltipStart;
                                 }
