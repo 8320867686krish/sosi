@@ -725,6 +725,8 @@ class ReportContoller extends Controller
                                 $simpleValue="ifodd";
                             }else{
                                 $simpleValue="ifoddif";
+                                $lineHeight = $lineHeight + $oddincreaseGap + $k;
+
                             }
                         }
                         if ($oddsameLocation > 1) {
