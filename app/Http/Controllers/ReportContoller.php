@@ -626,7 +626,7 @@ class ReportContoller extends Controller
 
             $k = 0;
             $gap = 1;
-            $oddincreaseGap = 29;
+            $oddincreaseGap = 100;
             $evenincreaseGap = 30;
             foreach ($chunks as $chunkIndex => $chunk) {
                 $imagePath = $decks['image'];
