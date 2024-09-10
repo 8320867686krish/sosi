@@ -725,7 +725,7 @@ class ReportContoller extends Controller
                                 $simpleValue="ifodd";
                             }else{
                                 $simpleValue="111";
-                                $tooltipStart = $tooltipStart - 29;
+                                $tooltipStart = $tooltipStart - 50;
                                 $lineHeight =  $topshow +  abs($tooltipStart);
                                 $lineTopPosition = $tooltipStart;
                             }
