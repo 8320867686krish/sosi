@@ -777,8 +777,8 @@ class ReportContoller extends Controller
                         }
                        
                        if($tooltipStart >=100 && $k>=10){
-                        $tooltipStart = $tooltipStart - 100;
-                        $lineHeight = $lineHeight - 100;
+                        $tooltipStart = $tooltipStart - 200;
+                        $lineHeight = $lineHeight - 200;
                        }
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
