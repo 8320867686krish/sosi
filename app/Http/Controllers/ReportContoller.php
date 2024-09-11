@@ -757,7 +757,7 @@ class ReportContoller extends Controller
                                   
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
                                     $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
-                                    $tooltipText="i".$tooltipText . $kVAlue;
+                                    $tooltipText="i". $kVAlue;
 
                                 }
                              }else{
@@ -765,7 +765,7 @@ class ReportContoller extends Controller
                               
                                 $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
                                 $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
-                                $tooltipText="e".$tooltipText . $kVAlue;
+                                $tooltipText="e".$kVAlue;
                             }
                         }
                         if ($sameLocation > 1) {
