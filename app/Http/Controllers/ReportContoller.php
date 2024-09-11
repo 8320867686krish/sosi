@@ -768,6 +768,9 @@ class ReportContoller extends Controller
                             }
                             $sameLocationevenarray[] = $tooltipStart;
                         }
+                        if(  $lineHeight > 300){
+                            $lineHeight =   $lineHeight -60;
+                        }
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
                         $evenArrayToolTip[$value['id']] =   $lineHeight;
