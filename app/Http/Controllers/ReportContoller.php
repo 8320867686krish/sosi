@@ -622,7 +622,7 @@ class ReportContoller extends Controller
         $tooltipCss = 'position: absolute;background-color: #fff;border: 1px solid #4052d6;padding: 1px;border-radius: 2px;
                 white-space: nowrap;z-index: 1;color:#4052d6;font-size:8px;text-align:center;';
         if (count($decks['checks']) > 0) {
-            $chunks = array_chunk($decks['checks']->toArray(), 12);
+            $chunks = array_chunk($decks['checks']->toArray(), 15);
 
             $k = 0;
             $gap = 1;
@@ -750,16 +750,16 @@ class ReportContoller extends Controller
                             if (abs($lineLeftPosition - $evenvalue) < 100 || abs($topshow - $evenarrayTop[$key]) < 100) {
                                 $sameLocation++;
                                 if (abs($lineLeftPosition - $evenvalue) < 100){
-                                    $tooltipStart = $tooltipStart +  $evenincreaseGap  ;
-                                    $lineHeight = $lineHeight +  $evenincreaseGap  ;
+                                    $tooltipStart = $tooltipStart +  $evenincreaseGap;
+                                    $lineHeight = $lineHeight +  $evenincreaseGap;
                                 }else{
-                                    $kVAlue = ($k < 25 ) ? 0 :$k * 2;
+                                    $kVAlue = ($k < 20 ) ? 0 :$k * 2;
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
                                     $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
                                     $tooltipText = $kVAlue."If";
                                 }
                              }else{
-                                $kVAlue = ($k < 25 ) ? 0 :$k * 2;
+                                $kVAlue = ($k < 20 ) ? 0 :$k * 2;
                                 $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
                                 $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
                                 $tooltipText = $kVAlue."ele";
