@@ -769,8 +769,8 @@ class ReportContoller extends Controller
                                 if (abs($tooltipStart - $tooltipValue) < 100) {
                                     if( abs($previousValue == abs($tooltipStart - $tooltipValue))){
                                          if(abs($tooltipStart - $tooltipValue) == 0 && $previousValue == 0){
-                                            $tooltipStart = $tooltipStart +  5;
-                                            $lineHeight = $lineHeight +  5;
+                                            $tooltipStart = $tooltipStart +  2;
+                                            $lineHeight = $lineHeight +  2;
                                          }
 
                                     }
