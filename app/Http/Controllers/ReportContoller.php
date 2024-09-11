@@ -749,8 +749,8 @@ class ReportContoller extends Controller
                         foreach ($evenarrayLeft as $key => $evenvalue) {
                             if (abs($lineLeftPosition - $evenvalue) < 100 ) {
                                 $sameLocation++;
-                                $tooltipStart = $tooltipStart +  $evenincreaseGap;
-                                $lineHeight = $lineHeight +  $evenincreaseGap;
+                                $tooltipStart = $tooltipStart +  $evenincreaseGap +10;
+                                $lineHeight = $lineHeight +  $evenincreaseGap + 10;
                                 $tooltipText = "ob111";
                             
                             }else{
