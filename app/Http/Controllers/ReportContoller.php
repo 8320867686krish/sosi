@@ -767,7 +767,7 @@ class ReportContoller extends Controller
 
                             foreach( $evenArrayToolTip as $tooltipValue){
                                 if (abs($tooltipStart - $tooltipValue) < 100) {
-                                    if( abs($previousValue - abs($tooltipStart - $tooltipValue))){
+                                    if( abs($previousValue == abs($tooltipStart - $tooltipValue))){
                                         $tooltipText = abs($tooltipStart - $tooltipValue);
 
                                     }
