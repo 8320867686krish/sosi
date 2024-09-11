@@ -769,11 +769,12 @@ class ReportContoller extends Controller
                        
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
-                        if(   $tooltipStart > 520){
+                        $tooltipText = $tooltipStart;
+
+                        if(   $tooltipStart > 600){
                             $tooltipStart =  $tooltipStart - 100;
                             $lineHeight = $lineHeight - 100;
                         }
-                        $tooltipText = $tooltipStart;
                     }
                  
                     $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 4px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
