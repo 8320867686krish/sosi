@@ -753,8 +753,8 @@ class ReportContoller extends Controller
                                 $lineHeight = $lineHeight +  $evenincreaseGap;
                             
                             }else{
-                                $tooltipStart = $tooltipStart +  $evenincreaseGap + $k ;
-                                $lineHeight = $lineHeight +  $evenincreaseGap + $k;
+                                $tooltipStart = $tooltipStart +  $evenincreaseGap + $k * 2 ;
+                                $lineHeight = $lineHeight +  $evenincreaseGap + $k * 2;
                             }
                         }
                         if ($sameLocation > 1) {
@@ -773,6 +773,7 @@ class ReportContoller extends Controller
                             $tooltipStart =  $tooltipStart - 100;
                             $lineHeight = $lineHeight - 100;
                         }
+                        $tooltipText = $tooltipStart;
                     }
                  
                     $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 4px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
