@@ -764,12 +764,13 @@ class ReportContoller extends Controller
                             $sameLocationevenarray[] = $tooltipStart;
                         }else{
                             foreach( $evenArrayToolTip as $tooltipValue){
-                                if (abs($lineHeight - $tooltipValue) < 100) {
-                                    $tooltipText = "Yes";
+                                if (abs($lineHeight - $tooltipValue) > 100) {
+                                    $tooltipText = "No";
                                     $tooltipStart = $tooltipStart -  5;
                                     $lineHeight = $lineHeight -  5;
                                 }else{
-                                    $tooltipText = $lineHeight;
+                                    $tooltipText = "Y";
+                                  
                                 }
                             }
                            
