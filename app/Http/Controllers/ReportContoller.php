@@ -755,15 +755,12 @@ class ReportContoller extends Controller
                                 }else{
                                     $kVAlue = ($k < 20 ) ? 0 :$k * 2;
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
-                                    $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
-                                    $tooltipText = $kVAlue."If";
+                                    $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;   
                                 }
                              }else{
                                 $kVAlue = ($k < 20 ) ? 0 :$k * 2;
                                 $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
                                 $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
-                                $tooltipText = $kVAlue."ele";
-
                             }
                         }
                         if ($sameLocation > 1) {
@@ -775,10 +772,7 @@ class ReportContoller extends Controller
                             }
                             $sameLocationevenarray[] = $tooltipStart;
                         }
-                       if($tooltipStart > 400){
-                        $tooltipStart = $tooltipStart -  100;
-                        $lineHeight = $lineHeight -  100;
-                       }
+                       
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
 
