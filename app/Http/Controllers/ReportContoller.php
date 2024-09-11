@@ -774,7 +774,11 @@ class ReportContoller extends Controller
                                             $tooltipText = 'Y';
                                          }
 
+                                    }else{
+                                        $tooltipText = 'N';
                                     }
+                                }else{
+                                    $tooltipText = 'YY';
                                 }
                                 $previousValue =  abs($tooltipStart - $tooltipValue);
                             }
