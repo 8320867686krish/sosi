@@ -672,6 +672,7 @@ class ReportContoller extends Controller
                 $html .= $newImage;
                 $evenarrayLeft = [];
                 $evenarrayTop = [];
+                $evenArrayToolTip = [];
                 $sameLocationevenarray = [];
                 $sameLocationoddarray = [];
 
@@ -753,8 +754,8 @@ class ReportContoller extends Controller
                                 $lineHeight = $lineHeight +  $evenincreaseGap;
                             }else{
                                 $tooltipText = "ov1";
-                                $tooltipStart = $tooltipStart +(20 - $k);
-                                $lineHeight = $lineHeight + (20 - $k);
+                                $tooltipStart = $evenArrayToolTip[$key] +5;
+                                $lineHeight = $lineHeight + 5;
                             }
                         }
                         if ($sameLocation > 1) {
@@ -768,6 +769,7 @@ class ReportContoller extends Controller
                         }
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
+                        $evenArrayToolTip[$value['id']] =   $tooltipStart;
                     }
                     $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 4px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
 
