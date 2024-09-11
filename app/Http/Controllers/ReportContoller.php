@@ -767,10 +767,12 @@ class ReportContoller extends Controller
 
                             foreach( $evenArrayToolTip as $tooltipValue){
                                 if (abs($lineHeight - $tooltipValue) < 100) {
-                                    
-                                        $tooltipStart = $tooltipStart +  8;
-                                        $lineHeight = $lineHeight +  8;
-                                        $tooltipText=$previousValue;
+                                        if($previousValue != 0){
+                                            $tooltipStart = $tooltipStart +  8;
+                                            $lineHeight = $lineHeight +  8;
+                                            $tooltipText=$previousValue."::".$lineHeight;
+                                        }
+                                     
                                     
                                 }
                                 $previousValue =  abs($tooltipStart - $tooltipValue);
