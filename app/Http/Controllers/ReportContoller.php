@@ -769,7 +769,7 @@ class ReportContoller extends Controller
                                     $tooltipStart = $tooltipStart -  5;
                                     $lineHeight = $lineHeight -  5;
                                 }else{
-                                    $tooltipText = "No";
+                                    $tooltipText = $lineHeight;
                                 }
                             }
                            
