@@ -753,22 +753,15 @@ class ReportContoller extends Controller
                                 $lineHeight = $lineHeight +  $evenincreaseGap;
                             }else{
                                 $tooltipText = "ov1";
-                                $tooltipStart = $tooltipStart +  $k;
-                                $lineHeight = $lineHeight + $k;
+                                $tooltipStart = $tooltipStart +($evenincreaseGap - $k);
+                                $lineHeight = $lineHeight + ($evenincreaseGap - $k);
                             }
                         }
                         if ($sameLocation > 1) {
                             foreach ($sameLocationevenarray as $sameLocationValue) {
                                 if ($sameLocationValue == $tooltipStart) {
-                                                                        //for overlapping else condition
-
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
-                                }else{
-                                    $tooltipText = "ov3";
-                                    //for overlapping else condition
-                                    $tooltipStart = $tooltipStart - 10;
-                                    $lineHeight = $lineHeight -  10;
                                 }
                             }
                             $sameLocationevenarray[] = $tooltipStart;
