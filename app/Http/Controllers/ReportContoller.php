@@ -781,7 +781,7 @@ class ReportContoller extends Controller
                             }
                             $sameLocationevenarray[] = $tooltipStart;
                         }
-                       if($tooltipStart > 400){
+                       if($k > 40){
                         $tooltipStart = $tooltipStart -  150;
                         $lineHeight = $lineHeight -  150;
                        }
