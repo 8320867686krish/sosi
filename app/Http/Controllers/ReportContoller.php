@@ -752,8 +752,6 @@ class ReportContoller extends Controller
                                 $sameLocation++;
                                 $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                 $lineHeight = $lineHeight +  $evenincreaseGap;
-                            }else{
-                                $tooltipText = "ov";
                             }
                         }
                         if ($sameLocation > 1) {
@@ -765,9 +763,16 @@ class ReportContoller extends Controller
                             }
                             $sameLocationevenarray[] = $tooltipStart;
                         }else{
-                            $tooltipText = "Yes";
-                            $tooltipStart = $tooltipStart -  5;
-                            $lineHeight = $lineHeight -  5;
+                            foreach( $evenArrayToolTip as $tooltipValue){
+                                if (abs($lineHeight - $tooltipValue) < 100) {
+                                    $tooltipText = "Yes";
+                                    $tooltipStart = $tooltipStart -  5;
+                                    $lineHeight = $lineHeight -  5;
+                                }else{
+                                    $tooltipText = "No";
+                                }
+                            }
+                           
                         }
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
