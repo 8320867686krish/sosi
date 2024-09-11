@@ -627,7 +627,7 @@ class ReportContoller extends Controller
             $k = 0;
             $gap = 1;
             $oddincreaseGap = 29;
-            $evenincreaseGap = 30;
+            $evenincreaseGap = 25;
             foreach ($chunks as $chunkIndex => $chunk) {
                 $imagePath = $decks['image'];
                 $imageData = base64_encode(file_get_contents($imagePath));
@@ -768,8 +768,9 @@ class ReportContoller extends Controller
                             }
                             $sameLocationevenarray[] = $tooltipStart;
                         }
-                        if(  $lineHeight > 300){
+                        if(  $lineHeight > 400){
                             $lineHeight =   $lineHeight -60;
+                            $tooltipStart =  $tooltipStart -60;
                         }
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
