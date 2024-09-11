@@ -753,14 +753,17 @@ class ReportContoller extends Controller
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap  ;
                                     $lineHeight = $lineHeight +  $evenincreaseGap  ;
                                 }else{
-                                    $kVAlue = ($k > 3 ) ? 30 :$k;
+                                    $kVAlue = ($k < 3 ) ? 30 :$k;
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
                                     $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
+                                    $tooltipText = $kVAlue."If";
                                 }
                              }else{
-                                $kVAlue = ($k > 3 ) ? 30 :$k;
+                                $kVAlue = ($k < 3 ) ? 30 :$k;
                                 $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
                                 $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
+                                $tooltipText = $kVAlue."ele";
+
                             }
                         }
                         if ($sameLocation > 1) {
