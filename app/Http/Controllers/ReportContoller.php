@@ -755,7 +755,7 @@ class ReportContoller extends Controller
                             }else{
                                 $tooltipText = "ov1";
                                 $tooltipStart = $evenArrayToolTip[$key] +5;
-                                $lineHeight = $lineHeight + 5;
+                                $lineHeight = $evenArrayToolTip[$key] + 5;
                             }
                         }
                         if ($sameLocation > 1) {
@@ -769,7 +769,7 @@ class ReportContoller extends Controller
                         }
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
-                        $evenArrayToolTip[$value['id']] =   $tooltipStart;
+                        $evenArrayToolTip[$value['id']] =   $lineHeight;
                     }
                     $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 4px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
 
