@@ -763,10 +763,16 @@ class ReportContoller extends Controller
                             }
                             $sameLocationevenarray[] = $tooltipStart;
                         }else{
+                            $previousValue = 0; // Initialize previous value before the loop
+
                             foreach( $evenArrayToolTip as $tooltipValue){
                                 if (abs($tooltipStart - $tooltipValue) < 100) {
-                                    $tooltipText = abs($tooltipStart - $tooltipValue);
+                                    if( abs($previousValue - abs($tooltipStart - $tooltipValue))){
+                                        $tooltipText = abs($tooltipStart - $tooltipValue);
+
+                                    }
                                 }
+                                $previousValue =  abs($tooltipStart - $tooltipValue);
                             }
                            
                         }
