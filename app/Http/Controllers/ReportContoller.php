@@ -755,8 +755,8 @@ class ReportContoller extends Controller
                                
                             }else{
                                 $tooltipText = abs($topshow - $evenarrayTop[$key]);
-                                $tooltipStart = $tooltipStart + 2;
-                                $lineHeight = $lineHeight + 2;
+                                $tooltipStart = $tooltipStart + 5;
+                                $lineHeight = $lineHeight + 5;
                             }
                         }
                         if ($sameLocation > 1) {
