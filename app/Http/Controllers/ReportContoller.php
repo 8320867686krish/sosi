@@ -762,22 +762,6 @@ class ReportContoller extends Controller
                                 }
                             }
                             $sameLocationevenarray[] = $tooltipStart;
-                        }else{
-                            $previousValue = 0; // Initialize previous value before the loop
-
-                            foreach( $evenArrayToolTip as $tooltipValue){
-                                if (abs($lineHeight - $tooltipValue) < 100) {
-                                        if($previousValue != 0){
-                                            $tooltipStart = $tooltipStart +  8;
-                                            $lineHeight = $lineHeight +  8;
-                                            $tooltipText=$previousValue."::".$lineHeight;
-                                        }
-                                     
-                                    
-                                }
-                                $previousValue =  abs($tooltipStart - $tooltipValue);
-                            }
-                           
                         }
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
