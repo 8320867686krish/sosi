@@ -27,9 +27,8 @@
             <li>1. Asbestos </li>
             <li>2. Polychlorinated biphenyls (PCBs) </li>
             <li>3. Ozone-depleting substances </li>
-            <li>4. Anti-fouling systems containing organotin compounds as a biocide or</li>
-            <li>5. Cybutryne</li>
-            <li>6. PFOS (as pe EUSRR & EMSA)</li>
+            <li>4. Anti-fouling systems containing organotin compounds as a biocide or Cybutryne</li>
+            <li>5. PFOS (as pe EUSRR & EMSA)</li>
         </ul>
         <div style="margin-top:20px;">
             <h4><b>1.Asbestos</b></h4>
