@@ -747,12 +747,23 @@ class ReportContoller extends Controller
                         $lineHeight = ($image_height - $topshow + $gap);
                         $tooltipStart = $image_height + $gap;
                         $sameLocation = 0;
+                        $previousValue = 0; 
                         foreach ($evenarrayLeft as $key => $evenvalue) {
                             if (abs($lineLeftPosition - $evenvalue) < 100 && abs($topshow - $evenarrayTop[$key]) < 100) {
                                 $sameLocation++;
                                 $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                 $lineHeight = $lineHeight +  $evenincreaseGap;
-                            }
+                            }else{
+                                if (abs($tooltipStart - $evenArrayToolTip[$key]) < 100) {
+                                    if(abs($tooltipStart - $evenArrayToolTip[$key]) == 0 && $previousValue == 0){
+                                       $tooltipStart = $previousValue +  15;
+                                       $lineHeight = $previousValue +  15;
+                                    }
+                                }
+                                $previousValue =  abs($tooltipStart - $evenArrayToolTip[$key]);
+
+                           }
+                            
                         }
                         if ($sameLocation > 1) {
                             foreach ($sameLocationevenarray as $sameLocationValue) {
@@ -762,22 +773,6 @@ class ReportContoller extends Controller
                                 }
                             }
                             $sameLocationevenarray[] = $tooltipStart;
-                        }else{
-                            $previousValue = 0; // Initialize previous value before the loop
-
-                            foreach( $evenArrayToolTip as $tooltipValue){
-                                if (abs($tooltipStart - $tooltipValue) < 100) {
-                                    if( abs($previousValue == abs($tooltipStart - $tooltipValue))){
-                                         if(abs($tooltipStart - $tooltipValue) == 0){
-                                            $tooltipStart = $previousValue +  5;
-                                            $lineHeight = $previousValue +  5;
-                                         }
-
-                                    }
-                                }
-                                $previousValue =  abs($tooltipStart - $tooltipValue);
-                            }
-                           
                         }
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
