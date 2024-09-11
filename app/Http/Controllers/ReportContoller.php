@@ -756,16 +756,17 @@ class ReportContoller extends Controller
                                     $kVAlue = ($k > 3 ) ? 5 :$k;
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
                                     $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
-                                    $tooltipText = "else";
+                                    $tooltipText = "else".$kVAlue;
                                 }
                              
                                 
                                
                             
                             }else{
-                                $tooltipStart = $tooltipStart +  $evenincreaseGap + 20;
-                                $lineHeight = $lineHeight +  $evenincreaseGap +20;
-                                $tooltipText = "ob";
+                                $kVAlue = ($k > 3 ) ? 5 :$k;
+                                $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
+                                $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
+                                $tooltipText = "ob".$kVAlue;
                             }
                         }
                         if ($sameLocation > 1) {
