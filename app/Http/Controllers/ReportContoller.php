@@ -749,14 +749,24 @@ class ReportContoller extends Controller
                         foreach ($evenarrayLeft as $key => $evenvalue) {
                             if (abs($lineLeftPosition - $evenvalue) < 100 || abs($topshow - $evenarrayTop[$key]) < 100) {
                                 $sameLocation++;
-                                
+                                if (abs($lineLeftPosition - $evenvalue) < 100){
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
-                                
+                                }else{
+                                    $kVAlue = ($k < 10 ) ? 0 :$k * 2;
+                                  
+                                    $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
+                                    $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
+                                    $tooltipText="i".$tooltipText . $kVAlue;
+
+                                }
                              }else{
-                                $tooltipStart = $tooltipStart +  $evenincreaseGap;
-                                $lineHeight = $lineHeight +  $evenincreaseGap;
-                             }
+                                $kVAlue = ($k < 10 ) ? 0 :$k * 2;
+                              
+                                $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
+                                $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
+                                $tooltipText="e".$tooltipText . $kVAlue;
+                            }
                         }
                         if ($sameLocation > 1) {
                             foreach ($sameLocationevenarray as $sameLocationValue) {
@@ -767,9 +777,9 @@ class ReportContoller extends Controller
                             }
                             $sameLocationevenarray[] = $tooltipStart;
                         }
-                       if($tooltipStart >= 500){
-                        $tooltipStart = $tooltipStart -  100;
-                        $lineHeight = $lineHeight -  100;
+                       if($tooltipStart >= 400){
+                        $tooltipStart = $tooltipStart -  150;
+                        $lineHeight = $lineHeight -  150;
                        }
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
