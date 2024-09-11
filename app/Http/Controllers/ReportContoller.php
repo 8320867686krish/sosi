@@ -753,9 +753,11 @@ class ReportContoller extends Controller
                                 $lineHeight = $lineHeight +  $evenincreaseGap;
                             }else if(abs($topshow - $evenarrayTop[$key]) < 100){
                                 $sameLocation++;
-                                $tooltipStart = $tooltipStart +  $evenincreaseGap;
-                                $lineHeight = $lineHeight +  $evenincreaseGap;
+                                $tooltipStart = $tooltipStart +  $evenincreaseGap +20;
+                                $lineHeight = $lineHeight +  $evenincreaseGap + 20;
                                 $tooltipText="Ade";
+                            }else{
+                                $tooltipText="Ade1";
                             }
                         }
                         if ($sameLocation > 1) {
