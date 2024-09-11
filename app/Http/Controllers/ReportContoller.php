@@ -753,17 +753,7 @@ class ReportContoller extends Controller
                                 $sameLocation++;
                                 $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                 $lineHeight = $lineHeight +  $evenincreaseGap;
-                            }else{
-                                if (abs($tooltipStart - $evenArrayToolTip[$key]) < 100) {
-                                    if(abs($tooltipStart - $evenArrayToolTip[$key]) == 0 && $previousValue == 0){
-                                       $tooltipStart = $previousValue +  15;
-                                       $lineHeight = $previousValue +  15;
-                                    }
-                                }
-                                $previousValue =  abs($tooltipStart - $evenArrayToolTip[$key]);
-
-                           }
-                            
+                            }
                         }
                         if ($sameLocation > 1) {
                             foreach ($sameLocationevenarray as $sameLocationValue) {
@@ -773,6 +763,21 @@ class ReportContoller extends Controller
                                 }
                             }
                             $sameLocationevenarray[] = $tooltipStart;
+                        }else{
+                            $previousValue = 0; // Initialize previous value before the loop
+
+                            foreach( $evenArrayToolTip as $tooltipValue){
+                                if (abs($tooltipStart - $tooltipValue) < 100) {
+                                         if(abs($tooltipStart - $tooltipValue) == 0 && $previousValue == 0){
+                                            $tooltipStart = $lineHeight +  5;
+                                            $lineHeight = $lineHeight +  5;
+                                         }
+
+                                    
+                                }
+                                $previousValue =  abs($tooltipStart - $tooltipValue);
+                            }
+                           
                         }
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
