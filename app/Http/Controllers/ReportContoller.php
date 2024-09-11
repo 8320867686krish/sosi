@@ -760,10 +760,13 @@ class ReportContoller extends Controller
                         if ($sameLocation > 1) {
                             foreach ($sameLocationevenarray as $sameLocationValue) {
                                 if ($sameLocationValue == $tooltipStart) {
+                                                                        //for overlapping else condition
+
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
                                 }else{
                                     $tooltipText = "ov3";
+                                    //for overlapping else condition
                                     $tooltipStart = $tooltipStart - 10;
                                     $lineHeight = $lineHeight -  10;
                                 }
