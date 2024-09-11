@@ -764,7 +764,7 @@ class ReportContoller extends Controller
                             $sameLocationevenarray[] = $tooltipStart;
                         }else{
                             foreach( $evenArrayToolTip as $tooltipValue){
-                                if (abs($lineHeight - $tooltipValue) > 100) {
+                                if (abs($tooltipStart - $tooltipValue) > 100) {
                                     $tooltipText = "No";
                                     $tooltipStart = $tooltipStart -  5;
                                     $lineHeight = $lineHeight -  5;
@@ -777,7 +777,7 @@ class ReportContoller extends Controller
                         }
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
-                        $evenArrayToolTip[$value['id']] =   $lineHeight;
+                        $evenArrayToolTip[$value['id']] =   $tooltipStart;
                     }
                     $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 4px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
 
