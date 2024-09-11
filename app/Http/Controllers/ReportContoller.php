@@ -753,9 +753,8 @@ class ReportContoller extends Controller
                                 $lineHeight = $lineHeight +  $evenincreaseGap;
                             }else{
                                 $tooltipText = "ov1";
-                                $tooltipStart = $tooltipStart +  8;
-
-                                $lineHeight = $lineHeight + 8;
+                                $tooltipStart = $tooltipStart +  $k;
+                                $lineHeight = $lineHeight + $k;
                             }
                         }
                         if ($sameLocation > 1) {
