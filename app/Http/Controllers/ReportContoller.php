@@ -752,6 +752,7 @@ class ReportContoller extends Controller
                                 $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                 $lineHeight = $lineHeight +  $evenincreaseGap;
                             }else{
+                                $tooltipText = "ov1";
                                 $tooltipStart = $tooltipStart +  5;
 
                                 $lineHeight = $lineHeight + 5;
@@ -762,6 +763,8 @@ class ReportContoller extends Controller
                                 if ($sameLocationValue == $tooltipStart) {
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
+                                }else{
+                                    $tooltipText = "ov3";
                                 }
                             }
                             $sameLocationevenarray[] = $tooltipStart;
