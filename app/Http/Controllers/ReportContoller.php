@@ -771,6 +771,7 @@ class ReportContoller extends Controller
                                          if(abs($tooltipStart - $tooltipValue) == 0 && $previousValue == 0){
                                             $tooltipStart = $tooltipStart +  2;
                                             $lineHeight = $lineHeight +  2;
+                                            $tooltipText = 'Y';
                                          }
 
                                     }
