@@ -753,7 +753,7 @@ class ReportContoller extends Controller
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
                                 }else{
-                                    $kVAlue = ($k < 10 ) ? 0 :$k * 2;
+                                    $kVAlue = ($k < 10 ) ? 0 :$k ;
                                   
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
                                     $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
@@ -761,7 +761,7 @@ class ReportContoller extends Controller
 
                                 }
                              }else{
-                                $kVAlue = ($k < 10 ) ? 0 :$k * 2;
+                                $kVAlue = ($k < 10 ) ? 0 :$k;
                               
                                 $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
                                 $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
