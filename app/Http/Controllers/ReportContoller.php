@@ -753,7 +753,7 @@ class ReportContoller extends Controller
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
                                 }else{
-                                    $kVAlue = ($k < 20 ) ? 15 :$k * 2;
+                                    $kVAlue = ($k < 20 ) ? 20 :$k * 2;
                                   
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
                                     $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
@@ -761,7 +761,7 @@ class ReportContoller extends Controller
 
                                 }
                              }else{
-                                $kVAlue = ($k < 20 ) ? 15 :$k * 2;
+                                $kVAlue = ($k < 20 ) ? 20 :$k * 2;
                               
                                 $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
                                 $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
@@ -777,7 +777,8 @@ class ReportContoller extends Controller
                             }
                             $sameLocationevenarray[] = $tooltipStart;
                         }
-                       if($tooltipStart >=500 && $k>=10){
+                        $too=$tooltipStart;
+                       if($tooltipStart >=400 && $k>=10){
                         $tooltipStart = $tooltipStart - 100;
                         $lineHeight = $lineHeight - 100;
                        }
@@ -789,7 +790,7 @@ class ReportContoller extends Controller
                  
                     $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 4px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
 
-                    $html .= '<span class="line" style="top:' . $lineTopPosition  . 'px;left:' . $lineLeftPosition . 'px;height:' . $lineHeight . 'px;' . $lineCss . '"></span>';
+                    $html .= '<span class="line" style="top:' . $lineTopPosition  . 'px;left:' . $lineLeftPosition . 'px;height:' . $lineHeight . 'px;' . $lineCss . '">'.$too.'</span>';
 
 
                     $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $tooltipStart . 'px; left:' . ($lineLeftPosition - 15) . 'px">' . $tooltipText . '</span>';
