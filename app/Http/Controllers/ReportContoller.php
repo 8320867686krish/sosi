@@ -753,7 +753,7 @@ class ReportContoller extends Controller
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap  ;
                                     $lineHeight = $lineHeight +  $evenincreaseGap  ;
                                 }else{
-                                    $kVAlue = ($k > 3 ) ? 5 :$k;
+                                    $kVAlue = ($k > 3 ) ? 15 :$k;
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
                                     $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
                                     $tooltipText = "else".$kVAlue;
