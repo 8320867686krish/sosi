@@ -752,21 +752,17 @@ class ReportContoller extends Controller
                                
                                     $tooltipStart = $tooltipStart + 28 ;
                                     $lineHeight = $lineHeight + 28;
-                                  if($lineHeight >= 300)
-                                  {
-                                    $lineHeight = $lineHeight -10;
-                                  }
-                                    $tooltipText = $lineHeight;
+                                 
                                 
                             }
                           
                             else{
                                 $sameLocation++;    
-                                if( abs($lineHeight - $evenarrayLineHeight[$key]) > 100){
+                               
                                     $tooltipStart = $tooltipStart - 10;
                                     $lineHeight = $lineHeight -10; 
                                     $tooltipText = "e".$k.":".$tooltipStart;
-                                }
+                                
                                
 
                              }
