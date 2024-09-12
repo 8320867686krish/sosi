@@ -755,7 +755,7 @@ class ReportContoller extends Controller
                                     $lineHeight = $lineHeight + 15;
                                 } else {
                                   
-                                    if(abs($lineHeight  - 210) > 300){
+                                    if(abs($lineHeight  - 210) > 220){
                                         $tooltipStart = $tooltipStart - abs($lineHeight  - 210);
                                         $lineHeight = $lineHeight -  abs($lineHeight  - 210);
                                     }else{
@@ -769,8 +769,14 @@ class ReportContoller extends Controller
                         if ($sameLocation > 1) {
                             foreach ($sameLocationevenarray as $sameLocationValue) {
                                 if ($sameLocationValue == $tooltipStart) {
-                                    $tooltipStart = $tooltipStart +  $evenincreaseGap;
-                                    $lineHeight = $lineHeight +  $evenincreaseGap;
+                                    
+                                    if(abs($lineHeight  - 210) > 220){
+                                        $tooltipStart = $tooltipStart - abs($lineHeight  - 210);
+                                        $lineHeight = $lineHeight -  abs($lineHeight  - 210);
+                                    }else{
+                                        $tooltipStart = $tooltipStart +  $evenincreaseGap;
+                                        $lineHeight = $lineHeight +  $evenincreaseGap;
+                                    }
                                 }
                             }
                             $sameLocationevenarray[] = $tooltipStart;
