@@ -770,8 +770,8 @@ class ReportContoller extends Controller
                                 }else{
                                     $kVlue = 0;
                                 }
-                                $tooltipStart = $tooltipStart +  $k - $kVlue;
-                                $lineHeight = $lineHeight +  $k - $kVlue;
+                                $tooltipStart = $tooltipStart - $gap;
+                                $lineHeight = $lineHeight - $gap;
                              }
                         }
                         if ($sameLocation > 1) {
