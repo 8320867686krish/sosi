@@ -627,7 +627,7 @@ class ReportContoller extends Controller
             $k = 0;
             $gap = 1;
             $oddincreaseGap = 29;
-            $evenincreaseGap = 30;
+            $evenincreaseGap = 29;
             foreach ($chunks as $chunkIndex => $chunk) {
                 $imagePath = $decks['image'];
                 $imageData = base64_encode(file_get_contents($imagePath));
@@ -748,29 +748,16 @@ class ReportContoller extends Controller
                         $sameLocation = 0;
 
                         foreach ($evenarrayLeft as $key => $evenvalue) {
-                            if (abs($lineLeftPosition - $evenvalue) < 100 || abs($topshow - $evenarrayTop[$key]) < 100) {
+                            if (abs($lineLeftPosition - $evenvalue) < 100 && abs($topshow - $evenarrayTop[$key]) < 100) {
                                 $sameLocation++;
-                                // if (abs($lineHeight - $evenarrayLineHeight[$key] > 100)) {
-                                //     $tooltipStart = $tooltipStart + 15;
-                                //     $lineHeight = $lineHeight + 15;
-                                // } else {
-                                if (abs($tooltipStart  - 210) < 100) {
-                                    $tooltipStart = $tooltipStart - 300;
-                                    $lineHeight = $lineHeight -  300;
-                                   
-                                } else {
-                                    $tooltipStart = $tooltipStart + $evenincreaseGap;
-                                    $lineHeight = $lineHeight + $evenincreaseGap;
-                                }
-
-                                // }
+                                $tooltipStart = $tooltipStart + $evenincreaseGap;
+                                $lineHeight = $lineHeight + $evenincreaseGap;
+                                
                             }
                         }
                         if ($sameLocation > 1) {
                             foreach ($sameLocationevenarray as $sameLocationValue) {
                                 if ($sameLocationValue == $tooltipStart) {
-
-
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
                                 }
