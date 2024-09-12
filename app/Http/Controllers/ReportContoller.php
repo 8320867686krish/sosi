@@ -752,27 +752,24 @@ class ReportContoller extends Controller
                                
                                     $tooltipStart = $tooltipStart + $evenincreaseGap ;
                                     $lineHeight = $lineHeight + $evenincreaseGap;
-                                         if( abs($lineHeight - $evenarrayLineHeight[$key]) < 100){
-                                    $tooltipStart = $tooltipStart - 15;
-                                    $lineHeight = $lineHeight -15; 
-                                    $tooltipText = "e".$k.":".$tooltipStart;
-                                }else{
+                                    if($lineHeight >= 240){
+                                        $tooltipStart = $tooltipStart - 10 ;
+                                        $lineHeight = $lineHeight - 10;
+                                    }
                                     $tooltipText = $lineHeight;
-
-                                }
                                 
                             }
                           
-                            // else{
+                            else{
                                
-                            //     if( abs($lineHeight - $evenarrayLineHeight[$key]) > 100){
-                            //         $tooltipStart = $tooltipStart - 15;
-                            //         $lineHeight = $lineHeight -15; 
-                            //         $tooltipText = "e".$k.":".$tooltipStart;
-                            //     }
+                                if( abs($lineHeight - $evenarrayLineHeight[$key]) > 100){
+                                    $tooltipStart = $tooltipStart - 15;
+                                    $lineHeight = $lineHeight -15; 
+                                    $tooltipText = "e".$k.":".$tooltipStart;
+                                }
                                
 
-                            //  }
+                             }
                         }
                         if ($sameLocation > 1) {
                             foreach ($sameLocationevenarray as $sameLocationValue) {
