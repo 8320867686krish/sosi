@@ -756,8 +756,13 @@ class ReportContoller extends Controller
                              {
                                 $tooltipText = $k;
                                 $sameLocation++;
-                                $tooltipStart = $tooltipStart +  $k;
-                                $lineHeight = $lineHeight +  $k;
+                                if($k>8){
+                                    $kVlue = 5;
+                                }else{
+                                    $kVlue = 0;
+                                }
+                                $tooltipStart = $tooltipStart +  $k - $kVlue;
+                                $lineHeight = $lineHeight +  $k - $kVlue;
                              }else{
                                 $tooltipText = "e".$k;
                                 if($k>14){
