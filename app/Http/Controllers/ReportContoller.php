@@ -58,7 +58,7 @@ class ReportContoller extends Controller
         $checks = Checks::with('deck:id,name')->with('check_hazmats.hazmat')->where('project_id', $id);
         $ship_name = $project["ship_name"];
         $imo_number = $project["imo_number"];
-  $project_no = $project['project_no'];
+        $project_no = $project['project_no'];
         $safeProjectNo = str_replace('/', '_', $project_no);
 
         if ($isSample) {
@@ -68,7 +68,7 @@ class ReportContoller extends Controller
         } else {
             $filename = "VSCP-{$safeProjectNo}" . "." . $fileExt;
         }
-       
+
 
         $checks = $checks->get();
 
@@ -162,7 +162,7 @@ class ReportContoller extends Controller
             $stylesheet = file_get_contents('public/assets/mpdf.css');
             $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
             $summery = 'Summary';
-            $mpdf->WriteHTML(view('report.cover', compact('projectDetail','summery')));
+            $mpdf->WriteHTML(view('report.cover', compact('projectDetail', 'summery')));
             $mpdf->WriteHTML(view('report.shipParticular', compact('projectDetail')));
             $mpdf->AddPage('L'); // Set landscape mode for the inventory page
 
@@ -215,7 +215,7 @@ class ReportContoller extends Controller
         $date = date('d-m-Y', strtotime($post['date']));
         $projectDetail = Projects::with('client')->find($project_id);
         if ($post['action'] == 'summery') {
-         return  $this->summeryReport($post);
+            return  $this->summeryReport($post);
         }
 
         $hazmets = Hazmat::withCount(['checkHasHazmats as check_type_count' => function ($query) use ($project_id) {
@@ -251,7 +251,7 @@ class ReportContoller extends Controller
             ->where('project_id', $project_id)
             ->get();
 
-        $ChangeCheckList = Checks::with('labResultsChange.hazmat')->where('markAsChange',1)
+        $ChangeCheckList = Checks::with('labResultsChange.hazmat')->where('markAsChange', 1)
             ->where('project_id', $project_id)
             ->get();
 
@@ -437,7 +437,7 @@ class ReportContoller extends Controller
         $mpdf->AddPage('P');
         $mpdf->WriteHTML(view('report.IHM-VSC', compact('projectDetail', 'brifimage', 'lebResultAll')));
         $mpdf->AddPage('L');
-        $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList','ChangeCheckList')));
+        $mpdf->WriteHTML(view('report.VisualSamplingCheck', compact('ChecksList', 'ChangeCheckList')));
 
         $mpdf->WriteHTML(view('report.riskAssessments'));
         $sampleImageChunks = $sampleImage->chunk(50);
@@ -451,11 +451,11 @@ class ReportContoller extends Controller
             $numberColoum = "Sample No";
 
 
-            $html = view('report.sampleImage', compact('chunk', 'title', 'show','numberColoum'))->render();
+            $html = view('report.sampleImage', compact('chunk', 'title', 'show', 'numberColoum'))->render();
             $mpdf->WriteHTML($html);
         }
         $sampleImageChunks = $visualImage->chunk(50);
-        $k=0;
+        $k = 0;
         foreach ($sampleImageChunks as $index => $chunk) {
             if ($k == 0) {
                 $title = "Visual Records";
@@ -463,7 +463,7 @@ class ReportContoller extends Controller
                 $visualShow = true;
             }
             $k++;
-            $html = view('report.visualImage', compact('chunk', 'title','visualShow','numberColoum'))->render();
+            $html = view('report.visualImage', compact('chunk', 'title', 'visualShow', 'numberColoum'))->render();
             $mpdf->WriteHTML($html);
         }
 
@@ -577,7 +577,7 @@ class ReportContoller extends Controller
             }
         }
         $mpdf->WriteHTML('<div style="position:absolute;bottom:100px;"><table width="100%"><tr><td style="text-align:center">... End of the IHM Report...</td></tr></table></div>');
-    
+
         $safeProjectNo = str_replace('/', '_', $projectDetail['project_no']);
 
         $fileName = $safeProjectNo . '.pdf';
@@ -722,7 +722,7 @@ class ReportContoller extends Controller
                                 $tooltipStart = $tooltipStart - $oddincreaseGap;
                                 $lineHeight = $lineHeight + $oddincreaseGap;
                                 $lineTopPosition = $lineTopPosition - $oddincreaseGap;
-                            }else{
+                            } else {
                                 //for else odd i mean line in same place
                                 $tooltipStart = $tooltipStart - 29;
                                 $lineHeight =  $topshow +  abs($tooltipStart);
@@ -749,51 +749,29 @@ class ReportContoller extends Controller
                         foreach ($evenarrayLeft as $key => $evenvalue) {
                             if (abs($lineLeftPosition - $evenvalue) < 100 || abs($topshow - $evenarrayTop[$key]) < 100) {
                                 $sameLocation++;
-                                $tooltipText = $lineHeight.";".$k;
-                                    if(abs($lineHeight - $evenarrayLineHeight[$key] > 100)){
-                                        $tooltipStart = $tooltipStart - 20 ;
-                                        $lineHeight = $lineHeight - 20;
-                                    }else{
-                                        $tooltipStart = $tooltipStart + $evenincreaseGap ;
-                                        $lineHeight = $lineHeight + $evenincreaseGap;
-                                    }
-                               
-                                
+                                $tooltipText = $lineHeight . ";" . $k;
+                                if (abs($lineHeight - $evenarrayLineHeight[$key] > 100)) {
+                                    $tooltipStart = $tooltipStart + 20;
+                                    $lineHeight = $lineHeight + 20;
+                                } else {
+                                    $tooltipStart = $tooltipStart + $evenincreaseGap;
+                                    $lineHeight = $lineHeight + $evenincreaseGap;
+                                }
                             }
-                          
-                            // else{
-                            //     $sameLocation++;    
-                            //         if($k <= 12){
-                            //             $kval = 5;
-                            //         }else{
-                            //             $kval = 0;
-                            //         }
-                            //         $tooltipStart = $tooltipStart - 5 +  $kval;
-                            //         $lineHeight = $lineHeight - 5 +  $kval; 
-                            //         $tooltipText = "e".$k.":".$tooltipStart;
-                                
-                               
-
-                            //  }
                         }
                         if ($sameLocation > 1) {
                             foreach ($sameLocationevenarray as $sameLocationValue) {
                                 if ($sameLocationValue == $tooltipStart) {
-                                   
+
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
-
                                 }
                             }
                             $sameLocationevenarray[] = $tooltipStart;
                         }
-                       
-                     
-                        
-                        $evenarrayLeft[$value['id']] = $lineLeftPosition;
+                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
                         $evenarrayLineHeight[$value['id']] = $lineHeight;
-                        
                     }
                     $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 4px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
 
@@ -845,18 +823,19 @@ class ReportContoller extends Controller
         }
     }
 
-    public function demoTest(){
+    public function demoTest()
+    {
         $ChecksList = CheckHasHazmat::get();
-        foreach($ChecksList as $value){
-             $check_id = $value['check_id'];
-             $hazmat_id = $value['hazmat_id'];
-            $lebResurt = LabResult::where('check_id',$check_id)->where('hazmat_id',$hazmat_id)->first();
-            if($lebResurt){
+        foreach ($ChecksList as $value) {
+            $check_id = $value['check_id'];
+            $hazmat_id = $value['hazmat_id'];
+            $lebResurt = LabResult::where('check_id', $check_id)->where('hazmat_id', $hazmat_id)->first();
+            if ($lebResurt) {
                 $type = $lebResurt['type'];
-            }else{
+            } else {
                 $type = 'Not Contained';
             }
-           CheckHasHazmat::where('id',$value['id'])->update(['final_lab_result'=>$type]);
+            CheckHasHazmat::where('id', $value['id'])->update(['final_lab_result' => $type]);
         }
     }
 }
