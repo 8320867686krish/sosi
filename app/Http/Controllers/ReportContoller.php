@@ -764,7 +764,7 @@ class ReportContoller extends Controller
                             //     $lineHeight = $lineHeight +  $k - $kVlue;
                             //  }
                             else{
-                                if($k>5){
+                                if($k>10){
                                     $kvalue =  $k + 1;
                                 }else{
                                     $kvalue = 0;
@@ -784,7 +784,7 @@ class ReportContoller extends Controller
                             $sameLocationevenarray[] = $tooltipStart;
                         }
                        
-                        if($lineHeight > 250){
+                        if($lineHeight > 297){
                             $tooltipStart = $tooltipStart - 50;
                         $lineHeight = $lineHeight -  50; 
                         }
