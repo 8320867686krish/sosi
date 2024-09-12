@@ -620,7 +620,7 @@ class ReportContoller extends Controller
         $html = "";
         $lineCss = 'position:absolute;background-color:#4052d6;border:solid #4052d6 1px;';
         $tooltipCss = 'position: absolute;background-color: #fff;border: 1px solid #4052d6;padding: 1px;border-radius: 2px;
-                white-space: nowrap;z-index: 1;color:#4052d6;font-size:5px;text-align:center;';
+                white-space: nowrap;z-index: 1;color:#4052d6;font-size:7px;text-align:center;';
         if (count($decks['checks']) > 0) {
             $chunks = array_chunk($decks['checks']->toArray(), 15);
 
@@ -689,7 +689,7 @@ class ReportContoller extends Controller
                     if (@$value['check_hazmats']) {
                         $hazmatCount = count($value['check_hazmats']); // Get the total number of elements
                         foreach ($value['check_hazmats'] as $index => $hazmet) {
-                            $tooltipText .= '<span style="font-size:5px;color:' . $hazmet['hazmat']['color']   . '">' . $hazmet['hazmat']['short_name'] . '</span>';
+                            $tooltipText .= '<span style="font-size:7px;color:' . $hazmet['hazmat']['color']   . '">' . $hazmet['hazmat']['short_name'] . '</span>';
                             if ($index < $hazmatCount - 1) {
                                 $tooltipText .= ',';
                             }
@@ -746,17 +746,17 @@ class ReportContoller extends Controller
                         $lineHeight = ($image_height - $topshow + $gap);
                         $tooltipStart = $image_height + $gap;
                         $sameLocation = 0;
+                        $tool=0;
                         foreach ($evenarrayLeft as $key => $evenvalue) {
                             if (abs($lineLeftPosition - $evenvalue) < 100 || abs($topshow - $evenarrayTop[$key]) < 100) {
                                 $sameLocation++;
                                 if (abs($lineHeight - $evenarrayLineHeight[$key] > 100)) {
                                     $tooltipStart = $tooltipStart + 15;
                                     $lineHeight = $lineHeight + 15;
-                                    $tooltipText = "This";
                                 } else {
                                     $tooltipStart = $tooltipStart + $evenincreaseGap;
                                     $lineHeight = $lineHeight + $evenincreaseGap;
-                                    $tooltipText = "This1";
+                                    $tool =$lineHeight;
                                 }
                             }
                         }
@@ -765,7 +765,6 @@ class ReportContoller extends Controller
                                 if ($sameLocationValue == $tooltipStart) {
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
-                                    $tooltipText = "This2";
                                 }
                             }
                             $sameLocationevenarray[] = $tooltipStart;
@@ -776,7 +775,7 @@ class ReportContoller extends Controller
                     }
                     $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 4px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
 
-                    $html .= '<span class="line" style="top:' . $lineTopPosition  . 'px;left:' . $lineLeftPosition . 'px;height:' . $lineHeight . 'px;' . $lineCss . '"></span>';
+                    $html .= '<span class="line" style="top:' . $lineTopPosition  . 'px;left:' . $lineLeftPosition . 'px;height:' . $lineHeight . 'px;' . $lineCss . '">'.$tool.'</span>';
 
 
                     $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $tooltipStart . 'px; left:' . ($lineLeftPosition - 15) . 'px">' . $tooltipText . '</span>';
