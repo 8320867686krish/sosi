@@ -749,9 +749,6 @@ class ReportContoller extends Controller
                         foreach ($evenarrayLeft as $key => $evenvalue) {
                             if (abs($lineLeftPosition - $evenvalue) < 100 || abs($topshow - $evenarrayTop[$key]) < 100) {
                                 $sameLocation++;
-                                if($k > 7){
-                                    $evenincreaseGap = $evenincreaseGap - 10;
-                                }
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
                                     $tooltipText = $k.":".$tooltipStart;
@@ -786,8 +783,8 @@ class ReportContoller extends Controller
                         }
                        
                         if($tooltipStart > 490  ){
-                            $tooltipStart = $tooltipStart - 15;
-                            $lineHeight = $lineHeight -  15; 
+                            $tooltipStart = $tooltipStart - 10;
+                            $lineHeight = $lineHeight -  10; 
                         }
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
