@@ -755,20 +755,20 @@ class ReportContoller extends Controller
 
                             }
                           
-                            else{
-                                if($k>5){
-                                    $kvalue =  $k + 8;
-                                }else{
-                                    $kvalue = 0;
-                                }
-                                if( abs($tooltipStart - $evenarraytooltipStart[$key]) < 100){
-                                    $tooltipStart = $tooltipStart - $k + $kvalue;
-                                    $lineHeight = $lineHeight  - $k + $kvalue; 
-                                    $tooltipText = "e".$k.":".$tooltipStart;
-                                }
+                            // else{
+                            //     if($k>5){
+                            //         $kvalue =  $k + 8;
+                            //     }else{
+                            //         $kvalue = 0;
+                            //     }
+                            //     if( abs($tooltipStart - $evenarraytooltipStart[$key]) < 100){
+                            //         $tooltipStart = $tooltipStart - $k + $kvalue;
+                            //         $lineHeight = $lineHeight  - $k + $kvalue; 
+                            //         $tooltipText = "e".$k.":".$tooltipStart;
+                            //     }
                                
 
-                             }
+                            //  }
                         }
                         if ($sameLocation > 1) {
                             foreach ($sameLocationevenarray as $sameLocationValue) {
@@ -777,14 +777,18 @@ class ReportContoller extends Controller
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
                                     $tooltipText = $tooltipStart;
 
+                                }else{
+                                    $tooltipStart = $tooltipStart - $k ;
+                                    $lineHeight = $lineHeight  - $k ; 
+                                    $tooltipText = "e".$k.":".$tooltipStart;
                                 }
                             }
                             $sameLocationevenarray[] = $tooltipStart;
                         }
                        
                         if($tooltipStart > 500  ){
-                            $tooltipStart = $tooltipStart - 20;
-                            $lineHeight = $lineHeight -  20; 
+                            $tooltipStart = $tooltipStart - 25;
+                            $lineHeight = $lineHeight -  25; 
                         }
                         
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
