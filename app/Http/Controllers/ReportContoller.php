@@ -765,13 +765,11 @@ class ReportContoller extends Controller
                             //  }
                             else{
                                 $tooltipText = "e".$k;
-                                if($k>8){
-                                    $kVlue = 10;
-                                }else{
-                                    $kVlue = 0;
-                                }
-                                $tooltipStart = $tooltipStart - $gap;
-                                $lineHeight = $lineHeight - $gap;
+                                // if($k>8){
+                                //     $k =  $k + 10;
+                                // }
+                                $tooltipStart = $tooltipStart - $k;
+                                $lineHeight = $lineHeight - $k;
                              }
                         }
                         if ($sameLocation > 1) {
