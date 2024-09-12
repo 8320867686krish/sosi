@@ -757,7 +757,7 @@ class ReportContoller extends Controller
                                 $tooltipText = $k;
                                 $sameLocation++;
                                 if($k>8){
-                                    $kVlue = 5;
+                                    $kVlue = $evenincreaseGap;
                                 }else{
                                     $kVlue = 0;
                                 }
