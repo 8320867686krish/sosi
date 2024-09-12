@@ -751,30 +751,30 @@ class ReportContoller extends Controller
                                 $sameLocation++;
                                 $tooltipText = $lineHeight.";".$k;
                                     if($lineHeight >= 300){
-                                        $tooltipStart = $tooltipStart - 29 ;
-                                        $lineHeight = $lineHeight - 29;
+                                        $tooltipStart = $tooltipStart - 100 ;
+                                        $lineHeight = $lineHeight - 100;
                                     }else{
-                                        $tooltipStart = $tooltipStart + 29 ;
-                                        $lineHeight = $lineHeight + 29;
+                                        $tooltipStart = $tooltipStart + 30 ;
+                                        $lineHeight = $lineHeight + 30;
                                     }
                                
                                 
                             }
                           
-                            else{
-                                $sameLocation++;    
-                                    if($k <= 12){
-                                        $kval = 5;
-                                    }else{
-                                        $kval = 0;
-                                    }
-                                    $tooltipStart = $tooltipStart - 5 +  $kval;
-                                    $lineHeight = $lineHeight - 5 +  $kval; 
-                                    $tooltipText = "e".$k.":".$tooltipStart;
+                            // else{
+                            //     $sameLocation++;    
+                            //         if($k <= 12){
+                            //             $kval = 5;
+                            //         }else{
+                            //             $kval = 0;
+                            //         }
+                            //         $tooltipStart = $tooltipStart - 5 +  $kval;
+                            //         $lineHeight = $lineHeight - 5 +  $kval; 
+                            //         $tooltipText = "e".$k.":".$tooltipStart;
                                 
                                
 
-                             }
+                            //  }
                         }
                         if ($sameLocation > 1) {
                             foreach ($sameLocationevenarray as $sameLocationValue) {
