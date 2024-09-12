@@ -764,7 +764,6 @@ class ReportContoller extends Controller
                             //     $lineHeight = $lineHeight +  $k - $kVlue;
                             //  }
                             else{
-                                $tooltipText = "e".$k;
                                 if($k>10){
                                     $kvalue =  $k + 1;
                                 }else{
