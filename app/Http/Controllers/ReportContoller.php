@@ -757,7 +757,7 @@ class ReportContoller extends Controller
                           
                             else{
                                 if($k>5){
-                                    $kvalue =  $k + 5;
+                                    $kvalue =  $k + 8;
                                 }else{
                                     $kvalue = 0;
                                 }
@@ -782,10 +782,10 @@ class ReportContoller extends Controller
                             $sameLocationevenarray[] = $tooltipStart;
                         }
                        
-                        if($tooltipStart > 500  ){
-                            $tooltipStart = $tooltipStart - 25;
-                            $lineHeight = $lineHeight -  25; 
-                        }
+                        // if($tooltipStart > 500  ){
+                        //     $tooltipStart = $tooltipStart - 25;
+                        //     $lineHeight = $lineHeight -  25; 
+                        // }
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
                         $evenarraytooltipStart[$value['id']] = $tooltipStart;
