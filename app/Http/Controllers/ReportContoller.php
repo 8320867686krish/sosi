@@ -751,7 +751,7 @@ class ReportContoller extends Controller
                                 $sameLocation++;
                                     $tooltipStart = $tooltipStart +  25;
                                     $lineHeight = $lineHeight +  25;
-
+                                $tooltipText = $k;
                             }
                           
                             else{
