@@ -766,7 +766,7 @@ class ReportContoller extends Controller
                             else{
                                 $tooltipText = "e".$k;
                                 if($k>12){
-                                    $kvalue =  $k + 8;
+                                    $kvalue =  $k + 5;
                                 }else{
                                     $kvalue = 0;
                                 }
