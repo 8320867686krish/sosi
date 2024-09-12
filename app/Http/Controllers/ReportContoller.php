@@ -761,11 +761,11 @@ class ReportContoller extends Controller
                                 }else{
                                     $kvalue = 0;
                                 }
-                                if( abs($lineHeight - $evenarraytooltipStart[$key]) < 100){
-                                    $tooltipStart = $tooltipStart - $k;
-                                    $lineHeight = $lineHeight  - $k ; 
-                                    $tooltipText = "e".$k.":".$tooltipStart;
-                                }
+                                // if( abs($lineHeight - $evenarraytooltipStart[$key]) < 100){
+                                //     $tooltipStart = $tooltipStart;
+                                //     $lineHeight = $lineHeight; 
+                                //     $tooltipText = "e".$k.":".$tooltipStart;
+                                // }
                                
 
                              }
