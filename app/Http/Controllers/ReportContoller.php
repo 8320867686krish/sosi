@@ -710,7 +710,7 @@ class ReportContoller extends Controller
                         }
                     }
                     $lineLeftPosition =  ($leftshow + 4);
-                    $tool=0;
+                    $tool = 0;
                     if ($k % 2 == 1) {
                         $lineTopPosition = "-" . $gap;
                         $lineHeight = ($topshow + $gap);
@@ -746,7 +746,7 @@ class ReportContoller extends Controller
                         $lineHeight = ($image_height - $topshow + $gap);
                         $tooltipStart = $image_height + $gap;
                         $sameLocation = 0;
-                      
+
                         foreach ($evenarrayLeft as $key => $evenvalue) {
                             if (abs($lineLeftPosition - $evenvalue) < 100 || abs($topshow - $evenarrayTop[$key]) < 100) {
                                 $sameLocation++;
@@ -754,35 +754,27 @@ class ReportContoller extends Controller
                                 //     $tooltipStart = $tooltipStart + 15;
                                 //     $lineHeight = $lineHeight + 15;
                                 // } else {
-                                  
-                                    if(abs($lineHeight  - 210) > 300){
-                                        $tooltipStart = $tooltipStart - abs($lineHeight  - 210);
-                                        $lineHeight = $lineHeight -  abs($lineHeight  - 210);
-                                     
-                    
-                                    }else{
-                                        $tooltipStart = $tooltipStart + $evenincreaseGap;
-                                        $lineHeight = $lineHeight + $evenincreaseGap;
-                                        $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 4px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
 
-                    $html .= '<span class="line" style="top:' . $lineTopPosition  . 'px;left:' . $lineLeftPosition . 'px;height:' . $lineHeight . 'px;' . $lineCss . '"></span>';
-
-
-                    $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $tooltipStart . 'px; left:' . ($lineLeftPosition - 15) . 'px">' . $tooltipText . '</span>';
-                                    }
-                                    
+                                if (abs($lineHeight  - 210) > 300) {
+                                    $tooltipStart = $tooltipStart - abs($lineHeight  - 210);
+                                    $lineHeight = $lineHeight -  abs($lineHeight  - 210);
+                                } else {
+                                    $tooltipStart = $tooltipStart + $evenincreaseGap;
+                                    $lineHeight = $lineHeight + $evenincreaseGap;
                                    
-                               // }
+                                }
+
+
+                                // }
                             }
                         }
                         if ($sameLocation > 1) {
                             foreach ($sameLocationevenarray as $sameLocationValue) {
                                 if ($sameLocationValue == $tooltipStart) {
-                                    
-                                   
-                                        $tooltipStart = $tooltipStart +  $evenincreaseGap;
-                                        $lineHeight = $lineHeight +  $evenincreaseGap;
-                                    
+
+
+                                    $tooltipStart = $tooltipStart +  $evenincreaseGap;
+                                    $lineHeight = $lineHeight +  $evenincreaseGap;
                                 }
                             }
                             $sameLocationevenarray[] = $tooltipStart;
@@ -791,12 +783,12 @@ class ReportContoller extends Controller
                         $evenarrayTop[$value['id']] =  $topshow;
                         $evenarrayLineHeight[$value['id']] = $lineHeight;
                     }
-                    // $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 4px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
+                    $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 4px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
 
-                    // $html .= '<span class="line" style="top:' . $lineTopPosition  . 'px;left:' . $lineLeftPosition . 'px;height:' . $lineHeight . 'px;' . $lineCss . '"></span>';
+                    $html .= '<span class="line" style="top:' . $lineTopPosition  . 'px;left:' . $lineLeftPosition . 'px;height:' . $lineHeight . 'px;' . $lineCss . '"></span>';
 
 
-                    // $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $tooltipStart . 'px; left:' . ($lineLeftPosition - 15) . 'px">' . $tooltipText . '</span>';
+                    $html .= '<span class="tooltip" style="' . $tooltipCss . 'top:' . $tooltipStart . 'px; left:' . ($lineLeftPosition - 15) . 'px">' . $tooltipText . '</span>';
                 }
                 $html .= '</div>';
                 $html .= '</div>';
