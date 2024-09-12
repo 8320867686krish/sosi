@@ -754,16 +754,14 @@ class ReportContoller extends Controller
                                 //     $tooltipStart = $tooltipStart + 15;
                                 //     $lineHeight = $lineHeight + 15;
                                 // } else {
-                                    $tooltipText = abs($lineHeight  - 210);
-                                if (abs($tooltipText  - 210) < 100) {
-                                    $tooltipStart = $tooltipStart - abs($tooltipText  - 210);
-                                    $lineHeight = $lineHeight -  abs($tooltipText  - 210);
+                                if (abs($tooltipText  - 210) < 50) {
+                                    $tooltipStart = $tooltipStart - 100;
+                                    $lineHeight = $lineHeight -  100;
                                    
                                 } else {
                                     $tooltipStart = $tooltipStart + $evenincreaseGap;
                                     $lineHeight = $lineHeight + $evenincreaseGap;
                                 }
-
 
                                 // }
                             }
