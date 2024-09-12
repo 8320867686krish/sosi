@@ -752,24 +752,27 @@ class ReportContoller extends Controller
                                
                                     $tooltipStart = $tooltipStart + $evenincreaseGap ;
                                     $lineHeight = $lineHeight + $evenincreaseGap;
-                                    if($lineHeight >= 240){
-                                        $tooltipStart = $tooltipStart - 5 ;
-                                        $lineHeight = $lineHeight - 5;
-                                    }
-                                    $tooltipText = $lineHeight;
-                                
-                            }
-                          
-                            else{
-                               
-                                if( abs($lineHeight - $evenarrayLineHeight[$key]) > 100){
+                                         if( abs($lineHeight - $evenarrayLineHeight[$key]) < 100){
                                     $tooltipStart = $tooltipStart - 15;
                                     $lineHeight = $lineHeight -15; 
                                     $tooltipText = "e".$k.":".$tooltipStart;
+                                }else{
+                                    $tooltipText = $lineHeight;
+
                                 }
+                                
+                            }
+                          
+                            // else{
+                               
+                            //     if( abs($lineHeight - $evenarrayLineHeight[$key]) > 100){
+                            //         $tooltipStart = $tooltipStart - 15;
+                            //         $lineHeight = $lineHeight -15; 
+                            //         $tooltipText = "e".$k.":".$tooltipStart;
+                            //     }
                                
 
-                             }
+                            //  }
                         }
                         if ($sameLocation > 1) {
                             foreach ($sameLocationevenarray as $sameLocationValue) {
