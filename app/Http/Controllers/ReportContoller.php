@@ -689,7 +689,7 @@ class ReportContoller extends Controller
                     if (@$value['check_hazmats']) {
                         $hazmatCount = count($value['check_hazmats']); // Get the total number of elements
                         foreach ($value['check_hazmats'] as $index => $hazmet) {
-                            $tooltipText .= '<span style="font-size:8px;color:' . $hazmet['hazmat']['color']   . '">' . $hazmet['hazmat']['short_name'] . '</span>';
+                            $tooltipText .= '<span style="font-size:5px;color:' . $hazmet['hazmat']['color']   . '">' . $hazmet['hazmat']['short_name'] . '</span>';
                             if ($index < $hazmatCount - 1) {
                                 $tooltipText .= ',';
                             }
@@ -752,9 +752,11 @@ class ReportContoller extends Controller
                                 if (abs($lineHeight - $evenarrayLineHeight[$key] > 100)) {
                                     $tooltipStart = $tooltipStart + 15;
                                     $lineHeight = $lineHeight + 15;
+                                    $tooltipText = "This";
                                 } else {
                                     $tooltipStart = $tooltipStart + $evenincreaseGap;
                                     $lineHeight = $lineHeight + $evenincreaseGap;
+                                    $tooltipText = "This1";
                                 }
                             }
                         }
@@ -763,6 +765,7 @@ class ReportContoller extends Controller
                                 if ($sameLocationValue == $tooltipStart) {
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
+                                    $tooltipText = "This2";
                                 }
                             }
                             $sameLocationevenarray[] = $tooltipStart;
