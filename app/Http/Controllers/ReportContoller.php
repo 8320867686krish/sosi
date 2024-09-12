@@ -755,7 +755,7 @@ class ReportContoller extends Controller
                                 //     $lineHeight = $lineHeight + 15;
                                 // } else {
                                     $tooltipText = abs($lineHeight  - 210);
-                                if (abs($lineHeight  - 210) > 300) {
+                                if (abs($tooltipText  - 210) > 300) {
                                     $tooltipStart = $tooltipStart - abs($lineHeight  - 210);
                                     $lineHeight = $lineHeight -  abs($lineHeight  - 210);
                                    
