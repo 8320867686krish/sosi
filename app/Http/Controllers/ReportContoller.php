@@ -750,7 +750,7 @@ class ReportContoller extends Controller
                             if (abs($lineLeftPosition - $evenvalue) < 100 || abs($topshow - $evenarrayTop[$key]) < 100) {
                                 $sameLocation++;
                                 $tooltipText = $lineHeight.";".$k;
-                                    if(abs($lineHeight - $evenarrayLineHeight[$key] < 100)){
+                                    if(abs($lineHeight - $evenarrayLineHeight[$key] > 100)){
                                         $tooltipStart = $tooltipStart - 50 ;
                                         $lineHeight = $lineHeight - 50;
                                     }else{
