@@ -751,7 +751,6 @@ class ReportContoller extends Controller
                                 $sameLocation++;
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
-                                    $tooltipText = $k.":".$tooltipStart;
 
                             }
                           
@@ -761,11 +760,11 @@ class ReportContoller extends Controller
                                 }else{
                                     $kvalue = 0;
                                 }
-                                // if( abs($lineHeight - $evenarraytooltipStart[$key]) < 100){
-                                //     $tooltipStart = $tooltipStart;
-                                //     $lineHeight = $lineHeight; 
-                                //     $tooltipText = "e".$k.":".$tooltipStart;
-                                // }
+                                if( abs($lineHeight - $evenarraytooltipStart[$key]) < 100){
+                                   // $tooltipStart = $tooltipStart;
+                                 //   $lineHeight = $lineHeight; 
+                                    $tooltipText = "e".$k.":".$tooltipStart;
+                                }
                                
 
                              }
