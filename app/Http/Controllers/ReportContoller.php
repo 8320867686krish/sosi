@@ -749,22 +749,12 @@ class ReportContoller extends Controller
                         foreach ($evenarrayLeft as $key => $evenvalue) {
                             if (abs($lineLeftPosition - $evenvalue) < 100 || abs($topshow - $evenarrayTop[$key]) < 100) {
                                 $sameLocation++;
-                                if (abs($lineLeftPosition - $evenvalue) < 100){
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
-                                }else{
-                                    $kVAlue = ($k < 10 ) ? 25 :$k * 2;
-                                  
-                                    $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
-                                    $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
-
-                                }
+                                
                              }else{
-                                $kVAlue = ($k < 10 ) ? 25 :$k * 2;
-                              
-                                $tooltipStart = $tooltipStart +  $evenincreaseGap +  $kVAlue ;
-                                $lineHeight = $lineHeight +  $evenincreaseGap + $kVAlue ;
-                            }
+                                $tooltipText = "Y".abs($topshow - $evenarrayTop[$key]);
+                             }
                         }
                         if ($sameLocation > 1) {
                             foreach ($sameLocationevenarray as $sameLocationValue) {
@@ -776,10 +766,7 @@ class ReportContoller extends Controller
                             $sameLocationevenarray[] = $tooltipStart;
                         }
                        
-                       if($tooltipStart >=100 && $k>=10){
-                        $tooltipStart = $tooltipStart - 200;
-                        $lineHeight = $lineHeight - 200;
-                       }
+                       
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
 
