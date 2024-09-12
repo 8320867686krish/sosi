@@ -778,6 +778,7 @@ class ReportContoller extends Controller
                             $tooltipStart = $tooltipStart - $k;
                         $lineHeight = $lineHeight -  $k; 
                         }
+                        $tooltipText = $lineHeight;
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
 
