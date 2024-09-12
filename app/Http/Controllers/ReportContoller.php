@@ -760,8 +760,13 @@ class ReportContoller extends Controller
                                 $lineHeight = $lineHeight +  $k;
                              }else{
                                 $tooltipText = "El".$k;
-                                $tooltipStart = $tooltipStart -  $k;
-                                $lineHeight = $lineHeight -  $k;
+                                if($k>14){
+                                    $kVlue = 5;
+                                }else{
+                                    $kVlue = 0;
+                                }
+                                $tooltipStart = $tooltipStart -  $k + $kVlue;
+                                $lineHeight = $lineHeight -  $k + $kVlue;
                              }
                         }
                         if ($sameLocation > 1) {
