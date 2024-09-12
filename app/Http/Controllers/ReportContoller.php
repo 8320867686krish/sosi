@@ -749,8 +749,8 @@ class ReportContoller extends Controller
                         foreach ($evenarrayLeft as $key => $evenvalue) {
                             if (abs($lineLeftPosition - $evenvalue) < 100 || abs($topshow - $evenarrayTop[$key]) < 100) {
                                 $sameLocation++;
-                                    $tooltipStart = $tooltipStart +  $evenincreaseGap;
-                                    $lineHeight = $lineHeight +  $evenincreaseGap;
+                                    $tooltipStart = $tooltipStart +  10;
+                                    $lineHeight = $lineHeight +  10;
 
                             }
                           
@@ -760,10 +760,6 @@ class ReportContoller extends Controller
                                     $tooltipStart = $tooltipStart - 15;
                                     $lineHeight = $lineHeight -15; 
                                     $tooltipText = "e".$k.":".$tooltipStart;
-                                }else{
-                                    $tooltipStart = $tooltipStart - 15;
-                                    $lineHeight = $lineHeight -15; 
-                                    $tooltipText = "els".$k.":".$tooltipStart;
                                 }
                                
 
@@ -775,7 +771,6 @@ class ReportContoller extends Controller
                                    
                                     $tooltipStart = $tooltipStart +  $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
-                                    $tooltipText = $tooltipStart.$k;
 
                                 }
                             }
