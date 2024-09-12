@@ -769,6 +769,7 @@ class ReportContoller extends Controller
                                 }else{
                                     $kvalue = 0;
                                 }
+                                $tooltipText = "ee".$k;
                                 $tooltipStart = $tooltipStart - $k +  $kvalue;
                                 $lineHeight = $lineHeight - $k +  $kvalue; 
                                
