@@ -754,10 +754,9 @@ class ReportContoller extends Controller
                             }
                              if(abs($topshow - $evenarrayTop[$key]) < 100)
                              {
-                                $tooltipText = $k;
                                 $sameLocation++;
                                 if($k>8){
-                                    $kVlue = $evenincreaseGap;
+                                    $kVlue = 15;
                                 }else{
                                     $kVlue = 0;
                                 }
