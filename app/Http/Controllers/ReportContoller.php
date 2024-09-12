@@ -677,7 +677,7 @@ class ReportContoller extends Controller
 
                 $oddarrayLeft = [];
                 $oddarrayTop = [];
-
+                $evenarraytooltipStart = [];
 
 
                 foreach ($chunk as $key => $value) {
@@ -761,8 +761,8 @@ class ReportContoller extends Controller
                                 }else{
                                     $kvalue = 0;
                                 }
-                                $tooltipStart = $tooltipStart -  abs($topshow - $evenarrayTop[$key]);
-                                $lineHeight = $lineHeight -  abs($topshow - $evenarrayTop[$key]); 
+                                $tooltipStart = $tooltipStart -  abs($tooltipStart - $evenarraytooltipStart[$key]);
+                                $lineHeight = $lineHeight -  abs($tooltipStart - $evenarraytooltipStart[$key]); 
                                 $tooltipText = "e".$k.":".$tooltipStart;
 
                              }
@@ -785,7 +785,7 @@ class ReportContoller extends Controller
                         }
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
-
+                        $evenarraytooltipStart[$value['id']] = $tooltipStart;
                         
                     }
                     $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 4px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
