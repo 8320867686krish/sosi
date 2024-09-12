@@ -759,8 +759,8 @@ class ReportContoller extends Controller
                             else{
                                 $sameLocation++;    
                                
-                                    $tooltipStart = $tooltipStart - $k;
-                                    $lineHeight = $lineHeight - $k; 
+                                    $tooltipStart = $tooltipStart - 5;
+                                    $lineHeight = $lineHeight - 5; 
                                     $tooltipText = "e".$k.":".$tooltipStart;
                                 
                                
