@@ -762,9 +762,12 @@ class ReportContoller extends Controller
                                 $lineHeight = $lineHeight + $evenincreaseGap;
                             }else{
                                 $countformax++;
-                                $tooltipText = $countformax.":".$tooltipText;
-                                $tooltipStart = $tooltipStart + $evenincreaseGap;
-                                $lineHeight = $lineHeight +  $evenincreaseGap;
+                                if( $countformax == 1){
+                                    $tooltipText = $countformax.":".$tooltipText;
+                                    $tooltipStart = $tooltipStart + $evenincreaseGap;
+                                    $lineHeight = $lineHeight +  $evenincreaseGap;
+                                }
+                              
                             }
                         }
                         if ($sameLocation > 1) {
