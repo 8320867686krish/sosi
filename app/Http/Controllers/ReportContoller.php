@@ -772,7 +772,7 @@ class ReportContoller extends Controller
                               
                             }
                         }
-                        if( $countformax == 1){
+                        if( $countformax <= 2){
                             $tooltipStart = $tooltipStart + $evenincreaseGap;
                             $lineHeight = $lineHeight + $evenincreaseGap;
                         }
