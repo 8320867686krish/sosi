@@ -167,6 +167,7 @@ class ReportContoller extends Controller
             $mpdf->AddPage('L'); // Set landscape mode for the inventory page
 
             $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3', 'decks')));
+            $mpdf->WriteHTML($mpdf->w);
             foreach ($decks as $key => $value) {
                 if (count($value['checks']) > 0) {
                     $html = $this->drawDigarm($value);
