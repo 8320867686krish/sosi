@@ -764,13 +764,13 @@ class ReportContoller extends Controller
                                 if ($key % 2 == 0) {
                                     // For even
                                     $tooltipText = "even";
-                                    $tooltipStart = $tooltipStart + $currentLength;
-                                    $lineHeight = $lineHeight + $currentLength ;
+                                    $tooltipStart = $tooltipStart + ($currentLength * 2);
+                                    $lineHeight = $lineHeight +  ($currentLength * 2);
                                 } else {
                                     // For odd
                                     $tooltipText = "odd";
-                                    $tooltipStart = $tooltipStart  +$evenincreaseGap; // Example of subtracting for odd
-                                    $lineHeight = $lineHeight - $evenincreaseGap ;    // Adjust this logic as per your needs
+                                    $tooltipStart = $tooltipStart  + $evenincreaseGap; // Example of subtracting for odd
+                                    $lineHeight = $lineHeight + $evenincreaseGap ;    // Adjust this logic as per your needs
                                 }
                             }
                         }
