@@ -681,7 +681,6 @@ class ReportContoller extends Controller
 
                 $longestTooltip = ''; // Optional: to store the longest tooltip text
                 $maxLength = 0; // Variable to store the max tooltip length
-                $countformax = 0;
 
                 foreach ($chunk as $key => $value) {
                     $top = $value['position_top'];
@@ -755,20 +754,21 @@ class ReportContoller extends Controller
                         $tooltipStart = $image_height + $gap;
                         $sameLocation = 0;
                         $findLeft = abs($maxLength * 5 + 100);
+                        $countformax = 0;
 
                         foreach ($evenarrayLeft as $key => $evenvalue) {
-                            if (abs($lineLeftPosition - $evenvalue) < $findLeft && abs($topshow - $evenarrayTop[$key]) < 100) {
+                            if (abs($lineLeftPosition - $evenvalue) < 100 && abs($topshow - $evenarrayTop[$key]) < 100) {
                                 $sameLocation++;
                                 $tooltipStart = $tooltipStart + $evenincreaseGap;
                                 $lineHeight = $lineHeight + $evenincreaseGap;
                             }else{
                                
-                                if( $countformax == 0){
+                                if( $countformax = 0){
                                     $tooltipText = $countformax.":".$tooltipText;
                                     $tooltipStart = $tooltipStart + $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
                                 }
-                               
+                                $countformax++;
                               
                             }
                         }
@@ -797,7 +797,7 @@ class ReportContoller extends Controller
                 $html .= '</div>';
 
                 $i++; // Increment the counter for the next image ID
-                $countformax++;
+
             }
         }
 
