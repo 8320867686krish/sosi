@@ -638,7 +638,7 @@ class ReportContoller extends Controller
                 } else {
                     if ($height >= 500) {
                         // $image_width = $width;
-                        $image_height = 400;
+                        $image_height = 300;
                         $image_width = ($image_height * $width) / $height;
                     } else {
                         $image_width = $width;
@@ -665,7 +665,7 @@ class ReportContoller extends Controller
                         $image_width = ($image_height * $width) / $height;
                         $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"  style="width:' .  $image_width . 'px;"/>';
                     } else {
-                        $image_height = 200;
+                        $image_height = $height;
                         $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
                     }
                 }
@@ -761,6 +761,7 @@ class ReportContoller extends Controller
                                 $tooltipStart = $tooltipStart + $evenincreaseGap;
                                 $lineHeight = $lineHeight + $evenincreaseGap;
                             }else{
+                                $tooltipText = "k:".$tooltipText;
                                 $tooltipStart = $tooltipStart + $evenincreaseGap;
                                 $lineHeight = $lineHeight +  $evenincreaseGap;
                             }
@@ -778,7 +779,6 @@ class ReportContoller extends Controller
                         $evenarrayTop[$value['id']] =  $topshow;
                         $evenarrayLineHeight[$value['id']] = $lineHeight;
                     }
-                    
                     $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 4px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
 
                     $html .= '<span class="line" style="top:' . $lineTopPosition  . 'px;left:' . $lineLeftPosition . 'px;height:' . $lineHeight . 'px;' . $lineCss . '"></span>';
