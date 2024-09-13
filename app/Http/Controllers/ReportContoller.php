@@ -754,6 +754,7 @@ class ReportContoller extends Controller
                         $tooltipStart = $image_height + $gap;
                         $sameLocation = 0;
                         $findLeft = abs($maxLength * 5 + 100);
+                    
 
                         foreach ($evenarrayLeft as $key => $evenvalue) {
                             if (abs($lineLeftPosition - $evenvalue) < $findLeft && abs($topshow - $evenarrayTop[$key]) < 100) {
@@ -761,8 +762,9 @@ class ReportContoller extends Controller
                                 $tooltipStart = $tooltipStart + $evenincreaseGap;
                                 $lineHeight = $lineHeight + $evenincreaseGap;
                             }else{
-                                $tooltipStart = $tooltipStart +  abs($currentLength  * 2 + $k);
-                                $lineHeight = $lineHeight +  abs($currentLength  * 2 + $k) ;
+                               $tooltipText =  $tooltipStart - $evenarrayLineHeight[$key];
+                                $tooltipStart = $tooltipStart +  5;
+                                $lineHeight = $lineHeight +  5 ;
                                
                             }
                         }
@@ -778,7 +780,7 @@ class ReportContoller extends Controller
                         }
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
-                        $evenarrayLineHeight[$value['id']] = $lineHeight;
+                        $evenarrayLineHeight[$value['id']] = $tooltipStart;
                     }
                      $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 4px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
 
