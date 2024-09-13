@@ -755,7 +755,6 @@ class ReportContoller extends Controller
                         $sameLocation = 0;
                         $findLeft = abs($maxLength * 3 + 100);
                         $countformax = 0;
-                        $incremented = false; // Add a flag to control increment
 
                         foreach ($evenarrayLeft as $key => $evenvalue) {
                             if (abs($lineLeftPosition - $evenvalue) < $findLeft && abs($topshow - $evenarrayTop[$key]) < 100) {
@@ -764,12 +763,11 @@ class ReportContoller extends Controller
                                 $lineHeight = $lineHeight + $evenincreaseGap;
                             }else{
                                
-                                if (!$incremented && $countformax == 0) {
-                                    $tooltipText = $lineHeight . ":" . $tooltipText;
+                                if ($countformax <= 1) {
+                                    $tooltipText = $$topshow - $evenarrayTop[$key] . ":" . $tooltipText;
                                     $tooltipStart = $tooltipStart + $evenincreaseGap;
                                     $lineHeight = $lineHeight + $evenincreaseGap;
                                     $countformax++;
-                                    $incremented = true; // Mark as incremented to prevent future increments
                                 }
                               
                             }
