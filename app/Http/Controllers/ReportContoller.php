@@ -763,8 +763,8 @@ class ReportContoller extends Controller
                                 $lineHeight = $lineHeight + $evenincreaseGap;
                             }else{
                                
-                                if( $countformax < 1){
-                                    $tooltipText = $countformax.":".$tooltipText;
+                                if( $countformax <= 1){
+                                    $tooltipText = $lineHeight.":".$tooltipText;
                                     $tooltipStart = $tooltipStart + $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
                                 }
