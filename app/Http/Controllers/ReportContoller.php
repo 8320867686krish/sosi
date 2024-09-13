@@ -753,7 +753,7 @@ class ReportContoller extends Controller
                         $lineHeight = ($image_height - $topshow + $gap);
                         $tooltipStart = $image_height + $gap;
                         $sameLocation = 0;
-                        $findLeft = abs($maxLength * 5 + 100);
+                        $findLeft = abs($maxLength * 25 + 100);
                         $countformax = 0;
 
                         foreach ($evenarrayLeft as $key => $evenvalue) {
