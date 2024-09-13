@@ -767,6 +767,9 @@ class ReportContoller extends Controller
                                 $tooltipText = $currentLength;
                                 $tooltipStart = $tooltipStart +  $currentLength;
                                 $lineHeight = $lineHeight +  $currentLength ;
+                               }else{
+                                $tooltipStart = $tooltipStart +  $currentLength;
+                                $lineHeight = $lineHeight +  $currentLength ;
                                }
                               
                                
