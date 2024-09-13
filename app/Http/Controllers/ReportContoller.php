@@ -753,7 +753,7 @@ class ReportContoller extends Controller
                         $lineHeight = ($image_height - $topshow + $gap);
                         $tooltipStart = $image_height + $gap;
                         $sameLocation = 0;
-                        $findLeft = abs($strlen(strip_tags($tooltipText))) * 15 + 100);
+                        $findLeft = abs(strlen(strip_tags($tooltipText)) * 15 + 100);
 
                         foreach ($evenarrayLeft as $key => $evenvalue) {
                             if (abs($lineLeftPosition - $evenvalue) < $findLeft && abs($topshow - $evenarrayTop[$key]) < 100) {
