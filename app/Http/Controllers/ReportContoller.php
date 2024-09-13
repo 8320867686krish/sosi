@@ -723,9 +723,8 @@ class ReportContoller extends Controller
                         $lineHeight = ($topshow + $gap);
                         $tooltipStart = $lineTopPosition - $oddincreaseGap;
                         $oddsameLocation = 0;
-                        $findLeft = abs($maxLength * 2 + 100);
                         foreach ($oddarrayLeft as $key => $oddvalue) {
-                            if (abs($lineLeftPosition - $oddvalue) < $findLeft && abs($topshow - $oddarrayTop[$key]) < 100) {
+                            if (abs($lineLeftPosition - $oddvalue) < 100 && abs($topshow - $oddarrayTop[$key]) < 100) {
                                 $oddsameLocation++;
                                 $tooltipStart = $tooltipStart - $oddincreaseGap;
                                 $lineHeight = $lineHeight + $oddincreaseGap;
@@ -754,9 +753,10 @@ class ReportContoller extends Controller
                         $lineHeight = ($image_height - $topshow + $gap);
                         $tooltipStart = $image_height + $gap;
                         $sameLocation = 0;
+                        $findLeft = abs($maxLength * 2 + 100);
 
                         foreach ($evenarrayLeft as $key => $evenvalue) {
-                            if (abs($lineLeftPosition - $evenvalue) < 100 && abs($topshow - $evenarrayTop[$key]) < 100) {
+                            if (abs($lineLeftPosition - $evenvalue) < $findLeft && abs($topshow - $evenarrayTop[$key]) < 100) {
                                 $sameLocation++;
                                 $tooltipStart = $tooltipStart + $evenincreaseGap;
                                 $lineHeight = $lineHeight + $evenincreaseGap;
