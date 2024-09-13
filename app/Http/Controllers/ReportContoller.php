@@ -640,13 +640,15 @@ class ReportContoller extends Controller
                         // $image_width = $width;
                         $image_height = 350;
                         $image_width = ($image_height * $width) / $height;
+                        $contaenerWidth = 1125;
                     } else {
                         $image_width = $width;
+                        $contaenerWidth = 1024;
                     }
-                    $leftPositionPixels = (3508 - $image_width) / 2;
-                    $leftPositionPercent = ($leftPositionPixels / 3508) * 100;
+                    $leftPositionPixels = ($contaenerWidth - $image_width) / 2;
+                    $leftPositionPercent = ($leftPositionPixels / $contaenerWidth) * 100;
 
-                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column;margin-left:{$leftPositionPercent}%;width:100%'>";
+                    $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column;margin-left:{$leftPositionPercent}%;border:5px solid red'>";
                 }
 
 
