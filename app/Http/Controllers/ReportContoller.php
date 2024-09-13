@@ -754,7 +754,7 @@ class ReportContoller extends Controller
                                 $lineHeight = $lineHeight + $evenincreaseGap;
                               
                             }else{
-                                $tooltipText = abs($lineLeftPosition - $evenvalue);
+                                $tooltipText = $topshow;
                             }
                         }
                         if ($sameLocation > 1) {
