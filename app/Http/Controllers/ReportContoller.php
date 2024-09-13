@@ -764,8 +764,8 @@ class ReportContoller extends Controller
                                 $countformax++;
                                 if( $countformax == 1){
                                     $tooltipText = $countformax.":".$tooltipText;
-                                    $tooltipStart = $tooltipStart + $evenincreaseGap;
-                                    $lineHeight = $lineHeight +  $evenincreaseGap;
+                                    $tooltipStart = $tooltipStart + $evenincreaseGap + $k;
+                                    $lineHeight = $lineHeight +  $evenincreaseGap + $k;
                                 }
                               
                             }
