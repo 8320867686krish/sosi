@@ -643,8 +643,8 @@ class ReportContoller extends Controller
                     } else {
                         $image_width = $width;
                     }
-                    $leftPositionPixels = (1024 - $image_width) / 2;
-                    $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
+                    $leftPositionPixels = (794 - $image_width) / 2;
+                    $leftPositionPercent = ($leftPositionPixels / 794) * 100;
 
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column;margin-left:{$leftPositionPercent}%;width:100%'>";
                 }
