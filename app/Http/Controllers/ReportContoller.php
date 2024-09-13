@@ -769,7 +769,7 @@ class ReportContoller extends Controller
                                     $lineHeight = $lineHeight + $evenincreaseGap;
                                    
                                 }
-                                $countformax;
+                                $countformax++;
                                 
                               
                             }
