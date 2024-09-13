@@ -238,8 +238,8 @@
                     <td valign="middle" align="center">{{ $hazmat->check_type_count }}
                     </td>
                 </tr>
-                
-                @endif
+
+            
                 @php
                 $sampling += $hazmat->sample_count;
                 $visual += $hazmat->visual_count;
@@ -252,6 +252,7 @@
                     <td valign="middle" align="center" style="border: 2px solid #000000"><b>{{ $visual }}</b></td>
                     <td valign="middle" align="center" style="border: 2px solid #000000"><b>{{ $total }}</b></td>
                 </tr>
+                @endif
             </tbody>
         </table>
     </section>
