@@ -638,7 +638,7 @@ class ReportContoller extends Controller
                 } else {
                     if ($height >= 500) {
                         // $image_width = $width;
-                        $image_height = 400;
+                        $image_height = 300;
                         $image_width = ($image_height * $width) / $height;
                     } else {
                         $image_width = $width;
@@ -661,7 +661,7 @@ class ReportContoller extends Controller
                     $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px;" />';
                 } else {
                     if ($height >= 500) {
-                        $image_height = 400;
+                        $image_height = 300;
                         $image_width = ($image_height * $width) / $height;
                         $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"  style="width:' .  $image_width . 'px;"/>';
                     } else {
@@ -761,17 +761,10 @@ class ReportContoller extends Controller
                                 $tooltipStart = $tooltipStart + $evenincreaseGap;
                                 $lineHeight = $lineHeight + $evenincreaseGap;
                             }else{
-                                if ($key % 2 == 0) {
-                                    // For even
-                                    $tooltipText = "even";
-                                    $tooltipStart = $tooltipStart + ($currentLength * 2);
-                                    $lineHeight = $lineHeight +  ($currentLength * 2);
-                                } else {
-                                    // For odd
-                                    $tooltipText = "odd";
+                                
                                     $tooltipStart = $tooltipStart  + $evenincreaseGap; // Example of subtracting for odd
                                     $lineHeight = $lineHeight + $evenincreaseGap ;    // Adjust this logic as per your needs
-                                }
+                                
                             }
                         }
                        
