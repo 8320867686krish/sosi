@@ -763,12 +763,14 @@ class ReportContoller extends Controller
                             }else{
                                 if ($key % 2 == 0) {
                                     // For even
-                                    $tooltipStart = $tooltipStart + $currentLength + $k;
-                                    $lineHeight = $lineHeight + $currentLength + $k;
+                                    $tooltipText = "even";
+                                    $tooltipStart = $tooltipStart + $currentLength;
+                                    $lineHeight = $lineHeight + $currentLength ;
                                 } else {
                                     // For odd
-                                    $tooltipStart = $tooltipStart - $currentLength - $k; // Example of subtracting for odd
-                                    $lineHeight = $lineHeight - $currentLength - $k;     // Adjust this logic as per your needs
+                                    $tooltipText = "odd";
+                                    $tooltipStart = $tooltipStart  +$evenincreaseGap; // Example of subtracting for odd
+                                    $lineHeight = $lineHeight - $evenincreaseGap ;    // Adjust this logic as per your needs
                                 }
                             }
                         }
