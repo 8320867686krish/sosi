@@ -753,7 +753,7 @@ class ReportContoller extends Controller
                         $lineHeight = ($image_height - $topshow + $gap);
                         $tooltipStart = $image_height + $gap;
                         $sameLocation = 0;
-                        $findLeft = abs($maxLength * 15 + 100);
+                        $findLeft = abs($maxLength * 3 + 100);
                         $countformax = 0;
 
                         foreach ($evenarrayLeft as $key => $evenvalue) {
@@ -763,7 +763,7 @@ class ReportContoller extends Controller
                                 $lineHeight = $lineHeight + $evenincreaseGap;
                             }else{
                                
-                                if( $countformax == 0){
+                                if( $countformax < 1){
                                     $tooltipText = $countformax.":".$tooltipText;
                                     $tooltipStart = $tooltipStart + $evenincreaseGap;
                                     $lineHeight = $lineHeight +  $evenincreaseGap;
