@@ -620,7 +620,7 @@ class ReportContoller extends Controller
         $html = "";
         $lineCss = 'position:absolute;background-color:#4052d6;border:solid #4052d6 1px;';
         $tooltipCss = 'position: absolute;background-color: #fff;border: 1px solid #4052d6;padding: 1px;border-radius: 2px;
-                white-space: nowrap;z-index: 1;color:#4052d6;font-size:7px;text-align:center;';
+                white-space: nowrap;z-index: 1;color:#4052d6;font-size:8px;text-align:center;';
         if (count($decks['checks']) > 0) {
             $chunks = array_chunk($decks['checks']->toArray(), 15);
 
@@ -679,6 +679,8 @@ class ReportContoller extends Controller
                 $oddarrayTop = [];
                 $evenarrayLineHeight = [];
 
+                $longestTooltip = ''; // Optional: to store the longest tooltip text
+                $maxLength = 0; // Variable to store the max tooltip length
 
                 foreach ($chunk as $key => $value) {
                     $top = $value['position_top'];
@@ -689,11 +691,16 @@ class ReportContoller extends Controller
                     if (@$value['check_hazmats']) {
                         $hazmatCount = count($value['check_hazmats']); // Get the total number of elements
                         foreach ($value['check_hazmats'] as $index => $hazmet) {
-                            $tooltipText .= '<span style="font-size:7px;color:' . $hazmet['hazmat']['color']   . '">' . $hazmet['hazmat']['short_name'] . '</span>';
+                            $tooltipText .= '<span style="font-size:8px;color:' . $hazmet['hazmat']['color']   . '">' . $hazmet['hazmat']['short_name'] . '</span>';
                             if ($index < $hazmatCount - 1) {
                                 $tooltipText .= ',';
                             }
                         }
+                    }
+                    $currentLength = strlen(strip_tags($tooltipText)); // Remove HTML tags for length calculation
+                    if ($currentLength > $maxLength) {
+                        $maxLength = $currentLength;
+                        $longestTooltip = $tooltipText; // Optional: Store the longest tooltip text
                     }
                     $k++;
                     if ($width > 1000 || $height >= 600) {
@@ -716,8 +723,9 @@ class ReportContoller extends Controller
                         $lineHeight = ($topshow + $gap);
                         $tooltipStart = $lineTopPosition - $oddincreaseGap;
                         $oddsameLocation = 0;
+                        $findLeft = abs($maxLength * 2 + 100);
                         foreach ($oddarrayLeft as $key => $oddvalue) {
-                            if (abs($lineLeftPosition - $oddvalue) < 100 && abs($topshow - $oddarrayTop[$key]) < 100) {
+                            if (abs($lineLeftPosition - $oddvalue) < $findLeft && abs($topshow - $oddarrayTop[$key]) < 100) {
                                 $oddsameLocation++;
                                 $tooltipStart = $tooltipStart - $oddincreaseGap;
                                 $lineHeight = $lineHeight + $oddincreaseGap;
@@ -753,8 +761,6 @@ class ReportContoller extends Controller
                                 $tooltipStart = $tooltipStart + $evenincreaseGap;
                                 $lineHeight = $lineHeight + $evenincreaseGap;
                               
-                            }else{
-                                $tooltipText = $topshow;
                             }
                         }
                         if ($sameLocation > 1) {
