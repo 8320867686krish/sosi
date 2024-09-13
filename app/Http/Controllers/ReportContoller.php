@@ -638,10 +638,12 @@ class ReportContoller extends Controller
                 } else {
                     if ($height >= 500) {
                         // $image_width = $width;
-                        $image_height = 300;
+                        $image_height = 150;
                         $image_width = ($image_height * $width) / $height;
                     } else {
-                        $image_width = $width;
+                        $image_height = 150;
+                     //   $image_width = $width;
+                     $image_width = ($image_height * $width) / $height;
                     }
                     $leftPositionPixels = (1024 - $image_width) / 2;
                     $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
