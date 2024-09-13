@@ -764,11 +764,12 @@ class ReportContoller extends Controller
                             }else{
                                
                                 if ($countformax <= 1) {
-                                    $tooltipText = $topshow - $evenarrayTop[$key] . ":" . $tooltipText;
+                                    $tooltipText = $countformax . ":" . $tooltipText;
                                     $tooltipStart = $tooltipStart + $evenincreaseGap;
                                     $lineHeight = $lineHeight + $evenincreaseGap;
-                                    $countformax++;
+                                   
                                 }
+                                $countformax++;
                               
                             }
                         }
