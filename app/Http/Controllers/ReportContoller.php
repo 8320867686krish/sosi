@@ -640,10 +640,10 @@ class ReportContoller extends Controller
                         // $image_width = $width;
                         $image_height = 350;
                         $image_width = ($image_height * $width) / $height;
-                        $contaenerWidth = 1125;
+                        $contaenerWidth = 1024;
                     } else {
                         $image_width = $width;
-                        $contaenerWidth = 1024;
+                        $contaenerWidth = 1125;
                     }
                     $leftPositionPixels = ($contaenerWidth - $image_width) / 2;
                     $leftPositionPercent = ($leftPositionPixels / $contaenerWidth) * 100;
