@@ -677,7 +677,6 @@ class ReportContoller extends Controller
 
                 $oddarrayLeft = [];
                 $oddarrayTop = [];
-                $evenarrayLineHeight = [];
 
                 $longestTooltip = ''; // Optional: to store the longest tooltip text
                 $maxLength = 0; // Variable to store the max tooltip length
@@ -762,14 +761,15 @@ class ReportContoller extends Controller
                                 $tooltipStart = $tooltipStart + $evenincreaseGap;
                                 $lineHeight = $lineHeight + $evenincreaseGap;
                             }else{
-                               $tooltipText =  abs($tooltipStart - $evenarrayLineHeight[$key]);
-                               if( abs($tooltipStart - $evenarrayLineHeight[$key]) <= 15){
-                                $tooltipText = $currentLength;
-                                $tooltipStart = $tooltipStart +  $currentLength + $k;
-                                $lineHeight = $lineHeight +  $currentLength + $k ;
-                               }
-                              
-                               
+                                if ($key % 2 == 0) {
+                                    // For even
+                                    $tooltipStart = $tooltipStart + $currentLength + $k;
+                                    $lineHeight = $lineHeight + $currentLength + $k;
+                                } else {
+                                    // For odd
+                                    $tooltipStart = $tooltipStart - $currentLength - $k; // Example of subtracting for odd
+                                    $lineHeight = $lineHeight - $currentLength - $k;     // Adjust this logic as per your needs
+                                }
                             }
                         }
                        
@@ -784,7 +784,6 @@ class ReportContoller extends Controller
                         }
                         $evenarrayLeft[$value['id']] = $lineLeftPosition;
                         $evenarrayTop[$value['id']] =  $topshow;
-                        $evenarrayLineHeight[$value['id']] = $tooltipStart;
                     }
                      $html .= '<div class="dot" style="top:' . $topshow . 'px; left:' . $leftshow . 'px; position: absolute;border: 4px solid #4052d6;background: #4052d6;border-radius: 50%;"></div>';
 
