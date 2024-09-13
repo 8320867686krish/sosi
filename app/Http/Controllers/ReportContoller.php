@@ -752,7 +752,9 @@ class ReportContoller extends Controller
                                 $sameLocation++;
                                 $tooltipStart = $tooltipStart + $evenincreaseGap;
                                 $lineHeight = $lineHeight + $evenincreaseGap;
-                                $tooltipText = "same";
+                              
+                            }else{
+                                $tooltipText = "both";
                             }
                         }
                         if ($sameLocation > 1) {
