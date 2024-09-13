@@ -753,18 +753,18 @@ class ReportContoller extends Controller
                         $lineHeight = ($image_height - $topshow + $gap);
                         $tooltipStart = $image_height + $gap;
                         $sameLocation = 0;
-                        $findLeft = abs($maxLength * 5 + 100);
+                        $findLeft =  strlen(strip_tags($tooltipText)) * 2 +100;
 
                         foreach ($evenarrayLeft as $key => $evenvalue) {
                             if (abs($lineLeftPosition - $evenvalue) < $findLeft && abs($topshow - $evenarrayTop[$key]) < 100) {
                                 $sameLocation++;
-                                $tooltipStart = $tooltipStart + $evenincreaseGap;
-                                $lineHeight = $lineHeight + $evenincreaseGap;
+                                $tooltipStart = $tooltipStart +  strlen(strip_tags($tooltipText));
+                                $lineHeight = $lineHeight +  strlen(strip_tags($tooltipText));
                               $tooltipText = $findLeft;
                             }else{
                                 $tooltipText = "ma".$findLeft;
-                                $tooltipStart = $tooltipStart +  $maxLength;
-                                $lineHeight = $lineHeight + $maxLength;
+                                $tooltipStart = $tooltipStart +   strlen(strip_tags($tooltipText));
+                                $lineHeight = $lineHeight +  strlen(strip_tags($tooltipText));
                             }
                         }
                         if ($sameLocation > 1) {
