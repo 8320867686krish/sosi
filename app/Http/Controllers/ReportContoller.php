@@ -638,7 +638,7 @@ class ReportContoller extends Controller
                 } else {
                     if ($height >= 500) {
                         // $image_width = $width;
-                        $image_height = 300;
+                        $image_height = 350;
                         $image_width = ($image_height * $width) / $height;
                     } else {
                         $image_width = $width;
@@ -661,7 +661,7 @@ class ReportContoller extends Controller
                     $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px;" />';
                 } else {
                     if ($height >= 500) {
-                        $image_height = 300;
+                       $image_height = 300;
                         $image_width = ($image_height * $width) / $height;
                         $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"  style="width:' .  $image_width . 'px;"/>';
                     } else {
@@ -678,7 +678,7 @@ class ReportContoller extends Controller
                 $oddarrayLeft = [];
                 $oddarrayTop = [];
 
-                $longestTooltip = ''; // Optional: to store the longest tooltip text
+                $maxLine = ''; // Optional: to store the longest tooltip text
                 $maxLength = 0; // Variable to store the max tooltip length
 
                 foreach ($chunk as $key => $value) {
@@ -699,7 +699,6 @@ class ReportContoller extends Controller
                     $currentLength = strlen(strip_tags($tooltipText)); // Remove HTML tags for length calculation
                     if ($currentLength > $maxLength) {
                         $maxLength = $currentLength;
-                        $longestTooltip = $tooltipText; // Optional: Store the longest tooltip text
                     }
                     $k++;
                     if ($width > 1000 || $height >= 600) {
