@@ -636,17 +636,15 @@ class ReportContoller extends Controller
                 if ($width >= 1000) {
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
                 } else {
-                    if ($height >= 500) {
+                    if ($height >= 400) {
                         // $image_width = $width;
-                        $image_height = 350;
+                        $image_height = 300;
                         $image_width = ($image_height * $width) / $height;
-                        $contaenerWidth = 1024;
                     } else {
                         $image_width = $width;
-                        $contaenerWidth = 1125;
                     }
-                    $leftPositionPixels = ($contaenerWidth - $image_width) / 2;
-                    $leftPositionPercent = ($leftPositionPixels / $contaenerWidth) * 100;
+                    $leftPositionPixels = (1024 - $image_width) / 2;
+                    $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
 
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column;margin-left:{$leftPositionPercent}%;'>";
                 }
