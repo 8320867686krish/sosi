@@ -167,7 +167,6 @@ class ReportContoller extends Controller
             $mpdf->AddPage('L'); // Set landscape mode for the inventory page
 
             $mpdf->WriteHTML(view('report.Inventory', compact('filteredResults1', 'filteredResults2', 'filteredResults3', 'decks')));
-            $mpdf->WriteHTML($mpdf->w);
             foreach ($decks as $key => $value) {
                 if (count($value['checks']) > 0) {
                     $html = $this->drawDigarm($value);
@@ -644,8 +643,8 @@ class ReportContoller extends Controller
                     } else {
                         $image_width = $width;
                     }
-                    $leftPositionPixels = (1024 - $image_width) / 2;
-                    $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
+                    $leftPositionPixels = (298 - $image_width) / 2;
+                    $leftPositionPercent = ($leftPositionPixels / 298) * 100;
 
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column;margin-left:{$leftPositionPercent}%;'>";
                 }
