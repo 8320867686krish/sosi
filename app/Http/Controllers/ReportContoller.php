@@ -706,7 +706,7 @@ class ReportContoller extends Controller
                         $leftshow = ($image_width * $left) / $width;
                     } else {
 
-                        if ($image_height == 300) {
+                        if ($image_height == 280) {
                             $topshow = ($image_width * $top) / $width;
                             $leftshow = ($image_width * $left) / $width;
                         } else {
