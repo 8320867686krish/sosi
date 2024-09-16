@@ -628,7 +628,7 @@ class ReportContoller extends Controller
             $gap = 1;
             $oddincreaseGap = 29;
             $evenincreaseGap = 29;
-            $imageDesireHeight = 260;
+            $imageDesireHeight = 200;
             foreach ($chunks as $chunkIndex => $chunk) {
                 $imagePath = $decks['image'];
                 $imageData = base64_encode(file_get_contents($imagePath));
