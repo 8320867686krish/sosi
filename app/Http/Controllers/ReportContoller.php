@@ -632,7 +632,7 @@ class ReportContoller extends Controller
             $ori = "landscape";
             $oddincreaseGap = 29;
             $evenincreaseGap = 29;
-            $imageDesireHeight = 450;
+            $imageDesireHeight = 500;
             foreach ($chunks as $chunkIndex => $chunk) {
                 $imagePath = $decks['image'];
                 $imageData = base64_encode(file_get_contents($imagePath));
