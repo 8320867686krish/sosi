@@ -415,7 +415,7 @@ class ReportContoller extends Controller
 
         foreach ($ChecksList as $key => $value) {
             $html = $this->drawDigarm($value);
-            $fileNameDiagram = $this->genrateDompdf($html['html'], $html['orientation']);
+            $fileNameDiagram = $this->genrateDompdf($html['html'], $html['orientaion']);
             $mpdf->setSourceFile($fileNameDiagram);
             $pageCount = $mpdf->setSourceFile($fileNameDiagram);
             for ($i = 1; $i <= $pageCount; $i++) {
