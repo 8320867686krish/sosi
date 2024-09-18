@@ -638,21 +638,20 @@ class ReportContoller extends Controller
                 $imageData = base64_encode(file_get_contents($imagePath));
                 $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
                 list($width, $height) = getimagesize($imagePath);
+                $containerWidth = "1024"; 
                 if ($width >= 1000) {
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
                 } else {
                     if ($height >= 380) {
                         $ori = "portrait";
+                        $containerWidth = "1000";
                         $image_height =  $imageDesireHeight;
                         $image_width = ($image_height * $width) / $height;
                     } else {
                         $image_width = $width;
+                        $containerWidth = "800";
                     }
-                    if ($ori == "portrait") {
-                        $containerWidth = "800"; // For portrait mode, set narrower container width
-                    } else {
-                        $containerWidth = "1024"; // For landscape mode, set wider container width
-                    }
+                   
                     $leftPositionPixels = ($containerWidth - $image_width) / 2;
                     $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
 
