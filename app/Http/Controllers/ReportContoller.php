@@ -649,7 +649,7 @@ class ReportContoller extends Controller
                         $image_width = $width;
                     }
                     if ($ori == "portrait") {
-                        $containerWidth = "600"; // For portrait mode, set narrower container width
+                        $containerWidth = "800"; // For portrait mode, set narrower container width
                     } else {
                         $containerWidth = "1024"; // For landscape mode, set wider container width
                     }
