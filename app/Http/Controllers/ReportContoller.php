@@ -645,7 +645,7 @@ class ReportContoller extends Controller
                     if ($height >= 380) {
                         $ori = "portrait";
                         if($width >= 500){
-                            $containerWidth = "0";
+                            $containerWidth = "500";
 
                         }else{
                             $containerWidth = "900";
