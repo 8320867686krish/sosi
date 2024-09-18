@@ -645,7 +645,7 @@ class ReportContoller extends Controller
                     // } else {
                     //     $image_width = $width;
                     // }
-                    if($height >= 300 || $width<=500){
+                    if($width<=500){
                         $orientation = "portrait";
                     }else{
                         $orientation = "landscape";
