@@ -632,7 +632,7 @@ class ReportContoller extends Controller
             $ori = "landscape";
             $oddincreaseGap = 29;
             $evenincreaseGap = 29;
-            $imageDesireHeight = 400;
+            $imageDesireHeight = 450;
             foreach ($chunks as $chunkIndex => $chunk) {
                 $imagePath = $decks['image'];
                 $imageData = base64_encode(file_get_contents($imagePath));
@@ -649,7 +649,6 @@ class ReportContoller extends Controller
                         $image_width = ($image_height * $width) / $height;
                     } else {
                         $image_width = $width;
-                        $containerWidth = "800";
                     }
                    
                     $leftPositionPixels = ($containerWidth - $image_width) / 2;
@@ -657,7 +656,7 @@ class ReportContoller extends Controller
 
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column;margin-left:{$leftPositionPercent}%;'>";
                 }
-                $topPer =  ( $ori == 'portrait') ? '50%':'20%';
+                $topPer =  ( $ori == 'portrait') ? '40%':'20%';
 
                 $html .= '<div style="margin-top:'.$topPer.';">';
 
