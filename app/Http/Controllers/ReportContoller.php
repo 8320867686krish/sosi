@@ -648,7 +648,12 @@ class ReportContoller extends Controller
                     } else {
                         $image_width = $width;
                     }
-                    $leftPositionPixels = (1024 - $image_width) / 2;
+                    if ($ori == "portrait") {
+                        $containerWidth = "600"; // For portrait mode, set narrower container width
+                    } else {
+                        $containerWidth = "1024"; // For landscape mode, set wider container width
+                    }
+                    $leftPositionPixels = ($containerWidth - $image_width) / 2;
                     $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
 
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column;margin-left:{$leftPositionPercent}%;'>";
