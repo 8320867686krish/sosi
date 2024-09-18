@@ -419,7 +419,7 @@ class ReportContoller extends Controller
             $mpdf->setSourceFile($fileNameDiagram);
             $pageCount = $mpdf->setSourceFile($fileNameDiagram);
             for ($i = 1; $i <= $pageCount; $i++) {
-                $mpdf->AddPage('L');
+                $mpdf->AddPage( $html['orientaion']);
                 if ($key == 0) {
                     $heading = '<h3 style="font-size:14px">3.4 VSCP Preparation.</h3>';
 
@@ -601,13 +601,8 @@ class ReportContoller extends Controller
     {
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);
-        // if (@$page) {
-        //     $dompdf->setPaper('A4', 'landscape');
-        // } else {
-        //     $dompdf->setPaper('A4', 'portrait');
-        // }
-     //   $dompdf->setPaper('a4','portrait');
-     $dompdf->setPaper('A4', 'portrait');
+       
+     $dompdf->setPaper('A4', $page);
 
         $dompdf->render();
         $mainContentPdf = $dompdf->output();
