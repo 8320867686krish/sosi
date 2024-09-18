@@ -601,11 +601,13 @@ class ReportContoller extends Controller
     {
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);
-        if (@$page) {
-            $dompdf->setPaper('A4', 'landscape');
-        } else {
-            $dompdf->setPaper('A4', 'portrait');
-        }
+        // if (@$page) {
+        //     $dompdf->setPaper('A4', 'landscape');
+        // } else {
+        //     $dompdf->setPaper('A4', 'portrait');
+        // }
+        $dompdf->setPaper('A4',$page);
+
         $dompdf->render();
         $mainContentPdf = $dompdf->output();
         $filename = "project" . uniqid() . "ab.pdf";
