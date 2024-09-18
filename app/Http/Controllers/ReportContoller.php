@@ -639,12 +639,12 @@ class ReportContoller extends Controller
                     $orientation = "landscape";
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
                 } else {
-                    // if ($height >= 380) {
-                    //     $image_height =  $imageDesireHeight;
-                    //     $image_width = ($image_height * $width) / $height;
-                    // } else {
-                    //     $image_width = $width;
-                    // }
+                    if ($height >= 380) {
+                        $image_height = 400;
+                        $image_width = ($image_height * $width) / $height;
+                    } else {
+                        $image_width = $width;
+                    }
                     if($width<=500){
                         $orientation = "portrait";
                     }else{
@@ -652,14 +652,19 @@ class ReportContoller extends Controller
                     }
                    
                     $image_width = $width;
-                    $leftPositionPixels = (1024 - $image_width) / 2;
-                    $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
+                    if( $orientation == "landscape"){
+                        $leftPositionPixels = (1024 - $image_width) / 2;
+                        $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
+                    }else{
+                        $leftPositionPercent = 0;
+                    }
+                
 
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column;margin-left:{$leftPositionPercent}%;'>";
                 }
 
 
-                $html .= '<div style="margin-top:20%;">';
+                $html .= '<div style="margin-top:40%;">';
 
                 $html .= '<div class="image-container " id="imgc' . $i . '" style="position: relative;width: 100%; ">';
                 $image_width  = 1024;
@@ -669,15 +674,15 @@ class ReportContoller extends Controller
 
                     $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px;" />';
                 } else {
-                    // if ($height >= 380) {
+                    if ($height >= 500) {
                      
-                    //    $image_height =400;
-                    //     $image_width = ($image_height * $width) / $height;
-                    //    $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"  style="width:' .  $image_width . 'px;"/>';
-                    // } else {
-                    //     $image_height = $height;
-                    //     $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
-                    // }
+                       $image_height =400;
+                        $image_width = ($image_height * $width) / $height;
+                       $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"  style="width:' .  $image_width . 'px;"/>';
+                    } else {
+                        $image_height = $height;
+                        $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
+                    }
                 $image_height = $height;
                   $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
                 }
@@ -718,15 +723,14 @@ class ReportContoller extends Controller
                         $leftshow = ($image_width * $left) / $width;
                     } else {
 
-                        // if ($image_height == $imageDesireHeight) {
-                        //     $topshow = ($image_width * $top) / $width;
-                        //     $leftshow = ($image_width * $left) / $width;
-                        // } else {
-                        //     $topshow = $top;
-                        //     $leftshow = $left;
-                        // }
-                        $topshow = $top;
-                        $leftshow = $left;
+                        if ($image_height == 400) {
+                            $topshow = ($image_width * $top) / $width;
+                            $leftshow = ($image_width * $left) / $width;
+                        } else {
+                            $topshow = $top;
+                            $leftshow = $left;
+                        }
+                       
                     }
                     $lineLeftPosition =  ($leftshow + 4);
                     $tool = 0;
