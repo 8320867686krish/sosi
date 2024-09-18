@@ -653,9 +653,9 @@ class ReportContoller extends Controller
 
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column;margin-left:{$leftPositionPercent}%;'>";
                 }
+                $topPer =  ( $ori == 'portrait') ? '50%':'20%';
 
-
-                $html .= '<div style="margin-top:20%;">';
+                $html .= '<div style="margin-top:'.$topPer.';">';
 
                 $html .= '<div class="image-container " id="imgc' . $i . '" style="position: relative;width: 100%; ">';
                 $image_width  = 1024;
