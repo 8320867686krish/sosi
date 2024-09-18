@@ -634,12 +634,9 @@ class ReportContoller extends Controller
                 $imageData = base64_encode(file_get_contents($imagePath));
                 $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
                 list($width, $height) = getimagesize($imagePath);
-                if($height > 300){
-                    $orientation = "portrait";
-                }else{
-                    $orientation = "landscape";
-                }
+               
                 if ($width >= 1000) {
+                    $orientation = "landscape";
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
                 } else {
                     // if ($height >= 380) {
@@ -648,6 +645,7 @@ class ReportContoller extends Controller
                     // } else {
                     //     $image_width = $width;
                     // }
+                    $orientation = "portrait";
                     $image_width = $width;
                     $leftPositionPixels = (1024 - $image_width) / 2;
                     $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
@@ -666,15 +664,15 @@ class ReportContoller extends Controller
 
                     $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px;" />';
                 } else {
-                    if ($height >= 380) {
+                    // if ($height >= 380) {
                      
-                       $image_height =400;
-                        $image_width = ($image_height * $width) / $height;
-                       $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"  style="width:' .  $image_width . 'px;"/>';
-                    } else {
-                        $image_height = $height;
-                        $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
-                    }
+                    //    $image_height =400;
+                    //     $image_width = ($image_height * $width) / $height;
+                    //    $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"  style="width:' .  $image_width . 'px;"/>';
+                    // } else {
+                    //     $image_height = $height;
+                    //     $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
+                    // }
                 $image_height = $height;
                   $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
                 }
