@@ -170,7 +170,8 @@ class ReportContoller extends Controller
             foreach ($decks as $key => $value) {
                 if (count($value['checks']) > 0) {
                     $html = $this->drawDigarm($value);
-                    $fileNameDiagram = $this->genrateDompdf($html, 'le');
+                    $fileNameDiagram = $this->genrateDompdf($html['html'], $html['orientaion']);
+
                     //    $mpdf = new Mpdf(['orientation' => 'L']); // Ensure landscape mode
                     $mpdf->setSourceFile($fileNameDiagram);
 
@@ -385,7 +386,7 @@ class ReportContoller extends Controller
         foreach ($decks as $key => $value) {
             if (count($value['checks']) > 0) {
                 $html = $this->drawDigarm($value);
-                $fileNameDiagram = $this->genrateDompdf($html, 'le');
+                $fileNameDiagram = $this->genrateDompdf($html['html'], $html['orientaion']);
                 $mpdf->setSourceFile($fileNameDiagram);
 
                 $pageCount = $mpdf->setSourceFile($fileNameDiagram);
