@@ -644,7 +644,7 @@ class ReportContoller extends Controller
                 } else {
                     if ($height >= 380) {
                         $ori = "portrait";
-                        $containerWidth = "950";
+                        $containerWidth = "800";
                         $image_height =  $imageDesireHeight;
                         $image_width = ($image_height * $width) / $height;
                     } else {
