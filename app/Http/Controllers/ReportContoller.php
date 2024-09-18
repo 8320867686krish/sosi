@@ -606,7 +606,7 @@ class ReportContoller extends Controller
         // } else {
         //     $dompdf->setPaper('A4', 'portrait');
         // }
-        $dompdf->setPaper('a4','portrait');
+     //   $dompdf->setPaper('a4','portrait');
 
         $dompdf->render();
         $mainContentPdf = $dompdf->output();
