@@ -170,8 +170,7 @@ class ReportContoller extends Controller
             foreach ($decks as $key => $value) {
                 if (count($value['checks']) > 0) {
                     $html = $this->drawDigarm($value);
-                    $fileNameDiagram = $this->genrateDompdf($html['html'], $html['orientaion']);
-
+                    $fileNameDiagram = $this->genrateDompdf($html, 'le');
                     //    $mpdf = new Mpdf(['orientation' => 'L']); // Ensure landscape mode
                     $mpdf->setSourceFile($fileNameDiagram);
 
@@ -386,7 +385,7 @@ class ReportContoller extends Controller
         foreach ($decks as $key => $value) {
             if (count($value['checks']) > 0) {
                 $html = $this->drawDigarm($value);
-                $fileNameDiagram = $this->genrateDompdf($html['html'], $html['orientaion']);
+                $fileNameDiagram = $this->genrateDompdf($html, 'le');
                 $mpdf->setSourceFile($fileNameDiagram);
 
                 $pageCount = $mpdf->setSourceFile($fileNameDiagram);
@@ -415,11 +414,11 @@ class ReportContoller extends Controller
 
         foreach ($ChecksList as $key => $value) {
             $html = $this->drawDigarm($value);
-            $fileNameDiagram = $this->genrateDompdf($html['html'], $html['orientaion']);
+            $fileNameDiagram = $this->genrateDompdf($html, 'le');
             $mpdf->setSourceFile($fileNameDiagram);
             $pageCount = $mpdf->setSourceFile($fileNameDiagram);
             for ($i = 1; $i <= $pageCount; $i++) {
-                $mpdf->AddPage( $html['orientaion']);
+                $mpdf->AddPage('L');
                 if ($key == 0) {
                     $heading = '<h3 style="font-size:14px">3.4 VSCP Preparation.</h3>';
 
@@ -601,9 +600,11 @@ class ReportContoller extends Controller
     {
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);
-       
-     $dompdf->setPaper('A4', $page);
-
+        if (@$page) {
+            $dompdf->setPaper('A4', 'landscape');
+        } else {
+            $dompdf->setPaper('A4', 'portrait');
+        }
         $dompdf->render();
         $mainContentPdf = $dompdf->output();
         $filename = "project" . uniqid() . "ab.pdf";
@@ -617,7 +618,6 @@ class ReportContoller extends Controller
     {
         $i = 1;
         $html = "";
-        $orientation = 0;
         $lineCss = 'position:absolute;background-color:#4052d6;border:solid #4052d6 1px;';
         $tooltipCss = 'position: absolute;background-color: #fff;border: 1px solid #4052d6;padding: 1px;border-radius: 2px;
                 white-space: nowrap;z-index: 1;color:#4052d6;font-size:8px;text-align:center;';
@@ -634,37 +634,23 @@ class ReportContoller extends Controller
                 $imageData = base64_encode(file_get_contents($imagePath));
                 $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
                 list($width, $height) = getimagesize($imagePath);
-               
                 if ($width >= 1000) {
-                    $orientation = "landscape";
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
                 } else {
                     if ($height >= 380) {
-                        $image_height = 400;
+                        $image_height =  $imageDesireHeight;
                         $image_width = ($image_height * $width) / $height;
                     } else {
                         $image_width = $width;
                     }
-                    if($width<=500){
-                        $orientation = "portrait";
-                    }else{
-                        $orientation = "landscape";
-                    }
-                   
-                    $image_width = $width;
-                    if( $orientation == "landscape"){
-                        $leftPositionPixels = (1024 - $image_width) / 2;
-                        $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
-                    }else{
-                        $leftPositionPercent = 0;
-                    }
-                
+                    $leftPositionPixels = (1024 - $image_width) / 2;
+                    $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
 
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column;margin-left:{$leftPositionPercent}%;'>";
                 }
 
 
-                $html .= '<div style="margin-top:40%;">';
+                $html .= '<div style="margin-top:20%;">';
 
                 $html .= '<div class="image-container " id="imgc' . $i . '" style="position: relative;width: 100%; ">';
                 $image_width  = 1024;
@@ -674,17 +660,14 @@ class ReportContoller extends Controller
 
                     $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px;" />';
                 } else {
-                    if ($height >= 500) {
-                     
-                       $image_height =400;
+                    if ($height >= 380) {
+                       $image_height =$imageDesireHeight;
                         $image_width = ($image_height * $width) / $height;
-                       $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"  style="width:' .  $image_width . 'px;"/>';
+                        $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"  style="width:' .  $image_width . 'px;"/>';
                     } else {
                         $image_height = $height;
                         $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
                     }
-                $image_height = $height;
-                  $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
                 }
                 $html .= $newImage;
                 $evenarrayLeft = [];
@@ -723,14 +706,13 @@ class ReportContoller extends Controller
                         $leftshow = ($image_width * $left) / $width;
                     } else {
 
-                        if ($image_height == 400) {
+                        if ($image_height == $imageDesireHeight) {
                             $topshow = ($image_width * $top) / $width;
                             $leftshow = ($image_width * $left) / $width;
                         } else {
                             $topshow = $top;
                             $leftshow = $left;
                         }
-                       
                     }
                     $lineLeftPosition =  ($leftshow + 4);
                     $tool = 0;
@@ -814,7 +796,7 @@ class ReportContoller extends Controller
         }
 
 
-        return ['html'=> $html,'orientaion' =>  $orientation];
+        return $html;
     }
     protected function mergeImageToPdf($imagePath, $title, $mpdf, $page = null)
     {
