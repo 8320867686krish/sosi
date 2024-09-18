@@ -170,14 +170,14 @@ class ReportContoller extends Controller
             foreach ($decks as $key => $value) {
                 if (count($value['checks']) > 0) {
                     $html = $this->drawDigarm($value);
-                    $fileNameDiagram = $this->genrateDompdf($html, 'le');
+                    $fileNameDiagram = $this->genrateDompdf($html['html'], $html['ori']);
                     //    $mpdf = new Mpdf(['orientation' => 'L']); // Ensure landscape mode
                     $mpdf->setSourceFile($fileNameDiagram);
 
                     $pageCount = $mpdf->setSourceFile($fileNameDiagram);
                     for ($i = 1; $i <= $pageCount; $i++) {
 
-                        $mpdf->AddPage('L');
+                        $mpdf->AddPage($html['ori']);
                         if ($key == 0) {
                             $mpdf->WriteHTML('<h3 style="font-size:14px">2.1 Location Diagram of Contained HazMat & PCHM.</h3>');
                         }
@@ -385,7 +385,8 @@ class ReportContoller extends Controller
         foreach ($decks as $key => $value) {
             if (count($value['checks']) > 0) {
                 $html = $this->drawDigarm($value);
-                $fileNameDiagram = $this->genrateDompdf($html, 'le');
+                $fileNameDiagram = $this->genrateDompdf($html['html'], $html['ori']);
+                
                 $mpdf->setSourceFile($fileNameDiagram);
 
                 $pageCount = $mpdf->setSourceFile($fileNameDiagram);
@@ -414,11 +415,11 @@ class ReportContoller extends Controller
 
         foreach ($ChecksList as $key => $value) {
             $html = $this->drawDigarm($value);
-            $fileNameDiagram = $this->genrateDompdf($html, 'le');
+            $fileNameDiagram = $this->genrateDompdf($html['html'], $html['ori']);
             $mpdf->setSourceFile($fileNameDiagram);
             $pageCount = $mpdf->setSourceFile($fileNameDiagram);
             for ($i = 1; $i <= $pageCount; $i++) {
-                $mpdf->AddPage('L');
+                $mpdf->AddPage($html['ori']);
                 if ($key == 0) {
                     $heading = '<h3 style="font-size:14px">3.4 VSCP Preparation.</h3>';
 
@@ -600,11 +601,13 @@ class ReportContoller extends Controller
     {
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);
-        if (@$page) {
-            $dompdf->setPaper('A4', 'landscape');
-        } else {
-            $dompdf->setPaper('A4', 'portrait');
-        }
+        // if (@$page) {
+        //     $dompdf->setPaper('A4', 'landscape');
+        // } else {
+        //     $dompdf->setPaper('A4', 'portrait');
+        // }
+        $dompdf->setPaper('A4', $page);
+
         $dompdf->render();
         $mainContentPdf = $dompdf->output();
         $filename = "project" . uniqid() . "ab.pdf";
@@ -626,9 +629,10 @@ class ReportContoller extends Controller
 
             $k = 0;
             $gap = 1;
+            $ori = "landscape";
             $oddincreaseGap = 29;
             $evenincreaseGap = 29;
-            $imageDesireHeight = 300;
+            $imageDesireHeight = 400;
             foreach ($chunks as $chunkIndex => $chunk) {
                 $imagePath = $decks['image'];
                 $imageData = base64_encode(file_get_contents($imagePath));
@@ -638,6 +642,7 @@ class ReportContoller extends Controller
                     $html .= "<div class='maincontnt next' style='display: flex; justify-content: center; align-items: center; flex-direction: column; height:100vh;'>";
                 } else {
                     if ($height >= 380) {
+                        $ori = "portrait";
                         $image_height =  $imageDesireHeight;
                         $image_width = ($image_height * $width) / $height;
                     } else {
@@ -796,7 +801,7 @@ class ReportContoller extends Controller
         }
 
 
-        return $html;
+        return ['html'=>$html,'ori'=>$ori];
     }
     protected function mergeImageToPdf($imagePath, $title, $mpdf, $page = null)
     {
