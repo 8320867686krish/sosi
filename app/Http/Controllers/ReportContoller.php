@@ -645,7 +645,12 @@ class ReportContoller extends Controller
                     // } else {
                     //     $image_width = $width;
                     // }
-                    $orientation = "portrait";
+                    if($height >= 300 || $width<=500){
+                        $orientation = "portrait";
+                    }else{
+                        $orientation = "landscape";
+                    }
+                   
                     $image_width = $width;
                     $leftPositionPixels = (1024 - $image_width) / 2;
                     $leftPositionPercent = ($leftPositionPixels / 1024) * 100;
