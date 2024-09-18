@@ -668,15 +668,15 @@ class ReportContoller extends Controller
 
                     $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" style="width:' .  $image_width . 'px;" />';
                 } else {
-                //     if ($height >= 380) {
-                //         $image_height = $height;
-                //      //  $image_height =$imageDesireHeight;
-                //    //     $image_width = ($image_height * $width) / $height;
-                //     //    $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"  style="width:' .  $image_width . 'px;"/>';
-                //     } else {
-                //         $image_height = $height;
-                //       //  $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
-                //     }
+                    if ($height >= 380) {
+                     
+                       $image_height =400;
+                        $image_width = ($image_height * $width) / $height;
+                       $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '"  style="width:' .  $image_width . 'px;"/>';
+                    } else {
+                        $image_height = $height;
+                        $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
+                    }
                 $image_height = $height;
                   $newImage = '<img src="' . $imageBase64 . '" id="imageDraw' . $i . '" />';
                 }
